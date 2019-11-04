@@ -14,7 +14,7 @@ License: LGPL-3
 LazyData: true
 RoxygenNote: 6.1.1
 Imports: 
-    data.table,
+    data.table (>= 1.10.4-3),
     Rcpp,
     xml2
 LinkingTo: 
