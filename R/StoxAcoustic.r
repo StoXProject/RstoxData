@@ -43,12 +43,11 @@ StoxAcoustic <- function(data_list = NULL,converter = NULL){
     
     
     
-    
     #################################################################
     #              Fiks structure in nmd echosounder                #
     #################################################################
     data_list$AcousticCategory$type=NULL
-    ul <- (unique(dl$AcousticCategory))
+    ul <- (unique(data_list$AcousticCategory))
     mm <- merge(data_list$ChannelReference, data_list$AcousticCategory)
 
     #Make new list structure    
@@ -157,10 +156,10 @@ StoxAcoustic <- function(data_list = NULL,converter = NULL){
     #################################################################
     #                       RENAME LOG level                        #
     #################################################################
-    names(data_list$Log)[names(data_list$Log)=='log_start'] <- 'Log'
+    names(data_list$Log)[names(data_list$Log)=='log_start']        <- 'Log'
     names(data_list$Log)[names(data_list$Log)=='integrator_dist '] <- 'Distance'
-    names(data_list$Log)[names(data_list$Log)=='lon_start '] <- 'StartLatitude'
-    names(data_list$Log)[names(data_list$Log)=='lat_start '] <- 'StartLongitude '
+    names(data_list$Log)[names(data_list$Log)=='lon_start ']       <- 'StartLatitude'
+    names(data_list$Log)[names(data_list$Log)=='lat_start ']       <- 'StartLongitude '
     
     
     #Fiks StartBottomDepth, where should we get this information from? 
