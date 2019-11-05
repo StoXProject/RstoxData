@@ -213,7 +213,119 @@ StoxAcoustic <- function(data_list = NULL,converter = NULL){
     
     data_list$NASC<-merge(data_list$NASC,temp2)
     
+  }else{
+    
+    #################################################################
+    # Description: protocol to convert ICESacoustic to StoxAcoustic #
+    #################################################################
+    
+    
+    
+    
+    
+    
+    
+    
+    #################################################################
+    #                       RENAME general level                    #
+    #################################################################
+    names(data_list)[names(data_list)=='Data']<- 'NASC'
+    
+    
+    
+    
+    
+    
+    #################################################################
+    #         Fiks to correct time format, and add to key           #
+    #################################################################
+    data_list$Log$LogKey <- sapply(data_list$Log$Time,function(i) paste0(gsub(' ','T',i),'.000Z'))
+    data_list$Log$EDSU <- paste(data_list$Log$CruiseKey,data_list$Log$LogKey,sep='/')
+    
+    
+    
+    
+    
+    
+    #################################################################
+    #                   MAKE other general level                    #
+    #################################################################
+    #merge tables
+    tmp <- merge(data_list$Sample,data_list$NASC)
+    tmp <- merge(tmp,data_list$Log[,c('Distance','Time','LogKey')],by='Distance')
+    names(tmp)[names(tmp)=="Instrument"]='ID'
+    names(tmp)[names(tmp)=="Value"]='NASC'
+    names(tmp)[names(tmp)=="SaCategory"]='AcousticCategory'
+    
+    
+    
+    
+    #apply beam level, and add Beam key to all
+    tmp_beam<-merge(tmp,data_list$Instrument, by='ID')
+    tmp_beam$BeamKey <- tmp_beam$Frequency
+    data_list$Beam<-unique(tmp_beam[,!c('NASC','ChannelDepthUpper','AcousticCategory','Type','Unit','SvThreshold')])
+    tmp$BeamKey <- tmp_beam$BeamKey
+    
+    
+    
+        
+    #apply acoustic catecory, and add Key to all
+    data_list$AcousticCategory <- tmp
+    data_list$AcousticCategory$AcousticCategoryKey <- tmp$AcousticCategory
+    tmp$AcousticCategoryKey<- tmp$AcousticCategory
+    
+    
+    
+    
+    
+    #Apply channel, and apply key to all
+    data_list$ChannelReference <- tmp
+    data_list$ChannelReference$ChannelReferenceKey <- 'P'
+    tmp$ChannelReferenceKey<- 'P'
+    
+    
+    
+    
+    #Apply channel, and apply key to all
+    data_list$NASC <- tmp
+    data_list$NASC$ChannelKey <- paste(tmp$ChannelDepthUpper,tmp$ChannelDepthLower,sep='/')
+    
+    
+    
+    
+    
+    
+    
+    #################################################################
+    #                       RENAME variables                        #
+    #################################################################
+    names(data_list$Cruise)[names(data_list$Cruise)=='platform'] <- 'Platform'
+    names(data_list$Log)[names(data_list$Log)=='Longitude'] <- 'StartLongitude'
+    names(data_list$Log)[names(data_list$Log)=='Latitude'] <- 'StartLatitude'
+    names(data_list$Log)[names(data_list$Log)=='BottomDepth'] <- 'StartBottomDepth'
+    names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthUpper'] <- 'MinRange'
+    names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthLower'] <- 'MaxRange'
+    
+    
+    
+    
+    
+    
+    #################################################################
+    #        Add cruice key to all list                             #
+    #################################################################
+    data_list$Cruise$CruiseKey           <- data_list$Cruise$LocalID
+    data_list$Log$CruiseKey              <- data_list$Cruise$LocalID
+    data_list$Beam$CruiseKey             <- data_list$Cruise$LocalID
+    data_list$AcousticCategory$CruiseKey <- data_list$Cruise$LocalID
+    data_list$ChannelReference$CruiseKey <- data_list$Cruise$LocalID
+    data_list$NASC$CruiseKey             <- data_list$Cruise$LocalID
+    
+    
+    
+    
   }
+  
   
 
   
