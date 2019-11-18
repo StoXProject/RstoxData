@@ -8,7 +8,7 @@
 #'
 #'
 #' @export
-StoxAcoustic <- function(data_list_in = NULL){
+StoxAcoustic <- function(AcousticData = NULL){
 
   
   
@@ -18,7 +18,7 @@ StoxAcoustic <- function(data_list_in = NULL){
   
   
   #Loop through all platforms
-  for (data_list in data_list_in){
+  for (data_list in AcousticData){
     
     
     
