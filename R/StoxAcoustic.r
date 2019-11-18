@@ -9,9 +9,12 @@
 #'
 #' @export
 StoxAcoustic <- function(AcousticData = NULL){
-
-  
-  
+	
+	# For flexibility accept a list of the input data, named by the data type:
+	if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
+		AcousticData <- AcousticData$AcousticData
+	}
+	
   #Define the output 
   data_list_out <- c()
   
@@ -35,7 +38,7 @@ StoxAcoustic <- function(AcousticData = NULL){
     if(is.null(data_list$echosounder_dataset))ices_format<- TRUE
     
     
-    
+    print(names(AcousticData))
     
     
     
