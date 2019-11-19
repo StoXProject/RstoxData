@@ -1,10 +1,9 @@
 
-#' Convert output from xml reader to StoxAcoustic
+#' Convert output from xml reader to StoxAcoustic data
 #'
 #' @param data_list table. The output from xmlreader.
-#' @param converter file. Instruction file to convert values
 #'
-#' @return List of data.table objects containing the "flattened" XML data.
+#' @return List of data.table objects containing the StoxAcoustic data.
 #'
 #'
 #' @export
@@ -262,18 +261,19 @@ StoxAcoustic <- function(data_list_in = NULL){
       temp <- merge(data_list$Beam[,c('upper_integrator_depth','LogKey')],data_list$Log[,c('pel_ch_thickness','LogKey')],by='LogKey')
       data_list$NASC <- merge(data_list$NASC,temp,by='LogKey')
       
-      
       data_list$NASC$MinRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch)-1)
       data_list$NASC$MaxRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch))
       
-      #Add the upper integration depth
-      data_list$NASC[data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth]<-data_list$NASC$upper_integrator_depth[data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth]
       
       
       
+      #Fiks upper integration depth for pelagic
+      #Denne må Dobbelsjekkes
+      data_list$NASC[(data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$MinRange<-data_list$NASC[(data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$upper_integrator_depth
       
       
       
+      data_list$ChannelReference[data_list$ChannelReference$ChannelReferenceKey=='B']
       
       
     }else{
