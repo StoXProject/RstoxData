@@ -7,17 +7,20 @@
 #'
 #'
 #' @export
-StoxAcoustic <- function(data_list_in = NULL){
-
-  
-  
+StoxAcoustic <- function(AcousticData = NULL){
+	
+	# For flexibility accept a list of the input data, named by the data type:
+	if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
+		AcousticData <- AcousticData$AcousticData
+	}
+	
   #Define the output 
   data_list_out <- c()
   
   
   
   #Loop through all platforms
-  for (data_list in data_list_in){
+  for (data_list in AcousticData){
     
     
     
@@ -34,7 +37,7 @@ StoxAcoustic <- function(data_list_in = NULL){
     if(is.null(data_list$echosounder_dataset))ices_format<- TRUE
     
     
-    
+    print(names(AcousticData))
     
     
     
@@ -189,10 +192,10 @@ StoxAcoustic <- function(data_list_in = NULL){
       #################################################################
       names(data_list$Log)[names(data_list$Log)=='log_start']        <- 'Log'
       names(data_list$Log)[names(data_list$Log)=='integrator_dist'] <- 'Distance'
-      names(data_list$Log)[names(data_list$Log)=='lon_start']       <- 'StartLatitude'
-      names(data_list$Log)[names(data_list$Log)=='lat_start']       <- 'StartLongitude'
-      names(data_list$Log)[names(data_list$Log)=='lon_stop']       <- 'StopLatitude'
-      names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'StopLongitude'
+      names(data_list$Log)[names(data_list$Log)=='lon_start']       <- 'StartLongitude'
+      names(data_list$Log)[names(data_list$Log)=='lat_start']       <- 'StartLatitude'
+      names(data_list$Log)[names(data_list$Log)=='lon_stop']       <- 'StopLongitude'
+      names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'StopLatitude'
       
       
       
