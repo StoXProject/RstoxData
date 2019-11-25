@@ -25,7 +25,7 @@
 #' @importFrom data.table as.data.table transpose
 #'
 #' @export
-readXmlFile <- function(xmlFilePath, stream = FALSE, useXsd = NULL) {
+readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Ices Acoustic XSD needs several additional treatment
 	icesAcousticPreprocess <- function(xsdObject) {
@@ -101,8 +101,12 @@ readXmlFile <- function(xmlFilePath, stream = FALSE, useXsd = NULL) {
 		return(NULL)
 	}
 
+	# Try to detect XSD
+	if(is.null(useXsd))
+		useXsd <- detectXsdType(xmlFilePath)
+
 	# Apply preprocess for ICES XSD
-	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
+	if(useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
 	}
 

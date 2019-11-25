@@ -4,7 +4,7 @@
 \alias{readXmlFile}
 \title{Read fisheries XML data format file}
 \usage{
-readXmlFile(xmlFilePath, stream = FALSE, useXsd = NULL)
+readXmlFile(xmlFilePath, stream = TRUE, useXsd = NULL)
 }
 \arguments{
 \item{xmlFilePath}{full path to the XML file to be read.}
