@@ -126,5 +126,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	# Finishing touch
 	final <- lapply(names(result), applyNameType, result, tableHeaders, tableTypes)
 	names(final) <- names(result)
+
+	# Add metadata
+	final[["metadata"]] <- list(useXsd = useXsd, file = xmlFilePath)
+
 	return(final)
 }
