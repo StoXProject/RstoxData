@@ -12,11 +12,6 @@ stoxFunctionAttributes <- list(
         functionType = "modelData", 
         functionCategory = "Baseline", 
         functionOutputDataType = "StoxAcousticData", 
-        functionParameterType = list(FileNames = "character"), 
-        functionParameterFormat = list(FileNames = "filePaths"), 
-        functionArgumentHierarchy = list(), 
-        functionAlias = list(), 
-        functionParameterAlias = list(), 
-        functionParameterValueAlias = list()
+        functionParameterFormat = list(FileNames = "filePaths")
     )
 )

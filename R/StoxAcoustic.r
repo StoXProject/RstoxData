@@ -271,7 +271,7 @@ StoxAcoustic <- function(AcousticData = NULL){
       
       
       #Fiks upper integration depth for pelagic
-      #Denne må Dobbelsjekkes
+      #Denne maa Dobbelsjekkes
       data_list$NASC[(data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$MinRange<-data_list$NASC[(data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$upper_integrator_depth
       
       
