@@ -5,19 +5,19 @@
 #' the XML file inside the zip file should be using the same name as the zip file itself (e.g. test.xml inside test.zip). 
 #'
 #' @param xmlFilePath full path to the XML file to be read.
-#' @param stream a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to FALSE.
+#' @param stream a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to TRUE.
 #' @param useXsd Specify an xsd object to use. Default to NULL.
 #'
 #' @return List of data.table objects containing the "flattened" XML data.
 #'
 #' @examples
 #' \dontrun{
-#' # Reading test.xml using XML DOM parser
-#' one <- readXmlFile("./test.xml")
 #' # Reading test.xml using XML pull parser
-#' two <- readXmlFile("./test.xml", stream = TRUE)
+#' one <- readXmlFile("./test.xml")
+#' # Reading test.xml using XML DOM parser
+#' two <- readXmlFile("./test.xml", stream = FALSE)
 #' # Reading test.xml inside test.zip file
-#' three <- readXmlFile("./test.zip", stream = TRUE)
+#' three <- readXmlFile("./test.zip")
 #' }
 #'
 #' @useDynLib RstoxData
