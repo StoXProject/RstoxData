@@ -222,7 +222,7 @@ createXsdObject <- function(xsdFile) {
 
 
 #' @importFrom xml2 xml_child read_html xml_find_all
-detectXsdType <- function(xmlFile) {
+detectXsdType <- function(xmlFile, xsdObjects) {
 
 	# Read first 5 lines
 	bits <- read_html(paste0(readLines(xmlFile, 5), collapse=""))

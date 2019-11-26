@@ -92,6 +92,10 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		return(z)
 	}
 
+	# Load data if necessary
+	if(!exists("xsdObjects"))
+		xsdObjects <- RstoxData::xsdObjects
+
 	# Expand path
 	xmlFilePath <- path.expand(xmlFilePath)
 
@@ -103,7 +107,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Try to detect XSD
 	if(is.null(useXsd))
-		useXsd <- detectXsdType(xmlFilePath)
+		useXsd <- detectXsdType(xmlFilePath, xsdObjects)
 
 	# Apply preprocess for ICES XSD
 	if(useXsd == "icesAcoustic") {
