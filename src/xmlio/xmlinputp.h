@@ -28,7 +28,7 @@
 #define XML_TOKEN_MAX		2048 	/* maximum length of a run */
 #define XML_ELEM_NAME_MAX	80		/* maximum element name length */
 #define XML_ATTR_MAX		50		/* maximum attributes in use at once */
-#define XML_ATTR_NAME_MAX	24		/* maximum attribute name length */
+#define XML_ATTR_NAME_MAX	32		/* maximum attribute name length */
 #define XML_ATTR_VALUE_MAX	2048	/* maximum attribute value length */
 #define XML_BUFFER_SIZE		2048	/* maximum number of characters to buffer at once */
 
