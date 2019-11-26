@@ -248,4 +248,6 @@ detectXsdType <- function(xmlFile) {
 		return("icesAcoustic")
 	else if( length(xml_find_all(bits, "//seddellinje")) )
 		return("landingerv2")
+	else
+		return(NULL)
 }
