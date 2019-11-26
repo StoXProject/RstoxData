@@ -1,7 +1,10 @@
 #' StoxLandingData
 #'
 #' Table (\code{\link[data.table]{data.table}}) with aggregated landings data from sales notes.
-#'
+#' Contains sales notes and landing notes.
+#' These are issued as fish is landed, and can be considered a census of all first hand sale of fish.
+#' Sales-notes should cover all landings from Norwegian vessels. Even those abroad.
+#' In addition they cover landings by foreign vessels in Norwegian ports.
 #'
 #' @section Column definitions:
 #'  \describe{
@@ -25,13 +28,13 @@
 #'   \item{countryLanding}{character() Country where catch was landed}
 #'   \item{usage}{character() Code for market usage of catch.}
 #'   \item{usageDescription}{character() Descriptive text for column 'usage'}
-#'   \item{weight}{nuermic() Weight of round catch in kg. Round weight may be estimated from post-processing weights.}
+#'   \item{weight}{numeric() Weight of round catch in kg. Round weight may be estimated from post-processing weights.}
 #'  }
 #'  
 #' @section Correspondance to other formats:
 #'  Correspondances indicate which field a value is derived from, not necessarily verbatim copied.
 #' 
-#'  Correspondance to NMDlandings (http://www.imr.no/formats/landinger/v2):
+#'  Correspondance to LandingData (http://www.imr.no/formats/landinger/v2):
 #'  \describe{
 #'   \item{speciesFAOCommercial}{ArtFAO_kode}
 #'   \item{speciesCategoryCommercial}{Art_kode}
@@ -82,23 +85,25 @@ loadResource <- function(name){
     stop(paste("Resource", name, "not recognized"))
   }
 
-  
-  
   loc <- readr::locale()
   loc$encoding <- "UTF-8"
   return(readr::read_delim(system.file("extdata","codeDescriptions", filename, package="RstoxData"), delim = "\t", locale = loc, col_types = col_types))
   
 }
 
-#' Extracts relevant columns for StoxLandingData and aggregates
-#' NA is treated as a category.
-#' @noRd
-extractAggregateLandings <- function(nmdLandings){
+#' Convert landing data
+#' @description
+#'  StoX function
+#'  Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
+#' @param LandingData Sales-notes data. See \code{\link[RstoxData]{LandingData}}
+#' @return \code{\link[RstoxData]{StoxLandingData}}, aggregated sales-notes data.
+#' @export
+StoxLanding <- function(LandingData){
   
-  flatLandings <- merge(nmdLandings$Seddellinje, nmdLandings$Fangstdata)
-  flatLandings <- merge(flatLandings, nmdLandings$Art)
-  flatLandings <- merge(flatLandings, nmdLandings$Produkt)
-  flatLandings <- merge(flatLandings, nmdLandings$Mottaker)
+  flatLandings <- merge(LandingData$Seddellinje, LandingData$Fangstdata)
+  flatLandings <- merge(flatLandings, LandingData$Art)
+  flatLandings <- merge(flatLandings, LandingData$Produkt)
+  flatLandings <- merge(flatLandings, LandingData$Mottaker)
 
   #
   # Note: if non-character columns are added to aggColumns. Handle accoridngly in NA-aggregation below

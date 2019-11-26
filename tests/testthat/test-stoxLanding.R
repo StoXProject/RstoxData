@@ -16,7 +16,7 @@ expect_false(any(is.na(usage$usageDescription)))
 
 context("test-stoxLanding")
 landingXML <- readXmlFile(system.file("testresources", "landing.xml", package="RstoxData"), stream = T)
-flatSL <- extractAggregateLandings(landingXML)
+flatSL <- StoxLanding(landingXML)
 expected_colums <- c("speciesFAOCommercial",
                      "speciesCategoryCommercial",
                      "commonNameCommercial",
@@ -48,7 +48,7 @@ expect_true(is.character(flatSL$countryVessel))
 context("test-stoxLanding missing values in aggColumns")
 weightPre <- sum(flatSL$weight)
 landingXML$Mottaker$Mottaksstasjon[2] <- NA
-flatSL <- extractAggregateLandings(landingXML)
+flatSL <- StoxLanding(landingXML)
 expect_equal(sum(is.na(flatSL$landingSite)), 1)
 weightPost <- sum(flatSL$weight)
 expect_equal(weightPre, weightPost)
