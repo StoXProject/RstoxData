@@ -32,14 +32,18 @@ expected_colums <- c("speciesFAOCommercial",
                      "n62Code",
                      "n62Description",
                      "vesselLength",
+                     "countryVessel",
                      "landingSite",
                      "countryLanding",
+                     "usage",
+                     "usageDescription",
                      "weight"
                      )
 expect_equivalent(expected_colums, names(flatSL))
 expect_true(is.numeric(flatSL$vesselLength))
 expect_true(is.numeric(flatSL$weight))
 expect_true(is.numeric(flatSL$year))
+expect_true(is.character(flatSL$countryVessel))
 
 context("test-stoxLanding missing values in aggColumns")
 weightPre <- sum(flatSL$weight)

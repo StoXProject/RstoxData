@@ -20,17 +20,12 @@
 #'   \item{n62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
 #'   \item{n62Description}{character() Descriptive text indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
 #'   \item{vesselLength}{numeric() Maximal length of vessel in meters}
+#'   \item{countryVessel}{character() Country of the vessel that caugth the catch}
+#'   \item{landingSite}{character() Code identifying landing site (buyer of catch)}
 #'   \item{countryLanding}{character() Country where catch was landed}
+#'   \item{usage}{character() Code for market usage of catch.}
+#'   \item{usageDescription}{character() Descriptive text for column 'usage'}
 #'   \item{weight}{nuermic() Weight of round catch in kg. Round weight may be estimated from post-processing weights.}
-#'  }
-#'  
-#'  DEVELOPMENT NOTE:
-#'  Will add, pending fix in XML parser:
-#'  \describe{
-#'   \item{countryVessel}{Country of the vessel that caugth the catch}
-#'   \item{landingSite}{Code identifying landing site (buyer of catch)}
-#'   \item{usage}{Market usage of catch.}
-#'   \item{usageDescription}{Descriptive text for column 'usage'}
 #'  }
 #'  
 #' @section Correspondance to other formats:
@@ -104,8 +99,7 @@ extractAggregateLandings <- function(nmdLandings){
   flatLandings <- merge(flatLandings, nmdLandings$Art)
   flatLandings <- merge(flatLandings, nmdLandings$Produkt)
   flatLandings <- merge(flatLandings, nmdLandings$Mottaker)
-  #flatLandings <- merge(flatLandings, nmdLandings$LandingOgProduksjonType)
-  
+
   #
   # Note: if non-character columns are added to aggColumns. Handle accoridngly in NA-aggregation below
   #
@@ -121,8 +115,10 @@ extractAggregateLandings <- function(nmdLandings){
                   "KystHav_kode", 
                   "NordS\u00F8rFor62GraderNord", 
                   "St\u00F8rsteLengde", 
+                  "Fart\u00F8ynasjonalitet_kode",
                   "Mottaksstasjon",
-                  "Mottakernasjonalitet_kode")
+                  "Mottakernasjonalitet_kode",
+                  "HovedgruppeAnvendelse_kode")
   
   flatLandings <- flatLandings[,c(aggColumns, "Rundvekt"), with=F]
 
@@ -155,16 +151,18 @@ extractAggregateLandings <- function(nmdLandings){
                            "coastal",
                            "n62Code",
                            "vesselLength",
+                           "countryVessel",
                            "landingSite",
                            "countryLanding",
+                           "usage",
                            "weight"
                            )
   
   
   gear <- loadResource("gear")[,c("gear", "gearDescription")]
   aggLandings <- merge(aggLandings, gear, all.x=T, by="gear")
-  #usage <- loadResource("usage")[,c("usage", "usageDescription")]
-  #aggLandings <- merge(aggLandings, usage, all.x=T)
+  usage <- loadResource("usage")[,c("usage", "usageDescription")]
+  aggLandings <- merge(aggLandings, usage, all.x=T, by="usage")
   coastal <- loadResource("coastal")[,c("coastal", "coastalDescription")]
   aggLandings <- merge(aggLandings, coastal, all.x=T, by="coastal")
   n62 <- loadResource("n62")[,c("n62Code", "n62Description")]
@@ -196,8 +194,11 @@ extractAggregateLandings <- function(nmdLandings){
                    "n62Code",
                    "n62Description",
                    "vesselLength",
+                   "countryVessel",
                    "landingSite",
                    "countryLanding",
+                   "usage",
+                   "usageDescription",
                    "weight")
   
   return(data.table::as.data.table(aggLandings[,returnOrder]))
