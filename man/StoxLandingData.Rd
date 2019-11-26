@@ -5,6 +5,10 @@
 \title{StoxLandingData}
 \description{
 Table (\code{\link[data.table]{data.table}}) with aggregated landings data from sales notes.
+Contains sales notes and landing notes.
+These are issued as fish is landed, and can be considered a census of all first hand sale of fish.
+Sales-notes should cover all landings from Norwegian vessels. Even those abroad.
+In addition they cover landings by foreign vessels in Norwegian ports.
 }
 \section{Column definitions}{
 
@@ -24,17 +28,12 @@ Table (\code{\link[data.table]{data.table}}) with aggregated landings data from 
   \item{n62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
   \item{n62Description}{character() Descriptive text indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
   \item{vesselLength}{numeric() Maximal length of vessel in meters}
+  \item{countryVessel}{character() Country of the vessel that caugth the catch}
+  \item{landingSite}{character() Code identifying landing site (buyer of catch)}
   \item{countryLanding}{character() Country where catch was landed}
-  \item{weight}{nuermic() Weight of round catch in kg. Round weight may be estimated from post-processing weights.}
- }
- 
- DEVELOPMENT NOTE:
- Will add, pending fix in XML parser:
- \describe{
-  \item{countryVessel}{Country of the vessel that caugth the catch}
-  \item{landingSite}{Code identifying landing site (buyer of catch)}
-  \item{usage}{Market usage of catch.}
-  \item{usageDescription}{Descriptive text for column 'usage'}
+  \item{usage}{character() Code for market usage of catch.}
+  \item{usageDescription}{character() Descriptive text for column 'usage'}
+  \item{weight}{numeric() Weight of round catch in kg. Round weight may be estimated from post-processing weights.}
  }
 }
 
@@ -42,7 +41,7 @@ Table (\code{\link[data.table]{data.table}}) with aggregated landings data from 
 
  Correspondances indicate which field a value is derived from, not necessarily verbatim copied.
 
- Correspondance to NMDlandings (http://www.imr.no/formats/landinger/v2):
+ Correspondance to LandingData (http://www.imr.no/formats/landinger/v2):
  \describe{
   \item{speciesFAOCommercial}{ArtFAO_kode}
   \item{speciesCategoryCommercial}{Art_kode}
