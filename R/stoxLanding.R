@@ -1,3 +1,49 @@
+#' LandingData
+#' 
+#' @section Data:
+#' One entry 'Seddellinje' is one line of a sales-note or landing-note. 
+#' These are issued as fish is landed, and a complete set of these for a period
+#' can be considered a census of all first hand sale of fish sold from Norwegian vessels.
+#' 
+#' @section Format:
+#' list() of \code{\link[data.table]{data.table}} 
+#' representing the different complexTypes in namespace http://www.imr.no/formats/landinger/v2
+#' For ease of merging: all top level attributes are repeated for all tables. And all line-identifying variables are included as top-level attributes.
+#' 
+#' @name LandingData
+#' 
+NULL
+
+#' Check if argument is LandingData
+#' @description 
+#'  Checks if argument conforms to specification for \code{\link[RstoxData]{LandingData}}
+#' @param LandingData argument to be checked for data conformity
+#' @return logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{LandingData}}
+#' @export
+is.LandingData <- function(LandingData){
+
+  if (!is.list(LandingData)){
+    return(FALSE)
+  }
+  if (!("Seddellinje" %in% names(LandingData))){
+    return(FALSE)
+  }
+  if (!data.table::is.data.table(LandingData$Seddellinje)){
+    return(FALSE)
+  }
+  if (!all(c("Dokumentnummer", 
+             "Linjenummer", 
+             "Art_kode", 
+             "Registreringsmerke_seddel", 
+             "SisteFangstdato", 
+             "Redskap_kode")
+              %in% names(LandingData$Seddellinje))){
+    return(FALSE)
+  }
+  
+  return(TRUE)
+}
+
 #' StoxLandingData
 #'
 #' Table (\code{\link[data.table]{data.table}}) with aggregated landings data from sales notes.

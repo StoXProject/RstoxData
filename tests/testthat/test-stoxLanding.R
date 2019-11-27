@@ -58,3 +58,6 @@ landingXML <- readXmlFile(system.file("testresources", "landing.xml", package="R
 flatSL <- StoxLanding(landingXML)
 expect_true(is.StoxLandingData(flatSL))
 expect_false(is.StoxLandingData(landingXML))
+
+expect_false(is.LandingData(flatSL))
+expect_true(is.LandingData(landingXML))
