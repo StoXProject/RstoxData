@@ -52,3 +52,12 @@ flatSL <- StoxLanding(landingXML)
 expect_equal(sum(is.na(flatSL$landingSite)), 1)
 weightPost <- sum(flatSL$weight)
 expect_equal(weightPre, weightPost)
+
+context("test-stoxLanding is.StoxLandingData")
+landingXML <- readXmlFile(system.file("testresources", "landing.xml", package="RstoxData"), stream = T)
+flatSL <- StoxLanding(landingXML)
+expect_true(is.StoxLandingData(flatSL))
+expect_false(is.StoxLandingData(landingXML))
+
+expect_false(is.LandingData(flatSL))
+expect_true(is.LandingData(landingXML))
