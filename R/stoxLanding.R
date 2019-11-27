@@ -208,3 +208,45 @@ StoxLanding <- function(LandingData){
   
   return(data.table::as.data.table(aggLandings[,returnOrder]))
 }
+
+#' Check if argument is StoxLandingData
+#' @description 
+#'  Checks if argument conforms to specification for \code{\link[RstoxData]{StoxLandingData}}
+#' @param StoxLandingData argument to be checked for data conformity
+#' @return logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{StoxLandingData}}
+#' @export
+is.StoxLandingData <- function(StoxLandingData){
+  
+  expected_colums <- c("speciesFAOCommercial",
+                       "speciesCategoryCommercial",
+                       "commonNameCommercial",
+                       "year",
+                       "catchDate",
+                       "gear",
+                       "gearDescription",
+                       "area",
+                       "location",
+                       "icesAreaGroup",
+                       "coastal",
+                       "coastalDescription",
+                       "n62Code",
+                       "n62Description",
+                       "vesselLength",
+                       "countryVessel",
+                       "landingSite",
+                       "countryLanding",
+                       "usage",
+                       "usageDescription",
+                       "weight"
+  )
+  
+  if (!data.table::is.data.table(StoxLandingData)){
+    return(FALSE)
+  }
+  
+  if (!all(expected_colums %in% names(StoxLandingData))){
+    return(FALSE)
+  }
+  
+  return(TRUE)
+}
