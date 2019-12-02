@@ -225,7 +225,7 @@ createXsdObject <- function(xsdFile) {
 detectXsdType <- function(xmlFile, xsdObjects) {
 
 	# Read first 5 lines
-	bits <- read_html(paste0(readLines(xmlFile, 5), collapse=""))
+	bits <- read_html(readChar(xmlFile, 500))
 
 	# Peek xmlns
 	print("Try to use XML namespace")
