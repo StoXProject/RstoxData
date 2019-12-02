@@ -1,7 +1,7 @@
 
 #' Convert output from xml reader to StoxAcoustic data
 #'
-#' @param data_list table. The output from xmlreader.
+#' @param AcousticData The output from xmlreader.
 #'
 #' @return List of data.table objects containing the StoxAcoustic data.
 #'

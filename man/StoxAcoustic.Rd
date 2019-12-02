@@ -7,7 +7,7 @@
 StoxAcoustic(AcousticData = NULL)
 }
 \arguments{
-\item{data_list}{table. The output from xmlreader.}
+\item{AcousticData}{The output from xmlreader.}
 }
 \value{
 List of data.table objects containing the StoxAcoustic data.

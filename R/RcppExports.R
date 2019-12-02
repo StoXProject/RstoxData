@@ -8,4 +8,3 @@ readXmlCpp <- function(inputFile, xsdObjects, xsdOverride = NULL, xmlEncoding = 
 readXmlCppStream <- function(inputFile, xsdObjects, xsdOverride = NULL, xmlEncoding = NULL) {
     .Call('_RstoxData_readXmlCppStream', PACKAGE = 'RstoxData', inputFile, xsdObjects, xsdOverride, xmlEncoding)
 }
-

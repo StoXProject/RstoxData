@@ -26,6 +26,7 @@ Authors:
 \itemize{
   \item Sindre Vatnehol
   \item Arne Johannes Holmin
+  \item Edvin Fuglebakk
 }
 
 }
