@@ -593,7 +593,7 @@ std::string GetExt(const std::string& inputFileName)
 }
 
 // [[Rcpp::export]]
-Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue)
+Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue)
 {
 
 	std::string inputFileName(inputFile[0]);

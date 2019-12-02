@@ -105,9 +105,10 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		return(NULL)
 	}
 
-	# Try to detect XSD
+	# Try to do autodetect
+	found <- autodetectXml(xmlFilePath, xsdObjects)
 	if(is.null(useXsd))
-		useXsd <- detectXsdType(xmlFilePath, xsdObjects)
+		useXsd <- found[["xsd"]]
 
 	# Apply preprocess for ICES XSD
 	if(useXsd == "icesAcoustic") {
@@ -116,9 +117,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Invoke C++ xml reading
 	if(stream) {
-		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd)
+		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd, found[["encoding"]])
 	} else {
-		res <- readXmlCpp(xmlFilePath, xsdObjects, useXsd)
+		res <- readXmlCpp(xmlFilePath, xsdObjects, useXsd, found[["encoding"]])
 	}
 
 	result <- res[["result"]]
