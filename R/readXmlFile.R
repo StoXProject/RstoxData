@@ -74,7 +74,13 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 		# Set column names
 		tableHeader <- tableHeaders[[x]]
+		Encoding(tableHeader) <- "UTF-8"
 		colnames(z) <- tableHeader
+
+		# Set encoding (Rcpp uses UTF-8)
+		for (cn in colnames(z)) {
+			Encoding(z[[cn]]) <- "UTF-8"
+		}
 
 		# Set column types (only double and integer for now)
 		tableType <- tableTypes[[x]]
