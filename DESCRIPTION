@@ -22,3 +22,5 @@ Suggests:
 RoxygenNote: 6.1.1
 LinkingTo: 
     Rcpp
+Suggests: 
+    testthat
