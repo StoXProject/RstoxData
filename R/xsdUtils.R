@@ -219,3 +219,35 @@ createXsdObject <- function(xsdFile) {
 
 	return(ret)
 }
+
+
+#' @importFrom xml2 xml_child read_html xml_find_all
+detectXsdType <- function(xmlFile, xsdObjects) {
+
+	# Read first 5 lines
+	bits <- read_html(readChar(xmlFile, 500))
+
+	# Peek xmlns
+	print("Try to use XML namespace")
+        ns <- xml_attrs(xml_child(xml_child(bits)))[["xmlns"]]
+	xsd <- paste0(tail(unlist(strsplit(ns, "/")), 2), collapse = "")
+	if(paste0(xsd, ".xsd") %in% names(xsdObjects))
+		return(xsd)
+
+	print("Do manual detection")
+	# Do manual detection
+	if( length(xml_find_all(bits, "//mission[@startyear]")) )
+		return("nmdbioticv3")
+	else if( length(xml_find_all(bits, "//mission[@year]")) )
+		return("nmdbioticv1.4")
+	else if( length(xml_find_all(bits, "//biotic")) )
+                return("icesBiotic")
+	else if( length(xml_find_all(bits, "//echosounder_dataset")) )
+		return("nmdechosounderv1")
+	else if( length(xml_find_all(bits, "//acoustic")) )
+		return("icesAcoustic")
+	else if( length(xml_find_all(bits, "//seddellinje")) )
+		return("landingerv2")
+	else
+		return(NULL)
+}

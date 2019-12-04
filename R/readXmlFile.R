@@ -5,19 +5,19 @@
 #' the XML file inside the zip file should be using the same name as the zip file itself (e.g. test.xml inside test.zip). 
 #'
 #' @param xmlFilePath full path to the XML file to be read.
-#' @param stream a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to FALSE.
+#' @param stream a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to TRUE.
 #' @param useXsd Specify an xsd object to use. Default to NULL.
 #'
 #' @return List of data.table objects containing the "flattened" XML data.
 #'
 #' @examples
 #' \dontrun{
-#' # Reading test.xml using XML DOM parser
-#' one <- readXmlFile("./test.xml")
 #' # Reading test.xml using XML pull parser
-#' two <- readXmlFile("./test.xml", stream = TRUE)
+#' one <- readXmlFile("./test.xml")
+#' # Reading test.xml using XML DOM parser
+#' two <- readXmlFile("./test.xml", stream = FALSE)
 #' # Reading test.xml inside test.zip file
-#' three <- readXmlFile("./test.zip", stream = TRUE)
+#' three <- readXmlFile("./test.zip")
 #' }
 #'
 #' @useDynLib RstoxData
@@ -25,7 +25,7 @@
 #' @importFrom data.table as.data.table transpose
 #'
 #' @export
-readXmlFile <- function(xmlFilePath, stream = FALSE, useXsd = NULL) {
+readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Ices Acoustic XSD needs several additional treatment
 	icesAcousticPreprocess <- function(xsdObject) {
@@ -92,6 +92,10 @@ readXmlFile <- function(xmlFilePath, stream = FALSE, useXsd = NULL) {
 		return(z)
 	}
 
+	# Load data if necessary
+	if(!exists("xsdObjects"))
+		xsdObjects <- RstoxData::xsdObjects
+
 	# Expand path
 	xmlFilePath <- path.expand(xmlFilePath)
 
@@ -101,8 +105,12 @@ readXmlFile <- function(xmlFilePath, stream = FALSE, useXsd = NULL) {
 		return(NULL)
 	}
 
+	# Try to detect XSD
+	if(is.null(useXsd))
+		useXsd <- detectXsdType(xmlFilePath, xsdObjects)
+
 	# Apply preprocess for ICES XSD
-	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
+	if(useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
 	}
 
@@ -122,5 +130,9 @@ readXmlFile <- function(xmlFilePath, stream = FALSE, useXsd = NULL) {
 	# Finishing touch
 	final <- lapply(names(result), applyNameType, result, tableHeaders, tableTypes)
 	names(final) <- names(result)
+
+	# Add metadata
+	final[["metadata"]] <- list(useXsd = useXsd, file = xmlFilePath)
+
 	return(final)
 }

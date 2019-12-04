@@ -1009,8 +1009,9 @@ static void getAttribute(const XML_Char *token, XML_Char *name, XML_Char *value)
 	while (*token && *token != '=')
 		*name++ = *token++;
 	*name = 0;
+#if defined(DEBUG)
 	assert(name - nameStart < XML_ATTR_NAME_MAX);
-
+#endif
 	assert(*token == '=');
 	token++;
 	quote = *token++;
@@ -1018,7 +1019,9 @@ static void getAttribute(const XML_Char *token, XML_Char *name, XML_Char *value)
 	while (*token && *token != quote)
 		*value++ = *token++;
 	*value = 0;
+#if defined(DEBUG)
 	assert(value - valueStart < XML_ATTR_VALUE_MAX);
+#endif
 }
 
 static XML_Error handleData(XML_Input *input, const XML_Char *token, size_t len, const XML_Handler *handler, void *userData)
