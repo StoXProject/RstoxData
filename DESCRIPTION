@@ -1,18 +1,26 @@
 Package: RstoxData
-Type: Package
 Title: R libraries to parse and write fisheries biotic and acoustic data format
-Version: 0.6.1
-Date: 2019-06-12
-Author: Ibrahim Umar
-Maintainer: Ibrahim Umar <ibrahim.umar@hi.no>
-Description: Tools to fetch and manipulate various data formats 
-        for fisheries (mainly geared towards biotic and acoustic data).
-License: LGPL-3 + file LICENSE
-Imports: Rcpp (>= 1.0.0), xml2, data.table, readr
-Depends: R (>= 2.10)
-LinkingTo: Rcpp
-Encoding: UTF-8
+Version: 1.0
+Authors@R: c(
+  person(given = "Ibrahim", family = "Umar", role = c("cre", "aut"), email = "ibrahim.umar@hi.no"), 
+  person(given = "Mikko Juhani", family = "Vihtakari", role = "aut"), 
+  person(given = "Sindre", family = "Vatnehol", role = "aut"), 
+  person(given = "Arne Johannes", family = "Holmin", role = "aut"))
+Depends: R (>= 3.6)
+Description: Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
+URL: https://github.com/StoXProject/RstoxData
+BugReports: https://github.com/StoXProject/RstoxData/issues
+License: LGPL-3
 LazyData: true
+Imports: 
+    data.table (>= 1.12.6),
+    Rcpp (>= 1.0.0),
+    xml2 (>= 1.2.2),
+    readr (>= 1.3.1)
+Suggests: 
+    testthat
 RoxygenNote: 6.1.1
+LinkingTo: 
+    Rcpp
 Suggests: 
     testthat
