@@ -24,7 +24,6 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Mikko Juhani Vihtakari
   \item Sindre Vatnehol
   \item Arne Johannes Holmin
 }
