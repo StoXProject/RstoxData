@@ -131,6 +131,11 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	result <- res[["result"]]
 	xsd <- res[["xsd"]]
 
+	# Fix encoding on the result list names
+	xx <- names(result)
+	Encoding(xx) <- "UTF-8"
+	names(result) <- xx
+
 	tableHeaders <- xsdObjects[[xsd]][["tableHeaders"]]
 	tableTypes <- xsdObjects[[xsd]][["tableTypes"]]
 
