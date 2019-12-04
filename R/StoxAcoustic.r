@@ -418,7 +418,8 @@ StoxAcoustic <- function(AcousticData = NULL){
     data_list$NASC <- data_list$NASC[,c('CruiseKey','LogKey','BeamKey','AcousticCategoryKey',
                                                     'ChannelReferenceKey','ChannelKey','MaxRange','MinRange','NASC')]
     
-    
+    #add effective log distance
+    data_list$Log$EffectiveDistance<-data_list$Log$Distance
     
     #bind platforms
     if(is.null(data_list_out)){
