@@ -1,0 +1,42 @@
+variable,level,nmdbioticv3,nmdbioticv1.4,icesbiotic,key
+CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,Y
+Platform,Cruise,platform,platform,Platform,
+CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Station,StationKey,StationKey,StationKey,Y
+CatchPlatform,Station,catchplatform ,platform,"paste0(Cruise, '/', Station, '/', Platform)",
+Station,Station,"paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)",
+StartLatitude,Station,latitudestart,latitudestart,StartLatitude,
+StartLongitude,Station,longitudestart,longitudestart,StartLongitude,
+StartDateTime,Station,"paste0(stationstartdate, '/', stationstarttime)",startdate + starttime,StartTime,
+StartBottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
+CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Haul,StationKey,StationKey,StationKey,Y
+HaulKey,Haul,HaulKey,HaulKey,HaulKey,Y
+HaulID,Haul,gear,gear,Number,
+TowedDistance,Haul,distance,distance,Distance,
+MinTrawlDepth,Haul,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
+MaxTrawlDepth,Haul,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
+VerticalTrawlOpening,Haul,verticaltrawlopening,trawlopening,Netopening,
+TrawlDoorSpread,Haul,trawldoorspread,doorspread,DoorSpread,
+SpeciesCategoryKey,SpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
+SpeciesCategory,SpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,
+CruiseKey,Sample,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Sample,StationKey,StationKey,StationKey,Y
+HaulKey,Sample,HaulKey,HaulKey,HaulKey,Y
+SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
+SampleKey,Sample,SampleKey,SampleKey,SampleKey,Y
+CatchWeightKilogram,Sample,catchweight,weight,SpeciesCategoryWeight,
+CatchCount,Sample,catchcount,count,SpeciesCategoryNumber,
+SampleWeightKilogram,Sample,lengthsampleweight,lengthsampleweight,SubsampleWeight,
+SampleCount,Sample,lengthsamplecount ,lengthsamplecount,SubsampledNumber,
+CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Individual,StationKey,StationKey,StationKey,Y
+HaulKey,Individual,HaulKey,HaulKey,HaulKey,Y
+SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
+SampleKey,Individual,SampleKey,SampleKey,SampleKey,Y
+IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,Y
+IndividualWeightGram,Individual,individualweight,weight,IndividualWeight,
+IndividualLengthCentimeter,Individual,length,length,LengthClass,
+LengthResolutionCentimeter,Individual,lengthresolution,lengthresolution,LengthCode,
+IndividualAge,Individual,age,age,IndividualAge,
+IndividualSex,Individual,sex,sex,IndividualSex,
