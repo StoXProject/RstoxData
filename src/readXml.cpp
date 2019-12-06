@@ -133,7 +133,7 @@ void processNode(pugi::xml_node& node, const std::vector<const char*>& parentPre
 }
 
 // [[Rcpp::export]]
-Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride = R_NilValue)
+Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride = R_NilValue, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding = R_NilValue)
 {
 
 	pugi::xml_document doc;

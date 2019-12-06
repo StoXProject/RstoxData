@@ -74,7 +74,13 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 		# Set column names
 		tableHeader <- tableHeaders[[x]]
+		Encoding(tableHeader) <- "UTF-8"
 		colnames(z) <- tableHeader
+
+		# Set encoding (Rcpp uses UTF-8)
+		for (cn in colnames(z)) {
+			Encoding(z[[cn]]) <- "UTF-8"
+		}
 
 		# Set column types (only double and integer for now)
 		tableType <- tableTypes[[x]]
@@ -105,9 +111,10 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		return(NULL)
 	}
 
-	# Try to detect XSD
+	# Try to do autodetect
+	found <- autodetectXml(xmlFilePath, xsdObjects)
 	if(is.null(useXsd))
-		useXsd <- detectXsdType(xmlFilePath, xsdObjects)
+		useXsd <- found[["xsd"]]
 
 	# Apply preprocess for ICES XSD
 	if(useXsd == "icesAcoustic") {
@@ -116,13 +123,18 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Invoke C++ xml reading
 	if(stream) {
-		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd)
+		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd, found[["encoding"]])
 	} else {
-		res <- readXmlCpp(xmlFilePath, xsdObjects, useXsd)
+		res <- readXmlCpp(xmlFilePath, xsdObjects, useXsd, found[["encoding"]])
 	}
 
 	result <- res[["result"]]
 	xsd <- res[["xsd"]]
+
+	# Fix encoding on the result list names
+	xx <- names(result)
+	Encoding(xx) <- "UTF-8"
+	names(result) <- xx
 
 	tableHeaders <- xsdObjects[[xsd]][["tableHeaders"]]
 	tableTypes <- xsdObjects[[xsd]][["tableTypes"]]

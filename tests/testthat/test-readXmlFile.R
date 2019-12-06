@@ -18,3 +18,9 @@ expect_true(all(c("Art", "Dellanding", "Fangstdata", "Landingsdata", "Seddellinj
 expect_false(any(is.na(streamParse$Produkt$Rundvekt)))
 expect_false(all(is.na(streamParse$Produkt$Registreringsmerke_seddel)))
 
+context("test-readXmlFile: Encoding")
+example <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
+encParse <- readXmlFile(example, stream = F)
+expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+encParse <- readXmlFile(example, stream = T)
+expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")

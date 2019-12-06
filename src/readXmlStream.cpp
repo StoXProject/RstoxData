@@ -9,25 +9,6 @@
 
 #include "Rcpp.h"
 
-// code below are from: https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
-// trim from start (in place)
-static inline void ltrim(std::string &s) {
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-	                                std::not1(std::ptr_fun<int, int>(std::isspace))));
-}
-
-// trim from end (in place)
-static inline void rtrim(std::string &s) {
-	s.erase(std::find_if(s.rbegin(), s.rend(),
-	                     std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-}
-
-// trim from both ends (in place)
-static inline void trim(std::string &s) {
-	ltrim(s);
-	rtrim(s);
-}
-
 
 class persistentData {
 private:
@@ -148,9 +129,6 @@ static void sDataHandler(const XML_Char *data, size_t len, void *userData)
 
 		// Put data inside string
 		std::string strdata(data, len);
-
-		// Remove (left/right) whitespaces
-		trim(strdata);
 
 		if(strdata.size() > 0) {
 			// Parse data
@@ -593,7 +571,7 @@ std::string GetExt(const std::string& inputFileName)
 }
 
 // [[Rcpp::export]]
-Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue)
+Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue)
 {
 
 	std::string inputFileName(inputFile[0]);
