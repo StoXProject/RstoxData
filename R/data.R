@@ -13,3 +13,7 @@
 #' }
 #' @source \url{https://www.imr.no/formats}
 "xsdObjects"
+
+#' @title stoxBioticObject
+#' @description Pre-processed objects for raw XML data to StoXBiotic format
+"stoxBioticObject"

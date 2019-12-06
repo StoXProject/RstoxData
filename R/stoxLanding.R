@@ -19,6 +19,7 @@ NULL
 #'  Checks if argument conforms to specification for \code{\link[RstoxData]{LandingData}}
 #' @param LandingData argument to be checked for data conformity
 #' @return logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{LandingData}}
+#' @name is.LandingData
 #' @export
 is.LandingData <- function(LandingData){
 
@@ -143,6 +144,7 @@ loadResource <- function(name){
 #'  Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
 #' @param LandingData Sales-notes data. See \code{\link[RstoxData]{LandingData}}
 #' @return \code{\link[RstoxData]{StoxLandingData}}, aggregated sales-notes data.
+#' @name StoxLanding
 #' @export
 StoxLanding <- function(LandingData){
   
@@ -260,6 +262,7 @@ StoxLanding <- function(LandingData){
 #'  Checks if argument conforms to specification for \code{\link[RstoxData]{StoxLandingData}}
 #' @param StoxLandingData argument to be checked for data conformity
 #' @return logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{StoxLandingData}}
+#' @name is.StoxLandingData
 #' @export
 is.StoxLandingData <- function(StoxLandingData){
   
