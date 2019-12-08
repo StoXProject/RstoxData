@@ -6,11 +6,17 @@
 #include <map>
 #include <string>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #define PUGIXML_HEADER_ONLY
 #define PUGIXML_NO_EXCEPTIONS
 
 #include "pugixml/pugixml.hpp"
-#include <Rcpp.h>
+
+#define STRICT_R_HEADERS
+#include "Rcpp.h"
 
 void processNode(pugi::xml_node& node, const std::vector<const char*>& parentPrefix, std::map<std::string, std::vector<std::string> >& tableHeaders, std::map<std::string, int >& prefixLens, std::map<std::string, int>& levelCtrs, Rcpp::List& ret) {
 
@@ -146,9 +152,19 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 
 	//pugi::xml_parse_result result = doc.load_buffer_inplace_own(&buffer[0], buffer.size());
 
-	// Read file
-	if (!doc.load_file(inputFile[0])) {
-		Rcpp::Rcout << "Unable to read " << inputFile << std::endl;
+	// Read file (in Windows use UTF-8 to UTF-16 conversion)
+#ifndef _WIN32
+        std::string filePath(inputFile[0]);
+#else
+        std::string filePath1(inputFile[0]);
+        std::wstring filePath;
+        filePath.resize(filePath1.size());
+        int newSize = MultiByteToWideChar(CP_UTF8, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());
+        filePath.resize(newSize);
+#endif
+
+	if (!doc.load_file(filePath.c_str())) {
+		Rcpp::Rcout << "Unable to read " << inputFile[0] << std::endl;
 		return -1;
 	}
 

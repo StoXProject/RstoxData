@@ -45,6 +45,15 @@ FileInputStream::FileInputStream(const char *path)
 		throw FileException(errno);
 }
 
+#ifdef _WIN32
+FileInputStream::FileInputStream(const wchar_t *path)
+{
+	mFile = _wfopen(path, L"r");
+	if (!mFile)
+		throw FileException(errno);
+}
+#endif
+
 FileInputStream::~FileInputStream()
 {
 	fclose(mFile);
@@ -65,6 +74,15 @@ FileOutputStream::FileOutputStream(const char *path)
 	if (!mFile)
 		throw FileException(errno);
 }
+
+#ifdef _WIN32
+FileOutputStream::FileOutputStream(const wchar_t *path)
+{
+	mFile = _wfopen(path, L"w");
+	if (!mFile)
+		throw FileException(errno);
+}
+#endif
 
 FileOutputStream::~FileOutputStream()
 {

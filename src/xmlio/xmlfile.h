@@ -29,6 +29,10 @@
 #include "xmlstream.h"
 #include <stdio.h>
 
+#ifdef _WIN32
+#include <wchar.h>
+#endif
+
 #ifdef __cplusplus
 	extern "C" {
 #endif
@@ -61,6 +65,9 @@ public:
 		@see			FileException
 	*/
 	FileInputStream(const char *path);
+#ifdef _WIN32
+	FileInputStream(const wchar_t *path);
+#endif
 	virtual ~FileInputStream();
 	virtual int read(XML_Char *buf, size_t bufLen);
 private:
@@ -79,6 +86,9 @@ public:
 		@see			FileException
 	*/
 	FileOutputStream(const char *path);
+#ifdef _WIN32
+	FileOutputStream(const wchar_t *path);
+#endif
 	virtual ~FileOutputStream();
 	virtual int write(const char *buf, size_t bufLen);
 private:
