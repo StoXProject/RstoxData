@@ -1,4 +1,12 @@
-StoxBiotic <- function(data) {
+#' Convert BioticData to StoxBioticData
+#'
+#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
+#'
+#' @return An object of StoX data type \code{\link{StoxBioticData}}.
+#'
+#' @export
+#' 
+StoxBiotic <- function(BioticData) {
 
 	firstPhase <- function(data, datatype, stoxBioticObject) {
 
@@ -19,15 +27,10 @@ StoxBiotic <- function(data) {
 
 	    ## Merge individual and age
 	    data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
-
+	    
 	    ## Cascading merge tables
-	    sequence <- c("mission", "fishstation", "catchsample", "individual")
-	    for(ii in 2:length(sequence)) {
-		curr <- sequence[ii]
-		prev <- sequence[(ii-1)]
-		vars <- names(data[[curr]])[names(data[[curr]]) %in% names(data[[prev]])]
-		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars)
-	    }
+	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
+	    data[toMerge] <- mergeDataTables(data, toMerge)
 	  }
 
 	  # 2. Making keys
@@ -76,7 +79,7 @@ StoxBiotic <- function(data) {
 
 	}
 
-	# 2nd phase
+	# 2nd phase 
 	secondPhase <- function(data, datatype, stoxBioticObject) {
 
 	  columns <- c("variable", "level", datatype)
@@ -101,17 +104,40 @@ StoxBiotic <- function(data) {
 
 	}
 
-	# Get data type	
-	datatype <- data[["metadata"]][["useXsd"]]
+	# Function to get the StoxBiotic on one file:
+	StoxBioticOne <- function(BioticData) {
+		# Get data type: 
+		datatype <- BioticData[["metadata"]][["useXsd"]]
+		
+		if(!exists("stoxBioticObject"))
+			BioticData(stoxBioticObject)
+		
+		# Do first phase
+		first <- firstPhase(BioticData, datatype, stoxBioticObject)
+		# Do second phase	
+		second <- secondPhase(first, datatype, stoxBioticObject)
+		
+		# Temporary fix:
+		print(second$Cruise[, 1:2])
+		second$Cruise <- second$Cruise[, 1:2]
+		
+		second
+	}
+	
+	StoxBioticData <- lapply(BioticData, StoxBioticOne)
 
-	if(!exists("stoxBioticObject"))
-		data(stoxBioticObject)
-
-	# Do first phase
-	first <- firstPhase(data, datatype, stoxBioticObject)
-	# Do second phase	
-	second <- secondPhase(first, datatype, stoxBioticObject)
-
-	return (second)
+	tableNames <- names(StoxBioticData[[1]])
+	StoxBioticData <- lapply(
+		tableNames, 
+		function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
+	)
+	names(StoxBioticData) <- tableNames
+	
+	StoxBioticData
 }
+
+
+
+
+
 

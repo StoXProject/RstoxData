@@ -2,16 +2,16 @@
 % Please edit documentation in R/StoxAcoustic.r
 \name{StoxAcoustic}
 \alias{StoxAcoustic}
-\title{Convert output from xml reader to StoxAcoustic data}
+\title{Convert AcousticData to StoxAcousticData}
 \usage{
 StoxAcoustic(AcousticData = NULL)
 }
 \arguments{
-\item{AcousticData}{The output from xmlreader.}
+\item{AcousticData}{A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.}
 }
 \value{
-List of data.table objects containing the StoxAcoustic data.
+An object of StoX data type \code{\link{StoxAcousticData}}.
 }
 \description{
-Convert output from xml reader to StoxAcoustic data
+Convert AcousticData to StoxAcousticData
 }

@@ -1,12 +1,11 @@
-
-#' Convert output from xml reader to StoxAcoustic data
+#' Convert AcousticData to StoxAcousticData
 #'
-#' @param AcousticData The output from xmlreader.
+#' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
 #'
-#' @return List of data.table objects containing the StoxAcoustic data.
-#'
+#' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
+#' 
 StoxAcoustic <- function(AcousticData = NULL){
 	
 	# For flexibility accept a list of the input data, named by the data type:
