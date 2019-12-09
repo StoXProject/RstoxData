@@ -7,6 +7,11 @@
 #include <cctype>
 #include <locale>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#define STRICT_R_HEADERS
 #include "Rcpp.h"
 
 
@@ -596,8 +601,16 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 		// Print out XML information
 		Rcpp::Rcout << "Parsing XML: " << inputFileName << std::endl;
 
-		// open input stream
+		// Open input file (in Windows use UTF-8 to UTF-16 conversion)
+#ifndef _WIN32
 		istream = new XML::FileInputStream(inputFileName.c_str());
+#else
+		std::wstring filePath;
+		filePath.resize(inputFileName.size());
+		int newSize = MultiByteToWideChar(CP_UTF8, 0, inputFileName.c_str(), inputFileName.length(), const_cast<wchar_t *>(filePath.c_str()), inputFileName.length());
+		filePath.resize(newSize);
+		istream = new XML::FileInputStream(filePath.c_str());
+#endif
 		input = new XML::Input(*istream);
 	}
 
