@@ -2,6 +2,7 @@
 # XSD data pre-processing
 
 library(xml2)
+library(usethis)
 
 source("R/xsdUtils.R")
 
@@ -11,6 +12,6 @@ xsdObjects <- lapply(xsdFiles, createXsdObject)
 
 names(xsdObjects) <- basename(xsdFiles)
 
-devtools::use_data(xsdObjects, overwrite = TRUE)
+use_data(xsdObjects, overwrite = TRUE)
 
 
