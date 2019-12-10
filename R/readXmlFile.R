@@ -69,18 +69,18 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		if(ncol(y) == 0)
 			y <- matrix(data = "", nrow = 0, ncol = length(tableHeaders[[x]]))
 
+		# Set encoding (Rcpp uses UTF-8)
+                for (cn in colnames(y)) {
+                        Encoding(y[[cn]]) <- "UTF-8"
+                }
+
 		# Convert to data.table
 		z <- as.data.table(y)
 
 		# Set column names
 		tableHeader <- tableHeaders[[x]]
 		Encoding(tableHeader) <- "UTF-8"
-		colnames(z) <- tableHeader
-
-		# Set encoding (Rcpp uses UTF-8)
-		for (cn in colnames(z)) {
-			Encoding(z[[cn]]) <- "UTF-8"
-		}
+		setnames(z, tableHeader)
 
 		# Set column types (only double and integer for now)
 		tableType <- tableTypes[[x]]
@@ -100,7 +100,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Load data if necessary
 	if(!exists("xsdObjects"))
-		xsdObjects <- RstoxData::xsdObjects
+		data(xsdObjects, envir = environment())
 
 	# Expand path
 	xmlFilePath <- path.expand(xmlFilePath)
