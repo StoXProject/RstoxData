@@ -1,8 +1,8 @@
 #' Convert AcousticData to StoxAcousticData
 #'
-#' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
+#' @param AcousticData A list of acoustic data (StoX data type \code{\link[=StoxAcoustic]{AcousticData}}), one element for each input acoustic file.
 #'
-#' @return An object of StoX data type \code{\link{StoxAcousticData}}.
+#' @return An object of StoX data type \code{\link[=StoxAcoustic]{StoxAcousticData}}.
 #'
 #' @export
 #' 

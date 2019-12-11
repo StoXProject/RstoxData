@@ -1,8 +1,8 @@
 #' Convert BioticData to StoxBioticData
 #'
-#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
+#' @param BioticData A list of biotic data (StoX data type \code{\link[=StoxBiotic]{BioticData}}), one element for each input biotic file.
 #'
-#' @return An object of StoX data type \code{\link{StoxBioticData}}.
+#' @return An object of StoX data type \code{\link[=StoxBiotic]{StoxBioticData}}.
 #'
 #' @export
 #' 
@@ -118,7 +118,7 @@ StoxBiotic <- function(BioticData) {
 		datatype <- BioticData[["metadata"]][["useXsd"]]
 		
 		if(!exists("stoxBioticObject"))
-			data(stoxBioticObject, envir = environment())
+			data(stoxBioticObject, package="RstoxData", envir = environment())
 		
 		# Do first phase
 		first <- firstPhase(BioticData, datatype, stoxBioticObject)
