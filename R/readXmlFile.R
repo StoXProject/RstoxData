@@ -27,6 +27,12 @@
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
+	# To UTf-8
+	toUTF8 <- function(srcvec) {
+		Encoding(srcvec) <- "UTF-8"
+		return(srcvec)
+	}
+
 	# Ices Acoustic XSD needs several additional treatment
 	icesAcousticPreprocess <- function(xsdObject) {
 
@@ -69,18 +75,21 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		if(ncol(y) == 0)
 			y <- matrix(data = "", nrow = 0, ncol = length(tableHeaders[[x]]))
 
-		# Set encoding (Rcpp uses UTF-8)
-                for (cn in colnames(y)) {
-                        Encoding(y[[cn]]) <- "UTF-8"
-                }
-
 		# Convert to data.table
-		z <- as.data.table(y)
+		z <- data.table(y)
 
 		# Set column names
 		tableHeader <- tableHeaders[[x]]
+
+		# NOTE: Landings' Fartoy header has duplicate header name try to rename the second
+		tableHeader <- make.unique(tableHeader)
 		Encoding(tableHeader) <- "UTF-8"
 		setnames(z, tableHeader)
+
+		# Set encoding (Rcpp uses UTF-8)
+		cn <- colnames(z)
+		if(nrow(z) > 0)
+			z[, (cn):=lapply(.SD, toUTF8), .SDcols=cn]
 
 		# Set column types (only double and integer for now)
 		tableType <- tableTypes[[x]]
@@ -100,7 +109,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Load data if necessary
 	if(!exists("xsdObjects"))
-		data(xsdObjects, envir = environment())
+		data(xsdObjects, package="RstoxData", envir = environment())
 
 	# Expand path
 	xmlFilePath <- path.expand(xmlFilePath)
