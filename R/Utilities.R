@@ -19,5 +19,6 @@ mergeDataTables <- function(data, tableNames = NULL) {
 		vars <- names(data[[curr]])[names(data[[curr]]) %in% names(data[[prev]])]
 		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars)
 	}
-	data[tableNames]
+
+	return(data)
 }
