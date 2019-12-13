@@ -30,9 +30,9 @@ StationKey,Sample,StationKey,StationKey,StationKey,Y
 HaulKey,Sample,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,Y
-CatchFractionWeightKilogram,Sample,catchweight,weight,SpeciesCategoryWeight,
+CatchFractionWeightKilogram,Sample,"ifelse(catchproducttype == 1, catchweight, NA)",weight,SpeciesCategoryWeight,
 CatchFractionCount,Sample,catchcount,count,SpeciesCategoryNumber,
-SampleWeightKilogram,Sample,lengthsampleweight,lengthsampleweight,SubsampleWeight,
+SampleWeightKilogram,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)",lengthsampleweight,SubsampleWeight,
 SampleCount,Sample,lengthsamplecount ,lengthsamplecount,SubsampledNumber,
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Individual,StationKey,StationKey,StationKey,Y
@@ -40,8 +40,8 @@ HaulKey,Individual,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,Y
-IndividualRoundWeightGram,Individual,individualweight * 1e3,weight * 1e3,IndividualWeight,
-IndividualTotalLengthCentimeter,Individual,length * 1e2,length * 1e2,LengthClass,
-LengthResolutionCentimeter,Individual,lengthresolution,lengthresolution,LengthCode,
+IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight * 1e3, NA)",weight * 1e3,IndividualWeight,
+IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length * 1e2, NA)",length * 1e2,LengthClass,
+LengthResolutionCentimeter,Individual,"convertLenRes(lengthresolution)",lengthresolution,LengthCode,
 IndividualAge,Individual,age,age,IndividualAge,
-IndividualSex,Individual,sex,sex,IndividualSex,
+IndividualSex,Individual,"ifelse(sex == 1, 'F', 'M')",sex,IndividualSex,

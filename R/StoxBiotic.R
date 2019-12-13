@@ -4,6 +4,7 @@
 #'
 #' @return An object of StoX data type \code{\link[=StoxBiotic]{StoxBioticData}}.
 #'
+#' @import data.table
 #' @export
 #' 
 StoxBiotic <- function(BioticData) {
@@ -82,6 +83,8 @@ StoxBiotic <- function(BioticData) {
 	# 2nd phase 
 	secondPhase <- function(data, datatype, stoxBioticObject) {
 
+	  # Getting conversion function for datatype
+	  convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
 
 	  # Try to stop data.table warnings (https://github.com/Rdatatable/data.table/issues/2988)
 	  .. <- function (x, env = parent.frame()) {
