@@ -248,22 +248,28 @@ static void sElemHandler(XML::Element &elem, void *userData)
 		// Create content
 		std::vector<std::string> *content = new std::vector<std::string>(NodeKeys.size());
 
+		// Placeholder for parent prefix (default to parent prefixes)
+		std::vector<std::string> *ptrToParentPrefix = parentPrefix;
+
 		// Prefix resize
 		int prefixSize = (*prefixLens)[(char*) root];
 		prefix.resize(prefixSize);
 
 		unsigned long parentPrefixSize = parentPrefix->size();
+
+		// Check for missing prefix
 		if(parentPrefixSize > 0 && (*parentPrefix)[(parentPrefixSize - 1)].empty()) {
 #ifdef DEBUG
 			std::cout << "We have missing prefix!" << std::endl;
 #endif
+			// Get parent prefixes directly from the parent content
 			std::vector<std::string>* parentContent = pD->getContent();
-			(*parentPrefix)[(parentPrefixSize - 1)] = (*parentContent)[(parentPrefixSize - 1)];
+			ptrToParentPrefix = parentContent;
 		}
 
 		// Apply parent attributes to row and to children prefix
 		for(unsigned long i = 0; i < parentPrefixSize; i++) {
-			(*content)[i] = prefix[i] = (*parentPrefix)[i];
+			(*content)[i] = prefix[i] = (*ptrToParentPrefix)[i];
 		}
 
 

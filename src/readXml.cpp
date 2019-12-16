@@ -120,14 +120,16 @@ void processNode(pugi::xml_node& node, const std::vector<const char*>& parentPre
 
 		} else {
 
-			// Check for missing prefix before going to children structure
+			// Check for missing prefix before going to children structure (for ICES XSDs)
 			if(prefixLens[root] > 0 && prefix[(prefixLens[root]-1)] == NULL) {
 #ifdef DEBUG
 				std::cout << "We have missing prefix!" << std::endl;
 				std::cout << "Peek: " << tempRes(levelCtrs[root], (prefixLens[root]-1)) << std::endl;
 #endif
-				if(!Rcpp::CharacterVector::is_na(tempRes(levelCtrs[root], (prefixLens[root]-1))))
-					prefix[(prefixLens[root]-1)] = tempRes(levelCtrs[root], (prefixLens[root]-1));
+				for(int jj = 0; jj < prefixLens[root]; jj++) {
+					if(!Rcpp::CharacterVector::is_na(tempRes(levelCtrs[root], jj)))
+						prefix[jj] = tempRes(levelCtrs[root], jj);
+				}
 			}
 
 			processNode(n, prefix, tableHeaders, prefixLens, levelCtrs, ret);

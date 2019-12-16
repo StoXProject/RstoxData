@@ -33,7 +33,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		return(srcvec)
 	}
 
-	# Ices Acoustic XSD needs several additional treatment
+	# Ices Acoustic XSD needs several additional treatments
 	icesAcousticPreprocess <- function(xsdObject) {
 
 		AC <- xsdObject
@@ -58,6 +58,38 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		newAC$tableHeaders$Log <- c("LocalID", newAC$tableHeaders$Log)
 		newAC$tableHeaders$Sample <- c("LocalID", "Distance", newAC$tableHeaders$Sample)
 		newAC$tableHeaders$Data <- c("LocalID", "Distance", "ChannelDepthUpper", newAC$tableHeaders$Data)
+
+		# Modify cruise structure to get LocalID as prefix
+		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+
+		return(newAC)
+	}
+
+	# Ices Biotic XSD needs several additional treatments
+	icesBioticPreprocess <- function(xsdObject) {
+
+		AC <- xsdObject
+
+		# We only interested in these tables
+		allData <- c("Biotic", "Cruise", "Survey", "Haul", "Catch", "Biology")
+		newAC <- lapply(AC, function(x) x[allData])
+
+		# Set again the root
+		newAC$root <- "Biotic"
+
+		# Re-build prefix data
+		newAC$prefixLens[allData] <- 0
+
+		allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
+
+		newAC$prefixLens[allDatawithPrefix] <- 2
+		newAC$prefixLens["Haul"] <- 3
+		newAC$prefixLens["Catch"] <- 5
+		newAC$prefixLens["Biology"] <- 6
+
+		newAC$tableHeaders$Haul <- c("LocalID", newAC$tableHeaders$Haul)
+		newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", newAC$tableHeaders$Catch)
+		newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
 
 		# Modify cruise structure to get LocalID as prefix
 		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
@@ -125,9 +157,11 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	if(is.null(useXsd))
 		useXsd <- found[["xsd"]]
 
-	# Apply preprocess for ICES XSD
+	# Apply preprocess for ICES XSDs
 	if(useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
+	} else if(useXsd == "icesBiotic") {
+		xsdObjects$icesBiotic.xsd <- icesBioticPreprocess(xsdObjects$icesBiotic.xsd)
 	}
 
 	# Invoke C++ xml reading
