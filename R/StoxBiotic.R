@@ -128,11 +128,7 @@ StoxBiotic <- function(BioticData) {
 		# Do second phase	
 		second <- secondPhase(first, datatype, stoxBioticObject)
 		
-		# Temporary fix. Change the names of the Station level to exclude the "Start" prefix:
-		setnames(second$Station, old = names(second$Station), new = sub("Start", "", names(second$Station)))
-		second$Individual[, LengthResolutionCentimeter := LengthResolutionCentimeter * 100] 
-		
-		second
+		return(second)
 	}
 	
 	StoxBioticData <- lapply(BioticData, StoxBioticOne)
