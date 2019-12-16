@@ -110,6 +110,9 @@ StoxBiotic <- function(BioticData) {
 		  sourceColumns <- c(sourceColumns, unlist(convertTable[level==i, "variable"]))
 		  secondPhaseTables[[i]] <- data[[i]][, ..sourceColumns]
 	  }
+
+	  # Remove duplicated rows from SpeciesCategory
+	  secondPhaseTables[["SpeciesCategory"]] <- unique(secondPhaseTables[["SpeciesCategory"]])
 	  
 	  return(secondPhaseTables)
 
