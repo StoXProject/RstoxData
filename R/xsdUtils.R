@@ -27,7 +27,7 @@ processXSD <- function(doc, path = NULL) {
 		# This is needed for echosounder v1 SA records
 		extension <- xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "extension"))
 
-		# If no children and "KeyType" (This might be specific to Biotic) or "*IDREFType*" (specific to ICES XSDs)
+		# If no children and "KeyType" (This might be specific to NMDBioticv3) or "*IDREFType*" (specific to ICES XSDs)
 		if(length(y) > 0 && (!grepl("KeyType", sName) || !grepl("IDREFType", sName))) {
 
 			if(grepl("IDREFType", sName)) print("IDREFType\n")
@@ -47,8 +47,8 @@ processXSD <- function(doc, path = NULL) {
 			# Remove nested elements
 			flat[[x[1]]] <<- lapply(flat[[x[1]]], function(xx){ if(is.list(xx)) return(xx[[1]][1]) else return(xx) })
 			return(list(x, members=z))
-		# Below is specific for Echosounder v1's SA records (with XSD extension)
-		} else if (length(extension) > 0)  {
+		# Below is specific for Echosounder v1's SA records (with XSD extension) and NMDBioticv1.x ("StringDescriptionType")
+		} else if (length(extension) > 0 && !grepl("StringDescriptionType", sName))  {
 			z <- lapply(extension, getNameTypeExt, x[1])
 
 			# Prepare flat
