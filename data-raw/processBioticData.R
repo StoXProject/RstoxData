@@ -24,9 +24,9 @@ stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise")
 stoxBioticObject$complexMaps[["nmdbioticv3"]] <- fread("stox-translate.csv", stringsAsFactors=FALSE)
 ## Length conversion
 stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- function(x) {
-	z <- list(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
+	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
 	names(z) <- seq_len(12)
-	return(unlist(z[x]))
+	return(z[x])
 }
 
 # Universal second phase conversion
