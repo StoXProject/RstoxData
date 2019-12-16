@@ -7,10 +7,10 @@
 StoxAcoustic(AcousticData = NULL)
 }
 \arguments{
-\item{AcousticData}{A list of acoustic data (StoX data type \code{\link[=StoxAcoustic]{AcousticData}}), one element for each input acoustic file.}
+\item{AcousticData}{A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.}
 }
 \value{
-An object of StoX data type \code{\link[=StoxAcoustic]{StoxAcousticData}}.
+An object of StoX data type \code{\link{StoxAcousticData}}.
 }
 \description{
 Convert AcousticData to StoxAcousticData

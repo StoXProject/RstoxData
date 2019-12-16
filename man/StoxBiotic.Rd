@@ -7,10 +7,10 @@
 StoxBiotic(BioticData)
 }
 \arguments{
-\item{BioticData}{A list of biotic data (StoX data type \code{\link[=StoxBiotic]{BioticData}}), one element for each input biotic file.}
+\item{BioticData}{A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.}
 }
 \value{
-An object of StoX data type \code{\link[=StoxBiotic]{StoxBioticData}}.
+An object of StoX data type \code{\link{StoxBioticData}}.
 }
 \description{
 Convert BioticData to StoxBioticData
