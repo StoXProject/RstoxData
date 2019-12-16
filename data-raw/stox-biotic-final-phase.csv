@@ -5,10 +5,10 @@ CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Station,StationKey,StationKey,StationKey,Y
 Station,Station,"paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)",
 CatchPlatform,Station,catchplatform ,platform,"paste0(Cruise, '/', Station, '/', Platform)",
-StartLatitude,Station,latitudestart,latitudestart,StartLatitude,
-StartLongitude,Station,longitudestart,longitudestart,StartLongitude,
-StartDateTime,Station,"paste0(stationstartdate, '/', stationstarttime)",startdate + starttime,StartTime,
-StartBottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
+Latitude,Station,latitudestart,latitudestart,StartLatitude,
+Longitude,Station,longitudestart,longitudestart,StartLongitude,
+DateTime,Station,"paste0(stationstartdate, '/', stationstarttime)",startdate + starttime,StartTime,
+BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
 CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Haul,StationKey,StationKey,StationKey,Y
 HaulKey,Haul,HaulKey,HaulKey,HaulKey,Y
