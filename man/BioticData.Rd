@@ -6,6 +6,9 @@
 \description{
 Biotic data read from biotic xml files.
 }
+\details{
+
+}
 \seealso{
 \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 }

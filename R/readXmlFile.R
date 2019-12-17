@@ -23,6 +23,7 @@
 #' @useDynLib RstoxData
 #' @importFrom Rcpp sourceCpp
 #' @importFrom data.table as.data.table transpose
+#' @importFrom utils data
 #'
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
