@@ -382,6 +382,8 @@ static void rootHandler(XML::Element &elem, void *userData)
 	Rcpp::Rcout << "Start root handler" << std::endl;
 #endif
 
+// We shifted all the namespace detection procedure in R
+#ifdef C_DETECT_NAMESPACE
 	// Getting the namespace
 	if (elem.NumAttributes() > 0)
 	{
@@ -405,6 +407,7 @@ static void rootHandler(XML::Element &elem, void *userData)
 			a = a.GetNext();
 		}
 	} 
+#endif
 
 	// If there is a user supplied xsd namespace
 	if (xsdOverride != NULL) {
@@ -454,12 +457,12 @@ static void rootHandler(XML::Element &elem, void *userData)
 	// Get XSD object
 	Rcpp::List tableHeaders = Rcpp::as<Rcpp::List>((*xsdObjects)[xsd])["tableHeaders"];
 	Rcpp::NumericVector prefixLens = Rcpp::as<Rcpp::List>((*xsdObjects)[xsd])["prefixLens"];
+	Rcpp::CharacterVector tbNames = Rcpp::as<Rcpp::List>((*xsdObjects)[xsd])["tableOrder"];
 
 	// convert R headers to std c++
 	std::vector<std::string>  tableNamesCpp;
 	std::map<std::string, std::vector<std::string> > tableHeadersCpp;
 	std::map<std::string, int > prefixLensCpp;
-	Rcpp::CharacterVector tbNames(tableHeaders.names());
 
 	std::string appendNS(":");
 	if(ns != NULL)
@@ -658,9 +661,14 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 
 	std::map<std::string, std::list<std::vector<std::string>* >* >* res = data->getReturnData();
 
-	for ( std::map<std::string, std::list<std::vector<std::string>* >* >::iterator it = res->begin(); it != res->end(); it++ )
-	{
-		std::list<std::vector<std::string>* >* mylist = it->second;
+	const char* finalXsd = data->getXsdUsed();
+
+	Rcpp::CharacterVector tbNames = Rcpp::as<Rcpp::List>(xsdObjects[finalXsd])["tableOrder"];
+
+	for(Rcpp::CharacterVector::iterator it = tbNames.begin(); it != tbNames.end(); ++it) {
+
+		std::string its(*it);
+		std::list<std::vector<std::string>* >* mylist = (*res)[its];
 
 		// Create counts
 		unsigned maxRow = mylist->size();
@@ -671,7 +679,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 			maxCol = mylist->front()->size();
 
 #ifdef DEBUG
-		Rcpp::Rcout << it->first
+		Rcpp::Rcout << *it
 		            << ": "
 		            << maxRow
 			    << ", "
@@ -680,7 +688,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 #endif
 		// Create matrix
 		Rcpp::CharacterMatrix xy(maxRow, maxCol);
-		result[it->first] = xy;
+		result[its] = xy;
 
 		// Iterate List
 		unsigned currentRow = 0;
@@ -707,7 +715,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 
 	// Return results and xsd name
 	Rcpp::List rReturn = Rcpp::List::create(
-	           Rcpp::_["xsd"]  = data->getXsdUsed(),
+	           Rcpp::_["xsd"]  = finalXsd,
 	           Rcpp::_["result"]  = result
 	       );
 

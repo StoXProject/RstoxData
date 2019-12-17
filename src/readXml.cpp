@@ -174,6 +174,8 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 	char* xmlns = NULL;
 	char* ns = NULL;
 
+// We shifted all the namespace detection procedure in R
+#ifdef C_DETECT_NAMESPACE
 	std::string xmlStr("xmlns");
 	for(pugi::xml_attribute a = doc.first_child().first_attribute()
 		; a
@@ -193,6 +195,7 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 			break;
 		}
 	}
+#endif
 
 	// If there is a user supplied xsd namespace
 	if (xsdOverride.isNotNull()) {
@@ -245,6 +248,7 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 	Rcpp::List tableHeaders = Rcpp::as<Rcpp::List>(xsdObjects[xsd])["tableHeaders"];
 	Rcpp::NumericVector prefixLens = Rcpp::as<Rcpp::List>(xsdObjects[xsd])["prefixLens"];
 	Rcpp::CharacterVector levelDims = Rcpp::as<Rcpp::List>(xsdObjects[xsd])["levelDims"];
+	Rcpp::CharacterVector tables = Rcpp::as<Rcpp::List>(xsdObjects[xsd])["tableOrder"];
 
 #ifdef DEBUG
 	Rcpp::Rcout << "Convert headers to C++" << std::endl;
@@ -254,7 +258,6 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 	std::vector<std::string>  tableNamesCpp;
 	std::map<std::string, std::vector<std::string> > tableHeadersCpp;
 	std::map<std::string, int > prefixLensCpp;
-	Rcpp::CharacterVector tables(tableHeaders.names());
 
 	std::string appendNS(":");
 	if(ns != NULL)
