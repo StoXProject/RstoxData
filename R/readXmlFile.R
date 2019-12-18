@@ -194,7 +194,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	names(final) <- names(result)
 
 	# Add metadata
-	final[["metadata"]] <- data.table(list(useXsd = useXsd, file = xmlFilePath))
+	final[["metadata"]] <- data.table(useXsd = useXsd, file = xmlFilePath)
 
 	return(final)
 }
