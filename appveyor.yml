@@ -54,7 +54,7 @@ on_failure:
 
 environment:
   NOT_CRAN: true
-  R_VERSION: 3.5
+  R_VERSION: 3.5.3
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
