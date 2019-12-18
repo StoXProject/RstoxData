@@ -121,7 +121,7 @@ StoxBiotic <- function(BioticData) {
 	# Function to get the StoxBiotic on one file:
 	StoxBioticOne <- function(BioticData) {
 		# Get data type: 
-		datatype <- BioticData[["metadata"]][["useXsd"]]
+		datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
 		
 		if(!exists("stoxBioticObject"))
 			data(stoxBioticObject, package="RstoxData", envir = environment())
