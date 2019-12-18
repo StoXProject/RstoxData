@@ -1,18 +1,17 @@
-
-#' Convert output from xml reader to StoxAcoustic data
+#' Convert AcousticData to StoxAcousticData
 #'
-#' @param AcousticData The output from xmlreader.
+#' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
 #'
-#' @return List of data.table objects containing the StoxAcoustic data.
-#'
+#' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
+#' 
 StoxAcoustic <- function(AcousticData = NULL){
 	
-	# For flexibility accept a list of the input data, named by the data type:
-	if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
-		AcousticData <- AcousticData$AcousticData
-	}
+	## For flexibility accept a list of the input data, named by the data type:
+	#if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
+	#	AcousticData <- AcousticData$AcousticData
+	#}
 	
   #Define the output 
   data_list_out <- c()
@@ -192,10 +191,10 @@ StoxAcoustic <- function(AcousticData = NULL){
       #################################################################
       names(data_list$Log)[names(data_list$Log)=='log_start']        <- 'Log'
       names(data_list$Log)[names(data_list$Log)=='integrator_dist'] <- 'Distance'
-      names(data_list$Log)[names(data_list$Log)=='lon_start']       <- 'StartLongitude'
-      names(data_list$Log)[names(data_list$Log)=='lat_start']       <- 'StartLatitude'
-      names(data_list$Log)[names(data_list$Log)=='lon_stop']       <- 'StopLongitude'
-      names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'StopLatitude'
+      names(data_list$Log)[names(data_list$Log)=='lon_start']       <- 'Longitude'
+      names(data_list$Log)[names(data_list$Log)=='lat_start']       <- 'Latitude'
+      names(data_list$Log)[names(data_list$Log)=='lon_stop']       <- 'Longitude2'
+      names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'Latitude2'
       
       
       
@@ -206,8 +205,8 @@ StoxAcoustic <- function(AcousticData = NULL){
       #################################################################
       #                 ADD info in  LOG level                        #
       #################################################################
-      data_list$Beam$StartBottomDepth<-rowMeans(cbind(data_list$Beam$min_bot_depth,data_list$Beam$max_bot_depth),na.rm = TRUE)
-      tmp2 <- data_list$Beam[,c('LogKey','BeamKey','StartBottomDepth')]
+      data_list$Beam$BottomDepth<-rowMeans(cbind(data_list$Beam$min_bot_depth,data_list$Beam$max_bot_depth),na.rm = TRUE)
+      tmp2 <- data_list$Beam[,c('LogKey','BeamKey','BottomDepth')]
       data_list$Log <- merge(data_list$Log,tmp2,by='LogKey')
       
       data_list$Log$EDSU <- paste(data_list$Cruise$Platform,data_list$Log$Log,sep='/')
@@ -362,11 +361,11 @@ StoxAcoustic <- function(AcousticData = NULL){
       #                       RENAME variables                        #
       #################################################################
       names(data_list$Cruise)[names(data_list$Cruise)=='platform'] <- 'Platform'
-      names(data_list$Log)[names(data_list$Log)=='Longitude'] <- 'StartLongitude'
-      names(data_list$Log)[names(data_list$Log)=='Latitude'] <- 'StartLatitude'
-      names(data_list$Log)[names(data_list$Log)=='LongitudeStop'] <- 'StopLongitude'
-      names(data_list$Log)[names(data_list$Log)=='LatitudeStop'] <- 'StopLatitude'
-      names(data_list$Log)[names(data_list$Log)=='BottomDepth'] <- 'StartBottomDepth'
+      names(data_list$Log)[names(data_list$Log)=='Longitude'] <- 'Longitude'
+      names(data_list$Log)[names(data_list$Log)=='Latitude'] <- 'Latitude'
+      names(data_list$Log)[names(data_list$Log)=='LongitudeStop'] <- 'Longitude2'
+      names(data_list$Log)[names(data_list$Log)=='LatitudeStop'] <- 'Latitude2'
+      names(data_list$Log)[names(data_list$Log)=='BottomDepth'] <- 'BottomDepth'
       names(data_list$Log)[names(data_list$Log)=='Distance'] <- 'Log'
       names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthUpper'] <- 'MinRange'
       names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthLower'] <- 'MaxRange'
@@ -379,8 +378,8 @@ StoxAcoustic <- function(AcousticData = NULL){
       
       
       ####Bugfiks since StopLat and lon do not exist yet
-      data_list$Log$StopLongitude <- NA
-      data_list$Log$StopLatitude <- NA
+      data_list$Log$Longitude2 <- NA
+      data_list$Log$Latitude2 <- NA
       
       
       
@@ -410,7 +409,7 @@ StoxAcoustic <- function(AcousticData = NULL){
     data_list<-data_list[c('Cruise','Log','Beam','NASC','AcousticCategory','ChannelReference')]  
     
     data_list$Cruise<-data_list$Cruise[,c('Platform','CruiseKey')]
-    data_list$Log <- data_list$Log[,c('Log','Distance','StartLongitude','StopLongitude','StartLatitude','StopLatitude','EDSU','CruiseKey','LogKey')]
+    data_list$Log <- data_list$Log[,c('Log','Distance','Longitude','Longitude2','Latitude','Latitude2','EDSU','CruiseKey','LogKey')]
     data_list$Beam <- data_list$Beam[,c('Frequency','CruiseKey','LogKey','BeamKey')]
     data_list$AcousticCategory <- data_list$AcousticCategory[,c('AcousticCategory','CruiseKey','LogKey','BeamKey','AcousticCategoryKey')]
     data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey','LogKey','BeamKey','AcousticCategoryKey','ChannelReferenceKey')]

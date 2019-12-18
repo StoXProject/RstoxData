@@ -52,6 +52,10 @@ on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
 
+environment:
+  NOT_CRAN: true
+  R_VERSION: 3.5.3
+
 artifacts:
   - path: '*.Rcheck\**\*.log'
     name: Logs

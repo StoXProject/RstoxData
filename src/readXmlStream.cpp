@@ -14,6 +14,30 @@
 #define STRICT_R_HEADERS
 #include "Rcpp.h"
 
+// -- Trim functions (source: https://stackoverflow.com/a/25385766)
+// --
+const char* ws = " \t\n\r\f\v";
+
+// trim from end of string (right)
+inline std::string& rtrim(std::string& s, const char* t = ws)
+{
+    s.erase(s.find_last_not_of(t) + 1);
+    return s;
+}
+
+// trim from beginning of string (left)
+inline std::string& ltrim(std::string& s, const char* t = ws)
+{
+    s.erase(0, s.find_first_not_of(t));
+    return s;
+}
+
+// trim from both ends of string (right then left)
+inline std::string& trim(std::string& s, const char* t = ws)
+{
+    return ltrim(rtrim(s, t), t);
+}
+// --
 
 class persistentData {
 private:
@@ -130,12 +154,15 @@ public:
 
 static void sDataHandler(const XML_Char *data, size_t len, void *userData)
 {
-	if(len > 0 && data[0] != '\0') {
+	if(len) {
+		// Test string
+		std::string teststr(data, len);
+		trim(teststr);
 
-		// Put data inside string
-		std::string strdata(data, len);
+		if(teststr.length()) {
+			// Put data inside string
+			std::string strdata(data, len);
 
-		if(strdata.size() > 0) {
 			// Parse data
 			passingData* pD = (passingData*) userData;
 
@@ -248,22 +275,28 @@ static void sElemHandler(XML::Element &elem, void *userData)
 		// Create content
 		std::vector<std::string> *content = new std::vector<std::string>(NodeKeys.size());
 
+		// Placeholder for parent prefix (default to parent prefixes)
+		std::vector<std::string> *ptrToParentPrefix = parentPrefix;
+
 		// Prefix resize
 		int prefixSize = (*prefixLens)[(char*) root];
 		prefix.resize(prefixSize);
 
 		unsigned long parentPrefixSize = parentPrefix->size();
+
+		// Check for missing prefix
 		if(parentPrefixSize > 0 && (*parentPrefix)[(parentPrefixSize - 1)].empty()) {
 #ifdef DEBUG
 			std::cout << "We have missing prefix!" << std::endl;
 #endif
+			// Get parent prefixes directly from the parent content
 			std::vector<std::string>* parentContent = pD->getContent();
-			(*parentPrefix)[(parentPrefixSize - 1)] = (*parentContent)[(parentPrefixSize - 1)];
+			ptrToParentPrefix = parentContent;
 		}
 
 		// Apply parent attributes to row and to children prefix
 		for(unsigned long i = 0; i < parentPrefixSize; i++) {
-			(*content)[i] = prefix[i] = (*parentPrefix)[i];
+			(*content)[i] = prefix[i] = (*ptrToParentPrefix)[i];
 		}
 
 
@@ -376,6 +409,8 @@ static void rootHandler(XML::Element &elem, void *userData)
 	Rcpp::Rcout << "Start root handler" << std::endl;
 #endif
 
+// We shifted all the namespace detection procedure in R
+#ifdef C_DETECT_NAMESPACE
 	// Getting the namespace
 	if (elem.NumAttributes() > 0)
 	{
@@ -399,6 +434,7 @@ static void rootHandler(XML::Element &elem, void *userData)
 			a = a.GetNext();
 		}
 	} 
+#endif
 
 	// If there is a user supplied xsd namespace
 	if (xsdOverride != NULL) {
@@ -448,12 +484,12 @@ static void rootHandler(XML::Element &elem, void *userData)
 	// Get XSD object
 	Rcpp::List tableHeaders = Rcpp::as<Rcpp::List>((*xsdObjects)[xsd])["tableHeaders"];
 	Rcpp::NumericVector prefixLens = Rcpp::as<Rcpp::List>((*xsdObjects)[xsd])["prefixLens"];
+	Rcpp::CharacterVector tbNames = Rcpp::as<Rcpp::List>((*xsdObjects)[xsd])["tableOrder"];
 
 	// convert R headers to std c++
 	std::vector<std::string>  tableNamesCpp;
 	std::map<std::string, std::vector<std::string> > tableHeadersCpp;
 	std::map<std::string, int > prefixLensCpp;
-	Rcpp::CharacterVector tbNames(tableHeaders.names());
 
 	std::string appendNS(":");
 	if(ns != NULL)
@@ -652,9 +688,14 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 
 	std::map<std::string, std::list<std::vector<std::string>* >* >* res = data->getReturnData();
 
-	for ( std::map<std::string, std::list<std::vector<std::string>* >* >::iterator it = res->begin(); it != res->end(); it++ )
-	{
-		std::list<std::vector<std::string>* >* mylist = it->second;
+	const char* finalXsd = data->getXsdUsed();
+
+	Rcpp::CharacterVector tbNames = Rcpp::as<Rcpp::List>(xsdObjects[finalXsd])["tableOrder"];
+
+	for(Rcpp::CharacterVector::iterator it = tbNames.begin(); it != tbNames.end(); ++it) {
+
+		std::string its(*it);
+		std::list<std::vector<std::string>* >* mylist = (*res)[its];
 
 		// Create counts
 		unsigned maxRow = mylist->size();
@@ -665,7 +706,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 			maxCol = mylist->front()->size();
 
 #ifdef DEBUG
-		Rcpp::Rcout << it->first
+		Rcpp::Rcout << *it
 		            << ": "
 		            << maxRow
 			    << ", "
@@ -674,7 +715,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 #endif
 		// Create matrix
 		Rcpp::CharacterMatrix xy(maxRow, maxCol);
-		result[it->first] = xy;
+		result[its] = xy;
 
 		// Iterate List
 		unsigned currentRow = 0;
@@ -701,7 +742,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 
 	// Return results and xsd name
 	Rcpp::List rReturn = Rcpp::List::create(
-	           Rcpp::_["xsd"]  = data->getXsdUsed(),
+	           Rcpp::_["xsd"]  = finalXsd,
 	           Rcpp::_["result"]  = result
 	       );
 

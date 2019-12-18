@@ -23,17 +23,24 @@
 #' @useDynLib RstoxData
 #' @importFrom Rcpp sourceCpp
 #' @importFrom data.table as.data.table transpose
+#' @importFrom utils data
 #'
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
-	# Ices Acoustic XSD needs several additional treatment
+	# To UTf-8
+	toUTF8 <- function(srcvec) {
+		Encoding(srcvec) <- "UTF-8"
+		return(srcvec)
+	}
+
+	# Ices Acoustic XSD needs several additional treatments
 	icesAcousticPreprocess <- function(xsdObject) {
 
 		AC <- xsdObject
 
 		# We only interested in these tables
-		allData <- c("Acoustic", "Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
+		allData <- AC$tableOrder
 		newAC <- lapply(AC, function(x) x[allData])
 
 		# Set again the root
@@ -56,6 +63,44 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		# Modify cruise structure to get LocalID as prefix
 		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
 
+		# Put back table order
+		newAC$tableOrder <- allData
+
+		return(newAC)
+	}
+
+	# Ices Biotic XSD needs several additional treatments
+	icesBioticPreprocess <- function(xsdObject) {
+
+		AC <- xsdObject
+
+		# We only interested in these tables
+		allData <- AC$tableOrder
+		newAC <- lapply(AC, function(x) x[allData])
+
+		# Set again the root
+		newAC$root <- "Biotic"
+
+		# Re-build prefix data
+		newAC$prefixLens[allData] <- 0
+
+		allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
+
+		newAC$prefixLens[allDatawithPrefix] <- 2
+		newAC$prefixLens["Haul"] <- 3
+		newAC$prefixLens["Catch"] <- 5
+		newAC$prefixLens["Biology"] <- 6
+
+		newAC$tableHeaders$Haul <- c("LocalID", newAC$tableHeaders$Haul)
+		newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", newAC$tableHeaders$Catch)
+		newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
+
+		# Modify cruise structure to get LocalID as prefix
+		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+
+		# Put back table order
+		newAC$tableOrder <- allData
+
 		return(newAC)
 	}
 
@@ -70,17 +115,20 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 			y <- matrix(data = "", nrow = 0, ncol = length(tableHeaders[[x]]))
 
 		# Convert to data.table
-		z <- as.data.table(y)
+		z <- data.table(y)
 
 		# Set column names
 		tableHeader <- tableHeaders[[x]]
+
+		# NOTE: Landings' Fartoy header has duplicate header name try to rename the second
+		tableHeader <- make.unique(tableHeader)
 		Encoding(tableHeader) <- "UTF-8"
-		colnames(z) <- tableHeader
+		setnames(z, tableHeader)
 
 		# Set encoding (Rcpp uses UTF-8)
-		for (cn in colnames(z)) {
-			Encoding(z[[cn]]) <- "UTF-8"
-		}
+		cn <- colnames(z)
+		if(nrow(z) > 0)
+			z[, (cn):=lapply(.SD, toUTF8), .SDcols=cn]
 
 		# Set column types (only double and integer for now)
 		tableType <- tableTypes[[x]]
@@ -100,7 +148,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Load data if necessary
 	if(!exists("xsdObjects"))
-		xsdObjects <- RstoxData::xsdObjects
+		data(xsdObjects, package="RstoxData", envir = environment())
 
 	# Expand path
 	xmlFilePath <- path.expand(xmlFilePath)
@@ -116,9 +164,11 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	if(is.null(useXsd))
 		useXsd <- found[["xsd"]]
 
-	# Apply preprocess for ICES XSD
+	# Apply preprocess for ICES XSDs
 	if(useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
+	} else if(useXsd == "icesBiotic") {
+		xsdObjects$icesBiotic.xsd <- icesBioticPreprocess(xsdObjects$icesBiotic.xsd)
 	}
 
 	# Invoke C++ xml reading
@@ -144,7 +194,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	names(final) <- names(result)
 
 	# Add metadata
-	final[["metadata"]] <- list(useXsd = useXsd, file = xmlFilePath)
+	final[["metadata"]] <- data.table(list(useXsd = useXsd, file = xmlFilePath))
 
 	return(final)
 }

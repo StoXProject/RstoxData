@@ -1,4 +1,13 @@
-StoxBiotic <- function(data) {
+#' Convert BioticData to StoxBioticData
+#'
+#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
+#'
+#' @return An object of StoX data type \code{\link{StoxBioticData}}.
+#'
+#' @import data.table
+#' @export
+#' 
+StoxBiotic <- function(BioticData) {
 
 	firstPhase <- function(data, datatype, stoxBioticObject) {
 
@@ -19,15 +28,10 @@ StoxBiotic <- function(data) {
 
 	    ## Merge individual and age
 	    data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
-
+	    
 	    ## Cascading merge tables
-	    sequence <- c("mission", "fishstation", "catchsample", "individual")
-	    for(ii in 2:length(sequence)) {
-		curr <- sequence[ii]
-		prev <- sequence[(ii-1)]
-		vars <- names(data[[curr]])[names(data[[curr]]) %in% names(data[[prev]])]
-		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars)
-	    }
+	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
+	    data <- mergeDataTables(data, toMerge)
 	  }
 
 	  # 2. Making keys
@@ -76,8 +80,18 @@ StoxBiotic <- function(data) {
 
 	}
 
-	# 2nd phase
+	# 2nd phase 
 	secondPhase <- function(data, datatype, stoxBioticObject) {
+
+	  # Getting conversion function for datatype
+	  convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
+
+	  # Try to stop data.table warnings (https://github.com/Rdatatable/data.table/issues/2988)
+	  .. <- function (x, env = parent.frame()) {
+		stopifnot(inherits(x, "character"))
+		stopifnot(length(x) == 1)
+		get(x, envir = parent.env(env))
+	  }
 
 	  columns <- c("variable", "level", datatype)
 	  convertTable <- stoxBioticObject$convertTable[, ..columns]
@@ -89,29 +103,51 @@ StoxBiotic <- function(data) {
 		  # Process conversion table
 		  for(j in 1:nrow(convertTable[level==i,])) {
 		    k <- convertTable[level==i,][j,]
-		    data[[i]][, (unlist(k[,"variable"])):=eval(parse(text=k[, ..datatype]))]
+		    data[[i]][, (unlist(k[,"variable"])):=eval(parse(text=k[, get(..("datatype"))]))]
 		  }
 		  # Get key for transfer
 		  sourceColumns <- unlist(indices(data[[i]], vectors = TRUE))
 		  sourceColumns <- c(sourceColumns, unlist(convertTable[level==i, "variable"]))
 		  secondPhaseTables[[i]] <- data[[i]][, ..sourceColumns]
 	  }
+
+	  # Remove duplicated rows from SpeciesCategory
+	  secondPhaseTables[["SpeciesCategory"]] <- unique(secondPhaseTables[["SpeciesCategory"]])
 	  
 	  return(secondPhaseTables)
 
 	}
 
-	# Get data type	
-	datatype <- data[["metadata"]][["useXsd"]]
+	# Function to get the StoxBiotic on one file:
+	StoxBioticOne <- function(BioticData) {
+		# Get data type: 
+		datatype <- BioticData[["metadata"]][["useXsd"]]
+		
+		if(!exists("stoxBioticObject"))
+			data(stoxBioticObject, package="RstoxData", envir = environment())
+		
+		# Do first phase
+		first <- firstPhase(BioticData, datatype, stoxBioticObject)
+		# Do second phase	
+		second <- secondPhase(first, datatype, stoxBioticObject)
+		
+		return(second)
+	}
+	
+	StoxBioticData <- lapply(BioticData, StoxBioticOne)
 
-	if(!exists("stoxBioticObject"))
-		data(stoxBioticObject)
-
-	# Do first phase
-	first <- firstPhase(data, datatype, stoxBioticObject)
-	# Do second phase	
-	second <- secondPhase(first, datatype, stoxBioticObject)
-
-	return (second)
+	tableNames <- names(StoxBioticData[[1]])
+	StoxBioticData <- lapply(
+		tableNames, 
+		function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
+	)
+	names(StoxBioticData) <- tableNames
+	
+	StoxBioticData
 }
+
+
+
+
+
 

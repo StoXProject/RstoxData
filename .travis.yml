@@ -2,12 +2,13 @@ language: R
 matrix:
   include:
   - os: linux
-    r: release
+    r: 3.5
   - os: osx
-    r: release
+    r: 3.5
 if: tag IS blank
 sudo: false
 cache: packages
+warnings_are_errors: false
 notifications:
   email:
     on_success: change

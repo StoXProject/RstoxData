@@ -76,6 +76,7 @@ nmdbioticv3,fishstation,,weather,Station,
 nmdbioticv3,fishstation,,stationcomment,Station,
 nmdbioticv3,catchsample,,CruiseKey,SpeciesCategory,Y
 nmdbioticv3,catchsample,,StationKey,SpeciesCategory,Y
+nmdbioticv3,catchsample,,HaulKey,SpeciesCategory,Y
 nmdbioticv3,catchsample,,SpeciesCategoryKey,SpeciesCategory,Y
 nmdbioticv3,catchsample,,commonname,SpeciesCategory,
 nmdbioticv3,catchsample,,catchcategory,SpeciesCategory,
