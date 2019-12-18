@@ -23,6 +23,7 @@
 #' @useDynLib RstoxData
 #' @importFrom Rcpp sourceCpp
 #' @importFrom data.table as.data.table transpose
+#' @importFrom utils data
 #'
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
@@ -39,7 +40,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		AC <- xsdObject
 
 		# We only interested in these tables
-		allData <- c("Acoustic", "Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
+		allData <- AC$tableOrder
 		newAC <- lapply(AC, function(x) x[allData])
 
 		# Set again the root
@@ -62,6 +63,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		# Modify cruise structure to get LocalID as prefix
 		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
 
+		# Put back table order
+		newAC$tableOrder <- allData
+
 		return(newAC)
 	}
 
@@ -71,7 +75,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		AC <- xsdObject
 
 		# We only interested in these tables
-		allData <- c("Biotic", "Cruise", "Survey", "Haul", "Catch", "Biology")
+		allData <- AC$tableOrder
 		newAC <- lapply(AC, function(x) x[allData])
 
 		# Set again the root
@@ -93,6 +97,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 		# Modify cruise structure to get LocalID as prefix
 		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+
+		# Put back table order
+		newAC$tableOrder <- allData
 
 		return(newAC)
 	}
@@ -187,7 +194,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 	names(final) <- names(result)
 
 	# Add metadata
-	final[["metadata"]] <- list(useXsd = useXsd, file = xmlFilePath)
+	final[["metadata"]] <- data.table(list(useXsd = useXsd, file = xmlFilePath))
 
 	return(final)
 }

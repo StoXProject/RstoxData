@@ -51,36 +51,36 @@
   <!--Cruise Vocabularies-->
   <xsd:complexType name="SurveyVocabulary">
     <xsd:simpleContent>
-      <xsd:extension base="string">
+      <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="string" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
 
   <xsd:complexType name="CountryVocabulary">
     <xsd:simpleContent>
-      <xsd:extension base="string">
+      <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="string" use="required" fixed="https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
 
   <xsd:complexType name="OrganisationVocabulary">
     <xsd:simpleContent>
-      <xsd:extension base="string">
+      <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="string" use="required" fixed="https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
 
   <xsd:complexType name="PlatformVocabulary">
     <xsd:simpleContent>
-      <xsd:extension base="string">
+      <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="string" use="required" fixed="https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>

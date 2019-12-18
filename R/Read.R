@@ -23,13 +23,7 @@ ReadBiotic <- function(FileNames) {
 	# NOTE: Fix the xsdobjects problem and remove the following line:
 	out <- lapply(FileNames, RstoxData::readXmlFile)
 	names(out) <- basename(FileNames)
-	
-	# A hack to convert the metadata of each file to data.table:
-	message("RstoxData::readXmlFile should be changed to return metadata as a data.table instead of a list")
-	for(name in names(out)) {
-		out[[name]]$metadata <- data.table::as.data.table(out[[name]]$metadata)
-	}
-	
+
 	out
 }
 
@@ -61,12 +55,6 @@ ReadAcoustic <- function(FileNames) {
 	warning("The ReadAcoustic in RstoxBase only works with nmdechosounderv1 due to testing.")
 	out <- lapply(FileNames, RstoxData::readXmlFile, stream = TRUE, useXsd = "nmdechosounderv1")
 	names(out) <- basename(FileNames)
-	
-	# A hack to convert the metadata of each file to data.table:
-	message("RstoxData::readXmlFile should be changed to return metadata as a data.table instead of a list")
-	for(name in names(out)) {
-		out[[name]]$metadata <- data.table::as.data.table(out[[name]]$metadata)
-	}
 	
 	out
 }
