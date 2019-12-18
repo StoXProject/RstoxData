@@ -8,10 +8,10 @@
 #' 
 StoxAcoustic <- function(AcousticData = NULL){
 	
-	# For flexibility accept a list of the input data, named by the data type:
-	if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
-		AcousticData <- AcousticData$AcousticData
-	}
+	## For flexibility accept a list of the input data, named by the data type:
+	#if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
+	#	AcousticData <- AcousticData$AcousticData
+	#}
 	
   #Define the output 
   data_list_out <- c()
