@@ -206,7 +206,7 @@ StoxAcoustic <- function(AcousticData = NULL){
       #                 ADD info in  LOG level                        #
       #################################################################
       data_list$Beam$BottomDepth<-rowMeans(cbind(data_list$Beam$min_bot_depth,data_list$Beam$max_bot_depth),na.rm = TRUE)
-      tmp2 <- data_list$Beam[,c('LogKey','BeamKey','BottomDepth')]
+      tmp2 <- data_list$Beam[,c('LogKey','BeamKey','BottomDepth','upper_integrator_depth')]
       data_list$Log <- merge(data_list$Log,tmp2,by='LogKey')
       
       data_list$Log$EDSU <- paste(data_list$Cruise$Platform,data_list$Log$Log,sep='/')
@@ -260,8 +260,8 @@ StoxAcoustic <- function(AcousticData = NULL){
       #
       #TODO: 
       #     - Do stuff to the bottom mode
-      temp <- merge(data_list$Beam[,c('upper_integrator_depth','LogKey')],data_list$Log[,c('pel_ch_thickness','LogKey')],by='LogKey')
-      data_list$NASC <- merge(data_list$NASC,temp,by='LogKey')
+      #temp <- merge(data_list$Beam[,c('upper_integrator_depth','LogKey')],data_list$Log[,c('pel_ch_thickness','LogKey')],by='LogKey')
+      data_list$NASC <- merge(data_list$NASC, data_list$Log[,c('upper_integrator_depth','pel_ch_thickness','LogKey','BeamKey')],by=c('LogKey','BeamKey'))
       
       data_list$NASC$MinRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch)-1)
       data_list$NASC$MaxRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch))
