@@ -88,11 +88,33 @@ processXSD <- function(doc, path = NULL) {
 	# start the recursive search
 	invisible(getRecNameType(rootInfo))
 
-	return(list(flat = flat, flatAttr = flatAttr, rootInfo = rootInfo))
+	return(list(flat = flat, flatAttr = flatAttr, rootInfo = rootInfo, doc = doc))
 
 }
 
-processMetadata <- function(flat, flatAttr, rootInfo, xsdFile) {
+processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
+
+	# Recursively try to find the column types
+	traceType <- function(xx) {
+		if(grepl("xs[:]|xsd[:]", xx))
+			return(xx)
+		else {
+			# Try to search the root "type"
+			findstring <- paste0('//*[@name="', xx, '"]')
+			el <- xml_find_all(xsdDoc, findstring)
+			elu <- unique(xml_attr(el, "type"))
+			res <- unlist(lapply(elu, traceType))
+
+			# Now try to search the root "base"
+			if(is.null(res)) {
+				findstring <- paste0('//*[@name="', xx, '"]//*[@base]')
+				el <- xml_find_all(xsdDoc, findstring)
+				elu <- unique(xml_attr(el, "base"))
+				res <- unlist(lapply(elu, traceType))
+			}
+			return(res)
+		}
+	}
 
 	# Process headers and dimensions
 	getAttrTable <- function(root, headAttr = c(), xpath="") {
@@ -177,6 +199,28 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile) {
 	levelDims <- unlist(levelDims)
 	prefixLens <- unlist(prefixLens)
 
+	# Process types that are still unresolved
+	for(nm in names(tableHeaders)) {
+		hd <- tableHeaders[[nm]]
+		tp <- tableTypes[[nm]]
+		if(length(hd)) {
+			for(it in 1:length(hd)){
+				bla <- NULL
+				if(!grepl("xs[:]|xsd[:]", tp[it])) {
+					# Exclude obvious types
+					if (tp[it] == "IDREF" || tp[it] == "IDREFType" || tp[it] == "ID") {
+						bla <- "xs:string"
+					} else {
+						# Try the recursive search
+						bla <- traceType(hd[it])
+					}
+					if(is.null(bla[1]) || is.na(bla[1])) stop("Error in determining types!")
+					tableTypes[[nm]][it] <- bla[1]
+				}
+			}
+		}
+	}
+
 	xsdObject <- list() 
 	xsdObject[["root"]] <- root
 	xsdObject[["treeStruct"]] <- treeStruct;
@@ -215,14 +259,14 @@ createXsdObject <- function(xsdFile) {
 	metaData <- processXSD(xsdObj, dirname(xsdFile))
 
 	# Process XML file
-	ret <- processMetadata(metaData$flat, metaData$flatAttr, metaData$rootInfo, xsdFile)
+	ret <- processMetadata(metaData$flat, metaData$flatAttr, metaData$rootInfo, xsdFile, metaData$doc)
 
 	return(ret)
 }
 
 
 #' @importFrom xml2 xml_child read_html xml_find_all
-autodetectXml <- function(xmlFile, xsdObjects) {
+autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	# Read first 500 characters
 	tmpText <- readChar(xmlFile, 500)
@@ -239,7 +283,8 @@ autodetectXml <- function(xmlFile, xsdObjects) {
 
 	# Getting XSD information
 	# Peek xmlns
-	print("Try to use XML namespace")
+	if(verbose)
+		message("Try to use XML namespace")
 
 	tmpG1 <- regexpr('xmlns="\\K[^"]*', tmpText, perl=T)
 	if(tmpG1 > -1) {
@@ -253,7 +298,9 @@ autodetectXml <- function(xmlFile, xsdObjects) {
 	if(paste0(xmlXsd, ".xsd") %in% names(xsdObjects))
 		return(list(xsd = xmlXsd, encoding = xmlEnc))
 
-	print("Do manual detection")
+	if(verbose)
+		print("Do manual detection")
+
 	# Do manual detection
 	if( length(xml_find_all(bits, "//mission[@startyear]")) )
 		xmlXsd <- "nmdbioticv3"

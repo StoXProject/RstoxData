@@ -23,9 +23,6 @@ StoxBiotic <- function(BioticData) {
 	    ## If preferredagereading in indivdiual is NA, use 1 as the preferred reading
 	    data$individual[,preferredagereading:= ifelse(is.na(preferredagereading), 1, preferredagereading)]
 
-	    ## Convert the agedeterminationid to integer
-	    data$agedetermination[,agedeterminationid:= as.integer(agedeterminationid)]
-
 	    ## Merge individual and age
 	    data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
 	    

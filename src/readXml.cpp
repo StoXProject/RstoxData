@@ -141,7 +141,7 @@ void processNode(pugi::xml_node& node, const std::vector<const char*>& parentPre
 }
 
 // [[Rcpp::export]]
-Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride = R_NilValue, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding = R_NilValue)
+Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride = R_NilValue, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding = R_NilValue, bool verbose = false)
 {
 
 	pugi::xml_document doc;
@@ -206,8 +206,11 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 		Rcpp::stop("Can not find the XML namespace, exiting...\n");
 	}
 
-	Rcpp::Rcout << "Root: " <<  doc.first_child().name() << "\n";
-	Rcpp::Rcout << "XML namespace: " << xmlns << "\n";
+	if (verbose == true) {
+		Rcpp::Rcout << "Root: " <<  doc.first_child().name() << "\n";
+		Rcpp::Rcout << "XML namespace: " << xmlns << "\n";
+	}
+
 	if(ns != NULL && strlen(ns) > 0 && strcmp(ns, "xsd") !=0 && strcmp(ns, "xsi") !=0) {
 		Rcpp::Rcout << "XML namespace prefix: " << ns << "\n";
 		Rcpp::stop("Unfortunately, namespace support is still broken!!!\n");
@@ -236,7 +239,8 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 		sprintf (xsd, "%s%s.xsd", one, two);
 	}
 	// Print out XML information
-	Rcpp::Rcout << "Using XSD: " << xsd << std::endl;
+	if (verbose == true)
+		Rcpp::Rcout << "Using XSD: " << xsd << std::endl;
 
 #ifdef DEBUG
 	Rcpp::Rcout << "Getting XSD objects" << std::endl;

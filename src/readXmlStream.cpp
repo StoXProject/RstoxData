@@ -116,10 +116,11 @@ private:
 	std::map<std::string, std::list<std::vector<std::string>* >* >* ret;
 	const Rcpp::List *xsdObjects;
 	const char* xsdOverride;
+	const bool verbose;
 
 public:
-	returnData(Rcpp::List& a, char* b) :
-		xsdObjects(&a), xsdOverride(b)
+	returnData(Rcpp::List& a, char* b, bool c) :
+		xsdObjects(&a), xsdOverride(b), verbose(c)
 	{}
 
 	~returnData()
@@ -149,6 +150,10 @@ public:
 	std::map<std::string, std::list<std::vector<std::string>* >* >* getReturnData()
 	{
 		return ret;
+	}
+	const bool isVerbose()
+	{
+		return verbose;
 	}
 };
 
@@ -400,6 +405,7 @@ static void rootHandler(XML::Element &elem, void *userData)
 
 	const Rcpp::List *xsdObjects = data->getXsdObjects();
 	const char* xsdOverride = data->getXsdOverride();
+	const bool verbose =  data->isVerbose();
 
 	const char* root = elem.GetName();
 	char* xmlns = NULL;
@@ -446,9 +452,11 @@ static void rootHandler(XML::Element &elem, void *userData)
 		Rcpp::stop("Can not find the XML namespace, exiting...\n");
 	}
 
+	if (verbose == true) {
+		Rcpp::Rcout << "Root: " << root << "\n";
+		Rcpp::Rcout << "XML namespace: " << xmlns << "\n";
+	}
 
-	Rcpp::Rcout << "Root: " << root << "\n";
-	Rcpp::Rcout << "XML namespace: " << xmlns << "\n";
 	if(ns != NULL && strlen(ns) > 0 && strcmp(ns, "xsd") !=0 && strcmp(ns, "xsi") !=0) {
 		Rcpp::Rcout << "XML namespace prefix: " << ns << "\n";
 		Rcpp::stop("Unfortunately, namespace support is still broken!!!\n");
@@ -476,7 +484,8 @@ static void rootHandler(XML::Element &elem, void *userData)
 		sprintf (xsd, "%s%s.xsd", one, two);
 	}
 
-	Rcpp::Rcout << "Using XSD: " << xsd << std::endl;
+	if (verbose == true)
+		Rcpp::Rcout << "Using XSD: " << xsd << std::endl;
 
 	// Put xsd info into return data
 	data->setXsdUsed(xsd);
@@ -612,7 +621,7 @@ std::string GetExt(const std::string& inputFileName)
 }
 
 // [[Rcpp::export]]
-Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue)
+Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue, bool verbose = false)
 {
 
 	std::string inputFileName(inputFile[0]);
@@ -627,7 +636,8 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 		size_t basePos = inputFileName.find_last_of(".");
 		std::string xmlfile(inputFileName.substr(0, basePos) + ".xml");
 
-		Rcpp::Rcout << "Parsing XML: " << inputFileName << " inside " << inputFileName << " compressed file" << std::endl;
+		if (verbose == true)
+			Rcpp::Rcout << "Parsing XML: " << inputFileName << " inside " << inputFileName << " compressed file" << std::endl;
 
 		zstream = new XML::ZipInputStream(inputFileName.c_str(), xmlfile.c_str());
 		input = new XML::Input(*zstream);
@@ -635,7 +645,8 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 	} else {
 
 		// Print out XML information
-		Rcpp::Rcout << "Parsing XML: " << inputFileName << std::endl;
+		if (verbose == true)
+			Rcpp::Rcout << "Parsing XML: " << inputFileName << std::endl;
 
 		// Open input file (in Windows use UTF-8 to UTF-16 conversion)
 #ifndef _WIN32
@@ -665,9 +676,9 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 
 	// If there is a user supplied xsd namespace
 	if (xsdOverride.isNotNull()) {
-		data = new returnData(xsdObjects, Rcpp::as<Rcpp::CharacterVector>(xsdOverride)[0]);
+		data = new returnData(xsdObjects, Rcpp::as<Rcpp::CharacterVector>(xsdOverride)[0], verbose);
 	} else {
-		data = new returnData(xsdObjects, NULL);
+		data = new returnData(xsdObjects, NULL, verbose);
 	}
 
 
