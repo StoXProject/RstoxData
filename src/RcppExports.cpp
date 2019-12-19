@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // readXmlCpp
-Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding);
-RcppExport SEXP _RstoxData_readXmlCpp(SEXP inputFileSEXP, SEXP xsdObjectsSEXP, SEXP xsdOverrideSEXP, SEXP xmlEncodingSEXP) {
+Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding, bool verbose);
+RcppExport SEXP _RstoxData_readXmlCpp(SEXP inputFileSEXP, SEXP xsdObjectsSEXP, SEXP xsdOverrideSEXP, SEXP xmlEncodingSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,13 +15,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type xsdObjects(xsdObjectsSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::CharacterVector> >::type xsdOverride(xsdOverrideSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::CharacterVector> >::type xmlEncoding(xmlEncodingSEXP);
-    rcpp_result_gen = Rcpp::wrap(readXmlCpp(inputFile, xsdObjects, xsdOverride, xmlEncoding));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(readXmlCpp(inputFile, xsdObjects, xsdOverride, xmlEncoding, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // readXmlCppStream
-Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride, Rcpp::Nullable<std::string> xmlEncoding);
-RcppExport SEXP _RstoxData_readXmlCppStream(SEXP inputFileSEXP, SEXP xsdObjectsSEXP, SEXP xsdOverrideSEXP, SEXP xmlEncodingSEXP) {
+Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride, Rcpp::Nullable<std::string> xmlEncoding, bool verbose);
+RcppExport SEXP _RstoxData_readXmlCppStream(SEXP inputFileSEXP, SEXP xsdObjectsSEXP, SEXP xsdOverrideSEXP, SEXP xmlEncodingSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,14 +30,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type xsdObjects(xsdObjectsSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type xsdOverride(xsdOverrideSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type xmlEncoding(xmlEncodingSEXP);
-    rcpp_result_gen = Rcpp::wrap(readXmlCppStream(inputFile, xsdObjects, xsdOverride, xmlEncoding));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(readXmlCppStream(inputFile, xsdObjects, xsdOverride, xmlEncoding, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RstoxData_readXmlCpp", (DL_FUNC) &_RstoxData_readXmlCpp, 4},
-    {"_RstoxData_readXmlCppStream", (DL_FUNC) &_RstoxData_readXmlCppStream, 4},
+    {"_RstoxData_readXmlCpp", (DL_FUNC) &_RstoxData_readXmlCpp, 5},
+    {"_RstoxData_readXmlCppStream", (DL_FUNC) &_RstoxData_readXmlCppStream, 5},
     {NULL, NULL, 0}
 };
 

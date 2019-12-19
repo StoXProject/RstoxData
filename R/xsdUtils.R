@@ -266,7 +266,7 @@ createXsdObject <- function(xsdFile) {
 
 
 #' @importFrom xml2 xml_child read_html xml_find_all
-autodetectXml <- function(xmlFile, xsdObjects) {
+autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	# Read first 500 characters
 	tmpText <- readChar(xmlFile, 500)
@@ -283,7 +283,8 @@ autodetectXml <- function(xmlFile, xsdObjects) {
 
 	# Getting XSD information
 	# Peek xmlns
-	print("Try to use XML namespace")
+	if(verbose)
+		message("Try to use XML namespace")
 
 	tmpG1 <- regexpr('xmlns="\\K[^"]*', tmpText, perl=T)
 	if(tmpG1 > -1) {
@@ -297,7 +298,9 @@ autodetectXml <- function(xmlFile, xsdObjects) {
 	if(paste0(xmlXsd, ".xsd") %in% names(xsdObjects))
 		return(list(xsd = xmlXsd, encoding = xmlEnc))
 
-	print("Do manual detection")
+	if(verbose)
+		print("Do manual detection")
+
 	# Do manual detection
 	if( length(xml_find_all(bits, "//mission[@startyear]")) )
 		xmlXsd <- "nmdbioticv3"
