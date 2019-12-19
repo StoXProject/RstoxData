@@ -57,10 +57,16 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		newAC$prefixLens["Data"] <- 4
 
 		newAC$tableHeaders$Log <- c("LocalID", newAC$tableHeaders$Log)
-		newAC$tableHeaders$Sample <- c("LocalID", "Distance", newAC$tableHeaders$Sample)
-		newAC$tableHeaders$Data <- c("LocalID", "Distance", "ChannelDepthUpper", newAC$tableHeaders$Data)
+		newAC$tableTypes$Log <- c("xsd:string", newAC$tableTypes$Log)
 
-		# Modify cruise structure to get LocalID as prefix
+		newAC$tableHeaders$Sample <- c("LocalID", "Distance", newAC$tableHeaders$Sample)
+		newAC$tableTypes$Sample <- c("xsd:string", "xsd:float", newAC$tableTypes$Sample)
+
+		newAC$tableHeaders$Data <- c("LocalID", "Distance", "ChannelDepthUpper", newAC$tableHeaders$Data)
+		newAC$tableTypes$Data <- c("xsd:string", "xsd:float",  "xsd:float", newAC$tableTypes$Data)
+
+
+		# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
 		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
 
 		# Put back table order
@@ -92,10 +98,15 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		newAC$prefixLens["Biology"] <- 6
 
 		newAC$tableHeaders$Haul <- c("LocalID", newAC$tableHeaders$Haul)
-		newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", newAC$tableHeaders$Catch)
-		newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
+		newAC$tableTypes$Haul <- c("xsd:string", newAC$tableTypes$Haul)
 
-		# Modify cruise structure to get LocalID as prefix
+		newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "DataType", "SpeciesValidity", tail(newAC$tableHeaders$Catch, length(newAC$tableHeaders$Catch) - 4))
+		newAC$tableTypes$Catch <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", "xsd:string", "xsd:string", tail(newAC$tableTypes$Catch, length(newAC$tableHeaders$Catch) - 4))
+
+		newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
+		newAC$tableTypes$Biology <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", newAC$tableTypes$Biology)
+
+		# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
 		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
 
 		# Put back table order
@@ -106,6 +117,12 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 
 	# Process column names and types
 	applyNameType <- function(x, result, tableHeaders, tableTypes) {
+
+		# Known atomic data types
+		knownTypes <- list( "xsd:ID"="character", "xsd:float"="double", "xs:string"="character",
+						"xsd:string"="character", "xsd:int"="integer", "xs:long"="integer", "xs:integer"="integer",
+						"xs:decimal"="double", "xs:date"="character", "xs:time"="character", "xs:double"="double")
+
 
 		# Get result matrix
 		y <- result[[x]]
@@ -134,13 +151,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL) {
 		tableType <- tableTypes[[x]]
 		if(length(tableType) > 0) {
 			for(i in 1:ncol(z)) {
-				j <- tail(unlist(strsplit(tableType[i], ":")), 1)
-				if(j %in% c("double", "integer", "decimal")) {
-					# Map the types
-					typeMap <- c("double" = "double", "integer" = "integer", "decimal" = "double")
-					doConv <- eval(parse(text = paste0("as.", typeMap[[j]])))
-					z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
-				}
+				# Map the types
+				doConv <- eval(parse(text = paste0("as.", knownTypes[[tableType[i]]])))
+				z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
 			}
 		}
 		return(z)
