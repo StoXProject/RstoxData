@@ -1,5 +1,5 @@
-# RstoxData version: 0.6.5 (latest alpha, 2019-12-20)
-## R version: 3.5
+# RstoxData version: 0.6.3 (latest alpha, 2019-12-26)
+# R version: 3.5
 
 [![Build Status](https://travis-ci.org/StoXProject/RstoxData.svg?branch=master)](https://travis-ci.org/StoXProject/RstoxData)
 [![Build status](https://ci.appveyor.com/api/projects/status/wcoo0w1syffu2yw3?svg=true)](https://ci.appveyor.com/project/iambaim/rstoxdata)
