@@ -25,7 +25,6 @@ Useful links:
 Authors:
 \itemize{
   \item Sindre Vatnehol
-  \item Edvin Fuglebakk
   \item Arne Johannes Holmin
   \item Edvin Fuglebakk
 }

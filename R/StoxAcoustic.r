@@ -32,7 +32,6 @@ StoxAcousticOne <- function(data_list) {
     if(is.null(data_list$echosounder_dataset))ices_format<- TRUE
     
     
-    print(names(AcousticData))
     
     
     
@@ -211,7 +210,6 @@ StoxAcousticOne <- function(data_list) {
       
       data_list$Log$LogOrigin2 <- "end"
       
-      print(data_list$Log)
       data_list$Log$LogDuration <- as.POSIXct(data_list$Log$stop_time, format="%Y-%m-%d %H:%M:%S") - as.POSIXct(data_list$Log$start_time, format="%Y-%m-%d %H:%M:%S")
       
       
