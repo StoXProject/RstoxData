@@ -17,11 +17,21 @@
 #' 
 #' @seealso \code{\link[RstoxData]{readXmlFile}}.
 #' 
+#' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
 ReadBiotic <- function(FileNames) {
-	# NOTE: Fix the xsdobjects problem and remove the following line:
-	out <- lapply(FileNames, RstoxData::readXmlFile)
+
+	# Read files in parallel
+	cores <- getCores()
+	if(get_os() == "win") {
+		cl <- makeCluster(cores)
+		out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
+		stopCluster(cl)
+	} else {
+		out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
+	}
+
 	names(out) <- basename(FileNames)
 
 	out
@@ -48,14 +58,25 @@ ReadBiotic <- function(FileNames) {
 #' 
 #' @seealso \code{\link[RstoxData]{readXmlFile}}.
 #' 
+#' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
 ReadAcoustic <- function(FileNames) {
 	# NOTE: Fix the xsdobjects problem and remove the following line:
 	warning("The ReadAcoustic in RstoxBase only works with nmdechosounderv1 due to testing.")
-	out <- lapply(FileNames, RstoxData::readXmlFile, stream = TRUE, useXsd = "nmdechosounderv1")
-	names(out) <- basename(FileNames)
-	
+
+	# Read files in parallel
+        cores <- getCores()
+        if(get_os() == "win") {
+                cl <- makeCluster(cores)
+                out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
+                stopCluster(cl)
+        } else {
+                out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
+        }
+
+        names(out) <- basename(FileNames)
+
 	out
 }
 

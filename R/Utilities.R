@@ -22,3 +22,36 @@ mergeDataTables <- function(data, tableNames = NULL) {
 
 	return(data)
 }
+
+# Detect OS
+get_os <- function() {
+	if (.Platform$OS.type == "windows") {
+		"win"
+	} else if (Sys.info()["sysname"] == "Darwin") {
+		"mac"
+	} else if (.Platform$OS.type == "unix") {
+		"unix"
+	} else {
+		stop("Unknown OS")
+	}
+}
+
+# Pick a suitable number of cores
+#' @importFrom parallel detectCores
+getCores <- function() {
+	cores <- as.integer(getOption("mc.cores"))
+	if (length(cores) == 0 || is.na(cores)) {
+		cores <- detectCores()
+		if (is.na(cores)) {
+			return(1)
+		} else {
+			# Don't use too many cores in autodetect
+			if (cores > 4)
+				return(4)
+			else
+				return(cores)
+		}
+	} else {
+		return(cores)
+	}
+}
