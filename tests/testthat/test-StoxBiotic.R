@@ -1,3 +1,6 @@
+# Satisfy R CMD check
+options("mc.cores" = 2)
+
 # StoxBiotic
 example <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
 
