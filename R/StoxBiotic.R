@@ -5,6 +5,7 @@
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
 #' @import data.table
+#' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
 StoxBiotic <- function(BioticData) {
@@ -130,8 +131,16 @@ StoxBiotic <- function(BioticData) {
 		
 		return(second)
 	}
-	
-	StoxBioticData <- lapply(BioticData, StoxBioticOne)
+
+	# Process Biotic data in parallel
+	cores <- getCores()
+	if(get_os() == "win") {
+		cl <- makeCluster(cores)
+		StoxBioticData <- parLapply(cl, BioticData, StoxBioticOne)
+		stopCluster(cl)
+	} else {
+		StoxBioticData <- mclapply(BioticData, StoxBioticOne, mc.cores = cores)
+	}
 
 	tableNames <- names(StoxBioticData[[1]])
 	StoxBioticData <- lapply(

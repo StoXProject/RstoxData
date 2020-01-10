@@ -1,3 +1,6 @@
+# Satisfy R CMD check
+options("mc.cores" = 2)
+
 # StoxAcoustic
 example <- system.file("testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
 
