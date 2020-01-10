@@ -13,13 +13,9 @@ StoxAcoustic <- function(AcousticData = NULL){
 	#	AcousticData <- AcousticData$AcousticData
 	#}
 	
-  #Define the output 
-  data_list_out <- c()
   
-  
-  
-  #Loop through all platforms
-  for (data_list in AcousticData){
+#Loop through all platforms
+StoxAcousticOne <- function(data_list) {
     
     
     
@@ -420,20 +416,30 @@ StoxAcoustic <- function(AcousticData = NULL){
     #add effective log distance
     data_list$Log$EffectiveDistance<-data_list$Log$Distance
     
-    #bind platforms
-    if(is.null(data_list_out)){
-      data_list_out=data_list}
-    else{
-    data_list_out <- Map(rbind,data_list_out,data_list)
-    }
-    
+    return(data_list)
   }
+
+  # Process Biotic data in parallel
+  cores <- getCores()
+  if(get_os() == "win") {
+    cl <- makeCluster(cores)
+    data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
+    stopCluster(cl)
+  } else {
+    data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = cores)
+  }
+
+  tableNames <- names(data_list_out[[1]])
+
+  StoxAcousticData <- lapply(
+      tableNames,
+      function(name) data.table::rbindlist(lapply(data_list_out, "[[", name))
+  )
+
+  names(StoxAcousticData) <- tableNames
+
+  #Output stox acoustic data
+  return(StoxAcousticData)
   
-  
-  
-  
-  #Output stox data
-  return(data_list_out)
-    
 }
   
