@@ -4,7 +4,7 @@
 \alias{mergeDataTables}
 \title{Merge data tables}
 \usage{
-mergeDataTables(data, tableNames = NULL)
+mergeDataTables(data, tableNames = NULL, output.only.last = FALSE, ...)
 }
 \arguments{
 \item{data}{A list of data tables.}

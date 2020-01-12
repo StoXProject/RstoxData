@@ -32,7 +32,6 @@ StoxAcousticOne <- function(data_list) {
     if(is.null(data_list$echosounder_dataset))ices_format<- TRUE
     
     
-    print(names(AcousticData))
     
     
     
@@ -41,6 +40,7 @@ StoxAcousticOne <- function(data_list) {
       # Description: protocol to convert NMDacoustic to StoxAcoustic  #
       #################################################################
       
+    	
       
       
       
@@ -62,17 +62,19 @@ StoxAcousticOne <- function(data_list) {
       
       
       
-      
       #################################################################
-      #              Fiks structure in nmd echosounder                #
+      #   Reorder the leevels to AcousticCategory > ChannelReference  #
       #################################################################
-      data_list$AcousticCategory$type=NULL
-      ul <- (unique(data_list$AcousticCategory))
-      mm <- merge(data_list$ChannelReference, data_list$AcousticCategory)
-  
-      #Make new list structure    
-      data_list$AcousticCategory<-ul
-      data_list$ChannelReference<-mm
+      merged <- merge(data_list$ChannelReference, data_list$AcousticCategory)
+      data_list$AcousticCategory <- unique(merged[, !"type"])
+      data_list$ChannelReference <- unique(merged)
+      #data_list$AcousticCategory$type=NULL
+      #ul <- (unique(data_list$AcousticCategory))
+      #mm <- merge(data_list$ChannelReference, data_list$AcousticCategory)
+  #
+      ##Make new list structure    
+      #data_list$AcousticCategory<-ul
+      #data_list$ChannelReference<-mm
       
       
       
@@ -157,10 +159,10 @@ StoxAcousticOne <- function(data_list) {
       
       
       
-      #################################################################
-      #              Add ChannelKey to all list                       #
-      #################################################################
-      data_list$NASC$ChannelKey           <- data_list$NASC$ch
+      ##############################################################
+      #              Add NASCKey to all list                       #
+      ##############################################################
+      data_list$NASC$NASCKey           <- data_list$NASC$ch
       
       
       
@@ -186,16 +188,11 @@ StoxAcousticOne <- function(data_list) {
       #                       RENAME LOG level                        #
       #################################################################
       names(data_list$Log)[names(data_list$Log)=='log_start']        <- 'Log'
-      names(data_list$Log)[names(data_list$Log)=='integrator_dist'] <- 'Distance'
+      names(data_list$Log)[names(data_list$Log)=='integrator_dist'] <- 'LogDistance'
       names(data_list$Log)[names(data_list$Log)=='lon_start']       <- 'Longitude'
       names(data_list$Log)[names(data_list$Log)=='lat_start']       <- 'Latitude'
       names(data_list$Log)[names(data_list$Log)=='lon_stop']       <- 'Longitude2'
       names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'Latitude2'
-      
-      
-      
-      
-      
       
       
       #################################################################
@@ -207,7 +204,13 @@ StoxAcousticOne <- function(data_list) {
       
       data_list$Log$EDSU <- paste(data_list$Cruise$Platform,data_list$Log$Log,sep='/')
       
+      data_list$Log$DateTime <- sapply(data_list$Log$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
       
+      data_list$Log$LogOrigin <- "start"
+      
+      data_list$Log$LogOrigin2 <- "end"
+      
+      data_list$Log$LogDuration <- as.POSIXct(data_list$Log$stop_time, format="%Y-%m-%d %H:%M:%S") - as.POSIXct(data_list$Log$start_time, format="%Y-%m-%d %H:%M:%S")
       
       
       
@@ -228,10 +231,16 @@ StoxAcousticOne <- function(data_list) {
       #################################################################
       #                       RENAME AcousticCatecory level           #
       #################################################################
-      names(data_list$AcousticCategory)[names(data_list$AcousticCategory)=='acocat'] <- 'AcousticCategory'
+      data_list$AcousticCategory$AcousticCategory <- data_list$AcousticCategory$AcousticCategoryKey
       
       
       
+      
+      
+      #################################################################
+      #                       RENAME ChannelReference level           #
+      #################################################################
+      data_list$ChannelReference$ChannelReference <- data_list$ChannelReference$ChannelReferenceKey
       
       
       
@@ -241,7 +250,7 @@ StoxAcousticOne <- function(data_list) {
       #                RENAME NASC level                              #
       #################################################################
       names(data_list$NASC)[names(data_list$NASC)=='sa'] <- 'NASC'
-      
+      data_list$NASC$Channel <- data_list$NASC$ch
       
       
       
@@ -345,7 +354,7 @@ StoxAcousticOne <- function(data_list) {
       
       #Apply channel, and apply key to all
       data_list$NASC <- tmp
-      data_list$NASC$ChannelKey <- paste(tmp$ChannelDepthUpper,tmp$ChannelDepthLower,sep='/')
+      data_list$NASC$NASCKey <- paste(tmp$ChannelDepthUpper,tmp$ChannelDepthLower,sep='/')
       
       
       
@@ -381,6 +390,7 @@ StoxAcousticOne <- function(data_list) {
       
       
       
+      
       #################################################################
       #        Add cruice key to all list                             #
       #################################################################
@@ -398,23 +408,22 @@ StoxAcousticOne <- function(data_list) {
     
     
   
+    #add effective log distance
+    data_list$Log$EffectiveLogDistance <- data_list$Log$LogDistance
     
     #################################################################
     #                REMOVE undefined stoxacoustic variables        #
     #################################################################
-    data_list<-data_list[c('Cruise','Log','Beam','NASC','AcousticCategory','ChannelReference')]  
+    data_list<-data_list[c('Cruise','Log','Beam','AcousticCategory','ChannelReference','NASC')]  
     
-    data_list$Cruise<-data_list$Cruise[,c('Platform','CruiseKey')]
-    data_list$Log <- data_list$Log[,c('Log','Distance','Longitude','Longitude2','Latitude','Latitude2','EDSU','CruiseKey','LogKey')]
-    data_list$Beam <- data_list$Beam[,c('Frequency','CruiseKey','LogKey','BeamKey')]
-    data_list$AcousticCategory <- data_list$AcousticCategory[,c('AcousticCategory','CruiseKey','LogKey','BeamKey','AcousticCategoryKey')]
-    data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey','LogKey','BeamKey','AcousticCategoryKey','ChannelReferenceKey')]
+    data_list$Cruise<-data_list$Cruise[, c('CruiseKey', 'Platform')]
+    data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance', 'BottomDepth')]
+    data_list$Beam <- data_list$Beam[,c('CruiseKey', 'LogKey', 'BeamKey', 'Frequency')]
+    data_list$AcousticCategory <- data_list$AcousticCategory[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'AcousticCategory')]
+    data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReference')]
     
-    data_list$NASC <- data_list$NASC[,c('CruiseKey','LogKey','BeamKey','AcousticCategoryKey',
-                                                    'ChannelReferenceKey','ChannelKey','MaxRange','MinRange','NASC')]
+    data_list$NASC <- data_list$NASC[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'NASCKey', 'Channel', 'MaxRange', 'MinRange', 'NASC')]
     
-    #add effective log distance
-    data_list$Log$EffectiveDistance<-data_list$Log$Distance
     
     return(data_list)
   }

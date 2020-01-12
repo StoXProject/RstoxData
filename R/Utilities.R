@@ -7,19 +7,27 @@
 #'
 #' @export
 #' 
-mergeDataTables <- function(data, tableNames = NULL) {
+mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, ...) {
+	
 	# Merge all tables by default:
 	if(length(tableNames) == 0) {
 		tableNames <- names(data)
 	}
+	
 	# Merge
 	for(ii in 2:length(tableNames)) {
 		curr <- tableNames[ii]
 		prev <- tableNames[(ii-1)]
-		vars <- names(data[[curr]])[names(data[[curr]]) %in% names(data[[prev]])]
-		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars)
+		#vars <- names(data[[curr]])[names(data[[curr]]) %in% names(data[[prev]])]
+		vars <- intersect(names(data[[curr]]), names(data[[prev]]))
+		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars, ...)
 	}
 
+	# If tableNamestableNames == "last", return the last table:
+	if(output.only.last) {
+		data <- data[[length(data)]]
+	}
+	
 	return(data)
 }
 
