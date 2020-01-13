@@ -14,8 +14,8 @@ StoxAcoustic <- function(AcousticData = NULL){
 	#}
 	
   
-#Loop through all platforms
-StoxAcousticOne <- function(data_list) {
+  #Loop through all platforms
+  StoxAcousticOne <- function(data_list) {
     
     
     
@@ -100,16 +100,13 @@ StoxAcousticOne <- function(data_list) {
       
       
       #################################################################
-      #         Fiks to correct time format, and add to key           #
+      #         Add Keys                                              #
       #################################################################
-      #
-      # TODO
-      #     -This is a quick fix assuming the format is not changed
-      data_list$Log$LogKey              <- sapply(data_list$Log$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
-      data_list$Beam$LogKey             <- sapply(data_list$Beam$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
-      data_list$AcousticCategory$LogKey <- sapply(data_list$AcousticCategory$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
-      data_list$ChannelReference$LogKey <- sapply(data_list$ChannelReference$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
-      data_list$NASC$LogKey             <- sapply(data_list$NASC$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
+      data_list$Log[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+      data_list$Beam[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+      data_list$AcousticCategory[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+      data_list$ChannelReference[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+      data_list$NASC[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
       
       
       
@@ -121,10 +118,10 @@ StoxAcousticOne <- function(data_list) {
       #################################################################
       #            Add BeamKey to all list                            #
       #################################################################
-      data_list$Beam$BeamKey             <- paste(data_list$Beam$freq,data_list$Beam$transceiver, sep='/')
-      data_list$AcousticCategory$BeamKey <- paste(data_list$AcousticCategory$freq,data_list$AcousticCategory$transceiver, sep='/')
-      data_list$ChannelReference$BeamKey <- paste(data_list$ChannelReference$freq,data_list$ChannelReference$transceiver, sep='/')
-      data_list$NASC$BeamKey             <- paste(data_list$NASC$freq,data_list$Channel$transceiver, sep='/')
+      data_list$Beam[, BeamKey := paste(freq, transceiver, sep='/')]
+      data_list$AcousticCategory[, BeamKey := paste(freq, transceiver, sep='/')]
+      data_list$ChannelReference[, BeamKey := paste(freq, transceiver, sep='/')]
+      data_list$NASC[, BeamKey := paste(freq, transceiver, sep='/')]
       
       
       
@@ -202,9 +199,9 @@ StoxAcousticOne <- function(data_list) {
       tmp2 <- data_list$Beam[,c('LogKey','BeamKey','BottomDepth','upper_integrator_depth')]
       data_list$Log <- merge(data_list$Log,tmp2,by='LogKey')
       
-      data_list$Log$EDSU <- paste(data_list$Cruise$Platform,data_list$Log$Log,sep='/')
+      data_list$Log[, EDSU:=paste(data_list$Cruise$Platform,Log,sep='/')]
       
-      data_list$Log$DateTime <- sapply(data_list$Log$start_time,function(i) paste0(gsub(' ','T',i),'.000Z'))
+      data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
       
       data_list$Log$LogOrigin <- "start"
       
@@ -306,8 +303,8 @@ StoxAcousticOne <- function(data_list) {
       #################################################################
       #         Fiks to correct time format, and add to key           #
       #################################################################
-      data_list$Log$LogKey <- sapply(data_list$Log$Time,function(i) paste0(gsub(' ','T',i),'.000Z'))
-      data_list$Log$EDSU <- paste(data_list$Log$CruiseKey,data_list$Log$LogKey,sep='/')
+      data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
+      data_list$Log[, EDSU:= paste(CruiseKey,LogKey,sep='/')]
       
       
       
