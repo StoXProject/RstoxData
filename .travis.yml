@@ -27,6 +27,9 @@ after_success:
   # Look for binary bundle (*.tgz for OSX and *.tar.gz for Linux)
   - "export BIN_PKG_FILE=$(ls $PKGNAME*gz)"
   - "echo Resulting binary: $BIN_PKG_FILE"
+  # Generate documentation pages
+  - Rscript -e 'remotes::install_cran("pkgdown")'
+  - Rscript -e 'pkgdown::build_site()'
 before_deploy:
   # Set up git user name and tag this commit
   - git config --global user.email "builds@travis-ci.com"
@@ -35,9 +38,17 @@ before_deploy:
   - if git tag $TRAVIS_TAG > /dev/null 2>&1; then echo Successfully tagged; else echo Tag already exists; fi
 
 deploy:
-  provider: releases
-  api_key: $API_KEY
-  file: $BIN_PKG_FILE
-  skip_cleanup: true
-  on:
-    branch: master
+  - provider: releases
+    api_key: $API_KEY
+    file: $BIN_PKG_FILE
+    skip_cleanup: true
+    on:
+     branch: master
+  - provider: pages
+    skip-cleanup: true
+    github-token: $API_KEY
+    keep-history: true
+    local-dir: docs
+    on:
+     branch: master
+     condition: $TRAVIS_OS_NAME = linux
