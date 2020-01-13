@@ -7,7 +7,7 @@ Station,Station,"paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', Sta
 CatchPlatform,Station,catchplatform ,platform,"paste0(Cruise, '/', Station, '/', Platform)",
 Latitude,Station,latitudestart,latitudestart,StartLatitude,
 Longitude,Station,longitudestart,longitudestart,StartLongitude,
-DateTime,Station,"paste0(stationstartdate, '/', stationstarttime)",startdate + starttime,StartTime,
+DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%SZ', tz='GMT')",startdate + starttime,StartTime,
 BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
 CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Haul,StationKey,StationKey,StationKey,Y
