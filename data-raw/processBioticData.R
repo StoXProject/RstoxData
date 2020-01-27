@@ -12,7 +12,7 @@ stoxBioticObject$indageHeadersList[["nmdbioticv3"]] <- c("missiontype", "startye
 
 ## Format: {source variable, target keyname}  
 stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
-                 list("cruise", "CruiseKey"), 
+                 list(c("cruise", "missiontype", "startyear", "platform", "missionnumber"), "CruiseKey"), 
                  list("station", "StationKey"),
                  list("serialnumber", "HaulKey"),
                  list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
