@@ -13,12 +13,10 @@ StoxAcoustic <- function(AcousticData = NULL){
 	#	AcousticData <- AcousticData$AcousticData
 	#}
 	
-  
-  #Loop through all platforms
-  StoxAcousticOne <- function(data_list) {
-    
-    
-    
+
+	StoxAcousticOne <- function(data_list) {
+
+	
     #TODO: 
     #   - Agree on a output and input format
     
@@ -265,15 +263,15 @@ StoxAcoustic <- function(AcousticData = NULL){
       #temp <- merge(data_list$Beam[,c('upper_integrator_depth','LogKey')],data_list$Log[,c('pel_ch_thickness','LogKey')],by='LogKey')
       data_list$NASC <- merge(data_list$NASC, data_list$Log[,c('upper_integrator_depth','pel_ch_thickness','LogKey','BeamKey')],by=c('LogKey','BeamKey'))
       
-      data_list$NASC$MinRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch)-1)
-      data_list$NASC$MaxRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch))
+      data_list$NASC$MinChannelRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch)-1)
+      data_list$NASC$MaxChannelRange<-data_list$NASC$pel_ch_thickness*(as.integer(data_list$NASC$ch))
       
       
       
       
       #Fiks upper integration depth for pelagic
       #Denne maa Dobbelsjekkes
-      data_list$NASC[(data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$MinRange<-data_list$NASC[(data_list$NASC$MinRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$upper_integrator_depth
+      data_list$NASC[(data_list$NASC$MinChannelRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$MinChannelRange<-data_list$NASC[(data_list$NASC$MinChannelRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$upper_integrator_depth
       
       
       
@@ -369,8 +367,8 @@ StoxAcoustic <- function(AcousticData = NULL){
       names(data_list$Log)[names(data_list$Log)=='LatitudeStop'] <- 'Latitude2'
       names(data_list$Log)[names(data_list$Log)=='BottomDepth'] <- 'BottomDepth'
       names(data_list$Log)[names(data_list$Log)=='Distance'] <- 'Log'
-      names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthUpper'] <- 'MinRange'
-      names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthLower'] <- 'MaxRange'
+      names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthUpper'] <- 'MinChannelRange'
+      names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthLower'] <- 'MaxChannelRange'
       
       
       #add integration distance
@@ -419,7 +417,7 @@ StoxAcoustic <- function(AcousticData = NULL){
     data_list$AcousticCategory <- data_list$AcousticCategory[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'AcousticCategory')]
     data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReference')]
     
-    data_list$NASC <- data_list$NASC[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'NASCKey', 'Channel', 'MaxRange', 'MinRange', 'NASC')]
+    data_list$NASC <- data_list$NASC[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'NASCKey', 'Channel', 'MaxChannelRange', 'MinChannelRange', 'NASC')]
     
     
     return(data_list)
