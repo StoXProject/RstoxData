@@ -24,26 +24,48 @@ filterData <- function(inputData, filterExpression, propagateUpwards = "") {
 		return(out)
 	}
 
-	applyFilter <- function(tableName, x, y) {
+	applyFilter <- function(tableName, x, y, propDown = TRUE, propUp = FALSE) {
+		ret <- list()
+
 		filts <- x[[tableName]]
-		table <- y[[tableName]]
-		if(!nrow(table)) {
+
+		if(!nrow( y[[tableName]])) {
 			warning(paste("Empty table", tableName))
-			return(table)
+			return(ret)
 		}
 
-		test <- try(table <- table[eval(filts),], silent = TRUE)
+		test <- try(ret[[tableName]] <- y[[tableName]][eval(filts),], silent = TRUE)
 		if(class(test)[1] == "try-error") {
 			warning(paste0("Apply filter error:\n", test[1]))
+		} else {
+			# 3. propagate down
+			if(propDown) {
+				start <- which(names(y) == tableName)
+				range <- c(start:length(names(y)))
+				# Don't propage if it's the only table
+				if(length(range) > 1) {
+					for(parent in head(range, -1)) {
+						# Find similar columns (assume those are keys)
+						key <- intersect(names(y[[parent + 1]]), names(y[[parent]]))
+						if(length(key) > 0) {
+							# Find the not deleted keys after filtering
+							deleted <- fsetdiff(y[[parent]][, ..key], ret[[names(y)[parent]]][, ..key])
+							# Propagate to child (using Map)
+							ret[[names(y)[parent+1]]] <- y[[parent+1]][do.call(pmin, Map(`%in%`, y[[parent+1]][, names(deleted), with=FALSE], deleted)) != 1L]
+						}
+					}
+				}
+			}
 		}
-		return(table)
+		return(ret)
 	}
 
 	applyFilterWrap <- function(fileName, x, y) {
-		out <- lapply(names(x[[fileName]]), applyFilter, x[[fileName]], y[[fileName]])
-		names(out) <- names(x[[fileName]])
-
-		merged <- replace(y[[fileName]], intersect(names(out), names(y[[fileName]])), out[intersect(names(out), names(y[[fileName]]))])
+		# Do per file filtering
+		for (tName in names(x[[fileName]])) {
+			out <- applyFilter(tName, x[[fileName]], y[[fileName]])
+			merged <- replace(y[[fileName]], intersect(names(out), names(y[[fileName]])), out[intersect(names(out), names(y[[fileName]]))])
+		}
 
 		return(merged)
 	}
@@ -80,15 +102,15 @@ filterData <- function(inputData, filterExpression, propagateUpwards = "") {
 	
 	# 3. Apply filters
 	if(level == 1) {
-		ret <- lapply(names(pFilters), applyFilter, pFilters, inputData)
+		for (tName in names(pFilters)) {
+			out <- applyFilter(tName, pFilters, inputData)
+			merged <- replace(inputData, intersect(names(out), names(inputData)), out[intersect(names(out), names(inputData))])
+		}
 	} else {
 		ret <- lapply(names(pFilters), applyFilterWrap, pFilters, inputData)
+		names(ret) <- names(pFilters)
+		merged <- replace(inputData, intersect(names(ret), names(inputData)), ret[intersect(names(ret), names(inputData))])
 	}
-	names(ret) <- names(pFilters)
-
-	merged <- replace(inputData, intersect(names(ret), names(inputData)), ret[intersect(names(ret), names(inputData))])
-
-	# 3. (TODO) Propagate down
 
 	# 4. (TODO) Propagate up
 
