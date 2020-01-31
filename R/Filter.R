@@ -7,7 +7,7 @@
 #' @import data.table
 #' @export
 #' 
-filterData <- function(inputData, filterExpression, propagateUpwards = "") {
+filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
 	
 	`%notin%` <- Negate(`%in%`)
 
@@ -24,7 +24,7 @@ filterData <- function(inputData, filterExpression, propagateUpwards = "") {
 		return(out)
 	}
 
-	applyFilter <- function(tableName, x, y, propDown = TRUE, propUp = FALSE) {
+	applyFilter <- function(tableName, x, y, propDown, propUp) {
 		ret <- list()
 
 		filts <- x[[tableName]]
@@ -60,10 +60,10 @@ filterData <- function(inputData, filterExpression, propagateUpwards = "") {
 		return(ret)
 	}
 
-	applyFilterWrap <- function(fileName, x, y) {
+	applyFilterWrap <- function(fileName, x, y, propDown, propUp) {
 		# Do per file filtering
 		for (tName in names(x[[fileName]])) {
-			out <- applyFilter(tName, x[[fileName]], y[[fileName]])
+			out <- applyFilter(tName, x[[fileName]], y[[fileName]], propDown, propUp)
 			merged <- replace(y[[fileName]], intersect(names(out), names(y[[fileName]])), out[intersect(names(out), names(y[[fileName]]))])
 		}
 
@@ -103,11 +103,11 @@ filterData <- function(inputData, filterExpression, propagateUpwards = "") {
 	# 3. Apply filters
 	if(level == 1) {
 		for (tName in names(pFilters)) {
-			out <- applyFilter(tName, pFilters, inputData)
+			out <- applyFilter(tName, pFilters, inputData, propagateDownwards, propagateUpwards)
 			merged <- replace(inputData, intersect(names(out), names(inputData)), out[intersect(names(out), names(inputData))])
 		}
 	} else {
-		ret <- lapply(names(pFilters), applyFilterWrap, pFilters, inputData)
+		ret <- lapply(names(pFilters), applyFilterWrap, pFilters, inputData, propagateDownwards, propagateUpwards)
 		names(ret) <- names(pFilters)
 		merged <- replace(inputData, intersect(names(ret), names(inputData)), ret[intersect(names(ret), names(inputData))])
 	}
