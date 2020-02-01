@@ -1,8 +1,11 @@
-#' Convert BioticData to StoxBioticData
+#' Run filter on any StoX related data source
 #'
-#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
+#' @param inputData An input data. Can be a list of biotic data (StoX data type \code{\link{BioticData}}), list of acoustic data, StoxBiotic data, or StoxAcoustic data.
+#' @param filterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param propagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param propagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
-#' @return An object of StoX data type \code{\link{StoxBioticData}}.
+#' @return An object of filtered data in the same format as the input data.
 #'
 #' @import data.table
 #' @export
@@ -62,9 +65,10 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 
 	applyFilterWrap <- function(fileName, x, y, propDown, propUp) {
 		# Do per file filtering
-		for (tName in names(x[[fileName]])) {
-			out <- applyFilter(tName, x[[fileName]], y[[fileName]], propDown, propUp)
-			merged <- replace(y[[fileName]], intersect(names(out), names(y[[fileName]])), out[intersect(names(out), names(y[[fileName]]))])
+		merged <- y[[fileName]]
+		for (tName in intersect(names(merged), names(x[[fileName]]))) {
+			out <- applyFilter(tName, x[[fileName]], merged, propDown, propUp)
+			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
 		}
 
 		return(merged)
@@ -102,9 +106,10 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	
 	# 3. Apply filters
 	if(level == 1) {
-		for (tName in names(pFilters)) {
-			out <- applyFilter(tName, pFilters, inputData, propagateDownwards, propagateUpwards)
-			merged <- replace(inputData, intersect(names(out), names(inputData)), out[intersect(names(out), names(inputData))])
+		merged <- inputData
+		for (tName in intersect(names(merged), names(pFilters))) {
+			out <- applyFilter(tName, pFilters, merged, propagateDownwards, propagateUpwards)
+			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
 		}
 	} else {
 		ret <- lapply(names(pFilters), applyFilterWrap, pFilters, inputData, propagateDownwards, propagateUpwards)
