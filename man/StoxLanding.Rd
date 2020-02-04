@@ -39,6 +39,7 @@ All columns that are not the ones aggregated (weight), will be used as aggregati
   \item{CatchDate}{SisteFangstdato}
   \item{Gear}{Redskap_kode}
   \item{Area}{Hovedområde_kode}
+  \item{SubArea}{Lokasjon_kode}
   \item{Coastal}{KystHav_kode}
   \item{N62Code}{NordSørFor62GraderNord}
   \item{VesselLengthGroup}{Lengdegruppe_kode}

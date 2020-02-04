@@ -14,6 +14,7 @@ Table (\code{\link[data.table]{data.table}}) with aggregated weight of landings 
   \item{CatchDate}{POSIXct() Date of catch (last catch on trip) in UTC}
   \item{Gear}{character() Code for gear used for catch (dominant gear for trip)}
   \item{Area}{character() Area code for the position where the catch was cought (dominant area for trip)}
+  \item{SubArea}{character() Subdivision of area code for the position where the catch was cought (dominant area for trip)}
   \item{Coastal}{character() Code indidcating whether catch was taken within coastal delimitation line (dominant side for trip)}
   \item{N62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
   \item{VesselLengthGroup}{character() Length group for vessel}
