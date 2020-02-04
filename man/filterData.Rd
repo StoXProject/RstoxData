@@ -2,16 +2,59 @@
 % Please edit documentation in R/Filter.R
 \name{filterData}
 \alias{filterData}
-\title{Convert BioticData to StoxBioticData}
+\alias{FilterBiotic}
+\alias{FilterAcoustic}
+\alias{FilterStoxBiotic}
+\alias{FilterStoxAcoustic}
+\title{Run filter on any StoX related data source}
 \usage{
-filterData(data, filterExpression, fropagateUpwards = "")
+filterData(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterBiotic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterAcoustic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterStoxBiotic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterStoxAcoustic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
 }
 \arguments{
-\item{BioticData}{A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.}
+\item{inputData}{An input data. Can be a list of biotic data (StoX data type \code{\link{BioticData}}), list of acoustic data, StoxBiotic data, or StoxAcoustic data.}
+
+\item{filterExpression}{Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.}
+
+\item{propagateDownwards}{Whether the filter action will propagate in the downwards direction. Default to TRUE.}
+
+\item{propagateUpwards}{Whether the filter action will propagate in the upwards direction. Default to FALSE.}
 }
 \value{
-An object of StoX data type \code{\link{StoxBioticData}}.
+An object of filtered data in the same format as the input data.
 }
 \description{
-Convert BioticData to StoxBioticData
+Run filter on any StoX related data source
 }
