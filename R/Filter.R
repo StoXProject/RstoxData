@@ -1,5 +1,7 @@
 #' Run filter on any StoX related data source
 #'
+#' @name filterData
+#'
 #' @param inputData An input data. Can be a list of biotic data (StoX data type \code{\link{BioticData}}), list of acoustic data, StoxBiotic data, or StoxAcoustic data.
 #' @param filterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param propagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
@@ -8,6 +10,7 @@
 #' @return An object of filtered data in the same format as the input data.
 #'
 #' @import data.table
+#' @importFrom utils head
 #' @export
 #' 
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
@@ -121,3 +124,15 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 
 	return(merged)
 }
+
+#' @rdname filterData
+FilterBiotic <- filterData
+
+#' @rdname filterData
+FilterAcoustic <- filterData
+
+#' @rdname filterData
+FilterStoxBiotic <- filterData
+
+#' @rdname filterData
+FilterStoxAcoustic <- filterData

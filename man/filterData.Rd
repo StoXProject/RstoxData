@@ -2,9 +2,41 @@
 % Please edit documentation in R/Filter.R
 \name{filterData}
 \alias{filterData}
+\alias{FilterBiotic}
+\alias{FilterAcoustic}
+\alias{FilterStoxBiotic}
+\alias{FilterStoxAcoustic}
 \title{Run filter on any StoX related data source}
 \usage{
 filterData(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterBiotic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterAcoustic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterStoxBiotic(
+  inputData,
+  filterExpression,
+  propagateDownwards = TRUE,
+  propagateUpwards = FALSE
+)
+
+FilterStoxAcoustic(
   inputData,
   filterExpression,
   propagateDownwards = TRUE,
