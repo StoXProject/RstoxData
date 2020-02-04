@@ -20,6 +20,7 @@ expect_equivalent(expected_colums, names(flatSL))
 expect_true(is.numeric(flatSL$RoundWeightKilogram))
 expect_true(is.numeric(flatSL$Year))
 expect_true(is.character(flatSL$CountryVessel))
+expect_true(length(flatSL$CatchDate) > 1 & "POSIXct" %in% class(flatSL$CatchDate))
 
 context("test-stoxLanding missing values in aggColumns")
 weightPre <- sum(flatSL$RoundWeightKilogram)

@@ -99,7 +99,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
   # format conversions
   cd <- as.POSIXct(aggLandings$CatchDate, format="%d.%m.%Y")
   attributes(cd)$tzone <- "UTC"
-  aggLandings$catchDate <- as.POSIXct(substr(as.character(cd),1,10), format="%Y-%m-%d", tzone="UTC")
+  aggLandings$CatchDate <- as.POSIXct(substr(as.character(cd),1,10), format="%Y-%m-%d", tzone="UTC")
   
   aggLandings$Year <- as.integer(aggLandings$Year)
   
@@ -149,7 +149,6 @@ StoxLanding <- function(LandingData, appendColumns=character(), appendColumnsNam
   
   return(extractNMDlandingsV2(LandingData, appendColumns, appendColumnsNames))
   
-
 }
 
 #' Check if argument is StoxLandingData
