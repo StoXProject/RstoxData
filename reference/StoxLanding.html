@@ -116,7 +116,11 @@
  Convert landing data to the aggregated format <code><a href='StoxLandingData.html'>StoxLandingData</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>StoxLanding</span>(<span class='no'>LandingData</span>)</pre>
+    <pre class="usage"><span class='fu'>StoxLanding</span>(
+  <span class='no'>LandingData</span>,
+  <span class='kw'>appendColumns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(),
+  <span class='kw'>appendColumnsNames</span> <span class='kw'>=</span> <span class='no'>appendColumns</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -125,11 +129,43 @@
       <th>LandingData</th>
       <td><p>Sales-notes data. See <code><a href='LandingData.html'>LandingData</a></code></p></td>
     </tr>
+    <tr>
+      <th>appendColumns</th>
+      <td><p>character() vector that identifies additional columns in <code><a href='LandingData.html'>LandingData</a></code> to append to <code><a href='StoxLandingData.html'>StoxLandingData</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>appendColumnsNames</th>
+      <td><p>character() vector that defines the names of the columns in 'appendColumns' in the output.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code><a href='StoxLandingData.html'>StoxLandingData</a></code>, aggregated sales-notes data.</p>
+    <p><code><a href='StoxLandingData.html'>StoxLandingData</a></code>, aggregated landings data.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>All columns that are not the ones aggregated (weight), will be used as aggregation variables.
+ This includes any columns added with 'appendColumns' and may not make much sense for continous variables.</p> 
+<p>If 'LandingData' does not contain columns identified by 'appendColumns'. NA columns will be added.</p>
+<p>Correspondances indicate which field a value is derived from, not necessarily verbatim copied.</p>
+<p>Correspondance to LandingData (http://www.imr.no/formats/landinger/v2):</p><dl class='dl-horizontal'>
+  <dt>Species</dt><dd><p>Art_kode</p></dd>
+  <dt>Year</dt><dd><p>Fangstår</p></dd>
+  <dt>CatchDate</dt><dd><p>SisteFangstdato</p></dd>
+  <dt>Gear</dt><dd><p>Redskap_kode</p></dd>
+  <dt>Area</dt><dd><p>Hovedområde_kode</p></dd>
+  <dt>SubArea</dt><dd><p>Lokasjon_kode</p></dd>
+  <dt>Coastal</dt><dd><p>KystHav_kode</p></dd>
+  <dt>N62Code</dt><dd><p>NordSørFor62GraderNord</p></dd>
+  <dt>VesselLengthGroup</dt><dd><p>Lengdegruppe_kode</p></dd>
+  <dt>CountryVessel</dt><dd><p>Fartøynasjonalitet_kode</p></dd>
+  <dt>LandingSite</dt><dd><p>Mottaksstasjon</p></dd>
+  <dt>CountryLanding</dt><dd><p>Landingsnasjon_kode</p></dd>
+  <dt>Usage</dt><dd><p>HovedgruppeAnvendelse_kode</p></dd>
+  <dt>RoundWeightKilogram</dt><dd><p>Rundvekt</p></dd>
+ 
+</dl>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -137,6 +173,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
     </ul>
 
   </div>
