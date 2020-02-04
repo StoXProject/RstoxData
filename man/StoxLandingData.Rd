@@ -4,66 +4,25 @@
 \alias{StoxLandingData}
 \title{StoxLandingData}
 \description{
-Table (\code{\link[data.table]{data.table}}) with aggregated landings data from sales notes.
-Contains sales notes and landing notes.
-These are issued as fish is landed, and can be considered a census of all first hand sale of fish.
-Sales-notes should cover all landings from Norwegian vessels. Even those abroad.
-In addition they cover landings by foreign vessels in Norwegian ports.
+Table (\code{\link[data.table]{data.table}}) with aggregated weight of landings from landing records.
 }
 \section{Column definitions}{
 
  \describe{
-  \item{speciesFAOCommercial}{character() FAO code for species (ASFIS)}
-  \item{speciesCategoryCommercial}{character() code for species category (several codes may code the same species or stock, and some species may be recorded only at higher taxonomic classifications)}
-  \item{commonNameCommercial}{character() common name used for species category in trade documents}
-  \item{year}{integer() Year of catch}
-  \item{catchDate}{POSIXct() Date of catch (last catch on trip) in UTC}
-  \item{gear}{character() Code for gear used for catch (dominant gear for trip)}
-  \item{gearDescription}{character() Descriptive text for column 'gear'}
-  \item{area}{character() Area code for the position of catch (dominant area for trip)}
-  \item{location}{character() Location code (subdivision of 'Area') for the position of catch (dominant area for trip)}
-  \item{icesAreaGroup}{character() Area code for the position of catch (dominant area for trip), based on different levels of the ICES spatial coding system}
-  \item{coastal}{character() code indidcating whether catch was taken within coastal delimitation line (dominant side for trip)}
-  \item{coastalDescription}{character() Descriptive text for column 'coastal'}
-  \item{n62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
-  \item{n62Description}{character() Descriptive text indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
-  \item{vesselLength}{numeric() Maximal length of vessel in meters}
-  \item{countryVessel}{character() Country of the vessel that caugth the catch}
-  \item{landingSite}{character() Code identifying landing site (buyer of catch)}
-  \item{countryLanding}{character() Country where catch was landed}
-  \item{usage}{character() Code for market usage of catch.}
-  \item{usageDescription}{character() Descriptive text for column 'usage'}
-  \item{weight}{numeric() Weight of round catch in kg. Round weight may be estimated from post-processing weights.}
- }
-}
-
-\section{Correspondance to other formats}{
-
- Correspondances indicate which field a value is derived from, not necessarily verbatim copied.
-
- Correspondance to LandingData (http://www.imr.no/formats/landinger/v2):
- \describe{
-  \item{speciesFAOCommercial}{ArtFAO_kode}
-  \item{speciesCategoryCommercial}{Art_kode}
-  \item{commonNameCommercial}{Art_bokmål}
-  \item{year}{Fangstår}
-  \item{catchDate}{SisteFangstdato}
-  \item{gear}{Redskap_kode}
-  \item{gearDescription}{Redskap_bokmål}
-  \item{area}{Hovedområde_kode}
-  \item{location}{Lokasjon_kode}
-  \item{icesAreaGroup}{Områdegruppering_bokmål}
-  \item{coastal}{KystHav_kode}
-  \item{coastalDescription}{KystHav_kode}
-  \item{n62Code}{NordSørFor62GraderNord}
-  \item{n62Description}{NordSørFor62GraderNord}
-  \item{vesselLength}{StørsteLengde}
-  \item{countryVessel}{Fartøynasjonalitet_kode}
-  \item{landingSite}{Mottaksstasjon}
-  \item{countryLanding}{Landingsnasjon_kode}
-  \item{usage}{HovedgruppeAnvendelse_kode}
-  \item{usageDescription}{HovedgruppeAnvendelse_bokmål}
-  \item{weight}{Rundvekt}
+  \item{Species}{character() code for species category (species identified by market or regulation standards. Several codes may code the same species or stock, and some catch may be recorded only at higher taxonomic classifications)}
+  \item{Year}{integer() Year of catch}
+  \item{CatchDate}{POSIXct() Date of catch (last catch on trip) in UTC}
+  \item{Gear}{character() Code for gear used for catch (dominant gear for trip)}
+  \item{Area}{character() Area code for the position where the catch was cought (dominant area for trip)}
+  \item{SubArea}{character() Subdivision of area code for the position where the catch was cought (dominant area for trip)}
+  \item{Coastal}{character() Code indidcating whether catch was taken within coastal delimitation line (dominant side for trip)}
+  \item{N62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
+  \item{VesselLengthGroup}{character() Length group for vessel}
+  \item{CountryVessel}{character() Country of the vessel that caugth the catch}
+  \item{LandingSite}{character() Code identifying landing site (buyer of catch)}
+  \item{CountryLanding}{character() Country where catch was landed}
+  \item{Usage}{character() Code for market usage of catch.}
+  \item{RoundWeightKilogram}{numeric() Weight of round catch in kg.}
  }
 }
 
