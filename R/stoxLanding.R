@@ -29,152 +29,127 @@ is.LandingData <- function(LandingData){
   return(TRUE)
 }
 
-
-loadResource <- function(name){
+#' Extracts aggregated Landings from NMD - landings (namespace: http://www.imr.no/formats/landinger/v2)
+#' @noRd
+extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendColumnsNames=appendColumns){
+  flatLandings <- LandingData$Seddellinje
+  for (part in names(LandingData)[!(names(LandingData) %in% c("Landingsdata", "Seddellinje", "metadata"))]){
+    keys <- names(LandingData[[part]])[names(LandingData[[part]]) %in% names(flatLandings)]
+    flatLandings <- merge(LandingData[[part]], flatLandings, by=keys)
+  }
   
-  if (name == "gear"){
-    filename = "gear.csv"
-    col_types = "ccc"
-  }
-  else if (name == "coastal"){
-    filename = "coastal.csv"
-    col_types = "cc"
-  }
-  else if (name == "n62"){
-    filename = "n62.csv"
-    col_types = "cc"
-  }
-  else if (name == "usage"){
-    filename = "usage.csv"
-    col_types = "ccc"
-  }
-  else{
-    stop(paste("Resource", name, "not recognized"))
-  }
-
-  loc <- readr::locale()
-  loc$encoding <- "UTF-8"
-  return(readr::read_delim(system.file("extdata","codeDescriptions", filename, package="RstoxData"), delim = "\t", locale = loc, col_types = col_types))
+  #
+  # Note: if non-character columns are added to aggColumns. Handle accoridngly in NA-aggregation below
+  #
+  sourceColumns <- c("Art_kode", 
+                     "Fangst\u00E5r", 
+                     "SisteFangstdato", 
+                     "Redskap_kode", 
+                     "Hovedomr\u00E5de_kode", 
+                     "KystHav_kode", 
+                     "NordS\u00F8rFor62GraderNord", 
+                     "Lengdegruppe_kode", 
+                     "Fart\u00F8ynasjonalitet_kode",
+                     "Mottaksstasjon",
+                     "Mottakernasjonalitet_kode",
+                     "HovedgruppeAnvendelse_kode")
+  sourceColumns <- c(sourceColumns, appendColumns)
   
+  outputColumns <- c( "Species",
+                      "Year",
+                      "CatchDate",
+                      "Gear",
+                      "Area",
+                      "Coastal",
+                      "N62Code",
+                      "VesselLengthGroup",
+                      "CountryVessel",
+                      "LandingSite",
+                      "CountryLanding",
+                      "Usage")
+  outputColumns <- c(outputColumns, appendColumnsNames)
+  
+  # add NAs for missing columns
+  # this is done because the underlaying format is supposed to be generalized to hetergenous formats like StoxBiotic.
+  for (col in appendColumns[!(appendColumns %in% names(flatLandings))]){
+    flatLandings[[col]] <- NA
+  }
+  
+  flatLandings <- flatLandings[,c(sourceColumns, "Rundvekt"), with=F]
+  
+  aggList <- list()
+  for (i in 1:length(sourceColumns)){
+    sourcename <- sourceColumns[i]
+    outputname <- outputColumns[i]
+    flatLandings[[outputname]] <- flatLandings[[sourcename]]
+    flatLandings[[outputname]][is.na(flatLandings[[sourcename]])] <- "<NA>" #set NAs to text-string for aggregation
+    aggList[[outputname]] <- flatLandings[[outputname]]
+  }
+  names(aggList) <- outputColumns
+  aggLandings <- stats::aggregate(list(Rundvekt=flatLandings$Rundvekt), by=aggList, FUN=function(x){sum(x, na.rm=T)})
+  aggLandings <- aggLandings[,c(outputColumns, "Rundvekt")]
+  
+  #reset NAs
+  for (aggC in outputColumns){
+    aggLandings[[aggC]][aggLandings[[aggC]] == "<NA>"] <- NA
+  }
+  aggLandings$RoundWeightKilogram <- aggLandings$Rundvekt
+  outputColumns <- c(outputColumns, "RoundWeightKilogram")
+  
+  # format conversions
+  cd <- as.POSIXct(aggLandings$CatchDate, format="%d.%m.%Y")
+  attributes(cd)$tzone <- "UTC"
+  aggLandings$catchDate <- as.POSIXct(substr(as.character(cd),1,10), format="%Y-%m-%d", tzone="UTC")
+  
+  aggLandings$Year <- as.integer(aggLandings$Year)
+  
+  return(data.table::as.data.table(aggLandings[,outputColumns]))
 }
 
 #' Convert landing data
 #' @description
 #'  StoX function
 #'  Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
+#' @details 
+#'  All columns that are not the ones aggregated (weight), will be used as aggregation variables.
+#'  This includes any columns added with 'appendColumns' and may not make much sense for continous variables.
+#'  
+#'  If 'LandingData' does not contain columns identified by 'appendColumns'. NA columns will be added.
+#' 
+#'  Correspondances indicate which field a value is derived from, not necessarily verbatim copied.
+#' 
+#'  Correspondance to LandingData (http://www.imr.no/formats/landinger/v2):
+#'  \describe{
+#'   \item{Species}{Art_kode}
+#'   \item{Year}{Fangstår}
+#'   \item{CatchDate}{SisteFangstdato}
+#'   \item{Gear}{Redskap_kode}
+#'   \item{Area}{Hovedområde_kode}
+#'   \item{Coastal}{KystHav_kode}
+#'   \item{N62Code}{NordSørFor62GraderNord}
+#'   \item{VesselLengthGroup}{Lengdegruppe_kode}
+#'   \item{CountryVessel}{Fartøynasjonalitet_kode}
+#'   \item{LandingSite}{Mottaksstasjon}
+#'   \item{CountryLanding}{Landingsnasjon_kode}
+#'   \item{Usage}{HovedgruppeAnvendelse_kode}
+#'   \item{RoundWeightKilogram}{Rundvekt}
+#'  }
+#'  
 #' @param LandingData Sales-notes data. See \code{\link[RstoxData]{LandingData}}
-#' @return \code{\link[RstoxData]{StoxLandingData}}, aggregated sales-notes data.
+#' @param appendColumns character() vector that identifies additional columns in \code{\link[RstoxData]{LandingData}} to append to \code{\link[RstoxData]{StoxLandingData}}.
+#' @param appendColumnsNames character() vector that defines the names of the columns in 'appendColumns' in the output.
+#' @return \code{\link[RstoxData]{StoxLandingData}}, aggregated landings data.
 #' @name StoxLanding
 #' @export
-StoxLanding <- function(LandingData){
+StoxLanding <- function(LandingData, appendColumns=character(), appendColumnsNames=appendColumns){
   
-  flatLandings <- merge(LandingData$Seddellinje, LandingData$Fangstdata)
-  flatLandings <- merge(flatLandings, LandingData$Art)
-  flatLandings <- merge(flatLandings, LandingData$Produkt)
-  flatLandings <- merge(flatLandings, LandingData$Mottaker)
-
-  #
-  # Note: if non-character columns are added to aggColumns. Handle accoridngly in NA-aggregation below
-  #
-  aggColumns <- c("ArtFAO_kode", 
-                  "Art_kode", 
-                  "Art_bokm\u00E5l", 
-                  "Fangst\u00E5r", 
-                  "SisteFangstdato", 
-                  "Redskap_kode", 
-                  "Hovedomr\u00E5de_kode", 
-                  "Lokasjon_kode",
-                  "Omr\u00E5degruppering_bokm\u00E5l", 
-                  "KystHav_kode", 
-                  "NordS\u00F8rFor62GraderNord", 
-                  "St\u00F8rsteLengde", 
-                  "Fart\u00F8ynasjonalitet_kode",
-                  "Mottaksstasjon",
-                  "Mottakernasjonalitet_kode",
-                  "HovedgruppeAnvendelse_kode")
-  
-  flatLandings <- flatLandings[,c(aggColumns, "Rundvekt"), with=F]
-
-  aggList <- list()
-  for (aggC in aggColumns){
-    flatLandings[[aggC]][is.na(flatLandings[[aggC]])] <- "<NA>" #set NAs to text-string for aggregation
-    aggList[[aggC]] <- flatLandings[[aggC]]
-  }
-  names(aggList) <- aggColumns
-  
-  aggLandings <- stats::aggregate(list(Rundvekt=flatLandings$Rundvekt), by=aggList, FUN=function(x){sum(x, na.rm=T)})
-  aggLandings <- aggLandings[,c(aggColumns, "Rundvekt")]
-  
-  
-  #reset NAs
-  for (aggC in aggColumns){
-    aggLandings[[aggC]][aggLandings[[aggC]] == "<NA>"] <- NA
+  if (length(appendColumns) != length(appendColumnsNames)){
+    stop("elements in appendColumnNames must correspond to elements in appendColumns")
   }
   
-  # rename headers
-  names(aggLandings) <- c("speciesFAOCommercial",
-                           "speciesCategoryCommercial",
-                           "commonNameCommercial",
-                           "year",
-                           "catchDate",
-                           "gear",
-                           "area",
-                           "location",
-                           "icesAreaGroup",
-                           "coastal",
-                           "n62Code",
-                           "vesselLength",
-                           "countryVessel",
-                           "landingSite",
-                           "countryLanding",
-                           "usage",
-                           "weight"
-                           )
+  return(extractNMDlandingsV2(LandingData, appendColumns, appendColumnsNames))
   
-  
-  gear <- loadResource("gear")[,c("gear", "gearDescription")]
-  aggLandings <- merge(aggLandings, gear, all.x=T, by="gear")
-  usage <- loadResource("usage")[,c("usage", "usageDescription")]
-  aggLandings <- merge(aggLandings, usage, all.x=T, by="usage")
-  coastal <- loadResource("coastal")[,c("coastal", "coastalDescription")]
-  aggLandings <- merge(aggLandings, coastal, all.x=T, by="coastal")
-  n62 <- loadResource("n62")[,c("n62Code", "n62Description")]
-  aggLandings <- merge(aggLandings, n62, all.x=T, by="n62Code")
-  
-  # format conversions
-  cd <- as.POSIXct(aggLandings$catchDate, format="%d.%m.%Y")
-  attributes(cd)$tzone <- "UTC"
-  aggLandings$catchDate <- as.POSIXct(substr(as.character(cd),1,10), format="%Y-%m-%d", tzone="UTC")
-  
-  aggLandings$vesselLength[aggLandings$vesselLength == "<NA>"] <- NA
-  aggLandings$vesselLength <- as.numeric(aggLandings$vesselLength)
-  
-  aggLandings$year[aggLandings$year == "<NA>"] <- NA
-  aggLandings$year <- as.integer(aggLandings$year)
-  
-  returnOrder <- c("speciesFAOCommercial",
-                   "speciesCategoryCommercial",
-                   "commonNameCommercial",
-                   "year",
-                   "catchDate",
-                   "gear",
-                   "gearDescription",
-                   "area",
-                   "location",
-                   "icesAreaGroup",
-                   "coastal",
-                   "coastalDescription",
-                   "n62Code",
-                   "n62Description",
-                   "vesselLength",
-                   "countryVessel",
-                   "landingSite",
-                   "countryLanding",
-                   "usage",
-                   "usageDescription",
-                   "weight")
-  
-  return(data.table::as.data.table(aggLandings[,returnOrder]))
+
 }
 
 #' Check if argument is StoxLandingData
@@ -186,27 +161,19 @@ StoxLanding <- function(LandingData){
 #' @export
 is.StoxLandingData <- function(StoxLandingData){
   
-  expected_colums <- c("speciesFAOCommercial",
-                       "speciesCategoryCommercial",
-                       "commonNameCommercial",
-                       "year",
-                       "catchDate",
-                       "gear",
-                       "gearDescription",
-                       "area",
-                       "location",
-                       "icesAreaGroup",
-                       "coastal",
-                       "coastalDescription",
-                       "n62Code",
-                       "n62Description",
-                       "vesselLength",
-                       "countryVessel",
-                       "landingSite",
-                       "countryLanding",
-                       "usage",
-                       "usageDescription",
-                       "weight"
+  expected_colums <- c("Species",
+                       "Year",
+                       "CatchDate",
+                       "Gear",
+                       "Area",
+                       "Coastal",
+                       "N62Code",
+                       "VesselLengthGroup",
+                       "CountryVessel",
+                       "LandingSite",
+                       "CountryLanding",
+                       "Usage",
+                       "RoundWeightKilogram"
   )
   
   if (!data.table::is.data.table(StoxLandingData)){
