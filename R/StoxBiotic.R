@@ -154,6 +154,22 @@ StoxBiotic <- function(BioticData) {
 
 
 
+#' Merge StoxBioticData
+#'
+#' @param StoxBioticData A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).
+#'
+#' @return An object of StoX data type \code{\link{MergedStoxBioticData}}.
+#'
+#' @export
+#' 
+MergeStoxBiotic <- function(StoxBioticData) {
+    mergeDataTables(StoxBioticData, tableNames = NULL, output.only.last = TRUE)
+}
+
+
+
+
+
 
 
 
