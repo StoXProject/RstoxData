@@ -4,7 +4,7 @@
 \alias{StoxAcoustic}
 \title{Convert AcousticData to StoxAcousticData}
 \usage{
-StoxAcoustic(AcousticData = NULL)
+StoxAcoustic(AcousticData = NULL, cores = NULL)
 }
 \arguments{
 \item{AcousticData}{A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.}

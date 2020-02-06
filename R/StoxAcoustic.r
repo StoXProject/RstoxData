@@ -6,15 +6,13 @@
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData = NULL){
+StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
 	
 	## For flexibility accept a list of the input data, named by the data type:
 	#if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
 	#	AcousticData <- AcousticData$AcousticData
 	#}
-	
-
-	StoxAcousticOne <- function(data_list) {
+    StoxAcousticOne <- function(data_list) {
 
 	
     #TODO: 
@@ -28,8 +26,6 @@ StoxAcoustic <- function(AcousticData = NULL){
     #       a flag here
     ices_format <- FALSE
     if(is.null(data_list$echosounder_dataset))ices_format<- TRUE
-    
-    
     
     
     
@@ -213,6 +209,8 @@ StoxAcoustic <- function(AcousticData = NULL){
         units ="secs"
     )
       
+      # Add NA as BottomDepth, since bottom depth in NMDEchosounder1 is defined as a start and stop value per frequency, and not one single value per Log, as in ICESAcoustic and as intended in StoxAcoustic. We choose to set these as NA and rather wait for any requests on the BottomDepth, which will call for a decision on how to interpret the bottom depth information in NMDEchosounder1 (confronting LSSS etc.):
+      data_list$Log$BottomDepth <- NA
       
       
       
@@ -419,8 +417,8 @@ StoxAcoustic <- function(AcousticData = NULL){
     
     data_list$Cruise<-data_list$Cruise[, c('CruiseKey', 'Platform')]
     # 2020-02-03: Removed BottomDepth, which is mandatory:
-    #data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance', 'BottomDepth')]
-    data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance')]
+    data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance', 'BottomDepth')]
+    #data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance')]
     data_list$Beam <- data_list$Beam[,c('CruiseKey', 'LogKey', 'BeamKey', 'Frequency')]
     data_list$AcousticCategory <- data_list$AcousticCategory[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'AcousticCategory')]
     data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReference')]
@@ -432,14 +430,22 @@ StoxAcoustic <- function(AcousticData = NULL){
   }
 
   # Process Biotic data in parallel
-  cores <- getCores()
-  if(get_os() == "win") {
-    cl <- makeCluster(cores)
-    data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
-    stopCluster(cl)
-  } else {
-    data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = cores)
+	if(length(cores) == 0) {
+	    cores <- getCores()
+	}
+	if(cores == 1) {
+	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
+	}
+  else {
+      if(get_os() == "win") {
+          cl <- makeCluster(cores)
+          data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
+          stopCluster(cl)
+      } else {
+          data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = cores)
+      }
   }
+  
 
   tableNames <- names(data_list_out[[1]])
 
