@@ -38,7 +38,7 @@ stoxFunctionAttributes <- list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxAcousticData", 
-		functionParameterHierarchy = list()
+		functionArgumentHierarchy = list()
 	),
 	
 	# Convert BioticData to StoxBioticData:
@@ -46,7 +46,7 @@ stoxFunctionAttributes <- list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
-		functionParameterHierarchy = list()
+		functionArgumentHierarchy = list()
 	),
 	
 	# Convert LandingData to StoxLandingData:
@@ -65,7 +65,7 @@ stoxFunctionAttributes <- list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "MergedStoxAcousticData", 
-	    functionParameterHierarchy = list()
+	    functionArgumentHierarchy = list()
 	),
 	
 	# Convert BioticData to StoxBioticData:
@@ -73,6 +73,6 @@ stoxFunctionAttributes <- list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "MergedStoxBioticData", 
-	    functionParameterHierarchy = list()
+	    functionArgumentHierarchy = list()
 	)
 )

@@ -195,7 +195,7 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       tmp2 <- data_list$Beam[,c('LogKey','BeamKey', 'upper_integrator_depth')]
       data_list$Log <- merge(data_list$Log,tmp2,by='LogKey')
       
-      data_list$Log[, EDSU:=paste(data_list$Cruise$Platform,Log,sep='/')]
+      data_list$Log[, EDSU := paste(data_list$Cruise$CruiseKey, LogKey, sep='/')]
       
       data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
       
@@ -280,6 +280,14 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       
       
       data_list$ChannelReference[data_list$ChannelReference$ChannelReferenceKey=='B']
+      
+      
+      
+      # Temporary change class of the Longitude2 and Latitude2 to double, due to error in the xsd:
+      data_list$Log$Latitude2 <- as.double(data_list$Log$Latitude2)
+      data_list$Log$Longitude2 <- as.double(data_list$Log$Longitude2)
+      
+      
       
       
     }else{
