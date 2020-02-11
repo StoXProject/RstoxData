@@ -16,31 +16,31 @@ filterData(
 )
 
 FilterBiotic(
-  inputData,
-  filterExpression,
-  propagateDownwards = TRUE,
-  propagateUpwards = FALSE
+  BioticData,
+  FilterExpression = "",
+  PropagateDownwards = TRUE,
+  PropagateUpwards = FALSE
 )
 
 FilterAcoustic(
-  inputData,
-  filterExpression,
-  propagateDownwards = TRUE,
-  propagateUpwards = FALSE
+  AcousticData,
+  FilterExpression = "",
+  PropagateDownwards = TRUE,
+  PropagateUpwards = FALSE
 )
 
 FilterStoxBiotic(
-  inputData,
-  filterExpression,
-  propagateDownwards = TRUE,
-  propagateUpwards = FALSE
+  StoxBioticData,
+  FilterExpression = "",
+  PropagateDownwards = TRUE,
+  PropagateUpwards = FALSE
 )
 
 FilterStoxAcoustic(
-  inputData,
-  filterExpression,
-  propagateDownwards = TRUE,
-  propagateUpwards = FALSE
+  StoxAcousticData,
+  FilterExpression = "",
+  PropagateDownwards = TRUE,
+  PropagateUpwards = FALSE
 )
 }
 \arguments{

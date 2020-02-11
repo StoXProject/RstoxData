@@ -125,14 +125,55 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	return(merged)
 }
 
+#' 
+#' @export
+#' 
 #' @rdname filterData
-FilterBiotic <- filterData
+FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    filterData(
+        BioticData, 
+        filterExpression = FilterExpression, 
+        propagateDownwards = PropagateDownwards, 
+        propagateUpwards = PropagateUpwards
+    )
+}
 
+#' 
+#' @export
+#' 
 #' @rdname filterData
-FilterAcoustic <- filterData
+FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    filterData(
+        AcousticData, 
+        filterExpression = FilterExpression, 
+        propagateDownwards = PropagateDownwards, 
+        propagateUpwards = PropagateUpwards
+    )
+}
 
-#' @rdname filterData
-FilterStoxBiotic <- filterData
 
+#' 
+#' @export
+#' 
 #' @rdname filterData
-FilterStoxAcoustic <- filterData
+FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    filterData(
+        StoxBioticData, 
+        filterExpression = FilterExpression, 
+        propagateDownwards = PropagateDownwards, 
+        propagateUpwards = PropagateUpwards
+    )
+}
+
+#' 
+#' @export
+#' 
+#' @rdname filterData
+FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    filterData(
+        StoxAcousticData, 
+        filterExpression = FilterExpression, 
+        propagateDownwards = PropagateDownwards, 
+        propagateUpwards = PropagateUpwards
+    )
+}
