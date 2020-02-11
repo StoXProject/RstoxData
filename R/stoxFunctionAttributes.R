@@ -60,6 +60,14 @@ stoxFunctionAttributes <- list(
 	 functionArgumentHierarchy = list()
 	), 
 	
+	# Convert BioticData to StoxBioticData:
+	FilterStoxBiotic = list(
+	    functionType = "modelData", 
+	    functionCategory = "baseline", 
+	    functionOutputDataType = "StoxBioticData", 
+	    functionParameterFormat = list(FileNames = "filterExpressionTable")
+	),
+	
 	# Convert AcousticData to StoxAcousticData:
 	MergeStoxAcoustic = list(
 	    functionType = "modelData", 
