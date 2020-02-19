@@ -125,11 +125,37 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	return(merged)
 }
 
-#' 
+
+splitFilterExpression <- function(FilterExpression, sep = "/") {
+    # Get the file names and the table names:
+    splited <- strsplit(FilterExpression, split = sep)
+    fileNames <- sapply(splited, function(x) x[seq_len(length(x) - 1)])
+    tableNames <- sapply(splited, utils::tail, 1)
+    
+    # Split the FilterExpression by the fileNames:
+    FilterExpression <- split(FilterExpression, fileNames)
+    names(FilterExpression) <- fileNames
+    
+    # Change the names of the individual tables:
+    
+}
+
+#' Filter (raw) Biotic data
+#'
+#' @param BioticData  Input \code{\link{BioticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
 FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+    #FilterExpression <- splitFilterExpression(FilterExpression)
+    
     filterData(
         BioticData, 
         filterExpression = FilterExpression, 
@@ -138,10 +164,18 @@ FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards =
     )
 }
 
-#' 
+#' Filter (raw) Acoustic data
+#'
+#' @param AcousticData  Input \code{\link{AcousticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
 FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         AcousticData, 
@@ -152,10 +186,18 @@ FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwar
 }
 
 
-#' 
+#' Filter StoxBiotic data
+#'
+#' @param StoxBioticData  Input \code{\link{StoxBioticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
 FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         StoxBioticData, 
@@ -165,10 +207,18 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDow
     )
 }
 
-#' 
+#' Filter StoxAcoustic data
+#'
+#' @param StoxBioticData  Input \code{\link{StoxAcousticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
 FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         StoxAcousticData, 
