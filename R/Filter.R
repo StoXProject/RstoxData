@@ -131,13 +131,18 @@ splitFilterExpression <- function(FilterExpression, sep = "/") {
     splited <- strsplit(FilterExpression, split = sep)
     fileNames <- sapply(splited, function(x) x[seq_len(length(x) - 1)])
     tableNames <- sapply(splited, utils::tail, 1)
+    tableNames <- split(tableNames, fileNames)
     
     # Split the FilterExpression by the fileNames:
     FilterExpression <- split(FilterExpression, fileNames)
     names(FilterExpression) <- fileNames
     
     # Change the names of the individual tables:
+    for(ind in seq_along(FilterExpression)) {
+        names(FilterExpression[[ind]]) <- tableNames[[ind]]
+    }
     
+    return(FilterExpression)
 }
 
 #' Filter (raw) Biotic data
@@ -154,7 +159,7 @@ splitFilterExpression <- function(FilterExpression, sep = "/") {
 #' 
 FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
-    #FilterExpression <- splitFilterExpression(FilterExpression)
+    FilterExpression <- splitFilterExpression(FilterExpression)
     
     filterData(
         BioticData, 
@@ -177,6 +182,9 @@ FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards =
 #' @export
 #' 
 FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+    FilterExpression <- splitFilterExpression(FilterExpression)
+    
     filterData(
         AcousticData, 
         filterExpression = FilterExpression, 
