@@ -6,7 +6,7 @@
 \usage{
 FilterAcoustic(
   AcousticData,
-  FilterExpression = "",
+  FilterExpression,
   PropagateDownwards = TRUE,
   PropagateUpwards = FALSE
 )

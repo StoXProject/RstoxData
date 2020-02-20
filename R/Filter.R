@@ -126,24 +126,37 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 }
 
 
-splitFilterExpression <- function(FilterExpression, sep = "/") {
+
+
+expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
+    
+    # Error if not a list:
+    if(!is.list(FilterExpressionList)) {
+        stop("FilterExpressionList must be a list")
+    }
+    # If the input list of expressions has 2 levels, return immediately:
+    if(is.list(FilterExpressionList[[1]])) {
+        return(FilterExpressionList)
+    }
+    
     # Get the file names and the table names:
-    splited <- strsplit(FilterExpression, split = sep)
+    splited <- strsplit(names(FilterExpressionList), split = sep)
     fileNames <- sapply(splited, function(x) x[seq_len(length(x) - 1)])
     tableNames <- sapply(splited, utils::tail, 1)
     tableNames <- split(tableNames, fileNames)
     
     # Split the FilterExpression by the fileNames:
-    FilterExpression <- split(FilterExpression, fileNames)
-    names(FilterExpression) <- fileNames
+    FilterExpressionList <- split(FilterExpressionList, fileNames)
+    names(FilterExpressionList) <- fileNames
     
     # Change the names of the individual tables:
-    for(ind in seq_along(FilterExpression)) {
-        names(FilterExpression[[ind]]) <- tableNames[[ind]]
+    for(ind in seq_along(FilterExpressionList)) {
+        names(FilterExpressionList[[ind]]) <- tableNames[[ind]]
     }
     
-    return(FilterExpression)
+    return(FilterExpressionList)
 }
+
 
 #' Filter (raw) Biotic data
 #'
@@ -157,9 +170,9 @@ splitFilterExpression <- function(FilterExpression, sep = "/") {
 #' @import data.table
 #' @export
 #' 
-FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterBiotic <- function(BioticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
-    FilterExpression <- splitFilterExpression(FilterExpression)
+    FilterExpression <- expandFilterExpressionList(FilterExpression)
     
     filterData(
         BioticData, 
@@ -181,9 +194,9 @@ FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards =
 #' @import data.table
 #' @export
 #' 
-FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterAcoustic <- function(AcousticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
-    FilterExpression <- splitFilterExpression(FilterExpression)
+    FilterExpression <- expandFilterExpressionList(FilterExpression)
     
     filterData(
         AcousticData, 
@@ -206,7 +219,7 @@ FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwar
 #' @import data.table
 #' @export
 #' 
-FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterStoxBiotic <- function(StoxBioticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         StoxBioticData, 
         filterExpression = FilterExpression, 
@@ -227,7 +240,7 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDow
 #' @import data.table
 #' @export
 #' 
-FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         StoxAcousticData, 
         filterExpression = FilterExpression, 

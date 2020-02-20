@@ -6,7 +6,7 @@
 \usage{
 FilterStoxBiotic(
   StoxBioticData,
-  FilterExpression = "",
+  FilterExpression,
   PropagateDownwards = TRUE,
   PropagateUpwards = FALSE
 )

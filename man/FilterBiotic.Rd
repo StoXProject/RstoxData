@@ -6,7 +6,7 @@
 \usage{
 FilterBiotic(
   BioticData,
-  FilterExpression = "",
+  FilterExpression,
   PropagateDownwards = TRUE,
   PropagateUpwards = FALSE
 )

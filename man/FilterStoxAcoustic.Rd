@@ -6,7 +6,7 @@
 \usage{
 FilterStoxAcoustic(
   StoxAcousticData,
-  FilterExpression = "",
+  FilterExpression,
   PropagateDownwards = TRUE,
   PropagateUpwards = FALSE
 )
