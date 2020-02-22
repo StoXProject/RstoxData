@@ -14,8 +14,8 @@
 #' @export
 #' 
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
-	
-	`%notin%` <- Negate(`%in%`)
+    
+    `%notin%` <- Negate(`%in%`)
 
 	processFilter <- function(filters) {
 		# Assume each individual filters relation are the AND (&) operator 
@@ -39,7 +39,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 			warning(paste("Empty table", tableName))
 			return(ret)
 		}
-
+		
 		test <- try(ret[[tableName]] <- y[[tableName]][eval(filts),], silent = TRUE)
 		if(class(test)[1] == "try-error") {
 			warning(paste0("Apply filter error:\n", test[1]))
@@ -52,7 +52,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 				if(length(range) > 1) {
 					for(parent in head(range, -1)) {
 						# Find similar columns (assume those are keys)
-						key <- intersect(names(y[[parent + 1]]), names(y[[parent]]))
+					    key <- intersect(names(y[[parent + 1]]), names(y[[parent]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
 							deleted <- fsetdiff(y[[parent]][, ..key], ret[[names(y)[parent]]][, ..key])
