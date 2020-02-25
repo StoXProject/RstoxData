@@ -2,10 +2,6 @@
 % Please edit documentation in R/Filter.R
 \name{filterData}
 \alias{filterData}
-\alias{FilterBiotic}
-\alias{FilterAcoustic}
-\alias{FilterStoxBiotic}
-\alias{FilterStoxAcoustic}
 \title{Run filter on any StoX related data source}
 \usage{
 filterData(
@@ -13,34 +9,6 @@ filterData(
   filterExpression,
   propagateDownwards = TRUE,
   propagateUpwards = FALSE
-)
-
-FilterBiotic(
-  BioticData,
-  FilterExpression = "",
-  PropagateDownwards = TRUE,
-  PropagateUpwards = FALSE
-)
-
-FilterAcoustic(
-  AcousticData,
-  FilterExpression = "",
-  PropagateDownwards = TRUE,
-  PropagateUpwards = FALSE
-)
-
-FilterStoxBiotic(
-  StoxBioticData,
-  FilterExpression = "",
-  PropagateDownwards = TRUE,
-  PropagateUpwards = FALSE
-)
-
-FilterStoxAcoustic(
-  StoxAcousticData,
-  FilterExpression = "",
-  PropagateDownwards = TRUE,
-  PropagateUpwards = FALSE
 )
 }
 \arguments{

@@ -14,8 +14,8 @@
 #' @export
 #' 
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
-	
-	`%notin%` <- Negate(`%in%`)
+    
+    `%notin%` <- Negate(`%in%`)
 
 	processFilter <- function(filters) {
 		# Assume each individual filters relation are the AND (&) operator 
@@ -39,7 +39,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 			warning(paste("Empty table", tableName))
 			return(ret)
 		}
-
+		
 		test <- try(ret[[tableName]] <- y[[tableName]][eval(filts),], silent = TRUE)
 		if(class(test)[1] == "try-error") {
 			warning(paste0("Apply filter error:\n", test[1]))
@@ -52,7 +52,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 				if(length(range) > 1) {
 					for(parent in head(range, -1)) {
 						# Find similar columns (assume those are keys)
-						key <- intersect(names(y[[parent + 1]]), names(y[[parent]]))
+					    key <- intersect(names(y[[parent + 1]]), names(y[[parent]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
 							deleted <- fsetdiff(y[[parent]][, ..key], ret[[names(y)[parent]]][, ..key])
@@ -125,11 +125,55 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	return(merged)
 }
 
-#' 
+
+
+
+expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
+    
+    # Error if not a list:
+    if(!is.list(FilterExpressionList)) {
+        stop("FilterExpressionList must be a list")
+    }
+    # If the input list of expressions has 2 levels, return immediately:
+    if(is.list(FilterExpressionList[[1]])) {
+        return(FilterExpressionList)
+    }
+    
+    # Get the file names and the table names:
+    splited <- strsplit(names(FilterExpressionList), split = sep)
+    fileNames <- sapply(splited, function(x) x[seq_len(length(x) - 1)])
+    tableNames <- sapply(splited, utils::tail, 1)
+    tableNames <- split(tableNames, fileNames)
+    
+    # Split the FilterExpression by the fileNames:
+    FilterExpressionList <- split(FilterExpressionList, fileNames)
+    names(FilterExpressionList) <- fileNames
+    
+    # Change the names of the individual tables:
+    for(ind in seq_along(FilterExpressionList)) {
+        names(FilterExpressionList[[ind]]) <- tableNames[[ind]]
+    }
+    
+    return(FilterExpressionList)
+}
+
+
+#' Filter (raw) Biotic data
+#'
+#' @param BioticData  Input \code{\link{BioticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
-FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterBiotic <- function(BioticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+    FilterExpression <- expandFilterExpressionList(FilterExpression)
+    
     filterData(
         BioticData, 
         filterExpression = FilterExpression, 
@@ -138,11 +182,22 @@ FilterBiotic <- function(BioticData, FilterExpression = "", PropagateDownwards =
     )
 }
 
-#' 
+#' Filter (raw) Acoustic data
+#'
+#' @param AcousticData  Input \code{\link{AcousticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
-FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterAcoustic <- function(AcousticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+    # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+    FilterExpression <- expandFilterExpressionList(FilterExpression)
+    
     filterData(
         AcousticData, 
         filterExpression = FilterExpression, 
@@ -152,11 +207,19 @@ FilterAcoustic <- function(AcousticData, FilterExpression = "", PropagateDownwar
 }
 
 
-#' 
+#' Filter StoxBiotic data
+#'
+#' @param StoxBioticData  Input \code{\link{StoxBioticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
-FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterStoxBiotic <- function(StoxBioticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         StoxBioticData, 
         filterExpression = FilterExpression, 
@@ -165,11 +228,19 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression = "", PropagateDow
     )
 }
 
-#' 
+#' Filter StoxAcoustic data
+#'
+#' @param StoxBioticData  Input \code{\link{StoxAcousticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
+#' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @import data.table
 #' @export
 #' 
-#' @rdname filterData
-FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression = "", PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
+FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, PropagateDownwards = TRUE, PropagateUpwards = FALSE) {
     filterData(
         StoxAcousticData, 
         filterExpression = FilterExpression, 
