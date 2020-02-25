@@ -93,7 +93,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 
 		allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
 
-		newAC$prefixLens[allDatawithPrefix] <- 2
+		newAC$prefixLens[allDatawithPrefix] <- 1
 		newAC$prefixLens["Haul"] <- 3
 		newAC$prefixLens["Catch"] <- 5
 		newAC$prefixLens["Biology"] <- 6
