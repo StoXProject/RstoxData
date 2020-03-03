@@ -4,7 +4,7 @@
 \name{stoxFunctionAttributes}
 \alias{stoxFunctionAttributes}
 \title{Function specification for inclusion in StoX projects}
-\format{An object of class \code{list} of length 12.}
+\format{An object of class \code{list} of length 11.}
 \usage{
 stoxFunctionAttributes
 }
