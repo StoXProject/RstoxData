@@ -49,6 +49,14 @@ stoxFunctionAttributes <- list(
 		functionArgumentHierarchy = list()
 	),
 	
+	# Convert BioticData to StoxBioticData:
+	StoxBiotic2 = list(
+	    functionType = "modelData", 
+	    functionCategory = "baseline", 
+	    functionOutputDataType = "StoxBioticData", 
+	    functionArgumentHierarchy = list()
+	),
+	
 	# Convert LandingData to StoxLandingData:
 	StoxLanding = list(
 	 functionType = "modelData",

@@ -49,7 +49,7 @@ get_os <- function() {
 getCores <- function() {
 	cores <- as.integer(getOption("mc.cores"))
 	if (length(cores) == 0 || is.na(cores)) {
-		cores <- detectCores()
+		cores <- parallel::detectCores()
 		if (is.na(cores)) {
 			return(1)
 		} else {

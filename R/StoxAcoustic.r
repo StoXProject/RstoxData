@@ -6,7 +6,9 @@
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
+StoxAcoustic <- function(AcousticData = NULL){
+    
+    cores = NULL
 	
 	## For flexibility accept a list of the input data, named by the data type:
 	#if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
