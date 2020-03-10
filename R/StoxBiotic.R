@@ -54,22 +54,21 @@ StoxBiotic_old <- function(BioticData) {
 #'
 #' @export
 #' 
-StoxBiotic <- function(BioticData) {
+StoxBiotic <- function(BioticData, cores = NULL) {
     
     # Convert from BioticData to the general sampling hierarchy:
-    GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData)
+    GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, cores = cores)
     
     # Extract the StoxBiotic data and rbind across files:
-    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy)
+    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, cores = cores)
     
     return(StoxBioticData)
 }
 
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
-BioticData2GeneralSamplingHierarchy <- function(BioticData) {
+BioticData2GeneralSamplingHierarchy <- function(BioticData, cores = NULL) {
     
     # Process Biotic data in parallel
-    cores <- NULL
     if(length(cores) == 0) {
         cores <- getCores()
     }
@@ -91,10 +90,9 @@ BioticData2GeneralSamplingHierarchy <- function(BioticData) {
 }
 
 # Function to convert rbind :
-GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy) {
+GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, cores = NULL) {
     
     # Process Biotic data in parallel
-    cores <- NULL
     if(length(cores) == 0) {
         cores <- getCores()
     }
