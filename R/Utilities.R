@@ -2,6 +2,7 @@
 #'
 #' @param data A list of data tables.
 #' @param tableNames A character vector holding the names of the tables to merge.
+#' @param output.only.last Only returns last merged table.
 #'
 #' @return A merged data table.
 #'
@@ -9,6 +10,16 @@
 #' 
 mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, ...) {
 	
+	# Better use xsdObjects for getting header vars from XML data for merging
+	## Get data type:
+	plen <- NULL
+	if(!is.null(data[["metadata"]])) {
+		if(!exists("xsdObjects"))
+			xsdObjects <- RstoxData::xsdObjects
+		datatype <- unlist(data[["metadata"]][1, "useXsd"])
+		plen <- xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
+	}
+
     # Merge all tables by default:
 	if(length(tableNames) == 0) {
 		tableNames <- names(data)
@@ -18,9 +29,20 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	for(ii in 2:length(tableNames)) {
 		curr <- tableNames[ii]
 		prev <- tableNames[(ii-1)]
-		#vars <- names(data[[curr]])[names(data[[curr]]) %in% names(data[[prev]])]
-		vars <- intersect(names(data[[curr]]), names(data[[prev]]))
-		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars, ...)
+
+		if(!is.null(plen))
+			vars <- names(data[[curr]])[1:plen[prev]]
+		else
+			vars <- intersect(names(data[[curr]]), names(data[[prev]]))
+
+		# There can be duplicate names between two tables, see that we fix them by adding appropriate suffix before merging
+		duplicates <- intersect(setdiff(names(data[[prev]]), vars), setdiff(names(data[[curr]]), vars))
+		for(ddpl in duplicates) {
+			print(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
+			setnames(data[[curr]], ddpl, paste0(ddpl, ".", curr))
+		}
+
+		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars, suffixes = suffixes, ...)
 	}
 
 	# If tableNamestableNames == "last", return the last table:

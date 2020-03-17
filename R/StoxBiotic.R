@@ -30,6 +30,18 @@ StoxBiotic <- function(BioticData) {
 	    ## Cascading merge tables
 	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
 	    data <- mergeDataTables(data, toMerge)
+	  } else if(datatype == "nmdbioticv1.4") {
+
+	    ## Merge individual and age
+	    indageHeaders <- intersect(names(data$agedetermination), names(data$individual))
+	    data$individual[,preferredagereading:= 1]
+	    data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "no"), all.x=TRUE)
+
+	    ## Cascading merge tables
+	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
+
+	    # Use custom suffixes as it contains duplicate header name between tables
+	    data <- mergeDataTables(data, toMerge)
 	  }
 
 	  # 2. Making keys

@@ -7,7 +7,7 @@ Station,Station,"paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', Sta
 CatchPlatform,Station,catchplatform ,platform,"paste0(Cruise, '/', Station, '/', Platform)",
 Latitude,Station,latitudestart,latitudestart,StartLatitude,
 Longitude,Station,longitudestart,longitudestart,StartLongitude,
-DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%SZ', tz='GMT')",startdate + starttime,StartTime,
+DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%SZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%SZ', tz='GMT')",StartTime,
 BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
 CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Haul,StationKey,StationKey,StationKey,Y
@@ -19,7 +19,7 @@ EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,
 MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
 MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
 VerticalNetOpening,Haul,verticaltrawlopening,trawlopening,Netopening,
-HorizontalNetOpening,Haul,wingspread,NA,HaulWingSpread,
+HorizontalNetOpening,Haul,wingspread,"as.numeric(NA)",HaulWingSpread,
 TrawlDoorSpread,Haul,trawldoorspread,doorspread,DoorSpread,
 CruiseKey,SpeciesCategory,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,SpeciesCategory,StationKey,StationKey,StationKey,Y
@@ -31,9 +31,9 @@ StationKey,Sample,StationKey,StationKey,StationKey,Y
 HaulKey,Sample,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,Y
-CatchFractionWeightKilogram,Sample,"ifelse(catchproducttype == 1, catchweight, NA)",weight,SpeciesCategoryWeight,
+CatchFractionWeightKilogram,Sample,"ifelse(catchproducttype == 1, catchweight, NA)","ifelse(producttype == 1, weight, NA)",SpeciesCategoryWeight,
 CatchFractionCount,Sample,catchcount,count,SpeciesCategoryNumber,
-SampleWeightKilogram,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)",lengthsampleweight,SubsampleWeight,
+SampleWeightKilogram,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)",SubsampleWeight,
 SampleCount,Sample,lengthsamplecount ,lengthsamplecount,SubsampledNumber,
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Individual,StationKey,StationKey,StationKey,Y
@@ -41,8 +41,8 @@ HaulKey,Individual,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,Y
-IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight * 1e3, NA)",weight * 1e3,IndividualWeight,
-IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length * 1e2, NA)",length * 1e2,LengthClass,
-LengthResolutionCentimeter,Individual,"convertLenRes(lengthresolution)",lengthresolution,LengthCode,
+IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight * 1e3, NA)","ifelse(producttype.individual == 1, weight.individual * 1e3, NA)",IndividualWeight,
+IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length * 1e2, NA)","ifelse(lengthmeasurement == 'E', length * 1e2, NA)",LengthClass,
+LengthResolutionCentimeter,Individual,"convertLenRes(lengthresolution)","convertLenRes(lengthunit)",LengthCode,
 IndividualAge,Individual,age,age,IndividualAge,
-IndividualSex,Individual,"ifelse(sex == 1, 'F', 'M')",sex,IndividualSex,
+IndividualSex,Individual,"ifelse(sex == 1, 'F', 'M')","ifelse(sex == 1, 'F', 'M')",IndividualSex,
