@@ -30,7 +30,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 		curr <- tableNames[ii]
 		prev <- tableNames[(ii-1)]
 
-		if(!is.null(plen))
+		if(!is.null(plen) && !is.na(plen[prev]))
 			vars <- names(data[[curr]])[1:plen[prev]]
 		else
 			vars <- intersect(names(data[[curr]]), names(data[[prev]]))

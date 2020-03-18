@@ -1,10 +1,10 @@
-variable,level,nmdbioticv3,nmdbioticv1.4,icesbiotic,key
+variable,level,nmdbioticv3,nmdbioticv1.4,icesBiotic,key
 CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,Y
 Platform,Cruise,platform,platform,Platform,
 CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Station,StationKey,StationKey,StationKey,Y
 Station,Station,"paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)",
-CatchPlatform,Station,catchplatform ,platform,"paste0(Cruise, '/', Station, '/', Platform)",
+CatchPlatform,Station,catchplatform,platform,Platform,
 Latitude,Station,latitudestart,latitudestart,StartLatitude,
 Longitude,Station,longitudestart,longitudestart,StartLongitude,
 DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%SZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%SZ', tz='GMT')",StartTime,
@@ -19,7 +19,7 @@ EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,
 MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
 MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
 VerticalNetOpening,Haul,verticaltrawlopening,trawlopening,Netopening,
-HorizontalNetOpening,Haul,wingspread,"as.numeric(NA)",HaulWingSpread,
+HorizontalNetOpening,Haul,wingspread,"as.numeric(NA)",WingSpread,
 TrawlDoorSpread,Haul,trawldoorspread,doorspread,DoorSpread,
 CruiseKey,SpeciesCategory,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,SpeciesCategory,StationKey,StationKey,StationKey,Y
@@ -31,18 +31,18 @@ StationKey,Sample,StationKey,StationKey,StationKey,Y
 HaulKey,Sample,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,Y
-CatchFractionWeightKilogram,Sample,"ifelse(catchproducttype == 1, catchweight, NA)","ifelse(producttype == 1, weight, NA)",SpeciesCategoryWeight,
+CatchFractionWeightKilogram,Sample,"ifelse(catchproducttype == 1, catchweight, NA)","ifelse(producttype == 1, weight, NA)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
 CatchFractionCount,Sample,catchcount,count,SpeciesCategoryNumber,
-SampleWeightKilogram,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)",SubsampleWeight,
-SampleCount,Sample,lengthsamplecount ,lengthsamplecount,SubsampledNumber,
+SampleWeightKilogram,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
+SampleCount,Sample,lengthsamplecount,lengthsamplecount,SubsampledNumber,
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Individual,StationKey,StationKey,StationKey,Y
 HaulKey,Individual,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,Y
-IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight * 1e3, NA)","ifelse(producttype.individual == 1, weight.individual * 1e3, NA)",IndividualWeight,
-IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length * 1e2, NA)","ifelse(lengthmeasurement == 'E', length * 1e2, NA)",LengthClass,
-LengthResolutionCentimeter,Individual,"convertLenRes(lengthresolution)","convertLenRes(lengthunit)",LengthCode,
+IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight, NA)","ifelse(producttype.individual == 1, weight.individual, NA)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
+IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length, NA)","ifelse(lengthmeasurement == 'E', length, NA)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
+LengthResolutionCentimeter,Individual,"convertLenRes(lengthresolution)","convertLenRes(lengthunit)",convertLenRes(LengthCode.Biology),
 IndividualAge,Individual,age,age,IndividualAge,
-IndividualSex,Individual,"ifelse(sex == 1, 'F', 'M')","ifelse(sex == 1, 'F', 'M')",IndividualSex,
+IndividualSex,Individual,"ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(substr(IndividualSex, nchar(IndividualSex), nchar(IndividualSex)) == 'F', 'F', ifelse(substr(IndividualSex, nchar(IndividualSex), nchar(IndividualSex)) == 'M', 'M', NA))",
