@@ -30,6 +30,60 @@ StoxBiotic <- function(BioticData) {
 	    ## Cascading merge tables
 	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
 	    data <- mergeDataTables(data, toMerge)
+	  } else if(datatype == "nmdbioticv1.4") {
+
+	    ## Merge individual and age
+	    indageHeaders <- intersect(names(data$agedetermination), names(data$individual))
+	    data$individual[,preferredagereading:= 1]
+	    data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "no"), all.x=TRUE)
+
+	    ## Cascading merge tables
+	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
+
+	    # Use custom suffixes as it contains duplicate header name between tables
+	    data <- mergeDataTables(data, toMerge)
+	  } else if(datatype == "icesBiotic") {
+
+	    # Merge Cruise and Survey name
+	    data[["Cruise"]][, Survey:=tail(data[["Survey"]],1)]
+
+	    ## Cascading merge tables
+	    toMerge <- c("Cruise", "Haul", "Catch")
+
+	    # Use custom suffixes as it contains duplicate header name between tables
+	    data <- mergeDataTables(data, toMerge)
+
+	    # Merge Biology manually as there is no obvious key relation with Catch table
+	    toAdd <- c("WeightUnit", "LengthCode", "LengthClass")
+	    setnames(data$Biology, toAdd, paste0(toAdd, ".Biology"))
+
+	    # Set intersection column
+	    byVars <- intersect(names(data$Catch), names(data$Biology))
+
+	    # Set counter
+	    bioCtr <- 1
+
+	    # Function for merging the appropriate Catch row with the corresponding Biology record
+	    specialMerge <- function(x) {
+			bioRange <- c(bioCtr:(bioCtr + unlist(x[1, "NumberAtLength"]) - 1))
+			bioCtr <<- bioCtr + unlist(x[1, "NumberAtLength"])
+			return(merge(x, data$Biology[bioRange, ], by = byVars))
+		}
+
+	    # Select only Catch records with valid NumberAtLength
+	    tmpCatch <- data$Catch[NumberAtLength > 0,]
+
+	    # Loop merge
+	    tmpBiology <- list()
+	    for(y in seq_len(nrow(tmpCatch))) {
+			tmpBiology[[y]] <- specialMerge(tmpCatch[y,])
+	    }
+
+	    # Combine results
+	    data$Biology <- rbindlist(tmpBiology)
+	  } else {
+	    print("Error: Invalid data input format. Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
+	    return(NULL)
 	  }
 
 	  # 2. Making keys
@@ -83,6 +137,8 @@ StoxBiotic <- function(BioticData) {
 
 	  # Getting conversion function for datatype
 	  convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
+	  convertLen <- stoxBioticObject$convertLen[[datatype]]
+	  convertWt <- stoxBioticObject$convertWt[[datatype]]
 
 	  # Try to stop data.table warnings (https://github.com/Rdatatable/data.table/issues/2988)
 	  .. <- function (x, env = parent.frame()) {

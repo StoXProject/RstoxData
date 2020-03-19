@@ -10,6 +10,8 @@ mergeDataTables(data, tableNames = NULL, output.only.last = FALSE, ...)
 \item{data}{A list of data tables.}
 
 \item{tableNames}{A character vector holding the names of the tables to merge.}
+
+\item{output.only.last}{Only returns last merged table.}
 }
 \value{
 A merged data table.
