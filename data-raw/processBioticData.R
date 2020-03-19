@@ -85,7 +85,7 @@ stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(x) {
 stoxBioticObject$convertLen[["icesBiotic"]] <- function(x, y) {
 
     # Get units
-    xx <- unlist(lapply(strsplit(x, "[_]"), "[[", 3))
+    xx <- unlist(lapply(strsplit(x, "[_]"), tail, 1))
 
     if(y == "cm") {
         z <- c(1, 0.01, 0.01)
@@ -104,7 +104,7 @@ stoxBioticObject$convertLen[["icesBiotic"]] <- function(x, y) {
 stoxBioticObject$convertWt[["icesBiotic"]] <- function(x, y) {
 
     # Get units
-    xx <- unlist(lapply(strsplit(x, "[_]"), "[[", 3))
+    xx <- unlist(lapply(strsplit(x, "[_]"), tail, 1))
 
     if(y == "kg") {
         z <- c(1, 0.001)
