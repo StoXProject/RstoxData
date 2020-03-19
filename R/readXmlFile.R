@@ -210,5 +210,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 	# Add metadata
 	final[["metadata"]] <- data.table(useXsd = useXsd, file = xmlFilePath)
 
+	# For ICES data, add their vocabulary
+	if(useXsd == "icesAcoustic" || useXsd == "icesBiotic")
+		final[["vocabulary"]] <- getIcesVocabulary(xmlFilePath)
+
 	return(final)
 }

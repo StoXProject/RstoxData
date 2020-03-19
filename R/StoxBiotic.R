@@ -65,22 +65,39 @@ StoxBiotic <- function(BioticData) {
 
 	    # Function for merging the appropriate Catch row with the corresponding Biology record
 	    specialMerge <- function(x) {
-			bioRange <- c(bioCtr:(bioCtr + unlist(x[1, "NumberAtLength"]) - 1))
-			bioCtr <<- bioCtr + unlist(x[1, "NumberAtLength"])
+	    increment <- NA
+
+			# Two scenarios, catch samples are by length or not
+			if(!is.na(unlist(x[1, "LengthCode"]))) {
+				increment <- unlist(x[1, "NumberAtLength"])
+			} else {
+				increment <- unlist(x[1, "SubsampledNumber"])
+			}
+
+			if(is.na(increment) || increment == 0)
+				return(NULL)
+
+			bioRange <- c(bioCtr:(bioCtr + increment - 1))
+			bioCtr <<- bioCtr + increment
 			return(merge(x, data$Biology[bioRange, ], by = byVars))
 		}
 
-	    # Select only Catch records with valid NumberAtLength
-	    tmpCatch <- data$Catch[NumberAtLength > 0,]
+	    # Get row count
+	    nrowC <- nrow(data$Biology)
 
 	    # Loop merge
 	    tmpBiology <- list()
-	    for(y in seq_len(nrow(tmpCatch))) {
-			tmpBiology[[y]] <- specialMerge(tmpCatch[y,])
+	    for(y in seq_len(nrow(data$Catch))) {
+			tmpBiology[[y]] <- specialMerge(data$Catch[y,])
 	    }
 
 	    # Combine results
 	    data$Biology <- rbindlist(tmpBiology)
+
+	    # Sanity check (old Biology row number must be the same with the merged product)
+	    if(nrowC != nrow(data$Biology)) {
+			stop("Error in merging.")
+	    }
 	  } else {
 	    print("Error: Invalid data input format. Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
 	    return(NULL)
