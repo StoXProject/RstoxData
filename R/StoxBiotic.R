@@ -60,26 +60,26 @@ StoxBiotic <- function(BioticData) {
 	    # Set intersection column
 	    byVars <- intersect(names(data$Catch), names(data$Biology))
 
-	    # Set counter
-	    bioCtr <- 1
-
 	    # Function for merging the appropriate Catch row with the corresponding Biology record
 	    specialMerge <- function(x) {
-	    increment <- NA
+			xLenC <- unlist(x[1, "LengthCode"])
 
 			# Two scenarios, catch samples are by length or not
-			if(!is.na(unlist(x[1, "LengthCode"]))) {
-				increment <- unlist(x[1, "NumberAtLength"])
+			if(!is.na(xLenC)) {
+				byVarX <- c(byVars, "LengthCode", "LengthClass")
+				byVarY <- c(byVars, "LengthCode.Biology", "LengthClass.Biology")
 			} else {
-				increment <- unlist(x[1, "SubsampledNumber"])
+				byVarX <- byVars
+				byVarY <- byVars
 			}
 
-			if(is.na(increment) || increment == 0)
-				return(NULL)
+			xtmp <- merge(x, data$Biology, by.x = byVarX, by.y = byVarY)
 
-			bioRange <- c(bioCtr:(bioCtr + increment - 1))
-			bioCtr <<- bioCtr + increment
-			return(merge(x, data$Biology[bioRange, ], by = byVars))
+			if(!is.na(xLenC)) {
+				xtmp[, `:=`(LengthCode.Biology=LengthCode, LengthClass.Biology=LengthClass)]
+			}
+
+			return(xtmp)
 		}
 
 	    # Get row count
@@ -92,7 +92,7 @@ StoxBiotic <- function(BioticData) {
 	    }
 
 	    # Combine results
-	    data$Biology <- rbindlist(tmpBiology)
+	    data$Biology <- rbindlist(tmpBiology, use.names=TRUE)
 
 	    # Sanity check (old Biology row number must be the same with the merged product)
 	    if(nrowC != nrow(data$Biology)) {
