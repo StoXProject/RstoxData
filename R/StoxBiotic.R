@@ -323,7 +323,6 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
 StoxBiotic_secondPhase <- function(BioticData) {
     # Get data type: 
     datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
-    print(datatype)
     
     if(!exists("stoxBioticObject"))
         data(stoxBioticObject, package="RstoxData", envir = environment())
