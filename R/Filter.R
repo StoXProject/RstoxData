@@ -132,7 +132,8 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
     
     # Error if not a list:
     if(!is.list(FilterExpressionList)) {
-        stop("FilterExpressionList must be a list")
+        #stop("FilterExpressionList must be a list")
+        return(FilterExpressionList)
     }
     # If the input list of expressions has 2 levels, return immediately:
     if(is.list(FilterExpressionList[[1]])) {
@@ -230,7 +231,7 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression, PropagateDownward
 
 #' Filter StoxAcoustic data
 #'
-#' @param StoxBioticData  Input \code{\link{StoxAcousticData}} data.
+#' @param StoxAcousticData  Input \code{\link{StoxAcousticData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
 #' @param PropagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
