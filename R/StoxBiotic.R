@@ -49,6 +49,7 @@ StoxBiotic_old <- function(BioticData) {
 #' Convert BioticData to StoxBioticData
 #'
 #' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
+#' @param cores Overrides multi-core auto detection. Default to NULL.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
