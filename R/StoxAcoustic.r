@@ -1,14 +1,14 @@
 #' Convert AcousticData to StoxAcousticData
 #'
 #' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
+#' @param cores Overrides multi-core auto detection. Default to NULL.
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData = NULL){
+StoxAcoustic <- function(AcousticData, cores = NULL){
     
-    cores = NULL
 	
 	## For flexibility accept a list of the input data, named by the data type:
 	#if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
@@ -329,8 +329,9 @@ StoxAcoustic <- function(AcousticData = NULL){
       tmp <- merge(tmp,data_list$Log[,c('Distance','Time','LogKey','Origin')],by='Distance')
       names(tmp)[names(tmp)=="Instrument"]='ID'
       names(tmp)[names(tmp)=="Value"]='NASC'
-      names(tmp)[names(tmp)=="SaCategory"]='AcousticCategory'
       
+      # Category can be in either EchoType of SaCategory
+      tmp[, AcousticCategory:=ifelse(is.na(SaCategory), EchoType, SaCategory)]
       
       
       
