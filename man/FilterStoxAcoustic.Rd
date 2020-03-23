@@ -12,13 +12,13 @@ FilterStoxAcoustic(
 )
 }
 \arguments{
+\item{StoxAcousticData}{Input \code{\link{StoxAcousticData}} data.}
+
 \item{FilterExpression}{Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.}
 
 \item{PropagateDownwards}{Whether the filter action will propagate in the downwards direction. Default to TRUE.}
 
 \item{PropagateUpwards}{Whether the filter action will propagate in the upwards direction. Default to FALSE.}
-
-\item{StoxBioticData}{Input \code{\link{StoxAcousticData}} data.}
 }
 \value{
 An object of filtered data in the same format as the input data.

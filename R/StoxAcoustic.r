@@ -1,12 +1,14 @@
 #' Convert AcousticData to StoxAcousticData
 #'
 #' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
+#' @param cores Overrides multi-core auto detection. Default to NULL.
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
+StoxAcoustic <- function(AcousticData, cores = NULL){
+    
 	
 	## For flexibility accept a list of the input data, named by the data type:
 	#if(is.list(AcousticData) && "AcousticData" %in% names(AcousticData)) {
@@ -299,9 +301,6 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       #################################################################
       
       
-      
-      
-      
       #################################################################
       #                       RENAME general level                    #
       #################################################################
@@ -316,7 +315,7 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       #         Fiks to correct time format, and add to key           #
       #################################################################
       data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
-      data_list$Log[, EDSU:= paste(CruiseKey,LogKey,sep='/')]
+      data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
       
       
       
@@ -327,11 +326,12 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       #                   MAKE other general level                    #
       #################################################################
       tmp <- merge(data_list$Sample,data_list$NASC)
-      tmp <- merge(tmp,data_list$Log[,c('Distance','Time','LogKey')],by='Distance')
+      tmp <- merge(tmp,data_list$Log[,c('Distance','Time','LogKey','Origin')],by='Distance')
       names(tmp)[names(tmp)=="Instrument"]='ID'
       names(tmp)[names(tmp)=="Value"]='NASC'
-      names(tmp)[names(tmp)=="SaCategory"]='AcousticCategory'
       
+      # Category can be in either EchoType of SaCategory
+      tmp[, AcousticCategory:=ifelse(is.na(SaCategory), EchoType, SaCategory)]
       
       
       
@@ -354,16 +354,19 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       
       
       #Apply channel, and apply key to all
-      data_list$ChannelReference <- tmp
-      data_list$ChannelReference$ChannelReferenceKey <- 'P'
-      tmp$ChannelReferenceKey<- 'P'
+      tmp$ChannelReferenceType <- 'P'
+      tmp$ChannelReferenceKey <- tmp$ChannelReferenceType
+      tmp$ChannelReferenceDepth <- ifelse(tmp$ChannelReferenceType == "P", 0, NA) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
+      tmp$ChannelReferenceOrientation <- ifelse(tmp$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vvertically upwards for bottom channels ("B"):      
       
+      data_list$ChannelReference <- tmp
       
       
       
       #Apply channel, and apply key to all
+      tmp$NASCKey <- paste(tmp$ChannelDepthUpper,tmp$ChannelDepthLower,sep='/')
+      tmp$Channel <- NA
       data_list$NASC <- tmp
-      data_list$NASC$NASCKey <- paste(tmp$ChannelDepthUpper,tmp$ChannelDepthLower,sep='/')
       
       
       
@@ -381,36 +384,33 @@ StoxAcoustic <- function(AcousticData = NULL, cores = NULL){
       names(data_list$Log)[names(data_list$Log)=='LatitudeStop'] <- 'Latitude2'
       #names(data_list$Log)[names(data_list$Log)=='BottomDepth'] <- 'BottomDepth'
       names(data_list$Log)[names(data_list$Log)=='Distance'] <- 'Log'
+      names(data_list$Log)[names(data_list$Log)=='Time'] <- 'DateTime'
+      names(data_list$Log)[names(data_list$Log)=='Origin'] <- 'LogOrigin'
+      
       names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthUpper'] <- 'MinChannelRange'
       names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthLower'] <- 'MaxChannelRange'
       
       
       #add integration distance
       data_list$Log<-merge(data_list$Log,data_list$Beam[,c('PingAxisInterval','LogKey')])
-      names(data_list$Log)[names(data_list$Log)=='PingAxisInterval'] <- 'Distance'
+      names(data_list$Log)[names(data_list$Log)=='PingAxisInterval'] <- 'LogDistance'
       
-      
+      data_list$Log$LogOrigin2 <- "end"
+      data_list$Log$LogDuration <- NA
       
       ####Bugfiks since StopLat and lon do not exist yet
       data_list$Log$Longitude2 <- NA
       data_list$Log$Latitude2 <- NA
-      
-      
-      
-      
-      
-      
+
       #################################################################
       #        Add cruice key to all list                             #
       #################################################################
-      data_list$Cruise$CruiseKey           <- data_list$Cruise$LocalID
-      data_list$Log$CruiseKey              <- data_list$Cruise$LocalID
-      data_list$Beam$CruiseKey             <- data_list$Cruise$LocalID
-      data_list$AcousticCategory$CruiseKey <- data_list$Cruise$LocalID
-      data_list$ChannelReference$CruiseKey <- data_list$Cruise$LocalID
-      data_list$NASC$CruiseKey             <- data_list$Cruise$LocalID
-      
-      
+      data_list$Cruise[, CruiseKey:= LocalID]
+      data_list$Log[, CruiseKey:= LocalID]
+      data_list$Beam[, CruiseKey:= LocalID]
+      data_list$AcousticCategory[, CruiseKey:= LocalID]
+      data_list$ChannelReference[, CruiseKey:= LocalID]
+      data_list$NASC[, CruiseKey:= LocalID]
       
       
     }
