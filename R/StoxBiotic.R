@@ -174,6 +174,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    byVars <- intersect(names(data$Catch), names(data$Biology))
 
 	    # Function for merging the appropriate Catch row with the corresponding Biology record
+	    # Also check for missing biology
 	    specialMerge <- function(x) {
 			xLenC <- unlist(x[1, "LengthCode"])
 
@@ -187,9 +188,31 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 			}
 
 			xtmp <- merge(x, data$Biology, by.x = byVarX, by.y = byVarY)
+			xtmp[, WeightMeasurement:= TRUE]
 
 			if(!is.na(xLenC)) {
 				xtmp[, `:=`(LengthCode.Biology=LengthCode, LengthClass.Biology=LengthClass)]
+
+				# Check NumberAtLength == Number of individual
+				countNL <- unlist(x[1, "NumberAtLength"])
+				lenDiff <- countNL - nrow(xtmp)
+
+				if(!is.na(lenDiff) && lenDiff > 0) {
+					# Calculate weight
+					avWt <- unlist(x[1, "WeightAtLength"])/countNL
+					WtUnit <- unlist(x[1, "WeightUnit"])
+					# Generate a sample individual
+					xadd <- merge(x, data$Biology[0, ], by.x = byVarX, by.y = byVarY, all.x = TRUE)
+					xadd[, `:=`(LengthCode.Biology=LengthCode, LengthClass.Biology=LengthClass)]
+					xadd[, `:=`(WeightMeasurement = FALSE, IndividualWeight = avWt, WeightUnit.Biology = WtUnit)]
+					# Duplicate as required
+					if( lenDiff > 1 ){
+						xaddList <- rep(list(xadd), lenDiff)
+						xadd <- rbindlist(xaddList)
+					}
+					# Combine
+					xtmp <- rbind(xtmp, xadd)
+				}
 			}
 
 			return(xtmp)
@@ -207,8 +230,18 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    # Combine results
 	    data$Biology <- rbindlist(tmpBiology, use.names=TRUE)
 
-	    # Sanity check (old Biology row number must be the same with the merged product)
-	    if(nrowC != nrow(data$Biology)) {
+		# Fix Individual ID
+		data$Biology[, FishID:=seq_len(.N)]
+
+		# Fix the SampleCount
+		colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
+		data$Catch[, SubsampledNumber:=ifelse(!is.na(NumberAtLength), sum(NumberAtLength), SubsampledNumber), by=colAgg]
+
+		# Purge duplicate samples
+		data$Catch <- data$Catch[!duplicated(data$Catch[, ..colAgg])]
+
+	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
+	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
 			stop("Error in merging.")
 	    }
 	  } else {
