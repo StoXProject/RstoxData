@@ -1,4 +1,4 @@
-# RstoxData version: 0.6.5 (latest alpha, 2019-12-20)
+# RstoxData version: 0.6.7 (latest alpha, 2020-03-20)
 ## R version: 3.5
 
 [![Build Status](https://travis-ci.org/StoXProject/RstoxData.svg?branch=master)](https://travis-ci.org/StoXProject/RstoxData)
@@ -11,9 +11,5 @@ Tools to fetch and manipulate various data formats for fisheries (mainly geared 
 devtools::install_github("StoXProject/RstoxData")
 
 
-### Release notes for RstoxData_0.6.5:
-. 
-
-### For historical release notes see https://github.com/StoXProject/RstoxData/blob/alpha/NEWS
-
+### Release notes for RstoxData_0.6.7
 
