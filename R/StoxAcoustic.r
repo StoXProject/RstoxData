@@ -16,21 +16,16 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
 	#}
     StoxAcousticOne <- function(data_list) {
 
-	
-    #TODO: 
-    #   - Agree on a output and input format
-    
-    
-    
-    #Check which data format this is
-    #TODO:
-    #     - Ibrahims code should output which xsd is used, and use this as 
-    #       a flag here
-    ices_format <- FALSE
-    if(is.null(data_list$echosounder_dataset))ices_format<- TRUE
-    
-    
-    
+    useXsd  <- data_list$metadata$useXsd
+    if(useXsd == 'nmdechosounderv1'){
+      ices_format <- FALSE
+    } else if(useXsd == 'icesAcoustic') {
+      ices_format <- TRUE
+    } else {
+      print("Unsupported input for StoxAcoustic")
+      return(NULL)
+    }
+
     if(ices_format==FALSE){
       #################################################################
       # Description: protocol to convert NMDacoustic to StoxAcoustic  #
