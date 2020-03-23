@@ -324,7 +324,7 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 #' @importFrom xml2 as_list read_xml xml_find_all
 getIcesVocabulary <- function(xmlFile) {
 	xmlObj <- read_xml(xmlFile)
-	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//Vocabulary/*")), function(x) if(length(x)>0) return(list(attr(x[[1]], "ID"), x$Code[[1]]))))
+	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//Vocabulary/*")), function(x) if(length(x)>0) return(list(attr(x[[1]], "ID"), ifelse(length(x$Code) > 0, x$Code, NA)))))
 	setnames(ret, c("id", "value"))
 	return(ret)
 }
