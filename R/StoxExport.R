@@ -1,5 +1,5 @@
 
-write2ICESacoustic_CSV <- function(Acoustic){
+write2ICESacoustic_CSV <- function(Acoustic,save=T){
   
   for(aco in Acoustic){
     if(aco$metadata$useXsd=='icesAcoustic'){
@@ -30,9 +30,11 @@ write2ICESacoustic_CSV <- function(Acoustic){
                   Data=HDat
       )
       
-      suppressWarnings(lapply(tmp, write.table, file=gsub('.xml','.csv',aco$metadata$file), append=TRUE, row.names=FALSE, quote=FALSE, sep=","))
+      if(save==T)suppressWarnings(lapply(tmp, write.table, file=gsub('.xml','.csv',aco$metadata$file), append=TRUE, row.names=FALSE, quote=FALSE, sep=","))
       
     }else{'Warning: only ices acoustic format is allowed'}
 
   }
+  
+  return(tmp)
 }
