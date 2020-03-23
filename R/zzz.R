@@ -6,3 +6,8 @@ utils::globalVariables(c("xsdObjects", "localEnv", ":=") )
 	fpath <- system.file("extdata", package = pkgname)
 	assign("fpath", fpath, envir = localEnv)
 }
+
+# Try to unload dynamic library
+.onUnload <- function (libpath) {
+	library.dynam.unload("RstoxData", libpath)
+}
