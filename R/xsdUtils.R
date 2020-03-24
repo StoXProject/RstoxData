@@ -323,8 +323,13 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 #' @importFrom data.table rbindlist setnames
 #' @importFrom xml2 as_list read_xml xml_find_all
 getIcesVocabulary <- function(xmlFile) {
-	xmlObj <- read_xml(xmlFile)
-	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//Vocabulary/*")), function(x) if(length(x)>0) return(list(attr(x[[1]], "ID"), ifelse(length(x$Code) > 0, x$Code, NA)))))
+
+	# Read only first 10e4 character
+	tmpText <- readChar(xmlFile, 10e4)
+	xmlObj <- read_html(tmpText)
+
+	# Apply transformation to get the vocabulary translation table
+	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//vocabulary/*")), function(x) if(length(x)>0) return(list(attr(x[[1]], "id"), ifelse(length(x$code) > 0, unlist(x$code), NA)))))
 	setnames(ret, c("id", "value"))
 	return(ret)
 }

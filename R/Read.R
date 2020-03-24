@@ -62,8 +62,6 @@ ReadBiotic <- function(FileNames) {
 #' @export
 #' 
 ReadAcoustic <- function(FileNames) {
-	# NOTE: Fix the xsdobjects problem and remove the following line:
-	warning("The ReadAcoustic in RstoxBase only works with nmdechosounderv1 due to testing.")
 
 	# Read files in parallel
         cores <- getCores()
