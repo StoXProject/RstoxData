@@ -49,7 +49,15 @@ write2ICESacoustic_CSV <- function(Acoustic,save=T){
       hl<-c()
       hl$Cruise <- 'Data'
       hl$Header <- 'Record'
-      tmp <- data.frame(aco$Data)
+      tmp_data <- data.frame(aco$Data)
+      names(tmp_data)[names(tmp_data)=='LocalID']<-'CruiseLocalID'
+      names(tmp_data)[names(tmp_data)!='CruiseLocalID']<-paste0('Data',names(tmp_data)[names(tmp_data)!='CruiseLocalID'])
+      hl<-cbind(hl,tmp_data)
+      
+      tmp_Log <- data.frame(aco$Log)
+      
+      merge(merge(aco$Data,aco$Log,by = c('LocalID','Distance')),aco$Sample,by= c('LocalID','Distance'))
+      
       names(tmp)<-paste0('DataProcessing',names(tmp))
       hl <- data.frame(aco$Data)
       HDat <- format(hl, trim=TRUE, width=0)
