@@ -21,19 +21,16 @@ expect_true(all.equal(sa1, sa2))
 
 ## ICES Acoustic
 icesFiles <- c("ICES_Acoustic_1.xml", "ICES_Acoustic_2.xml")
-len <- c(11, 12)
 exampleDir <- system.file("testresources","", package="RstoxData")
 
-for(i in seq_len(length(icesFiles))) {
-    item <- icesFiles[[i]]
-    ilen <- len[[i]]
+for(item in icesFiles) {
 	context(paste("test-StoxAcoustic: ICES acoustic data", item, "to StoxAcoustic: DOM"))
     icesDataA <- StoxAcoustic(list(readXmlFile(paste0(exampleDir, "/", item), stream = F)))
-	expect_equal(nrow(icesDataA$Log), ilen)
+	expect_equal(nrow(icesDataA$Log), 2)
 
 	context(paste("test-StoxAcoustic: ICES acoustic data", item, "to StoxAcoustic: Stream"))
     icesDataB <- StoxAcoustic(list(readXmlFile(paste0(exampleDir, "/", item), stream = T)))
-	expect_equal(nrow(icesDataB$Log), ilen)
+	expect_equal(nrow(icesDataB$Log), 2)
 
 	context(paste("test-StoxAcoustic: ICES acoustic data", item, "to StoxAcoustic DOM == stream"))
     expect_true(all.equal(icesDataA, icesDataB))
