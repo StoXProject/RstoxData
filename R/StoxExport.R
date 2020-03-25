@@ -40,26 +40,38 @@ write2ICESacoustic_CSV <- function(Acoustic,save=T){
       hl$Cruise <- 'Cruise'
       hl$Header <- 'Record'
       hl$CruiseSurvey <- aco$Survey[2]
-      tmp <- data.frame(aco$DataProcessing)
-      names(tmp)<-paste0('DataProcessing',names(tmp))
+      tmp <- data.frame(aco$Cruise)
+      names(tmp)<-paste0('Cruise',names(tmp))
       hl <- cbind(hl,tmp)
       HCru <- format(hl, trim=TRUE, width=0)
       
       
       hl<-c()
-      hl$Cruise <- 'Data'
+      hl$Data <- 'Data'
       hl$Header <- 'Record'
+      tmp_log <- unique(data.frame(aco$Log))
+      names(tmp_log)[names(tmp_log)=='LocalID']<-'CruiseLocalID'
+      names(tmp_log)[names(tmp_log)!='CruiseLocalID']<-paste0('Log',names(tmp_log)[names(tmp_log)!='CruiseLocalID'])
+      tmp_sample <- data.frame(aco$Sample)
+      names(tmp_sample)[names(tmp_sample)=='LocalID']<-'CruiseLocalID'
+      names(tmp_sample)[names(tmp_sample)=='Distance']<-'LogDistance'
+      names(tmp_sample)[names(tmp_sample)=='Instrument']<-'InstrumentID'
+      names(tmp_sample)[names(tmp_sample)=='Calibration']<-'CalibrationID'
+      names(tmp_sample)[names(tmp_sample)=='DataAcquisition']<-'DataAcquisitionID'
+      names(tmp_sample)[names(tmp_sample)=='DataProcessing']<-'DataProcessingID'
+      names(tmp_sample)[!names(tmp_sample)%in%c('CruiseLocalID','LogDistance','InstrumentID','CalibrationID','DataAcquisitionID','DataProcessingID')] <-paste0('Sample',names(tmp_sample)[!names(tmp_sample)%in%c('CruiseLocalID','LogDistance','InstrumentID','CalibrationID','DataAcquisitionID','DataProcessingID')])
+      
+      
       tmp_data <- data.frame(aco$Data)
       names(tmp_data)[names(tmp_data)=='LocalID']<-'CruiseLocalID'
-      names(tmp_data)[names(tmp_data)!='CruiseLocalID']<-paste0('Data',names(tmp_data)[names(tmp_data)!='CruiseLocalID'])
-      hl<-cbind(hl,tmp_data)
+      names(tmp_data)[names(tmp_data)=='Distance']<-'LogDistance'
+      names(tmp_data)[names(tmp_data)=='ChannelDepthUpper']<-'SampleChannelDepthUpper'
+      names(tmp_data)[!names(tmp_data)%in%c('CruiseLocalID','LogDistance','SampleChannelDepthUpper')]<-paste0('Data',names(tmp_data)[!names(tmp_data)%in%c('CruiseLocalID','LogDistance','SampleChannelDepthUpper')])
       
-      tmp_Log <- data.frame(aco$Log)
       
-      merge(merge(aco$Data,aco$Log,by = c('LocalID','Distance')),aco$Sample,by= c('LocalID','Distance'))
-      
-      names(tmp)<-paste0('DataProcessing',names(tmp))
-      hl <- data.frame(aco$Data)
+      tmp_sub <-(merge(tmp_data,tmp_sample, by=intersect(names(tmp_data),names(tmp_sample))))
+      tmp_sub <-merge(tmp_log,tmp_sub,by=intersect(names(tmp_log),names(tmp_sub)))
+      hl<-cbind(hl,tmp_sub)
       HDat <- format(hl, trim=TRUE, width=0)
       
       tmp <- list(Instrument=HInst,
