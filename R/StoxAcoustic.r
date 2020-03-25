@@ -332,6 +332,12 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       
       #apply beam level, and add Beam key to all
       tmp_beam<-merge(tmp,data_list$Instrument, by='ID')
+
+      # Sanity check, we can't have missing instrument records/linkage
+      if(nrow(tmp_beam) == 0) {
+        stop("StoxAcoustic: There is something wrong in the instrument records (input format: ICES Acoustic)")
+      }
+
       tmp_beam$BeamKey <- tmp_beam$Frequency
       data_list$Beam<-unique(tmp_beam[,!c('NASC','ChannelDepthUpper','AcousticCategory','Type','Unit','SvThreshold')])
       tmp$BeamKey <- tmp_beam$BeamKey
