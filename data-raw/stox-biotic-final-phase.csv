@@ -13,7 +13,7 @@ CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Haul,StationKey,StationKey,StationKey,Y
 HaulKey,Haul,HaulKey,HaulKey,HaulKey,Y
 Haul,Haul,"paste0(CruiseKey, '/', HaulKey)","paste0(CruiseKey, '/', HaulKey)","paste0(CruiseKey, '/', HaulKey)",
-Gear,Haul,gear,gear,Number,
+Gear,Haul,gear,gear,Gear,
 TowedDistance,Haul,distance,distance,Distance,
 EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,
 MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
