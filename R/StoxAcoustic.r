@@ -403,6 +403,10 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       data_list$Log$Longitude2 <- NA
       data_list$Log$Latitude2 <- NA
 
+      # Remove duplicates in Log and Beam
+      data_list$Log <- unique(data_list$Log)
+      data_list$Beam <- unique(data_list$Beam)
+
       #################################################################
       #        Add cruice key to all list                             #
       #################################################################
