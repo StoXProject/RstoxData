@@ -26,6 +26,7 @@ test_script:
   - travis-tool.sh run_tests
 
 before_deploy:
+  - travis-tool.sh install_r drat
   - ps: |
           $env:PKGVER = Select-String -Path .\DESCRIPTION -Pattern '^Version: ' | % {$_.line -replace "^Version: "}
           $env:PKGNAME = Select-String -Path .\DESCRIPTION -Pattern '^Package: ' | % {$_.line -replace "^Package: "}

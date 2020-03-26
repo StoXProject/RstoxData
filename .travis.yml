@@ -5,6 +5,7 @@ os:
 r:
 - 3.5
 - 3.6
+cran: https://cran.revolutionanalytics.com
 if: tag IS blank
 cache: packages
 warnings_are_errors: false
@@ -27,7 +28,8 @@ after_success:
   - "rm ${SRC_PKG_FILE}.tar.gz"
   # Look for binary bundle (*.tgz for OSX and *.tar.gz for Linux)
   - "export BINSRC=$(ls $PKGNAME*gz)"
-  - "export BIN_PKG_FILE=${BINSRC%.*}-R${TRAVIS_R_VERSION}.${BINSRC##*.}"
+  - "export BINDST=${BINSRC//.tar.gz/-R${TRAVIS_R_VERSION}.tar.gz}"
+  - "export BIN_PKG_FILE=${BINDST//.tgz/-R${TRAVIS_R_VERSION}.tgz}"
   - "cp ${BINSRC} ${BIN_PKG_FILE}"
   - "echo Resulting binary: $BIN_PKG_FILE"
   # Generate documentation pages
