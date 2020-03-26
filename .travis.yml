@@ -1,18 +1,19 @@
-language: R
-matrix:
-  include:
-  - os: linux
-    r: 3.5
-  - os: osx
-    r: 3.5
+language: r
+os:
+- linux
+- osx
+r:
+- 3.5
+- 3.6
 if: tag IS blank
-sudo: false
 cache: packages
 warnings_are_errors: false
 notifications:
   email:
     on_success: change
     on_failure: change
+r_packages:
+  - drat
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then R -e 'source("https://install-github.me/r-lib/remotes")'; fi
 after_success:
@@ -25,7 +26,9 @@ after_success:
   - "R CMD INSTALL --build ${SRC_PKG_FILE}.tar.gz"
   - "rm ${SRC_PKG_FILE}.tar.gz"
   # Look for binary bundle (*.tgz for OSX and *.tar.gz for Linux)
-  - "export BIN_PKG_FILE=$(ls $PKGNAME*gz)"
+  - "export BINSRC=$(ls $PKGNAME*gz)"
+  - "export BIN_PKG_FILE=${BINSRC%.*}-R${TRAVIS_R_VERSION}.${BINSRC##*.}"
+  - "cp ${BINSRC} ${BIN_PKG_FILE}"
   - "echo Resulting binary: $BIN_PKG_FILE"
   # Generate documentation pages
   - Rscript -e 'remotes::install_cran("pkgdown")'
@@ -39,16 +42,16 @@ before_deploy:
 
 deploy:
   - provider: releases
-    api_key: $API_KEY
+    token: $API_KEY
     file: $BIN_PKG_FILE
     skip_cleanup: true
     on:
      branch: master
   - provider: pages
-    skip-cleanup: true
-    github-token: $API_KEY
-    keep-history: true
-    local-dir: docs
+    skip_cleanup: true
+    token: $API_KEY
+    keep_history: true
+    local_dir: docs
     on:
      branch: master
      condition: $TRAVIS_OS_NAME = linux
