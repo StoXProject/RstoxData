@@ -6,7 +6,7 @@ Authors@R: c(
   person(given = "Sindre", family = "Vatnehol", role = "aut"), 
   person(given = "Arne Johannes", family = "Holmin", role = "aut"), 
   person(given = "Edvin", family = "Fuglebakk", role = "aut"))
-Depends: R (>= 3.6)
+Depends: R (>= 3.5)
 Description: Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
 URL: https://github.com//RstoxData
 BugReports: https://github.com//RstoxData/issues
