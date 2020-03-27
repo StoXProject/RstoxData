@@ -3,8 +3,8 @@ os:
 - linux
 - osx
 r:
-- 3.5
-- 3.6
+- oldrel
+- release
 cran: https://cran.revolutionanalytics.com
 if: tag IS blank
 cache: packages
@@ -25,16 +25,20 @@ after_success:
   - "echo $SRC_PKG_FILE"
   # Build binary and remove the source archive
   - "R CMD INSTALL --build ${SRC_PKG_FILE}.tar.gz"
+  - "mkdir drat"
+  - "cp ${SRC_PKG_FILE}.tar.gz drat/"
   - "rm ${SRC_PKG_FILE}.tar.gz"
   # Look for binary bundle (*.tgz for OSX and *.tar.gz for Linux)
   - "export BINSRC=$(ls $PKGNAME*gz)"
   - "export BINDST=${BINSRC//.tar.gz/-R${TRAVIS_R_VERSION}.tar.gz}"
   - "export BIN_PKG_FILE=${BINDST//.tgz/-R${TRAVIS_R_VERSION}.tgz}"
   - "cp ${BINSRC} ${BIN_PKG_FILE}"
+  - "cp ${BINSRC} drat/"
   - "echo Resulting binary: $BIN_PKG_FILE"
-  # Generate documentation pages
-  - Rscript -e 'remotes::install_cran("pkgdown")'
-  - Rscript -e 'pkgdown::build_site()'
+  - test $TRAVIS_BRANCH == "master" && $TRAVIS_OS_NAME == "linux" && test $TRAVIS_R_VERSION_STRING == "release" && Rscript -e 'remotes::install_cran("pkgdown")' && Rscript -e 'pkgdown::build_site()'
+  # Populate DRAT
+  - test $TRAVIS_REPO_SLUG == "StoXProject/RstoxData" && test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "deploy_drat" && bash deploy.sh
+
 before_deploy:
   # Set up git user name and tag this commit
   - git config --global user.email "builds@travis-ci.com"
@@ -56,4 +60,6 @@ deploy:
     local_dir: docs
     on:
      branch: master
-     condition: $TRAVIS_OS_NAME = linux
+     condition: 
+     - $TRAVIS_OS_NAME = linux
+     - $TRAVIS_R_VERSION_STRING = release
