@@ -216,7 +216,7 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       #                       RENAME Frequency level                  #
       #################################################################
       names(data_list$Beam)[names(data_list$Beam)=='freq'] <- 'Frequency'
-    
+      
       
       
       
@@ -289,7 +289,8 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       
       
       
-    }else{
+    }
+    else{
       
       #################################################################
       # Description: protocol to convert ICESacoustic to StoxAcoustic #
@@ -338,9 +339,14 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
         stop("StoxAcoustic: There is something wrong in the instrument records (input format: ICES Acoustic)")
       }
 
-      tmp_beam$BeamKey <- tmp_beam$Frequency
-      data_list$Beam<-unique(tmp_beam[,!c('NASC','ChannelDepthUpper','AcousticCategory','Type','Unit','SvThreshold')])
+      # Multiply by 1000 to get the frequency into Hz and not kHz as specified in the ICESAcoustic:
+      tmp_beam$Frequency <- 1000 * tmp_beam$Frequency
+      
+      
+      #tmp_beam$BeamKey <- tmp_beam$Frequency
+      tmp_beam$BeamKey <- paste(tmp_beam$Frequency, tmp_beam$ID, sep = '/')
       tmp$BeamKey <- tmp_beam$BeamKey
+      data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'AcousticCategory','Type','Unit','SvThreshold', 'SaCategory')])
       
       
       
@@ -349,8 +355,8 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       data_list$AcousticCategory <- tmp
       data_list$AcousticCategory$AcousticCategoryKey <- tmp$AcousticCategory
       tmp$AcousticCategoryKey<- tmp$AcousticCategory
-      
-      
+      # Get only unique lines:
+      data_list$AcousticCategory <- unique(data_list$AcousticCategory[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'Type','Unit','SvThreshold', 'SaCategory')])
       
       
       
@@ -361,11 +367,13 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       tmp$ChannelReferenceOrientation <- ifelse(tmp$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vvertically upwards for bottom channels ("B"):      
       
       data_list$ChannelReference <- tmp
+      # Get only unique lines:
+      data_list$ChannelReference <- unique(data_list$ChannelReference[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'Type','Unit','SvThreshold', 'SaCategory')])
       
       
       
       #Apply channel, and apply key to all
-      tmp$NASCKey <- paste(tmp$ChannelDepthUpper,tmp$ChannelDepthLower,sep='/')
+      tmp$NASCKey <- paste(tmp$ChannelDepthUpper, tmp$ChannelDepthLower, sep = '/')
       tmp$Channel <- NA
       data_list$NASC <- tmp
       
@@ -396,7 +404,9 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       data_list$Log<-merge(data_list$Log,data_list$Beam[,c('PingAxisInterval','LogKey')])
       names(data_list$Log)[names(data_list$Log)=='PingAxisInterval'] <- 'LogDistance'
       
-      data_list$Log$LogOrigin2 <- "end"
+      # The LogOrigin2 should be NA until it gets incorporated in the ICESAcoustic format:
+      #data_list$Log$LogOrigin2 <- "end"
+      data_list$Log$LogOrigin2 <- NA
       data_list$Log$LogDuration <- NA
       
       ####Bugfiks since StopLat and lon do not exist yet
@@ -406,6 +416,20 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       # Remove duplicates in Log and Beam
       data_list$Log <- unique(data_list$Log)
       data_list$Beam <- unique(data_list$Beam)
+      
+      
+      # Interpret the LogOrigin and LogOrigin2 as "start", "middle" or "end":
+      interpretLogOrigin <- function(x) {
+      	if(!is.na(x[1])) {
+      		sub("AC_LogOrigin_", "", x)
+      	}
+      	else {
+      		x
+      	}
+      }
+      data_list$Log$LogOrigin <- interpretLogOrigin(data_list$Log$LogOrigin)
+      data_list$Log$LogOrigin2 <- interpretLogOrigin(data_list$Log$LogOrigin2)
+      
 
       #################################################################
       #        Add cruice key to all list                             #

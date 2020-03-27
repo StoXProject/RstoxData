@@ -14,8 +14,8 @@ The RstoxData package contains functions for reading, filtering and writing biot
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/StoXProject/RstoxData}
-  \item Report bugs at \url{https://github.com/StoXProject/RstoxData/issues}
+  \item \url{https://github.com//RstoxData}
+  \item Report bugs at \url{https://github.com//RstoxData/issues}
 }
 
 }
