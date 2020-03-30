@@ -41,8 +41,8 @@ HaulKey,Individual,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,Y
-IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight, NA)","ifelse(producttype.individual == 1, weight.individual, NA)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
-IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length, NA)","ifelse(lengthmeasurement == 'E', length, NA)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
+IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(producttype.individual == 1, weight.individual * 1000, NA)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
+IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
 LengthResolutionCentimeter,Individual,"convertLenRes(lengthresolution)","convertLenRes(lengthunit)",convertLenRes(LengthCode.Biology),
 WeightMeasurement,Individual,"'IndividualWeight'","'IndividualWeight'","ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",
 IndividualAge,Individual,age,age,IndividualAge,
