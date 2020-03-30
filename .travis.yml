@@ -17,6 +17,12 @@ r_packages:
   - drat
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then R -e 'source("https://install-github.me/r-lib/remotes")'; fi
+
+before_script:
+  - wget https://github.com/StoXProject/repo/raw/master/scripts/checktag.sh
+  - wget https://github.com/StoXProject/repo/raw/master/scripts/deploy.sh
+  - bash checktag.sh
+
 after_success:
   # Get Package name and version from DESCRIPTION
   - 'export PKGVER=$(sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)'
@@ -35,9 +41,10 @@ after_success:
   - "cp ${BINSRC} ${BIN_PKG_FILE}"
   - "cp ${BINSRC} drat/"
   - "echo Resulting binary: $BIN_PKG_FILE"
-  - test $TRAVIS_BRANCH == "master" && $TRAVIS_OS_NAME == "linux" && test $TRAVIS_R_VERSION_STRING == "release" && Rscript -e 'remotes::install_cran("pkgdown")' && Rscript -e 'pkgdown::build_site()'
+  # If you are in linux with R release, instruct to deploy source in drat and also generate docs with pkdown
+  - test $TRAVIS_BRANCH == "master"  && test $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_OS_NAME == "linux" && test $TRAVIS_R_VERSION_STRING == "release" && export DEPLOY_SRC="true" && Rscript -e 'remotes::install_cran("pkgdown")' && Rscript -e 'pkgdown::build_site()'
   # Populate DRAT
-  - test $TRAVIS_REPO_SLUG == "StoXProject/RstoxData" && test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "deploy_drat" && bash deploy.sh
+  - test $TRAVIS_BRANCH == "master"  && test $TRAVIS_PULL_REQUEST == "false" && PKG_REPO=$PWD && bash deploy.sh
 
 before_deploy:
   # Set up git user name and tag this commit
@@ -60,6 +67,4 @@ deploy:
     local_dir: docs
     on:
      branch: master
-     condition: 
-     - $TRAVIS_OS_NAME = linux
-     - $TRAVIS_R_VERSION_STRING = release
+     condition: $TRAVIS_OS_NAME = linux && $TRAVIS_R_VERSION_STRING = release
