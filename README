@@ -1,4 +1,4 @@
-# RstoxData version: 0.7.0 (latest alpha, 2020-03-27)
+# RstoxData version: 0.7.1 (latest alpha, 2020-03-31)
 # R version: 3.5
 
 
@@ -6,12 +6,12 @@
 
 
 # Install the latest developer version
-devtools::install_github("https://github.com//RstoxData@v0.7.0")
+devtools::install_github("https://github.com/StoXProject/RstoxData@v0.7.1")
 
 
-# Release notes for RstoxData_0.7.0:
+# Release notes for RstoxData_0.7.1:
 # . 
 
-# For historical release notes see https://github.com//RstoxData/blob/alpha/NEWS
+# For historical release notes see https://github.com/StoXProject/RstoxData/blob/alpha/NEWS
 
 

@@ -4,12 +4,7 @@
 \alias{FilterAcoustic}
 \title{Filter (raw) Acoustic data}
 \usage{
-FilterAcoustic(
-  AcousticData,
-  FilterExpression,
-  PropagateDownwards = TRUE,
-  PropagateUpwards = FALSE
-)
+FilterAcoustic(AcousticData, FilterExpression)
 }
 \arguments{
 \item{AcousticData}{Input \code{\link{AcousticData}} data.}
