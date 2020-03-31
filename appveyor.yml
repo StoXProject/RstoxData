@@ -43,7 +43,7 @@ on_success:
   - ps: |
           if( !$env:APPVEYOR_PULL_REQUEST_NUMBER ) {
             if( $env:APPVEYOR_REPO_BRANCH  -eq "master" ) {
-              deploy.sh
+              .\deploy.sh
             }
           }
   # Prepare for release deploy

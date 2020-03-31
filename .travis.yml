@@ -44,7 +44,7 @@ after_success:
   # If you are in linux with R release, instruct to deploy source in drat and also generate docs with pkdown
   - test $TRAVIS_BRANCH == "master"  && test $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_OS_NAME == "linux" && test $TRAVIS_R_VERSION_STRING == "release" && export DEPLOY_SRC="true" && Rscript -e 'remotes::install_cran("pkgdown")' && Rscript -e 'pkgdown::build_site()'
   # Populate DRAT
-  - test $TRAVIS_BRANCH == "master"  && test $TRAVIS_PULL_REQUEST == "false" && PKG_REPO=$PWD && bash deploy.sh
+  - test $TRAVIS_BRANCH == "master"  && test $TRAVIS_PULL_REQUEST == "false" && export PKG_REPO=$PWD && bash deploy.sh
 
 before_deploy:
   # Set up git user name and tag this commit
@@ -64,7 +64,7 @@ deploy:
     skip_cleanup: true
     token: $API_KEY
     keep_history: true
-    local_dir: docs
+    local_dir: ${PKG_REPO}/docs
     on:
      branch: master
      condition: $TRAVIS_OS_NAME = linux && $TRAVIS_R_VERSION_STRING = release
