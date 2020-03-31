@@ -19,18 +19,40 @@ for:
 -
   skip_tags: true
 
+before_build:
+  - curl -fsSL -o checktag.sh https://github.com/StoXProject/repo/raw/master/scripts/checktag.sh
+  - curl -fsSL -o deploy.sh https://github.com/StoXProject/repo/raw/master/scripts/deploy.sh
+  - checktag.sh
+
 build_script:
   - travis-tool.sh install_deps
 
 test_script:
   - travis-tool.sh run_tests
 
-before_deploy:
+on_success:
+  # Prepare to deploy DRAT
+  - travis-tool.sh install_r drat
+  - travis-tool.sh install_r git2r
+  - ps: new-item "drat" -itemtype directory
+  - ps: $env:BINSRC = Get-ChildItem -Path . | Where-Object { $_.Extension -eq ".zip" }
+  - ps: $env:PKG_REPO = Get-Location
+  - ps: $env:PKG_REPO = [regex]::escape($env:PKG_REPO)
+  - ps: copy $env:BINSRC .\drat
+  # Do drat deploy whenever it is not a pull request and only for the master branch
+  - ps: |
+          if( !$env:APPVEYOR_PULL_REQUEST_NUMBER ) {
+            if( $env:APPVEYOR_REPO_BRANCH  -eq "master" ) {
+              deploy.sh
+            }
+          }
+  # Prepare for release deploy
   - ps: |
           $env:PKGVER = Select-String -Path .\DESCRIPTION -Pattern '^Version: ' | % {$_.line -replace "^Version: "}
           $env:PKGNAME = Select-String -Path .\DESCRIPTION -Pattern '^Package: ' | % {$_.line -replace "^Package: "}
           $SRC_PKG_FILE = "${env:PKGNAME}_$env:PKGVER"
           Write-Host "File is $SRC_PKG_FILE"
+          Get-ChildItem -Path . | Where-Object { $_.Extension -eq ".zip" }  | % { rename-item –path $_.Fullname –Newname ($_.basename + '-R' + $R_VERSION + $_.extension) }
           $env:BIN_PKG_FILE = Get-ChildItem -Path . | Where-Object { $_.Extension -eq ".zip" }
           Write-Host "Resulting binary: $env:BIN_PKG_FILE"
 
@@ -39,8 +61,7 @@ deploy:
   release: '$(PKGNAME)-v$(PKGVER)'
   description: ''
   provider: GitHub
-  auth_token:
-    secure: 1BrsGiqI0hK/nqDJHPXRJbTGoaQ0pIhJ70mspFSKBlYhTyss/FagjPzLkRR7uLTq
+  auth_token: $(API_KEY)
   artifact: $(BIN_PKG_FILE)
   draft: false
   prerelease: false
@@ -54,7 +75,10 @@ on_failure:
 
 environment:
   NOT_CRAN: true
-  R_VERSION: 3.5.3
+
+  matrix:
+  - R_VERSION: oldrel
+  - R_VERSION: release
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
