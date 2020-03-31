@@ -345,8 +345,8 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       
       #tmp_beam$BeamKey <- tmp_beam$Frequency
       tmp_beam$BeamKey <- paste(tmp_beam$Frequency, tmp_beam$ID, sep = '/')
-      data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper','AcousticCategory','Type','Unit','SvThreshold')])
       tmp$BeamKey <- tmp_beam$BeamKey
+      data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'AcousticCategory','Type','Unit','SvThreshold', 'SaCategory')])
       
       
       
@@ -355,8 +355,8 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       data_list$AcousticCategory <- tmp
       data_list$AcousticCategory$AcousticCategoryKey <- tmp$AcousticCategory
       tmp$AcousticCategoryKey<- tmp$AcousticCategory
-      
-      
+      # Get only unique lines:
+      data_list$AcousticCategory <- unique(data_list$AcousticCategory[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'Type','Unit','SvThreshold', 'SaCategory')])
       
       
       
@@ -367,6 +367,8 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       tmp$ChannelReferenceOrientation <- ifelse(tmp$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vvertically upwards for bottom channels ("B"):      
       
       data_list$ChannelReference <- tmp
+      # Get only unique lines:
+      data_list$ChannelReference <- unique(data_list$ChannelReference[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'Type','Unit','SvThreshold', 'SaCategory')])
       
       
       
