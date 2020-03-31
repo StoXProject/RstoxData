@@ -1,17 +1,17 @@
-# RstoxData version: 0.7.1 (latest alpha, 2020-03-31)
+# RstoxData version: 0.8.0 (latest alpha, 2020-04-01)
 # R version: 3.5
 
 
 # Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
 
 
-# Install the latest developer version
-devtools::install_github("https://github.com/StoXProject/RstoxData@v0.7.1")
+# Install the latest GitHub release
+devtools::install_github("https://github.com/StoXProject/RstoxData", ref = "RstoxData-v0.8.0")
 
 
-# Release notes for RstoxData_0.7.1:
+# Release notes for RstoxData_0.8.0:
 # . 
 
-# For historical release notes see https://github.com/StoXProject/RstoxData/blob/alpha/NEWS
+# For historical release notes see https://github.com/StoXProject/RstoxData/blob/master/NEWS
 
 
