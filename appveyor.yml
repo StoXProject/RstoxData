@@ -30,7 +30,7 @@ build_script:
 test_script:
   - travis-tool.sh run_tests
 
-on_success:
+before_deploy:
   # Prepare to deploy DRAT
   - travis-tool.sh install_r drat
   - travis-tool.sh install_r git2r
