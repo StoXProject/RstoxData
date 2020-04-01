@@ -48,12 +48,12 @@ before_deploy:
           }
   # Prepare for release deploy
   - ps: |
+          $env:R_NUMVER = Rscript -e getRversion()
           $env:PKGVER = Select-String -Path .\DESCRIPTION -Pattern '^Version: ' | % {$_.line -replace "^Version: "}
           $env:PKGNAME = Select-String -Path .\DESCRIPTION -Pattern '^Package: ' | % {$_.line -replace "^Package: "}
-          $SRC_PKG_FILE = "${env:PKGNAME}_$env:PKGVER"
-          Write-Host "File is $SRC_PKG_FILE"
-          Get-ChildItem -Path . | Where-Object { $_.Extension -eq ".zip" }  | % { rename-item –path $_.Fullname –Newname ($_.basename + '-R' + $R_VERSION + $_.extension) }
+          Get-ChildItem -Path . | Where-Object { $_.Extension -eq ".zip" }  | % { rename-item –path $_.Fullname –Newname ($_.basename + '-R' + $env:R_NUMVER + $_.extension) }
           $env:BIN_PKG_FILE = Get-ChildItem -Path . | Where-Object { $_.Extension -eq ".zip" }
+          dir
           Write-Host "Resulting binary: $env:BIN_PKG_FILE"
 
 deploy:
