@@ -328,6 +328,9 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     columns <- c("variable", "level", datatype)
+    if(!datatype %in% names(stoxBioticObject$convertTable)) {
+    	stop("The input format ", datatype, " is not yet supprted in RstoxData")
+    }
     convertTable <- stoxBioticObject$convertTable[, ..columns]
     
     # Data placeholder
