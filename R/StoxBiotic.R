@@ -63,6 +63,9 @@ StoxBiotic <- function(BioticData, cores = NULL) {
     # Extract the StoxBiotic data and rbind across files:
     StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, cores = cores)
     
+    # Ensure that the numeric values are rounded to the defined number of digits:
+    RstoxData::setRstoxPrecisionLevel(StoxBioticData)
+    
     return(StoxBioticData)
 }
 

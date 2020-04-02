@@ -494,6 +494,10 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
   )
 
   names(StoxAcousticData) <- tableNames
+  
+  # Ensure that the numeric values are rounded to the defined number of digits:
+  RstoxData::setRstoxPrecisionLevel(StoxAcousticData)
+  
 
   #Output stox acoustic data
   return(StoxAcousticData)
