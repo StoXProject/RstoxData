@@ -85,3 +85,40 @@ getCores <- function() {
 		return(cores)
 	}
 }
+
+
+#' Round off to number of digits
+#'
+#' @param data A list of data tables.
+#' @param tableNames A character vector holding the names of the tables to merge.
+#' @param output.only.last Only returns last merged table.
+#'
+#' @return A merged data table.
+#'
+#' @export
+#' 
+setRstoxPrecisionLevel <- function(x) {
+	# Get the defines number of digits:
+	digits <- getRstoxDataDefinitions("digits")
+	
+	# If a data.table run setPrecisionLevelOneDT() directly:
+	if(data.table::is.data.table(x)) {
+		setPrecisionLevelOneDT(x, digits = digits)
+	}
+	# If a list of data tables, loop through the list and set precision:
+	else if(is.list(x)) {
+		for(tableName in names(x)) {
+			setPrecisionLevelOneDT(x[[tableName]], digits = digits)
+		}
+	}
+}
+# Functino setting the precision of one data table:
+setPrecisionLevelOneDT <- function(DT, digits) {
+	# Detect numeric columns and round off to the specified number of digits:
+	atNumeric <- sapply(DT, is.numeric)
+	if(any(atNumeric)) {
+		numericCols <- names(DT)[atNumeric]
+		DT[, (numericCols) := round(.SD, digits), .SDcols = numericCols]
+	}
+}
+

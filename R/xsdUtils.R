@@ -242,7 +242,8 @@ createXsdObject <- function(xsdFile) {
 	# If not exists
 	if(!file.exists(xsdFile)) {
 		# Get path from local environment
-		fpath <- get("fpath", envir = localEnv)
+		#fpath <- get("fpath", envir = localEnv)
+		fpath <- getRstoxDataDefinitions("fpath")
 		xsdFilePath <- paste0(fpath, "/", basename(xsdFile))
 		if(!file.exists(xsdFilePath)) {
 			print(paste("It seems that", xsdFile, "does not exist or the format is not supported."))
