@@ -15,7 +15,7 @@
 #' 
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
     
-    `%notin%` <- Negate(`%in%`)
+	`%notin%` <- Negate(`%in%`)
 
 	processFilter <- function(filters) {
 		# Assume each individual filters relation are the AND (&) operator 
@@ -78,9 +78,15 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	}
 
 	level <- 0
+	
 	# 1. Check Validity/Level of data
-	if(!is.list(inputData) || !is.list(filterExpression) || !length(inputData) || !length(filterExpression)) {
-		warning("Data / Filter parameters is empty!")
+	if(!length(filterExpression)) {
+		return(inputData)
+	} else if(!is.list(filterExpression)) {
+		warning("Invalid filter parameter (must be a list)!")
+		return(NULL)
+	} else if(!is.list(inputData) || !length(inputData)) {
+		warning("Invalid or empty input data!")
 		return(NULL)
 	} else if(is.data.table(inputData[[1]])) {
 		level <- 1

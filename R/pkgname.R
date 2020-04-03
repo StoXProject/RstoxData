@@ -7,6 +7,18 @@
 #' @name RstoxData
 #'
 "_PACKAGE"
+
+.onLoad <- function(libname, pkgname){
+	# Initiate the RstoxData environment:
+	initiateRstoxData()
+} 
+
+# Try to unload dynamic library
+.onUnload <- function (libpath) {
+	library.dynam.unload("RstoxData", libpath)
+} 
+
 #' @useDynLib RstoxData, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 NULL
+
