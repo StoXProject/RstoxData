@@ -141,6 +141,9 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
         #stop("FilterExpressionList must be a list")
         return(FilterExpressionList)
     }
+	else if(length(FilterExpressionList) == 0) {
+        return(FilterExpressionList)
+	}
     # If the input list of expressions has 2 levels, return immediately:
     if(is.list(FilterExpressionList[[1]])) {
         return(FilterExpressionList)
