@@ -412,7 +412,7 @@ AddStoxBioticVariables <- function(StoxBioticData, BioticData, TableName, Variab
 	TableName <- split(TableName, TableName)
 	
 	# Get the variables:
-	extractVariablesFromOneTable <- function(tab, var, data) {
+	extractVariablesFromTable <- function(tab, var, data) {
 		if(length(tableName)) {
 			data[[tab]]
 		}

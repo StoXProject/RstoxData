@@ -135,8 +135,8 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 
 
 expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
-    
-    # Error if not a list:
+	
+	# Error if not a list:
     if(!is.list(FilterExpressionList)) {
         #stop("FilterExpressionList must be a list")
         return(FilterExpressionList)
@@ -148,7 +148,7 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
     if(is.list(FilterExpressionList[[1]])) {
         return(FilterExpressionList)
     }
-    
+	
     # Get the file names and the table names:
     splited <- strsplit(names(FilterExpressionList), split = sep)
     fileNames <- sapply(splited, function(x) x[seq_len(length(x) - 1)])
@@ -157,7 +157,8 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
     
     # Split the FilterExpression by the fileNames:
     FilterExpressionList <- split(FilterExpressionList, fileNames)
-    names(FilterExpressionList) <- fileNames
+    
+    names(FilterExpressionList) <- unique(fileNames)
     
     # Change the names of the individual tables:
     for(ind in seq_along(FilterExpressionList)) {
