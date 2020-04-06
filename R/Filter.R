@@ -71,6 +71,9 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		merged <- y[[fileName]]
 		for (tName in intersect(names(merged), names(x[[fileName]]))) {
 			out <- applyFilter(tName, x[[fileName]], merged, propDown, propUp)
+			if(!length(out)) {
+				warning("Filter on data from file \"", fileName, "\" returned empty table \"", tName, "\"")
+			}
 			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
 		}
 
