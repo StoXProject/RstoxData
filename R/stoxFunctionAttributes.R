@@ -65,7 +65,7 @@ stoxFunctionAttributes <- list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "BioticData", 
-	    functionParameterFormat = list(FilterExpression = "filterExpressionTable")
+	    functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
 	# Convert BioticData to StoxBioticData:
@@ -73,7 +73,7 @@ stoxFunctionAttributes <- list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "AcousticData", 
-	    functionParameterFormat = list(FilterExpression = "filterExpressionTable")
+	    functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
 	# Convert BioticData to StoxBioticData:
@@ -81,7 +81,7 @@ stoxFunctionAttributes <- list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "StoxBioticData", 
-	    functionParameterFormat = list(FilterExpression = "filterExpressionTable")
+	    functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
 	# Convert BioticData to StoxBioticData:
@@ -89,7 +89,7 @@ stoxFunctionAttributes <- list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "StoxAcousticData", 
-	    functionParameterFormat = list(FilterExpression = "filterExpressionTable")
+	    functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
 	# Convert AcousticData to StoxAcousticData:

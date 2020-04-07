@@ -386,7 +386,64 @@ MergeStoxBiotic <- function(StoxBioticData) {
 }
 
 
+#' Merge StoxBioticData
+#'
+#' @param StoxBioticData A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).
+#'
+#' @return An object of StoX data type \code{\link{MergedStoxBioticData}}.
+#'
+#' @export
+#' 
+AddStoxBioticVariables <- function(StoxBioticData, BioticData, TableName, VariableName, cores = NULL) {
+	
+	# Check the the BioticData are all from the same source (ICES/NMD):
+	checkDataSource(BioticData)
+	
+	# Convert from BioticData to the general sampling hierarchy:
+	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, cores = cores)
+	
+	# Get the variables:
+	if(length(TableName) != length(VariableName)) {
+		stop("TableName and VariableName must have the same length")
+	}
+	
+	# Split the TableName and VariableName into lists by the TableName:
+	VariableName <- split(VariableName, TableName)
+	TableName <- split(TableName, TableName)
+	
+	# Get the variables:
+	extractVariablesFromTable <- function(tab, var, data) {
+		if(length(tableName)) {
+			data[[tab]]
+		}
+		
+	}
+	
+	
+	
+	
+}
 
+checkDataSource <- function(BioticData) {
+	# Function to match the metadata against data source strings:
+	matchSource <- function(x, BioticData) {
+		matched <- startsWith(sapply(lapply(BioticData, "[[", "metadata"), "[[", "useXsd"), x)
+		output <- rep(NA, length(matched))
+		output[matched] <- x
+		return(output)
+	}
+	
+	# Detect the data source:
+	possibleDataSources <- c("nmd", "ices")
+	detectedDataSources <- sapply(possibleDataSources, matchSource, BioticData = BioticData)
+	detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
+	# Accept only BioticData from a single source:
+	if(any(detectedDataSources[1] != detectedDataSources)) {
+		stop("The function AddStoxBioticVariables can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
+	}
+	
+	return(detectedDataSources)
+}
 
 
 

@@ -15,7 +15,7 @@
 #' 
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
     
-    `%notin%` <- Negate(`%in%`)
+	`%notin%` <- Negate(`%in%`)
 
 	processFilter <- function(filters) {
 		# Assume each individual filters relation are the AND (&) operator 
@@ -71,6 +71,9 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		merged <- y[[fileName]]
 		for (tName in intersect(names(merged), names(x[[fileName]]))) {
 			out <- applyFilter(tName, x[[fileName]], merged, propDown, propUp)
+			if(!length(out)) {
+				warning("Filter on data from file \"", fileName, "\" returned empty table \"", tName, "\"")
+			}
 			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
 		}
 
@@ -78,9 +81,15 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	}
 
 	level <- 0
+	
 	# 1. Check Validity/Level of data
-	if(!is.list(inputData) || !is.list(filterExpression) || !length(inputData) || !length(filterExpression)) {
-		warning("Data / Filter parameters is empty!")
+	if(!length(filterExpression)) {
+		return(inputData)
+	} else if(!is.list(filterExpression)) {
+		warning("Invalid filter parameter (must be a list)!")
+		return(NULL)
+	} else if(!is.list(inputData) || !length(inputData)) {
+		warning("Invalid or empty input data!")
 		return(NULL)
 	} else if(is.data.table(inputData[[1]])) {
 		level <- 1
@@ -129,17 +138,20 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 
 
 expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
-    
-    # Error if not a list:
+	
+	# Error if not a list:
     if(!is.list(FilterExpressionList)) {
         #stop("FilterExpressionList must be a list")
         return(FilterExpressionList)
     }
+	else if(length(FilterExpressionList) == 0) {
+        return(FilterExpressionList)
+	}
     # If the input list of expressions has 2 levels, return immediately:
     if(is.list(FilterExpressionList[[1]])) {
         return(FilterExpressionList)
     }
-    
+	
     # Get the file names and the table names:
     splited <- strsplit(names(FilterExpressionList), split = sep)
     fileNames <- sapply(splited, function(x) x[seq_len(length(x) - 1)])
@@ -148,7 +160,8 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
     
     # Split the FilterExpression by the fileNames:
     FilterExpressionList <- split(FilterExpressionList, fileNames)
-    names(FilterExpressionList) <- fileNames
+    
+    names(FilterExpressionList) <- unique(fileNames)
     
     # Change the names of the individual tables:
     for(ind in seq_along(FilterExpressionList)) {
