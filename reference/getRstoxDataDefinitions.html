@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>StoX data type StoxAcousticData — StoxAcousticData • RstoxData</title>
+<title>Get RstoxData definitions — getRstoxDataDefinitions • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="StoX data type StoxAcousticData — StoxAcousticData" />
-<meta property="og:description" content="Acoustic data stored in the StoxAcoustic format, which contains the variables needed for most estimation models used by StoX." />
+<meta property="og:title" content="Get RstoxData definitions — getRstoxDataDefinitions" />
+<meta property="og:description" content="This function gets vital definitions from the RstoxData environment." />
 
 
 
@@ -108,24 +108,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>StoX data type StoxAcousticData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>StoxAcousticData.Rd</code></div>
+    <h1>Get RstoxData definitions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Definitions.R'><code>R/Definitions.R</code></a></small>
+    <div class="hidden name"><code>getRstoxDataDefinitions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Acoustic data stored in the StoxAcoustic format, which contains the variables needed for most estimation models used by StoX.</p>
+    <p>This function gets vital definitions from the RstoxData environment.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>getRstoxDataDefinitions</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>name</th>
+      <td><p>An optional string vector denoting which definitions to extract.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>values overriding the values of definitions.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>This StoX data type is produced by <code><a href='StoxAcoustic.html'>StoxAcoustic</a></code>, and contains the tables Cruise, Log, Beam, AcousticCategory, ChannelReference and NASC in that hierachical order.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p>A list of definitions.</p>
 
-    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>getRstoxDataDefinitions</span>()</div><div class='output co'>#&gt; $digits
+#&gt; [1] 12
+#&gt; 
+#&gt; $fpath
+#&gt; [1] "/tmp/RtmprrhzfU/temp_libpath5de36b88cb01/RstoxData/extdata"
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
