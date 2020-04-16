@@ -382,7 +382,7 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #' @export
 #' 
 MergeStoxBiotic <- function(StoxBioticData) {
-    mergeDataTables(StoxBioticData, tableNames = NULL, output.only.last = TRUE)
+    mergeDataTables(StoxBioticData, tableNames = NULL, output.only.last = TRUE, all = TRUE)
 }
 
 

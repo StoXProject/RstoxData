@@ -41,7 +41,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 			print(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
 			setnames(data[[curr]], ddpl, paste0(ddpl, ".", curr))
 		}
-
+		
 		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars, suffixes = suffixes, ...)
 	}
 

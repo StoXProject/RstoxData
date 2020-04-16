@@ -102,9 +102,107 @@ stoxFunctionAttributes <- list(
 	
 	# Convert BioticData to StoxBioticData:
 	MergeStoxBiotic = list(
-	    functionType = "modelData", 
-	    functionCategory = "baseline", 
-	    functionOutputDataType = "MergedStoxBioticData", 
-	    functionArgumentHierarchy = list()
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "MergedStoxBioticData", 
+		functionArgumentHierarchy = list()
+	),
+	
+	##### Define and Convert variables: #####
+	
+	# Biotic:
+	DefineBioticVariableConversion = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "BioticVariableConversion"
+	),
+	
+	ConvertBioticVariables = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "BioticData", 
+		functionParameterFormat = list(
+			VariableConversionTable = "variableConversionTable"
+		), 
+		functionArgumentHierarchy = list(
+			VariableConversionTable = list(
+				ConversionMethod = "Table"
+			), 
+			FileName = list(
+				ConversionMethod = "PreDefined"
+			)
+		)
+	),
+	
+	# StoxBiotic:
+	DefineStoxBioticVariableConversion = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticVariableConversion"
+	),
+	
+	ConvertStoxBioticVariables = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticData", 
+		functionParameterFormat = list(
+			VariableConversionTable = "variableConversionTable"
+		), 
+		functionArgumentHierarchy = list(
+			VariableConversionTable = list(
+				ConversionMethod = "Table"
+			), 
+			FileName = list(
+				ConversionMethod = "PreDefined"
+			)
+		)
+	),
+	
+	# Acoustic:
+	DefineAcousticVariableConversion = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "AcousticVariableConversion"
+	),
+	
+	ConvertAcousticVariables = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "AcousticData", 
+		functionParameterFormat = list(
+			VariableConversionTable = "variableConversionTable"
+		), 
+		functionArgumentHierarchy = list(
+			VariableConversionTable = list(
+				ConversionMethod = "Table"
+			), 
+			FileName = list(
+				ConversionMethod = "PreDefined"
+			)
+		)
+	),
+	
+	# StoxAcoustic:
+	DefineStoxAcousticVariableConversion = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxAcousticVariableConversion"
+	),
+	
+	ConvertStoxAcousticVariables = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxAcousticData", 
+		functionParameterFormat = list(
+			VariableConversionTable = "variableConversionTable"
+		), 
+		functionArgumentHierarchy = list(
+			VariableConversionTable = list(
+				ConversionMethod = "Table"
+			), 
+			FileName = list(
+				ConversionMethod = "PreDefined"
+			)
+		)
 	)
 )
