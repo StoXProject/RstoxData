@@ -514,5 +514,5 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
 #' @export
 #' 
 MergeStoxAcoustic <- function(StoxAcousticData) {
-    mergeDataTables(StoxAcousticData, tableNames = NULL, output.only.last = TRUE)
+    mergeDataTables(StoxAcousticData, tableNames = NULL, output.only.last = TRUE, all = TRUE)
 }
