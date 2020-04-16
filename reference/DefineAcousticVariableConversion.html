@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge StoxBioticData — AddStoxBioticVariables • RstoxData</title>
+<title>Acoustic variable conversion — DefineAcousticVariableConversion • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge StoxBioticData — AddStoxBioticVariables" />
-<meta property="og:description" content="Merge StoxBioticData" />
+<meta property="og:title" content="Acoustic variable conversion — DefineAcousticVariableConversion" />
+<meta property="og:description" content="This function reads a file holding a table for converting values of one or more variables to new values in AcousticData. The actual conversion is done by ConvertAcousticVariables." />
 
 
 
@@ -108,35 +108,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge StoxBioticData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxBiotic.R'><code>R/StoxBiotic.R</code></a></small>
-    <div class="hidden name"><code>AddStoxBioticVariables.Rd</code></div>
+    <h1>Acoustic variable conversion</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/DefineAndUpdateVariables.R'><code>R/DefineAndUpdateVariables.R</code></a></small>
+    <div class="hidden name"><code>DefineAcousticVariableConversion.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge StoxBioticData</p>
+    <p>This function reads a file holding a table for converting values of one or more variables to new values in <code><a href='AcousticData.html'>AcousticData</a></code>. The actual conversion is done by <code><a href='ConvertAcousticVariables.html'>ConvertAcousticVariables</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>AddStoxBioticVariables</span>(
-  <span class='no'>StoxBioticData</span>,
-  <span class='no'>BioticData</span>,
-  <span class='no'>TableName</span>,
-  <span class='no'>VariableName</span>,
-  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>DefineAcousticVariableConversion</span>(<span class='no'>processData</span>, <span class='no'>FileName</span>, <span class='kw'>UseProcessData</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>StoxBioticData</th>
-      <td><p>A list of StoX biotic data (StoX data type <code><a href='StoxBioticData.html'>StoxBioticData</a></code>).</p></td>
+      <th>processData</th>
+      <td><p>The current data produced by a previous instance of the function.</p></td>
+    </tr>
+    <tr>
+      <th>FileName</th>
+      <td><p>A file from which to read the <code>VariableConversionTable</code>.</p></td>
+    </tr>
+    <tr>
+      <th>UseProcessData</th>
+      <td><p>Logical: If TRUE use the existing function output in the process.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of StoX data type <code>MergedStoxBioticData</code>.</p>
+    <p>A <code>AcousticVariableConversion</code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
