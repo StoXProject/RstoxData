@@ -1,4 +1,5 @@
 
+#' @importFrom utils write.table
 write2ICESacoustic_CSV <- function(Acoustic,save=T){
   
   for(aco in Acoustic){
@@ -96,6 +97,7 @@ write2ICESacoustic_CSV <- function(Acoustic,save=T){
 }
 
 # Datras format generator from Biotic v3
+#' @importFrom stats aggregate
 generateDATRAS <- function(raw, additionalStation = NA) {
 
     # Check input is a NMD Biotic v3 data
