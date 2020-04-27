@@ -112,7 +112,7 @@ stoxFunctionAttributes <- list(
 	
 	# Biotic:
 	DefineBioticVariableConversion = list(
-		functionType = "modelData", 
+		functionType = "processData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "BioticVariableConversion"
 	),
@@ -136,7 +136,7 @@ stoxFunctionAttributes <- list(
 	
 	# StoxBiotic:
 	DefineStoxBioticVariableConversion = list(
-		functionType = "modelData", 
+		functionType = "processData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticVariableConversion"
 	),
@@ -160,7 +160,7 @@ stoxFunctionAttributes <- list(
 	
 	# Acoustic:
 	DefineAcousticVariableConversion = list(
-		functionType = "modelData", 
+		functionType = "processData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "AcousticVariableConversion"
 	),
@@ -184,7 +184,7 @@ stoxFunctionAttributes <- list(
 	
 	# StoxAcoustic:
 	DefineStoxAcousticVariableConversion = list(
-		functionType = "modelData", 
+		functionType = "processData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxAcousticVariableConversion"
 	),
