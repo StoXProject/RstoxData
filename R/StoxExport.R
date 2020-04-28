@@ -1,5 +1,128 @@
+getQuarter <- function(stationstartdate) {
+    x <- format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
+    return(floor((as.numeric(x) - 1) / 3 + 1))
+}
+
+
+getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
+
+          temp <-  as.data.table(cbind(q=quarter, ap=aphia, sp=specialstage, ms=maturationstage, res=NA))
+
+          temp[, `:=`(sp = as.numeric(sp), ms = as.numeric(ms), res = as.numeric(res) )]
+
+          temp[, isHerringOrSpratOrMackerel := ifelse(ap %in% c("126417", "126425", "127023"), TRUE, FALSE)]
+
+          temp[!is.na(sp) & isHerringOrSpratOrMackerel == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
+          temp[!is.na(sp) & isHerringOrSpratOrMackerel == FALSE, res := 60 + sp]
+
+          temp[is.na(sp) & !is.na(ms), res := ifelse(ms == 5 & q == "3", NA, 60 + ms)]
+
+          return(temp$res)
+}
+
+getGOVSweepByEquipment <- function(gear) {
+    cnvTbl <- c("3120" = NA,
+                "3190" = 60,
+                "3191" = 60,
+                "3192" = 60,
+                "3193" = 110,
+                "3194" = 110,
+                "3195" = 110,
+                "3196" = 60,
+                "3197" = 110,
+                "3198" = 60,
+                "3199" = 60)
+
+    x <- cnvTbl[as.character(gear)]
+    x[is.null(x)] <- NA
+    return(x)
+}
+
+getHaulVal <- function(gearcondition, samplequality) {
+    temp <-  as.data.table(cbind(g=gearcondition, s=samplequality))
+    temp[, res:="I"]
+    temp[(is.na(g) | g %in% c("1","2")) &
+        (is.na(s) | s %in% c("0", "1")), res:="V"]
+
+    return(temp$res)
+}
+
+# Stolen from: https://github.com/cran/mapplots/blob/master/R/ices.rect.R
+getICESrect <- function(lat, lng){
+    x <- floor(lng+60)+1000
+    y <- floor(lat*2)-71+100
+    num1<- substr(y,2,3)
+    lett <- LETTERS[as.numeric(substr(x,2,3))]
+    num2 <- substr(x,4,4)
+    paste(num1,lett,num2,sep='')
+}
+
+getDistanceMeter <- function(lat1, lon1, lat2, lon2) {
+    x <-  acos( sin(lat1*pi/180)*sin(lat2*pi/180) + cos(lat1*pi/180)*cos(lat2*pi/180)*cos(lon2*pi/180-lon1*pi/180) ) * 6371000
+    return(x)
+}
+
+getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, stationstoptime) {
+
+    t0 <- ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, stationstarttime)))
+    t1 <- ifelse(is.na(stationstopdate) | is.na(stationstoptime), NA, gsub("Z", " ", paste0(stationstopdate, stationstoptime)))
+    
+    start <- as.POSIXct(t0)
+    end <- as.POSIXct(t1)
+
+    return(round(difftime(end, start)/60))
+}
+
+# Get ICES ship data
+getICESShipCode <- function(platformname) {
+
+    construct <- function(shipName) {
+        # We have to remove "."," " and use uppercase
+        shipName <- toupper(gsub("[[:space:][:punct:]]", "", shipName))
+
+        # Replace the nordic character with AA
+        shipName <- gsub("\u00C5", "AA", shipName)
+
+        data <- tryCatch(
+            {
+                read_xml("https://vocab.ices.dk/services/rdf/collection/TS_Ship")
+            },
+                error = function(e){return(NA)}
+        )
+
+        # Can't download from ICES
+        if (is.na(data))
+            return(NA)
+
+        nodes <- xml_find_all(data, paste0("//skos:concept[contains(translate(skos:prefLabel[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]"))
+
+        # Ship not found
+        if (length(nodes) < 1) {
+          return(NA)
+        }
+
+        shipDetailUrl <- xml_attr(nodes[[1]], "about")
+        shipCode <- tail(unlist(strsplit(shipDetailUrl, split="/")), 1)
+
+        # Simple hack for Cefas Endeavour
+        if(shipCode == "END") shipCode <- "ENDW"
+
+        return(shipCode)
+    }
+
+    nm <- unique(platformname)
+    y <- unlist(lapply(nm, construct))
+    names(y) <- nm
+
+    x <- y[as.character(platformname)]
+    x[is.null(x)] <- NA
+
+    return(x)
+}
+
+
 #' @importFrom utils write.table
-exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE) {
+exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "") {
 
   ovw <- function(fn, ow) {
     if (file.exists(fn)) {
@@ -13,7 +136,7 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE) {
 
   if (combine) {
     ovw(filename, overwrite)
-    suppressWarnings(lapply(data, write.table, file = filename, append = TRUE, row.names = FALSE, quote = FALSE, sep = ","))
+    suppressWarnings(lapply(data, write.table, file = filename, append = TRUE, na = na, row.names = FALSE, quote = FALSE, sep = ","))
   } else {
     subname <- names(data)
 
@@ -23,13 +146,13 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE) {
     for (i in seq_len(length(data))) {
       subfilename <- paste0(tools::file_path_sans_ext(filename), "_", subname[i], ".", tools::file_ext(filename))
       ovw(subfilename, overwrite)
-      suppressWarnings(write.table(data[[i]], file=subfilename, append=FALSE, row.names=FALSE, quote=FALSE, sep=","))
+      suppressWarnings(write.table(data[[i]], file = subfilename, append = FALSE, na = na, row.names = FALSE, quote = FALSE, sep = ","))
     }
   }
   return(TRUE)
 }
 
-write2ICESacoustic_CSV <- function(Acoustic, save = TRUE){
+writeICESAcoustic <- function(Acoustic, save = TRUE){
   
   for(aco in Acoustic){
     if(aco$metadata$useXsd=='icesAcoustic'){
@@ -124,9 +247,154 @@ write2ICESacoustic_CSV <- function(Acoustic, save = TRUE){
   return(tmp)
 }
 
+
+writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", save = TRUE) {
+
+  doGenBiotic <- function(raw, save) {
+
+    cruiseRaw <- raw$mission
+
+    Cruise <- cruiseRaw[, .(
+      Cruise = "Cruise",
+      Header = "Record",
+      CruiseSurvey = SurveyCode,
+      CruiseCountry = "NO",
+      CruiseOrganisation = 612,
+      CruisePlatform = getICESShipCode(platformname),
+      CruiseStartDate = gsub("Z", "", missionstartdate),
+      CruiseEndDate = gsub("Z", "", missionstopdate),
+      CruiseLocalID = cruise
+    )]
+
+    CruiseLocalID <- Cruise$CruiseLocalID
+
+    haulRaw <- raw$fishstation
+    Haul <- haulRaw[, .(
+      Haul = "Haul",
+      Header = "Record",
+      CruiseLocalID = CruiseLocalID,
+      HaulGear = GearCode,
+      HaulNumber = serialnumber,
+      HaulStationName = station,
+      HaulStartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
+      HaulDuration = getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime),
+      HaulValidity = getHaulVal(gearcondition, samplequality),
+      HaulStartLatitude = latitudestart,
+      HaulStartLongitude = longitudestart,
+      HaulStopLatitude = latitudeend,
+      HaulStopLongitude = longitudeend,
+      HaulStatisticalRectangle = getICESrect(latitudestart, longitudestart),
+      HaulMinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
+      HaulMaxTrawlDepth = fishingdepthmax,
+      HaulBottomDepth = bottomdepthstart,
+      HaulDistance = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
+      HaulNetopening = verticaltrawlopening,
+      HaulCodendMesh = NA,
+      HaulSweepLength = getGOVSweepByEquipment(gear),
+      HaulGearExceptions = NA,
+      HaulDoorType = trawldoortype,
+      HaulWarpLength = wirelength,
+      HaulWarpDiameter = wirediameter,
+      HaulWarpDensity = wiredensity,
+      HaulDoorSurface = trawldoorarea,
+      HaulDoorWeight = trawldoorweight,
+      HaulDoorSpread = trawldoorspread,
+      HaulWingSpread = wingspread,
+      HaulBuoyancy = NA,
+      HaulKiteArea = NA,
+      HaulGroundRopeWeight = NA,
+      HaulRigging = NA,
+      HaulTickler = NA,
+      HaulHydrographicStationID = NA,
+      HaulTowDirection = direction,
+      HaulSpeedGround = NA,
+      HaulSpeedWater = gearflow,
+      HaulWindDirection = winddirection,
+      HaulWindSpeed = windspeed,
+      HaulSwellDirection = NA,
+      HaulSwellHeight = NA,
+      HaulLogDistance = NA,
+      HaulStratum = NA
+    )]
+
+  catchRaw <- raw$catchsample
+  Catch <- catchRaw[, .(
+      Catch = "Catch",
+      Header = "Record",
+      CruiseLocalID = CruiseLocalID,
+      HaulGear = GearCode,
+      HaulNumber = serialnumber,
+      CatchDataType = "R",
+      CatchSpeciesCode = aphia,
+      CatchSpeciesValidity = catchproducttype,
+      CatchSpeciesCategory = 1,
+      CatchSpeciesCategoryNumber = catchcount,
+      CatchWeightUnit = "kg",
+      CatchSpeciesCategoryWeight = catchweight,
+      CatchSpeciesSex = NA,
+      CatchSubsampledNumber = lengthsamplecount,
+      CatchSubsamplingFactor = catchcount / lengthsamplecount,
+      CatchSubsampleWeight = lengthsampleweight,
+      CatchLengthCode = NA,
+      CatchLengthClass = NA,
+      CatchLengthType = "1",
+      CatchNumberAtLength = lengthsamplecount,
+      CatchWeightAtLength = NA
+    )]
+
+    indRaw <- raw$individual
+    indRaw[is.na(preferredagereading), preferredagereading := 1]
+
+    baseAge <- intersect(names(indRaw), names(raw$agedetermination))
+    indRaw <- merge(indRaw, raw$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
+    indRaw <- merge(raw$catchsample, indRaw, by = intersect(names(raw$catchsample), names(indRaw)))
+    indRaw <- merge(raw$fishstation, indRaw, by = intersect(names(raw$fishstation), names(indRaw)))
+    
+    Biology <- indRaw[, .(
+      Biology = "Biology",
+      Header = "Record",
+      CruiseLocalID = CruiseLocalID,
+      HaulGear = GearCode,
+      HaulNumber = serialnumber,
+      CatchSpeciesCode = aphia,
+      CatchSpeciesCategory = 1,
+      BiologyStockCode = NA,
+      BiologyFishID = specimenid,
+      BiologyLengthCode = "mm",
+      BiologyLengthClass = length * 1000,
+      BiologyWeightUnit = 'gr',
+      BiologyIndividualWeight = individualweight * 1000,
+      BiologyIndividualSex = ifelse(is.na(sex), NA, ifelse(sex == "1", "F", "M")),
+      BiologyIndividualMaturity = getDATRASMaturity(getQuarter(stationstartdate), aphia, specialstage, maturationstage),
+      BiologyMaturityScale = "M6",
+      BiologyIndividualAge = age,
+      BiologyAgePlusGroup = NA,
+      BiologyAgeSource = "Otolith",
+      BiologyGeneticSamplingFlag = NA,
+      BiologyStomachSamplingFlag = NA,
+      BiologyParasiteSamplingFlag = NA,
+      BiologyIndividualVertebraeCount = NA
+    )]
+
+    bioticOutput <- list(Cruise = Cruise, Haul = Haul, Catch = Catch, Biology = Biology)
+
+    # Save to file
+    if(save == TRUE){
+      filename = gsub('.xml','.csv',raw$metadata$file)
+      exportCSV(filename, bioticOutput, combine = TRUE, overwrite = TRUE)
+    }
+
+    return(bioticOutput)
+  }
+
+  out <- lapply(BioticData, doGenBiotic, save)
+  return(out)
+
+} 
+
 # Datras format generator from Biotic v3
 #' @importFrom stats aggregate
-generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
+writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
 
     doGenDATRAS <- function(raw, additionalStation, save) {
       # Check input is a NMD Biotic v3 data
@@ -143,33 +411,15 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
       }
 
       ## 1. HH ##
-      '%ni%' <- Negate('%in%')
-
       getTSCountryByIOC <- function(nation) {
           cnvTbl <- c("58" = "NOR")
 
           x <- cnvTbl[as.character(nation)]
-          x[is.null(x)] <- "-9"
+          x[is.null(x)] <- NA
           return(x)
       }
 
-      getGOVSweepByEquipment <- function(gear) {
-          cnvTbl <- c("3120" = -9,
-                      "3190" = 60,
-                      "3191" = 60,
-                      "3192" = 60,
-                      "3193" = 110,
-                      "3194" = 110,
-                      "3195" = 110,
-                      "3196" = 60,
-                      "3197" = 110,
-                      "3198" = 60,
-                      "3199" = 60)
-
-          x <- cnvTbl[as.character(gear)]
-          x[is.null(x)] <- "-9"
-          return(x)
-      }
+      '%ni%' <- Negate('%in%')
 
       getGearExp <- function(sweep, year, serialnumber, depth) {
 
@@ -200,7 +450,7 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
               if(length(y) == 3) {
                   return(paste0(y[1], y[2]))
               } else {
-                  return("-9")
+                  return(NA)
               }
           }
 
@@ -209,41 +459,9 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
           return(unlist(lapply(x, timeshot)))
       }
 
-      getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, stationstoptime) {
-
-          start <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)))
-          end <- as.POSIXct(gsub("Z", " ", paste0(stationstopdate, stationstoptime)))
-
-          return(round(difftime(end, start)/60))
-      }
-
       getQuarter <- function(stationstartdate) {
           x <- format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
           return(floor((as.numeric(x) - 1) / 3 + 1))
-      }
-
-      getDistanceMeter <- function(lat1, lon1, lat2, lon2) {
-          x <-  acos( sin(lat1*pi/180)*sin(lat2*pi/180) + cos(lat1*pi/180)*cos(lat2*pi/180)*cos(lon2*pi/180-lon1*pi/180) ) * 6371000
-          return(x)
-      }
-
-      getHaulVal <- function(gearcondition, samplequality) {
-          temp <-  as.data.table(cbind(g=gearcondition, s=samplequality))
-          temp[, res:="I"]
-          temp[(is.na(g) | g %in% c("1","2")) &
-              (is.na(s) | s %in% c("0", "1")), res:="V"]
-
-          return(temp$res)
-      }
-
-      # Stolen from: https://github.com/cran/mapplots/blob/master/R/ices.rect.R
-      getICESrect <- function(lat, lng){
-          x <- floor(lng+60)+1000
-          y <- floor(lat*2)-71+100
-          num1<- substr(y,2,3)
-          lett <- LETTERS[as.numeric(substr(x,2,3))]
-          num2 <- substr(x,4,4)
-          paste(num1,lett,num2,sep='')
       }
 
       # Adopted from: https://www.mathworks.com/matlabcentral/fileexchange/62180-sunriseset-lat-lng-utcoff-date-plot
@@ -323,53 +541,6 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
           return(unlist(lapply(datetime, getDN, ssTab)))
       }
 
-      # Get ICES ship data
-      getICESShipCode <- function(platformname) {
-
-          construct <- function(shipName) {
-              # We have to remove "."," " and use uppercase
-              shipName <- toupper(gsub("[[:space:][:punct:]]", "", shipName))
-
-              # Replace the nordic character with AA
-              shipName <- gsub("\u00C5", "AA", shipName)
-
-              data <- tryCatch(
-                  {
-                      read_xml("https://vocab.ices.dk/services/rdf/collection/TS_Ship")
-                  },
-                      error = function(e){return(NA)}
-              )
-
-              # Can't download from ICES
-              if (is.na(data))
-                  return("-9")
-
-              nodes <- xml_find_all(data, paste0("//skos:concept[contains(translate(skos:prefLabel[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]"))
-
-              # Ship not found
-              if (length(nodes) < 1) {
-                return("-9")
-              }
-
-              shipDetailUrl <- xml_attr(nodes[[1]], "about")
-              shipCode <- tail(unlist(strsplit(shipDetailUrl, split="/")), 1)
-
-              # Simple hack for Cefas Endeavour
-              if(shipCode == "END") shipCode <- "ENDW"
-
-              return(shipCode)
-          }
-
-          nm <- unique(platformname)
-          y <- unlist(lapply(nm, construct))
-          names(y) <- nm
-
-          x <- y[as.character(platformname)]
-          x[is.null(x)] <- "-9"
-
-          return(x)
-      }
-
       finalHH <- merge(raw$mission, raw$fishstation)
 
       # Make HH records and filter only valid stationtype
@@ -388,51 +559,51 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
           "Month" = getMonth(stationstartdate),
           "Day" = getDay(stationstartdate),
           "TimeShot" = getTimeShot(stationstarttime),
-          "Stratum" = "-9",
+          "Stratum" = NA,
           "HaulDur" = as.numeric(getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime)),
           "DayNight" = getDayNight(stationstartdate, stationstarttime, latitudestart, longitudestart),
-          "ShootLat" = latitudestart,
-          "ShootLong" = longitudestart,
-          "HaulLat" = latitudeend,
-          "HaulLong" = longitudeend,
+          "ShootLat" = round(latitudestart, 4),
+          "ShootLong" = round(longitudestart, 4),
+          "HaulLat" = round(latitudeend, 4),
+          "HaulLong" = round(longitudeend, 4),
           "StatRec" = getICESrect(latitudestart, longitudestart),
           "Depth" = round(bottomdepthstart),
           "HaulVal" = getHaulVal(gearcondition, samplequality),
-          "HydroStNo" = -9,
+          "HydroStNo" = NA,
           "StdSpecRecCode" = 1,
           "BycSpecRecCode" = 1,
           "DataType" = "R",
-          "Netopening"= verticaltrawlopening,
-          "Rigging" = -9,
-          "Tickler" = -9,
-          "Distance" = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
-          "Warpingt" = wirelength,
-          "Warpdia" = -9,
-          "WarpDen" = -9,
-          "DoorSurface" = 4.46,
+          "Netopening"= round(verticaltrawlopening, 1),
+          "Rigging" = NA,
+          "Tickler" = NA,
+          "Distance" = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
+          "Warpingt" = round(wirelength),
+          "Warpdia" = NA,
+          "WarpDen" = NA,
+          "DoorSurface" = 4.5,
           "DoorWgt" = 1075,
-          "DoorSpread" = ifelse(!is.na(trawldoorspread), trawldoorspread, -9),
-          "WingSpread" = -9,
-          "Buoyancy" = -9,
-          "KiteDim" = 0.85,
-          "WgtGroundRope" = -9,
-          "TowDir" = ifelse(!is.na(direction), round(direction), -9),
+          "DoorSpread" = ifelse(!is.na(trawldoorspread), round(trawldoorspread, 1), NA),
+          "WingSpread" = NA,
+          "Buoyancy" = NA,
+          "KiteDim" = 0.8,
+          "WgtGroundRope" = NA,
+          "TowDir" = ifelse(!is.na(direction), round(direction), NA),
           "GroundSpeed" = round(gearflow, 1),
-          "SpeedWater" = -9,
-          "SurCurDir" = -9,
-          "SurCurSpeed" = -9,
-          "BotCurDir" = -9,
-          "BotCurSpeed" = -9,
-          "WindDir" = -9,
-          "WindSpeed" = -9,
-          "SwellDir" = -9,
-          "SwellHeight" = -9,
-          "SurTemp" = -9,
-          "BotTemp" = -9,
-          "SurSal" = -9,
-          "BotSal" = -9,
-          "ThermoCline" = -9,
-          "ThClineDepth" = -9
+          "SpeedWater" = NA,
+          "SurCurDir" = NA,
+          "SurCurSpeed" = NA,
+          "BotCurDir" = NA,
+          "BotCurSpeed" = NA,
+          "WindDir" = NA,
+          "WindSpeed" = NA,
+          "SwellDir" = NA,
+          "SwellHeight" = NA,
+          "SurTemp" = NA,
+          "BotTemp" = NA,
+          "SurSal" = NA,
+          "BotSal" = NA,
+          "ThermoCline" = NA,
+          "ThClineDepth" = NA
       )]
 
       HHraw <- copy(finalHH[is.na(stationtype) | stationtype %in% targetStationType, c("RecordType", "Quarter", "Country", "Ship", "Gear",
@@ -457,7 +628,9 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
       getSpecVal <- function(HaulVal, catchcount, lengthsamplecount, catchweight){
           temp <-  as.data.table(cbind(hv=HaulVal, cc=catchcount, lsc=lengthsamplecount, cw=catchweight))
 
-          temp[, res:="-9"]
+          # Default is invalid
+          temp[, res := "0"]
+
           temp[!is.na(cc) & !is.na(lsc) & !is.na(cw), res:="1"]
           temp[!is.na(cc) &  is.na(lsc) &  is.na(cw), res:="4"]
           temp[ is.na(cc) &  is.na(lsc) & !is.na(cw), res:="6"]
@@ -478,12 +651,13 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
 
       # Calculate lngtCode
       mergedHL[,lngtCode := "1"]
-      mergedHL[is.na(sampletype), lngtCode := "-9"]
+      mergedHL[is.na(sampletype), lngtCode := NA]
       mergedHL[isCrustacean == TRUE, lngtCode := "."]
       mergedHL[isHerringOrSprat == TRUE, lngtCode := "0"]
 
       # lenInterval, and reportInMM
-      mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", "5", "1"), reportInMM = ifelse(lngtCode %ni% c("1", "-9"), TRUE, FALSE))]
+      mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", 5, 1), reportInMM = ifelse(lngtCode %ni% c("1", NA), TRUE, FALSE))]
+      mergedHL[is.na(lenInterval), lenInterval := 1]
 
       # catCatchWgt & subWeight
       mergedHL[is.na(catchweight), catchweight:= 0]
@@ -495,7 +669,7 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
       mergedHL[is.na(lengthsamplecount), lengthsamplecount := 0]
 
       # get sampleFac
-      mergedHL[, sampleFac := ifelse(lengthsampleweight > 0, catchweight / lengthsampleweight, 1.0)]
+      mergedHL[, sampleFac := ifelse(!is.na(lengthsampleweight), catchweight / lengthsampleweight, NA)]
 
       # Merge with individual
       mergedHL <- merge(mergedHL, raw$individual, by = intersect(names(mergedHL), names(raw$individual)), all.x = TRUE)
@@ -504,40 +678,40 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
       mergedHL[, N := sum(!is.na(specimenid)), by = groupHL]
 
       # For the record with empty individual data
-      mergedHL[N == 0 | lengthsampleweight == 0, `:=`(lngtClass = "-9", sex = NA)]
+      mergedHL[N == 0 | lengthsampleweight == 0, `:=`(lngtClass = as.integer(NA), sex = as.character(NA))]
 
       # Get Individual length
       mergedHL[, length := length * 100]
 
       # Some species have very small length in cm, use mm instead
-      mergedHL[length < 1, `:=`(lngtCode = ".", lenInterval = "1", reportInMM = TRUE)]
+      mergedHL[length < 1, `:=`(lngtCode = ".", lenInterval = 1, reportInMM = TRUE)]
 
       # Process MM length
       mergedHL[reportInMM == TRUE, length := length * 10]
 
       # Get sex
-      mergedHL[, sex := ifelse(is.na(sex), "-9", ifelse(sex == "1", "F", "M"))]
+      mergedHL[, sex := ifelse(is.na(sex), as.character(NA), ifelse(sex == "1", "F", "M"))]
 
       # Get lngtClass
-      mergedHL[lengthsampleweight == 0, lngtClass := "-9"]
+      mergedHL[lengthsampleweight == 0, lngtClass := as.integer(NA)]
       for(interval in unique(mergedHL$lenInterval)) {
-          intVec <- seq(0, max(mergedHL$length, na.rm = T), by = as.numeric(interval))
+          intVec <- seq(0, max(mergedHL$length, na.rm = T), by = interval)
           mergedHL[lenInterval == interval, lngtClass := intVec[findInterval(length, intVec)]]
       }
-      mergedHL[is.na(lngtClass), lngtClass := "-9"]
+      mergedHL[is.na(lngtClass), lngtClass := NA]
 
       # Aggregate hlNoAtLngth and lsCountTot
-      mergedHL[, `:=`(hlNoAtLngth = ifelse(N==0 | lengthsampleweight == 0, 1.0 * catchcount, 1.0 * sampleFac), lsCountTot = ifelse(N==0 | lengthsampleweight == 0, 1.0 * lengthsamplecount, 1.0))]
+      mergedHL[, `:=`(hlNoAtLngth = ifelse(N==0 | lengthsampleweight == 0, catchcount, sampleFac), lsCountTot = ifelse(N==0 | lengthsampleweight == 0, lengthsamplecount, 1))]
 
-      finalHL <- mergedHL[, .(hlNoAtLngth = sum(hlNoAtLngth), lsCountTot = sum(lsCountTot)), by = c(groupHL,  "lngtClass",
+      finalHL <- mergedHL[, .(N, hlNoAtLngth = sum(hlNoAtLngth), lsCountTot = sum(lsCountTot)), by = c(groupHL,  "lngtClass",
                               "Quarter",
                               "Country",
                               "Ship",
                               "Gear",
                               "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catchpartnumber", "catCatchWgt", "subWeight", "lngtCode", "stationtype")]
 
-      finalHL[,`:=`(totalNo = sum(hlNoAtLngth), noMeas = sum(lsCountTot)), by=c(groupHL)]
-      finalHL[, subFactor := ifelse(totalNo == 0 | noMeas == 0, -9, totalNo / noMeas)]
+      finalHL[,`:=`(totalNo = N, noMeas = sum(lsCountTot)), by=c(groupHL)]
+      finalHL[, subFactor := ifelse(totalNo == 0 | noMeas == 0, NA, totalNo / noMeas)]
       finalHL[, subWeight := ifelse(subFactor == 1, catCatchWgt, subWeight)]
 
 
@@ -556,36 +730,20 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
           "SpecCode" = aphia,
           "SpecVal" = SpecVal,
           "Sex" = sex,
-          "TotalNo" = ifelse(totalNo == 0, -9, totalNo),
+          "TotalNo" = ifelse(totalNo == 0, NA, round(totalNo, 2)),
           "CatIdentifier" = catchpartnumber,
-          "NoMeas" = ifelse(noMeas == 0, -9, noMeas),
-          "SubFactor" = subFactor,
-          "SubWgt" = ifelse(subWeight == 0, -9, subWeight),
-          "CatCatchWgt" = ifelse(catCatchWgt == 0, -9, catCatchWgt),
+          "NoMeas" = ifelse(noMeas == 0, NA, noMeas),
+          "SubFactor" = round(subFactor, 4),
+          "SubWgt" = ifelse(subWeight == 0, NA, round(subWeight)),
+          "CatCatchWgt" = ifelse(catCatchWgt == 0, NA, round(catCatchWgt)),
           "LngtCode" = lngtCode,
           "LngtClass" = lngtClass,
-          "HLNoAtLngt" = ifelse(lsCountTot > 0, lsCountTot, -9))
+          "HLNoAtLngt" = ifelse(lsCountTot > 0, round(lsCountTot, 2), NA))
           ]
       )
 
 
       ## 3. CA ##
-
-      getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
-
-          temp <-  as.data.table(cbind(q=quarter, ap=aphia, sp=specialstage, ms=maturationstage, res=-9))
-
-          temp[, `:=`(sp = as.numeric(sp), ms = as.numeric(ms), res = as.numeric(res) )]
-
-          temp[, isHerringOrSpratOrMackerel := ifelse(ap %in% c("126417", "126425", "127023"), TRUE, FALSE)]
-
-          temp[!is.na(sp) & isHerringOrSpratOrMackerel == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
-          temp[!is.na(sp) & isHerringOrSpratOrMackerel == FALSE, res := 60 + sp]
-
-          temp[is.na(sp) & !is.na(ms), res := ifelse(ms == 5 & q == "3", -9, 60 + ms)]
-
-          return(temp$res)
-      }
 
       mergedHL[is.na(preferredagereading), preferredagereading := 1]
       baseAge <- intersect(names(mergedHL), names(raw$agedetermination))
@@ -627,10 +785,10 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
           "LngtClass" = lngtClass,
           "Sex" = sex,
           "Maturity" = maturity,
-          "PlusGr" = as.character(-9),
-          "AgeRings" = ifelse(!is.na(age), age, -9),
+          "PlusGr" = as.character(NA),
+          "AgeRings" = ifelse(!is.na(age), age, NA),
           "CANoAtLngt" = nInd,
-          "IndWgt" = ifelse(!is.na(meanW), meanW * 1000, -9))
+          "IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA))
           ]
       )
 
@@ -652,21 +810,19 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
     if(nrow(dupl)) {
       found <- aggregate(CatCatchWgt ~ StNo + SpecCode + Sex + CatIdentifier, hl[(hl$SpecCode %in% dupl$aphia & hl$StNo %in% dupl$serialnumber),], FUN = function(x) length(unique(x)))
       found <- found[found$CatCatchWgt > 1, ]
-      if(nrow(found)) {
-        for(iz in 1:nrow(found)) {
-          tmpHL <- hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], ]
-          combinedCatCatchWgt <- tmpHL
-          # Fix CatCatchWgt
-          hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "CatCatchWgt"] <- round(mean(tmpHL$CatCatchWgt))
-          # Fix CatCatchWgt
-          hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "SubWgt"] <- round(mean(tmpHL$SubWgt))
-          # Fix totalNo
-          hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "TotalNo"] <- sum(unique(tmpHL$TotalNo))
-          # Fix noMeas
-          hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "NoMeas"] <- sum(tmpHL$HLNoAtLngt)
-          # Finally, fix SubFactor
-          hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "SubFactor"] <- sum(unique(tmpHL$TotalNo))/sum(tmpHL$HLNoAtLngt)
-        }
+      for(iz in seq_len(nrow(found))) {
+        tmpHL <- hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], ]
+        combinedCatCatchWgt <- tmpHL
+        # Fix CatCatchWgt
+        hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "CatCatchWgt"] <- round(mean(tmpHL$CatCatchWgt))
+        # Fix CatCatchWgt
+        hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "SubWgt"] <- round(mean(tmpHL$SubWgt))
+        # Fix totalNo
+        hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "TotalNo"] <- sum(unique(tmpHL$TotalNo))
+        # Fix noMeas
+        hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "NoMeas"] <- sum(tmpHL$HLNoAtLngt)
+        # Finally, fix SubFactor
+        hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "SubFactor"] <- sum(unique(tmpHL$TotalNo))/sum(tmpHL$HLNoAtLngt)
       }
     }
 
@@ -677,30 +833,28 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
     tmp <- aggregate(SpecVal ~ SpecCode + StNo, hl, FUN = function(x) length(unique(x)))
     tmp <- tmp[tmp$SpecVal>1, ]
 
-    if( nrow(tmp) > 0 ) {
-      for( rownum in 1: nrow(tmp) ) {
+    for( rownum in seq_len(nrow(tmp)) ) {
         tmpSpecs <- hl[(hl$StNo==tmp$StNo[rownum] & hl$SpecCode==tmp$SpecCode[rownum]),]$SpecVal
         if(any(tmpSpecs == 1))
           hl <- hl[!(hl$StNo==tmp$StNo[rownum] & hl$SpecCode==tmp$SpecCode[rownum] & hl$SpecVal!=1),]
         else
           hl[(hl$StNo==tmp$StNo[rownum] & hl$SpecCode==tmp$SpecCode[rownum]), c("SpecVal")] <- min(tmpSpecs)
-      }
     }
 
     ## SpecVal Conditionals
-    hl[hl$SpecVal==0, c("Sex", "TotalNo", "CatIdentifier", "NoMeas", "SubFactor", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- -9
+    hl[hl$SpecVal==0, c("Sex", "TotalNo", "CatIdentifier", "NoMeas", "SubFactor", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
 
-    hl[hl$SpecVal==4, c("NoMeas", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- -9
+    hl[hl$SpecVal==4, c("NoMeas", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
     hl[hl$SpecVal==4, c("SubFactor")] <- 1
 
-    hl[hl$SpecVal==5, c("TotalNo", "NoMeas", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- -9
+    hl[hl$SpecVal==5, c("TotalNo", "NoMeas", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
     hl[hl$SpecVal==5, c("SubFactor")] <- 1
 
-    hl[hl$SpecVal==6, c("TotalNo", "NoMeas", "LngtCode", "LngtClass", "HLNoAtLngt")] <- -9
+    hl[hl$SpecVal==6, c("TotalNo", "NoMeas", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
 
-    hl[hl$SpecVal==7, c("NoMeas", "LngtCode", "LngtClass", "HLNoAtLngt")] <- -9
+    hl[hl$SpecVal==7, c("NoMeas", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
 
-    hl[hl$SpecVal==10, c("CatCatchWgt")] <- -9
+    hl[hl$SpecVal==10, c("CatCatchWgt")] <- NA
 
     ## WARN #2:
     ## will now get errors in DATRAS upload for duplicate records
@@ -711,20 +865,6 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
     ca <- ca[ca$StNo %in% hh$StNo,]
     # throw out ca records for Invalid hauls
     ca <- ca[!ca$StNo %in% hh$StNo[hh$HaulVal=='I'],]
-
-    # Number formats
-    hh$Distance <- round(hh$Distance)
-    hh$Warpingt <- round(hh$Warpingt)
-    hh$KiteDim <- round(hh$KiteDim, 1)
-    hh$Netopening <- round(hh$Netopening, 1)
-    hh$WingSpread <- round(hh$WingSpread, 1)
-    hh$DoorSpread <- sprintf("%.1f", round(hh$DoorSpread, 1))
-    hh$DataType <- as.character(as.factor(hh$DataType))
-    hh$HaulVal <- as.character(as.factor(hh$HaulVal))
-    hl$TotalNo <- sprintf("%.2f",round(as.numeric(as.character(hl$TotalNo)), 2))
-    hl$HLNoAtLngt <- sprintf("%.2f", round(as.numeric(as.character(hl$HLNoAtLngt)), 2))
-    hl$SubFactor <- sprintf("%.4f", round(as.numeric(as.character(hl$SubFactor)), 4))
-    hl$SubWgt <- sprintf("%d", round(as.numeric(as.character(hl$SubWgt))))
 
     ##########################################
     ## Removing some benthos - this won't be needed in the future
@@ -773,8 +913,8 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
                   117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
                   146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
 
-    hl <- hl[!hl$SpecCode %in% c(-9, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
-    ca <- ca[!ca$SpecCode %in% c(-9, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
+    hl <- hl[!hl$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
+    ca <- ca[!ca$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
 
     ## IU: Filter out additional benthos:
     benthosSpecCodes <- c(104,956,966,1128,1296,1367,1608,11707,100782,100839,100854,103439,103732,104040,105865,106041,106673,106702,106789,106834,107152,
@@ -800,17 +940,15 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
       tt <- merge(testca, testhl, by = c("StNo","SpecCode"), all=TRUE)
       missingHL <- tt[is.na(tt$hl),]
 
-      if(nrow(missingHL) > 0) {
-        # Populate missing value in HL
-        for(idxHL in 1:nrow(missingHL)){
-          r <- missingHL[idxHL,]
-          tmp <- hl[hl$StNo==r$StNo,][1,]
-          tmp$SpecCode <- r$SpecCode
-          tmp$SpecVal <- 4
-          tmp$TotalNo <- c(hh$HaulDur[hh$StNo==r$StNo])
-          tmp$CatCatchWgt <- -9
-          hl <- rbind(hl,tmp)
-        }
+      # Populate missing value in HL
+      for(idxHL in seq_len(nrow(missingHL))) {
+        r <- missingHL[idxHL,]
+        tmp <- hl[hl$StNo==r$StNo,][1,]
+        tmp$SpecCode <- r$SpecCode
+        tmp$SpecVal <- 4
+        tmp$TotalNo <- c(hh$HaulDur[hh$StNo==r$StNo])
+        tmp$CatCatchWgt <- NA
+        hl <- rbind(hl,tmp)
       }
     }
     ## WARN #4:
@@ -826,7 +964,7 @@ generateDATRAS <- function(BioticData, additionalStation = NA, save = TRUE) {
     # Save to file
     if(save==T){
       filename = gsub('.xml','.csv',raw$metadata$file)
-      exportCSV(filename, datrasOutput, combine = TRUE, overwrite = TRUE)
+      exportCSV(filename, datrasOutput, combine = TRUE, na = "-9", overwrite = TRUE)
     }
 
     return(datrasOutput)
