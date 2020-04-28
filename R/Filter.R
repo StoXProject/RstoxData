@@ -72,7 +72,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		for (tName in intersect(names(merged), names(x[[fileName]]))) {
 			out <- applyFilter(tName, x[[fileName]], merged, propDown, propUp)
 			if(!length(out)) {
-				warning("Filter on data from file \"", fileName, "\" returned empty table \"", tName, "\"")
+				warning("StoX: Filter on data from file \"", fileName, "\" returned empty table \"", tName, "\"")
 			}
 			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
 		}
@@ -86,25 +86,25 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	if(!length(filterExpression)) {
 		return(inputData)
 	} else if(!is.list(filterExpression)) {
-		warning("Invalid filter parameter (must be a list)!")
+		warning("StoX: Invalid filter parameter (must be a list)!")
 		return(NULL)
 	} else if(!is.list(inputData) || !length(inputData)) {
-		warning("Invalid or empty input data!")
+		warning("StoX: Invalid or empty input data!")
 		return(NULL)
 	} else if(is.data.table(inputData[[1]])) {
 		level <- 1
 		if(!is.character(filterExpression[[1]])) {
-			warning("Data/Filter level mismatch!")
+			warning("StoX: Data/Filter level mismatch!")
 			return(NULL)
 		}
 	} else if(is.data.table(inputData[[1]][[1]])) {
 		level <- 2
 		if(!is.character(filterExpression[[1]][[1]])) {
-			warning("Data/Filter level mismatch!")
+			warning("StoX: Data/Filter level mismatch!")
 			return(NULL)
 		}
 	} else {
-		warning("Something wrong with the input!")
+		warning("StoX: Something wrong with the input!")
 		return(NULL)
 	}
 

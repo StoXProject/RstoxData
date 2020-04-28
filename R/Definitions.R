@@ -18,6 +18,41 @@ initiateRstoxData <- function(){
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")
 	
+	# Define the process property formats:
+	processPropertyFormats <- list(
+		single = list(), 
+		vector = list(
+			"filePaths"
+		), 
+		list = list(
+			"filterExpressionList"
+		), 
+		table = list(
+			"variableConversionTable"
+		)
+	)
+	
+	# Define the column names of the different parameter tables:
+	parameterTableInfo <- list(
+		variableConversionTable = list(
+			title = "Define new values for spcific variables", 
+			info = data.table::data.table(
+				name = c(
+					"TableName", 
+					"VariableName", 
+					"Value", 
+					"NewValue"
+				), 
+				type = c(
+					"character",
+					"character",
+					"character",
+					"character"
+				)
+			)
+		)
+	)
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())

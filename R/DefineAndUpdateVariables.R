@@ -120,6 +120,7 @@ convertVariables <- function(data, VariableConversionTable) {
 }
 
 convertVariable <- function(conversionList, data) {
+	stop("We need to add types from the metadata here, and interpret the type of the Value. The column Value will always be character , and needs to be parsed to the right type to make the conversion work. Maybe we also need a warning or an error if the user tries to modify a key?")
 	# If FileName is given, step into the files:
 	if(length(conversionList$FileName)) {
 		data[[conversionList$FileName]][[conversionList$TableName]][, c(conversionList$VariableName) := replace(
