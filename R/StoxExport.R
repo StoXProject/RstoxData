@@ -620,7 +620,8 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
 
       mergedHL <- merge(raw$catchsample, finalHH, by=intersect(names(raw$catchsample), names(finalHH)))
 
-      groupHL <- c("missiontype", "startyear", "platform", "missionnumber", "serialnumber", "aphia", "sex")
+      groupCA <- c("missiontype", "startyear", "platform", "missionnumber", "serialnumber", "aphia", "sex")
+      groupHL <- c(groupCA, "catchpartnumber")
 
       # Remove rows with empty aphia
       mergedHL <- mergedHL[!is.na(aphia)]
@@ -660,16 +661,11 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
       mergedHL[is.na(lenInterval), lenInterval := 1]
 
       # catCatchWgt & subWeight
-      mergedHL[is.na(catchweight), catchweight:= 0]
-      mergedHL[is.na(lengthsampleweight), lengthsampleweight:= 0]
-      mergedHL[, catCatchWgt := ceiling(catchweight * 1000)]
-      mergedHL[, subWeight := ceiling(lengthsampleweight * 1000)]
-
-      mergedHL[is.na(catchcount), catchcount := 0]
-      mergedHL[is.na(lengthsamplecount), lengthsamplecount := 0]
+      mergedHL[!is.na(catchweight), catCatchWgt := ceiling(catchweight * 1000)]
+      mergedHL[!is.na(lengthsampleweight), subWeight := ceiling(lengthsampleweight * 1000)]
 
       # get sampleFac
-      mergedHL[, sampleFac := ifelse(!is.na(lengthsampleweight), catchweight / lengthsampleweight, NA)]
+      mergedHL[, sampleFac := catchweight / lengthsampleweight]
 
       # Merge with individual
       mergedHL <- merge(mergedHL, raw$individual, by = intersect(names(mergedHL), names(raw$individual)), all.x = TRUE)
@@ -678,7 +674,7 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
       mergedHL[, N := sum(!is.na(specimenid)), by = groupHL]
 
       # For the record with empty individual data
-      mergedHL[N == 0 | lengthsampleweight == 0, `:=`(lngtClass = as.integer(NA), sex = as.character(NA))]
+      mergedHL[N == 0, `:=`(lngtClass = as.integer(NA), sex = as.character(NA))]
 
       # Get Individual length
       mergedHL[, length := length * 100]
@@ -693,27 +689,26 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
       mergedHL[, sex := ifelse(is.na(sex), as.character(NA), ifelse(sex == "1", "F", "M"))]
 
       # Get lngtClass
-      mergedHL[lengthsampleweight == 0, lngtClass := as.integer(NA)]
       for(interval in unique(mergedHL$lenInterval)) {
           intVec <- seq(0, max(mergedHL$length, na.rm = T), by = interval)
           mergedHL[lenInterval == interval, lngtClass := intVec[findInterval(length, intVec)]]
       }
-      mergedHL[is.na(lngtClass), lngtClass := NA]
+
+      # Count measured individual
+      mergedHL[!is.na(length), lsCountTot := 1]
 
       # Aggregate hlNoAtLngth and lsCountTot
-      mergedHL[, `:=`(hlNoAtLngth = ifelse(N==0 | lengthsampleweight == 0, catchcount, sampleFac), lsCountTot = ifelse(N==0 | lengthsampleweight == 0, lengthsamplecount, 1))]
-
-      finalHL <- mergedHL[, .(N, hlNoAtLngth = sum(hlNoAtLngth), lsCountTot = sum(lsCountTot)), by = c(groupHL,  "lngtClass",
+      finalHL <- mergedHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(groupHL,  "lngtClass",
                               "Quarter",
                               "Country",
                               "Ship",
                               "Gear",
-                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catchpartnumber", "catCatchWgt", "subWeight", "lngtCode", "stationtype")]
+                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "subWeight", "lngtCode", "stationtype")]
 
-      finalHL[,`:=`(totalNo = N, noMeas = sum(lsCountTot)), by=c(groupHL)]
+      finalHL <- finalHL[!duplicated(finalHL)]
+      finalHL[,`:=`(totalNo = N, noMeas = sum(lsCountTot)), by = groupHL]
       finalHL[, subFactor := ifelse(totalNo == 0 | noMeas == 0, NA, totalNo / noMeas)]
       finalHL[, subWeight := ifelse(subFactor == 1, catCatchWgt, subWeight)]
-
 
       HLraw <- copy(finalHL[is.na(stationtype) | stationtype %in% targetStationType, .("RecordType" = "HL",
           "Quarter" = Quarter,
@@ -730,15 +725,15 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
           "SpecCode" = aphia,
           "SpecVal" = SpecVal,
           "Sex" = sex,
-          "TotalNo" = ifelse(totalNo == 0, NA, round(totalNo, 2)),
+          "TotalNo" = round(totalNo, 2),
           "CatIdentifier" = catchpartnumber,
-          "NoMeas" = ifelse(noMeas == 0, NA, noMeas),
+          "NoMeas" = noMeas,
           "SubFactor" = round(subFactor, 4),
-          "SubWgt" = ifelse(subWeight == 0, NA, round(subWeight)),
-          "CatCatchWgt" = ifelse(catCatchWgt == 0, NA, round(catCatchWgt)),
+          "SubWgt" = round(subWeight),
+          "CatCatchWgt" = round(catCatchWgt),
           "LngtCode" = lngtCode,
           "LngtClass" = lngtClass,
-          "HLNoAtLngt" = ifelse(lsCountTot > 0, round(lsCountTot, 2), NA))
+          "HLNoAtLngt" = round(lsCountTot, 2))
           ]
       )
 
@@ -756,9 +751,9 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
       mergedCA[, maturity:=getDATRASMaturity(Quarter, aphia, specialstage, maturationstage)]
 
       # Aggregate count
-      mergedCA[!is.na(individualweight), `:=`(nWithWeight =.N, totWeight = sum(individualweight)), by = c(groupHL,  "lngtClass", "maturity", "age")]
+      mergedCA[!is.na(individualweight), `:=`(nWithWeight =.N, totWeight = sum(individualweight)), by = c(groupCA,  "lngtClass", "maturity", "age")]
 
-      finalCA <- mergedCA[, .(nInd =.N), by = c(groupHL,  "lngtClass", "maturity", "age",
+      finalCA <- mergedCA[, .(nInd =.N), by = c(groupCA,  "lngtClass", "maturity", "age",
                               "Quarter",
                               "Country",
                               "Ship",
