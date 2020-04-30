@@ -1,9 +1,30 @@
+# Function to compare with ices vocabulary of allowed values
+compareICES <- function(url, field) {
+  pg <- tryCatch(
+        {
+         read_xml(url)
+        },
+        error = function(e){
+                warning(paste("Url", url, "is not exist or no internet connection available."))
+                return(NA)
+        }
+  )
+  recs <- xml_find_all(pg, "//Key")
+  vals <- trimws(xml_text(recs))
+  for(x in field){
+    if(!x %in% vals){
+      warning(paste0(x, " not defined in ", url))
+    }
+  }
+}     
+
+# Get quarter representation from a date
 getQuarter <- function(stationstartdate) {
     x <- format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
     return(floor((as.numeric(x) - 1) / 3 + 1))
 }
 
-
+# Get maturity indicator for a species
 getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
 
           temp <-  as.data.table(cbind(q=quarter, ap=aphia, sp=specialstage, ms=maturationstage, res=NA))
@@ -20,6 +41,7 @@ getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
           return(temp$res)
 }
 
+# Convert gear number to sweep length
 getGOVSweepByEquipment <- function(gear) {
     cnvTbl <- c("3120" = NA,
                 "3190" = 60,
@@ -38,6 +60,7 @@ getGOVSweepByEquipment <- function(gear) {
     return(x)
 }
 
+# Get Haul validity
 getHaulVal <- function(gearcondition, samplequality) {
     temp <-  as.data.table(cbind(g=gearcondition, s=samplequality))
     temp[, res:="I"]
@@ -47,6 +70,7 @@ getHaulVal <- function(gearcondition, samplequality) {
     return(temp$res)
 }
 
+# Generate ICES rectangle from a coordinate
 # Stolen from: https://github.com/cran/mapplots/blob/master/R/ices.rect.R
 getICESrect <- function(lat, lng){
     x <- floor(lng+60)+1000
@@ -57,11 +81,13 @@ getICESrect <- function(lat, lng){
     paste(num1,lett,num2,sep='')
 }
 
+# Get distance in meters between two coordinates
 getDistanceMeter <- function(lat1, lon1, lat2, lon2) {
     x <-  acos( sin(lat1*pi/180)*sin(lat2*pi/180) + cos(lat1*pi/180)*cos(lat2*pi/180)*cos(lon2*pi/180-lon1*pi/180) ) * 6371000
     return(x)
 }
 
+# Calculate time diff
 getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, stationstoptime) {
 
     t0 <- ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, stationstarttime)))
@@ -85,7 +111,7 @@ getICESShipCode <- function(platformname) {
 
         data <- tryCatch(
             {
-                read_xml("https://vocab.ices.dk/services/rdf/collection/TS_Ship")
+                read_xml("https://vocab.ices.dk/services/pox/GetCodeList/SHIPC")
             },
                 error = function(e){return(NA)}
         )
@@ -94,18 +120,15 @@ getICESShipCode <- function(platformname) {
         if (is.na(data))
             return(NA)
 
-        nodes <- xml_find_all(data, paste0("//skos:concept[contains(translate(skos:prefLabel[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]"))
+        nodes <- xml_find_all(data, paste0("//d1:Code[contains(translate(d1:Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/d1:Key"))
 
         # Ship not found
         if (length(nodes) < 1) {
           return(NA)
         }
 
-        shipDetailUrl <- xml_attr(nodes[[1]], "about")
-        shipCode <- tail(unlist(strsplit(shipDetailUrl, split="/")), 1)
-
-        # Simple hack for Cefas Endeavour
-        if(shipCode == "END") shipCode <- "ENDW"
+	# Get the latest matching ships
+        shipCode <- xml_text(tail(nodes,1))
 
         return(shipCode)
     }
@@ -157,6 +180,75 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
   for(aco in Acoustic){
     if(aco$metadata$useXsd=='icesAcoustic'){
       
+      #Remove echo type
+      aco$Data$EchoType<-NULL      
+
+      #Fix notation of metadata
+      translate <- function(xx) {
+          res <- aco$vocabulary$value[match(xx, aco$vocabulary$id)]
+          # Fix NAs
+          res[which(is.na(res))] <- xx[which(is.na(res))]
+          return(res)
+      }
+      
+      aco$Instrument$TransducerLocation <- translate(aco$Instrument$TransducerLocation)
+      aco$Instrument$TransducerBeamType <- translate(aco$Instrument$TransducerBeamType)
+      aco$Calibration$AcquisitionMethod <- translate(aco$Calibration$AcquisitionMethod)
+      aco$Calibration$ProcessingMethod <- translate(aco$Calibration$ProcessingMethod)
+      aco$DataAcquisition$SoftwareName <- translate(aco$DataAcquisition$SoftwareName)
+      aco$DataAcquisition$StoredDataFormat <- translate(aco$DataAcquisition$StoredDataFormat)
+      aco$DataProcessing$SoftwareName <- translate(aco$DataProcessing$SoftwareName)
+      aco$DataProcessing$TriwaveCorrection <- translate(aco$DataProcessing$TriwaveCorrection)
+      aco$DataProcessing$OnAxisGainUnit <- translate(aco$DataProcessing$OnAxisGainUnit)
+      aco$Cruise$Country <- translate(aco$Cruise$Country)
+      aco$Cruise$Platform <- translate(aco$Cruise$Platform)
+      aco$Cruise$Organisation <- translate(aco$Cruise$Organisation)
+      # Take the last survey code
+      aco$Survey$Code <- translate(tail(aco$Survey$Code, 1))
+      aco$Log$Origin <- translate(aco$Log$Origin)
+      aco$Log$Validity <- translate(aco$Log$Validity)
+      aco$Sample$PingAxisIntervalType <- translate(aco$Sample$PingAxisIntervalType)
+      aco$Sample$PingAxisIntervalUnit <- translate(aco$Sample$PingAxisIntervalUnit)
+      aco$Sample$PingAxisIntervalOrigin <- translate(aco$Sample$PingAxisIntervalOrigin)
+      aco$Data$SaCategory <- translate(aco$Data$SaCategory)
+      aco$Data$SaCategory <- translate(aco$Data$SaCategory)
+      aco$Data$Type <- translate(aco$Data$Type)
+      aco$Data$Unit <- translate(aco$Data$Unit)
+      
+      
+      #Check metadata towards ices definitions
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml',unique(aco$Instrument$TransducerLocation))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml',unique(aco$Instrument$TransducerBeamType))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml',unique(aco$Calibration$AcquisitionMethod))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml',unique(aco$Calibration$ProcessingMethod))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(aco$DataAcquisition$SoftwareName))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml',unique(aco$DataAcquisition$StoredDataFormat))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(aco$DataAcquisition$SoftwareName))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml',unique(aco$DataProcessing$SoftwareName))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml',unique(aco$DataProcessing$TriwaveCorrection))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml',unique(aco$DataProcessing$OnAxisGainUnit))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml',unique(aco$Cruise$Country))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml',unique(aco$Cruise$Platform))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml',unique(aco$Cruise$Organisation))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(aco$Survey$Code))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml',unique(aco$Log$Origin))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml',unique(aco$Log$Validity))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml',unique(aco$Sample$PingAxisIntervalType))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml',unique(aco$Sample$PingAxisIntervalUnit))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml',unique(aco$Sample$PingAxisIntervalOrigin))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml',unique(aco$Data$SaCategory))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml',unique(aco$Data$Type))
+      compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml',unique(aco$Data$Unit))
+      
+      
+      
+      # #Test to see if the log distance is always increasing
+      # if(is.unsorted((aco$Log$Distance))){warning('The log distance in Log field is not chronological with time')}
+      # if(is.unsorted((aco$Sample$Distance))){warning('The log distance in Sample field is not chronological with time')}
+      # if(is.unsorted((aco$Data$Distance))){warning('The log distance in Data field is not chronological with time')}
+      
+      
+      #Make the Instrument field
       hl<-c()
       hl$Instrument <- 'Instrument'
       hl$Header <- 'Record'
@@ -165,6 +257,8 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
       hl <- cbind(hl,tmp)
       HInst <- format(hl, trim=TRUE, width=0)
       
+      
+      #Make the Calibration field
       hl<-c()
       hl$Calibration <- 'Calibration'
       hl$Header <- 'Record'
@@ -173,6 +267,8 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
       hl <- cbind(hl,tmp)
       HCal <- format(hl, trim=TRUE, width=0)
       
+      
+      #Make the DataAcquisition field
       hl<-c()
       hl$DataAcquisition <- 'DataAcquisition'
       hl$Header <- 'Record'
@@ -181,6 +277,8 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
       hl <- cbind(hl,tmp)
       HDatA <- format(hl, trim=TRUE, width=0)
       
+      
+      #Make the DataProcessing Field
       hl<-c()
       hl$DataProcessing <- 'DataProcessing'
       hl$Header <- 'Record'
@@ -189,23 +287,36 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
       hl <- cbind(hl,tmp)
       HDatP <- format(hl, trim=TRUE, width=0)
       
+      
+      #Make the Cruise Field
       hl<-c()
       hl$Cruise <- 'Cruise'
       hl$Header <- 'Record'
-      hl$CruiseSurvey <- aco$Survey[2]
+      ttt <- unique(aco$Survey$Code)
+      hl$CruiseSurvey <- ttt[[1]]
       tmp <- data.frame(aco$Cruise)
       names(tmp)<-paste0('Cruise',names(tmp))
       hl <- cbind(hl,tmp)
       HCru <- format(hl, trim=TRUE, width=0)
-      
-      
+
+
+      #Make the Data Field
       hl<-c()
       hl$Data <- 'Data'
       hl$Header <- 'Record'
-      tmp_log <- unique(data.frame(aco$Log))
+
+
+      tmp_log <- unique(aco$Log)
+      tmp_log <- lapply(tmp_log, unlist)
+      # tmp_log$Origin<-unlist(tmp_log$Origin)
+      # tmp_log$Validity<-unlist(tmp_log$Validity)
       names(tmp_log)[names(tmp_log)=='LocalID']<-'CruiseLocalID'
       names(tmp_log)[names(tmp_log)!='CruiseLocalID']<-paste0('Log',names(tmp_log)[names(tmp_log)!='CruiseLocalID'])
-      tmp_sample <- data.frame(aco$Sample)
+
+      tmp_sample <- lapply(aco$Sample, unlist)
+      # tmp_sample$SamplePingAxisIntervalType<-unlist(tmp_sample$SamplePingAxisIntervalType)
+      # tmp_sample$SamplePingAxisIntervalUnit<-unlist(tmp_sample$SamplePingAxisIntervalUnit)
+      # tmp_sample$SamplePingAxisIntervalUnit<-unlist(tmp_sample$SamplePingAxisIntervalUnit)
       names(tmp_sample)[names(tmp_sample)=='LocalID']<-'CruiseLocalID'
       names(tmp_sample)[names(tmp_sample)=='Distance']<-'LogDistance'
       names(tmp_sample)[names(tmp_sample)=='Instrument']<-'InstrumentID'
@@ -215,18 +326,25 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
       names(tmp_sample)[!names(tmp_sample)%in%c('CruiseLocalID','LogDistance','InstrumentID','CalibrationID','DataAcquisitionID','DataProcessingID')] <-paste0('Sample',names(tmp_sample)[!names(tmp_sample)%in%c('CruiseLocalID','LogDistance','InstrumentID','CalibrationID','DataAcquisitionID','DataProcessingID')])
       
       
-      tmp_data <- data.frame(aco$Data)
+      tmp_data <- lapply(aco$Data, unlist)
+      
+      # tmp_data$SaCategory<-unlist(tmp_data$SaCategory)
+      # tmp_data$Type<-unlist(tmp_data$Type)
+      # tmp_data$Unit<-unlist(tmp_data$Unit)
+      # tmp_data$Value<-formatC(tmp_data$Value,format='fg')
+      
       names(tmp_data)[names(tmp_data)=='LocalID']<-'CruiseLocalID'
       names(tmp_data)[names(tmp_data)=='Distance']<-'LogDistance'
       names(tmp_data)[names(tmp_data)=='ChannelDepthUpper']<-'SampleChannelDepthUpper'
       names(tmp_data)[!names(tmp_data)%in%c('CruiseLocalID','LogDistance','SampleChannelDepthUpper')]<-paste0('Data',names(tmp_data)[!names(tmp_data)%in%c('CruiseLocalID','LogDistance','SampleChannelDepthUpper')])
       
       
-      tmp_sub <-(merge(tmp_data,tmp_sample, by=intersect(names(tmp_data),names(tmp_sample))))
-      tmp_sub <-merge(tmp_log,tmp_sub,by=intersect(names(tmp_log),names(tmp_sub)))
-      hl<-cbind(hl,tmp_sub)
-      HDat <- format(hl, trim=TRUE, width=0)
       
+      tmp_sub <- merge(as.data.table(tmp_log), as.data.table(tmp_sample), by=intersect(names(tmp_log), names(tmp_sample)))
+      tmp_sub <- merge(as.data.table(tmp_data), as.data.table(tmp_sub), by=intersect(names(tmp_data), names(tmp_sub)))
+        
+      HDat <- cbind(as.data.table(hl), tmp_sub)
+
       tmp <- list(Instrument=HInst,
                   Calibration=HCal,
                   DataAcquisition=HDatA,
@@ -234,8 +352,8 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
                   Cruise=HCru,
                   Data=HDat
       )
-      
-      if(save==T){
+
+      if(save == TRUE){
         filename = gsub('.xml','.csv',aco$metadata$file)
         exportCSV(filename, tmp, combine = TRUE, overwrite = TRUE)
       }
@@ -248,9 +366,14 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
 }
 
 
-writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", save = TRUE) {
+writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", allowRemoveSpecies = TRUE, save = TRUE) {
 
   doGenBiotic <- function(raw, save) {
+
+    if(raw$metadata$useXsd != "nmdbioticv3") {
+	warning("writeICESBiotic: Only NMD Biotic version 3 data is accepted as input!")
+	return(NA)
+    }
 
     cruiseRaw <- raw$mission
 
@@ -286,7 +409,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", s
       HaulStatisticalRectangle = getICESrect(latitudestart, longitudestart),
       HaulMinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
       HaulMaxTrawlDepth = fishingdepthmax,
-      HaulBottomDepth = bottomdepthstart,
+      HaulBottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
       HaulDistance = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
       HaulNetopening = verticaltrawlopening,
       HaulCodendMesh = NA,
@@ -317,8 +440,12 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", s
       HaulStratum = NA
     )]
 
-  catchRaw <- raw$catchsample
-  Catch <- catchRaw[, .(
+    catchRaw <- raw$catchsample
+
+    # We must filter records with aphia == NA
+    catchRaw <- catchRaw[!is.na(aphia)]
+
+    Catch <- catchRaw[, .(
       Catch = "Catch",
       Header = "Record",
       CruiseLocalID = CruiseLocalID,
@@ -326,8 +453,8 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", s
       HaulNumber = serialnumber,
       CatchDataType = "R",
       CatchSpeciesCode = aphia,
-      CatchSpeciesValidity = catchproducttype,
-      CatchSpeciesCategory = 1,
+      CatchSpeciesValidity = ifelse(is.na(catchproducttype), 0, catchproducttype),
+      CatchSpeciesCategory = catchpartnumber,
       CatchSpeciesCategoryNumber = catchcount,
       CatchWeightUnit = "kg",
       CatchSpeciesCategoryWeight = catchweight,
@@ -342,6 +469,18 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", s
       CatchWeightAtLength = NA
     )]
 
+    # Logic for missing important records
+    Catch[is.na(CatchSpeciesCategoryNumber) & is.na(CatchSpeciesCategoryWeight) & !is.na(CatchSubsampledNumber), CatchSpeciesCategoryNumber := CatchSubsampledNumber]
+    Catch[is.na(CatchSpeciesCategoryNumber) & is.na(CatchSpeciesCategoryWeight) & !is.na(CatchSubsampleWeight), CatchSpeciesCategoryWeight := CatchSubsampleWeight]
+
+    # NA means that nothing is subsampled
+    Catch[!is.na(CatchSpeciesCategoryWeight) & is.na(CatchSubsampleWeight), CatchSubsampleWeight := 0]
+
+    # Set Haul without any catch as invalid hauls
+    '%ni%' <- Negate('%in%')
+    Haul[HaulNumber %ni% unique(Catch$HaulNumber), HaulValidity := "I"]
+
+    # Combine required tables for the Biology level
     indRaw <- raw$individual
     indRaw[is.na(preferredagereading), preferredagereading := 1]
 
@@ -357,7 +496,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", s
       HaulGear = GearCode,
       HaulNumber = serialnumber,
       CatchSpeciesCode = aphia,
-      CatchSpeciesCategory = 1,
+      CatchSpeciesCategory = catchpartnumber,
       BiologyStockCode = NA,
       BiologyFishID = specimenid,
       BiologyLengthCode = "mm",
@@ -375,6 +514,18 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", s
       BiologyParasiteSamplingFlag = NA,
       BiologyIndividualVertebraeCount = NA
     )]
+
+    if(allowRemoveSpecies) {
+        print("All species that is not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml are automatically removed. Set allowRemoveSpecies = FALSE to prevent this.")
+        # Check for valid aphias, mark other as invalid
+        xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+        validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
+        Catch <- Catch[CatchSpeciesCode %in% validCodes, ]
+        Biology <- Biology[CatchSpeciesCode %in% validCodes, ]
+    } else {
+        print("allowRemoveSpecies is set to TRUE. Will only give warning for records with species that is not accepted by the ICES system.")
+        compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$CatchSpeciesCode))
+    }
 
     bioticOutput <- list(Cruise = Cruise, Haul = Haul, Catch = Catch, Biology = Biology)
 
@@ -399,7 +550,7 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
     doGenDATRAS <- function(raw, additionalStation, save) {
       # Check input is a NMD Biotic v3 data
       if(raw$metadata$useXsd != "nmdbioticv3") {
-          print("DATRAS export can only accept NMD Biotic version 3 data as input. Exiting.")
+          warning("writeICESDatras: Only NMD Biotic version 3 data is accepted as input!")
           return(NA)
       }
 
@@ -703,12 +854,11 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
                               "Country",
                               "Ship",
                               "Gear",
-                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "subWeight", "lngtCode", "stationtype")]
+                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype")]
 
       finalHL <- finalHL[!duplicated(finalHL)]
-      finalHL[,`:=`(totalNo = N, noMeas = sum(lsCountTot)), by = groupHL]
-      finalHL[, subFactor := ifelse(totalNo == 0 | noMeas == 0, NA, totalNo / noMeas)]
-      finalHL[, subWeight := ifelse(subFactor == 1, catCatchWgt, subWeight)]
+      finalHL[,`:=`(noMeas = sum(lsCountTot)), by = groupHL]
+      finalHL[,`:=`(totalNo = noMeas * sampleFac, subFactor = sampleFac)]
 
       HLraw <- copy(finalHL[is.na(stationtype) | stationtype %in% targetStationType, .("RecordType" = "HL",
           "Quarter" = Quarter,
@@ -957,7 +1107,7 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
     datrasOutput <- list(HH=hh, HL=hl, CA=ca)
 
     # Save to file
-    if(save==T){
+    if(save == TRUE){
       filename = gsub('.xml','.csv',raw$metadata$file)
       exportCSV(filename, datrasOutput, combine = TRUE, na = "-9", overwrite = TRUE)
     }
