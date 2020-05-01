@@ -151,7 +151,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 		# Set column types (only double and integer for now)
 		tableType <- tableTypes[[x]]
 		if(length(tableType) > 0) {
-			for(i in 1:ncol(z)) {
+			for(i in seq_len(ncol(z))) {
 				# Map the types
 				doConv <- eval(parse(text = paste0("as.", knownTypes[[tableType[i]]])))
 				z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
