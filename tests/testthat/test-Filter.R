@@ -75,11 +75,43 @@ filterExpression2$Haul <- c(
 out1 <- StoxBiotic(filterData(inputData1, filterExpression1))
 out2 <- filterData(inputData2, filterExpression2)
 
-context("test-Filter: Filter propagation")
+context("test-Filter: Filter downward propagation")
 comparison <- all.equal(out1, out2)
 
 # Should be one difference in the Station table
 expect_equal(length(comparison), 1)
+
+
+# Propagate Upwards
+inputData <- ReadBiotic(filenames)
+
+filterExpression <- list()
+filterExpression$`biotic_v3_example.xml`$catchsample <- c(
+	'commonname %notin% c("torsk", "sei", "hyse", "lange", "lysing", "gråsteinbit", "kveite")'
+)
+
+context("test-Filter: Filter upward propagation (BioticData)")
+outPrup <- filterData(inputData, filterExpression, propagateUpwards = TRUE)
+expect_equal(nrow(outPrup$`biotic_v3_example.xml`$fishstation), 1)
+
+context("test-Filter: Filter downward propagation with blank record tables in between")
+expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
+
+# Propagate upwards with StoxBiotic
+inputData <- StoxBiotic(ReadBiotic(filenames))
+
+filterExpression <- list()
+filterExpression$Sample <- c(
+	'SpeciesCategoryKey %like% "breiflabb|lyr"'
+)
+
+context("test-Filter: Filter downward + upward propagation (StoxBiotic)")
+outPrup <- filterData(inputData, filterExpression, propagateUpwards = TRUE)
+expect_equal(nrow(outPrup$SpeciesCategory), 2)
+expect_equal(nrow(outPrup$Sample), 2)
+expect_equal(nrow(outPrup$Haul), 1)
+expect_equal(nrow(outPrup$Station), 1)
+expect_equal(nrow(outPrup$Individual), 0)
 
 
 
