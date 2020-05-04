@@ -175,6 +175,18 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "
   return(TRUE)
 }
 
+
+#' Write ICES acoustic CSV format file
+#'
+#' Given an \code{AcousticData} object, this function will write an ICES acoustic CSV file. Note that this function only supports
+#' \code{AcousticData} object that is created from reading an ICES acoustic XML file.
+#'
+#' @param Acoustic a \code{AcousticData} object from an ICES acoustic XML format file.
+#' @param save an output file in collated CSV format will be created if this parameter is set to TRUE.
+#'
+#' @return List of data.table objects in the ICES acoustic CSV format.
+#'
+#' @export
 writeICESAcoustic <- function(Acoustic, save = TRUE){
   
   for(aco in Acoustic){
@@ -365,7 +377,21 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
   return(tmp)
 }
 
-
+#' Write ICES biotic CSV format file
+#'
+#' Given an \code{BioticData} object, this function will write an ICES biotic CSV file. Note that this function only supports
+#' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
+#'
+#' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#' @param SurveyCode use this parameter to specify a SurveyCode value in the resulting CSV file.
+#' @param GearCode use this parameter to specify a GearCode value in the resulting CSV file.
+#' @param allowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
+#'        https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.
+#' @param save an output file in collated CSV format will be created if this parameter is set to TRUE.
+#'
+#' @return List of data.table objects in the ICES acoustic CSV format.
+#'
+#' @export
 writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", allowRemoveSpecies = TRUE, save = TRUE) {
 
   doGenBiotic <- function(raw, save) {
@@ -543,11 +569,22 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", a
 
 } 
 
-# Datras format generator from Biotic v3
+#' Write ICES DATRAS (NS-IBTS) format file
+#'
+#' Given an \code{BioticData} object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
+#' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
+#'
+#' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#' @param addStationType additional StationType to be included. By default only fish stations with StationType == NA are included.
+#' @param save an output file in collated CSV format will be created if this parameter is set to TRUE.
+#'
+#' @return List of data.table objects in the ICES DATRAS CSV format.
+#'
 #' @importFrom stats aggregate
-writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
+#' @export
+writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
 
-    doGenDATRAS <- function(raw, additionalStation, save) {
+    doGenDATRAS <- function(raw, addStationType, save) {
       # Check input is a NMD Biotic v3 data
       if(raw$metadata$useXsd != "nmdbioticv3") {
           warning("writeICESDatras: Only NMD Biotic version 3 data is accepted as input!")
@@ -555,8 +592,8 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
       }
 
       # Construct user-defined additional stations (default to NA stationtypes)
-      if(length(additionalStation) > 0 && !all(is.na(additionalStation))) {
-          targetStationType <- additionalStation
+      if(length(addStationType) > 0 && !all(is.na(addStationType))) {
+          targetStationType <- addStationType
       } else {
           targetStationType <- c()
       }
@@ -1115,7 +1152,7 @@ writeICESDatras <- function(BioticData, additionalStation = NA, save = TRUE) {
     return(datrasOutput)
   }
 
-  out <- lapply(BioticData, doGenDATRAS, additionalStation, save)
+  out <- lapply(BioticData, doGenDATRAS, addStationType, save)
 
   return(out)
 }
