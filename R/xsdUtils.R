@@ -330,7 +330,7 @@ getIcesVocabulary <- function(xmlFile) {
 	xmlObj <- read_html(tmpText)
 
 	# Apply transformation to get the vocabulary translation table
-	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//vocabulary/*")), function(x) if(length(x)>0) return(list(attr(x[[1]], "id"), ifelse(length(x$code) > 0, unlist(x$code), NA)))))
-	setnames(ret, c("id", "value"))
+	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//vocabulary/*/code")), function(x) if(length(x)>0) return(list(attr(x, "id"), ifelse(length(x) > 0, unlist(x), NA), attr(x, "codetype")))))
+	setnames(ret, c("id", "value", "codetype"))
 	return(ret)
 }
