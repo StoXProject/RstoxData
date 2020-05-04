@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parses landings (sales notes) — readLssFile • RstoxData</title>
+<title>Write ICES DATRAS (NS-IBTS) format file — writeICESDatras • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Parses landings (sales notes) — readLssFile" />
-<meta property="og:description" content="Parses sales notes data from the Norwegian Directorate of Fisheries (FDIR) on the LSS format" />
+<meta property="og:title" content="Write ICES DATRAS (NS-IBTS) format file — writeICESDatras" />
+<meta property="og:description" content="Given an BioticData object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
+BioticData object that is created from reading an NMD biotic version 3 XML file." />
 
 
 
@@ -108,46 +109,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parses landings (sales notes)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/fdirParsing.R'><code>R/fdirParsing.R</code></a></small>
-    <div class="hidden name"><code>readLssFile.Rd</code></div>
+    <h1>Write ICES DATRAS (NS-IBTS) format file</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxExport.R'><code>R/StoxExport.R</code></a></small>
+    <div class="hidden name"><code>writeICESDatras.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Parses sales notes data from the Norwegian Directorate of Fisheries (FDIR) on the LSS format</p>
+    <p>Given an <code>BioticData</code> object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
+<code>BioticData</code> object that is created from reading an NMD biotic version 3 XML file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>readLssFile</span>(<span class='no'>file</span>, <span class='kw'>encoding</span> <span class='kw'>=</span> <span class='st'>"latin1"</span>, <span class='kw'>guessMax</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>)</pre>
+    <pre class="usage"><span class='fu'>writeICESDatras</span>(<span class='no'>BioticData</span>, <span class='kw'>addStationType</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>save</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file</th>
-      <td><p>path to file with LSS landings</p></td>
+      <th>BioticData</th>
+      <td><p>a <code>BioticData</code> object from an XML file with NMD biotic version 3 format.</p></td>
     </tr>
     <tr>
-      <th>encoding</th>
-      <td><p>encoding for 'file'</p></td>
+      <th>addStationType</th>
+      <td><p>additional StationType to be included. By default only fish stations with StationType == NA are included.</p></td>
     </tr>
     <tr>
-      <th>guessMax</th>
-      <td><p>passed to readr::read_delim</p></td>
+      <th>save</th>
+      <td><p>an output file in collated CSV format will be created if this parameter is set to TRUE.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.table with LSS landings</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The LSS format is a pipe-separated format encoding landings (sales-notes).
- It is provided to IMR on a regular basis from FDIR.
- Column headers are in Norwegian.</p>
-<p>Historically, columns in the landings provided from FDIR has been adapted for each data delivery
- Lately data deliveries has become standardized, but in order to support variants
- adherence to the standardization is not enfored by this function, and data types are inferred from data.
- The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_delim</a></code>)</p>
+    <p>List of data.table objects in the ICES DATRAS CSV format.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
