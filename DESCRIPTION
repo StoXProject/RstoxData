@@ -1,6 +1,6 @@
 Package: RstoxData
 Title: R libraries to parse and write fisheries biotic and acoustic data format
-Version: 0.8.5
+Version: 0.8.6
 Authors@R: c(
   person(given = "Ibrahim", family = "Umar", role = c("cre", "aut"), email = "ibrahim.umar@hi.no"), 
   person(given = "Sindre", family = "Vatnehol", role = "aut"), 
