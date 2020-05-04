@@ -8,7 +8,10 @@
 #'
 #'  Historically, columns in the landings provided from FDIR has been adapted for each data delivery
 #'  Lately data deliveries has become standardized, but in order to support variants
-#'  adherence to the standardization is not enfored by this function, unless option 'strict' is selected, and data types may be inferred from data.
+#'  adherence to the standardization is not enfored by this function, unless option 'strict' is selected.
+#'  If column names does not match specification, but data is otherwise parseable, a warning will be issued.
+#'  
+#'  If 'strict' is not selection, data types may be inferred from data.
 #'  The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to \code{\link[readr]{read_delim}})
 #' @param file path to file with LSS landings
 #' @param encoding encoding for 'file'
@@ -167,7 +170,17 @@ readLssFile <- function(file, encoding="latin1", guessMax = 100000, strict=T){
   loc$decimal_mark <- ","
   loc$encoding <- encoding
   if (strict){
-    db <- readr::read_delim(file, delim="|", col_names=T, trim_ws=TRUE, na=c("", "na", "NA"), locale=loc, col_types = spec_land) 
+    headers <- names(readr::read_delim(file, delim="|", col_names=T, col_types=paste(rep("c",107), collapse=""), trim_ws=TRUE, na=c("", "na", "NA"), locale=loc, n_max = 1))
+    
+    if (length(headers) != length(spec_land$cols)){
+      stop("Number of columns in file does not match specification.")
+    }
+    if (!all(headers == names(spec_land$cols))){
+      differences <- sum(headers != names(spec_land$cols))
+      warning(paste("Header names does not match specification,", differences, "column names differ."))
+    }
+      
+    db <- readr::read_delim(file, delim="|", col_names=names(spec_land$cols), trim_ws=TRUE, na=c("", "na", "NA"), locale=loc, col_types = spec_land, skip = 1) 
     db <- data.table::as.data.table(db) 
     db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`)
   }

@@ -28,6 +28,9 @@ The LSS format is a pipe-separated format encoding landings (sales-notes).
 
  Historically, columns in the landings provided from FDIR has been adapted for each data delivery
  Lately data deliveries has become standardized, but in order to support variants
- adherence to the standardization is not enfored by this function, unless option 'strict' is selected, and data types may be inferred from data.
+ adherence to the standardization is not enfored by this function, unless option 'strict' is selected.
+ If column names does not match specification, but data is otherwise parseable, a warning will be issued.
+ 
+ If 'strict' is not selection, data types may be inferred from data.
  The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to \code{\link[readr]{read_delim}})
 }

@@ -12,6 +12,10 @@ expect_true("Snurpenot/ringnot" %in% data$Redskap)
 expect_true(all(!is.na(data$`Art - FDIR`)))
 expect_equal(nrow(data),9)
 
+suppressMessages(nonstrictdata <- readLssFile(system.file("testresources","landings_trimmed_2018.lss", package="RstoxData"), strict=F))
+expect_equal(nrow(data), nrow(nonstrictdata))
+expect_equal(ncol(data), ncol(nonstrictdata))
+
 context("readErsFile: normal run")
 data <- readErsFile(system.file("testresources","logbooks_trimmed_2015.psv", package="RstoxData"))
 expect_true(data.table::is.data.table(data))
