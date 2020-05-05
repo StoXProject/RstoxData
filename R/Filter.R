@@ -205,7 +205,7 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
 #' @import data.table
 #' @export
 #' 
-FilterBiotic <- function(BioticData, FilterExpression) {
+FilterBiotic <- function(BioticData, FilterExpression, FilterUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
     FilterExpression <- expandFilterExpressionList(FilterExpression)
     
@@ -213,7 +213,7 @@ FilterBiotic <- function(BioticData, FilterExpression) {
         BioticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
-        propagateUpwards = FALSE
+        propagateUpwards = FilterUpwards
     )
 }
 
@@ -229,7 +229,7 @@ FilterBiotic <- function(BioticData, FilterExpression) {
 #' @import data.table
 #' @export
 #' 
-FilterAcoustic <- function(AcousticData, FilterExpression) {
+FilterAcoustic <- function(AcousticData, FilterExpression, FilterUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
     FilterExpression <- expandFilterExpressionList(FilterExpression)
     
@@ -237,7 +237,7 @@ FilterAcoustic <- function(AcousticData, FilterExpression) {
         AcousticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
-        propagateUpwards = FALSE
+        propagateUpwards = FilterUpwards
     )
 }
 
@@ -254,12 +254,12 @@ FilterAcoustic <- function(AcousticData, FilterExpression) {
 #' @import data.table
 #' @export
 #' 
-FilterStoxBiotic <- function(StoxBioticData, FilterExpression) {
+FilterStoxBiotic <- function(StoxBioticData, FilterExpression, FilterUpwards = FALSE) {
     filterData(
         StoxBioticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
-        propagateUpwards = FALSE
+        propagateUpwards = FilterUpwards
     )
 }
 
@@ -275,11 +275,11 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression) {
 #' @import data.table
 #' @export
 #' 
-FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression) {
+FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, FilterUpwards = FALSE) {
     filterData(
         StoxAcousticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
-        propagateUpwards = FALSE
+        propagateUpwards = FilterUpwards
     )
 }

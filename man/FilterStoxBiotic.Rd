@@ -4,7 +4,7 @@
 \alias{FilterStoxBiotic}
 \title{Filter StoxBiotic data}
 \usage{
-FilterStoxBiotic(StoxBioticData, FilterExpression)
+FilterStoxBiotic(StoxBioticData, FilterExpression, FilterUpwards = FALSE)
 }
 \arguments{
 \item{StoxBioticData}{Input \code{\link{StoxBioticData}} data.}
