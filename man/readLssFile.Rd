@@ -11,7 +11,7 @@ readLssFile(file, encoding = "latin1", guessMax = 1e+05, strict = T)
 
 \item{encoding}{encoding for 'file'}
 
-\item{guessMax}{passed to readr::read_delim, unless 'strict' is true}
+\item{guessMax}{passed to \code{\link[readr]{read_delim}}, unless 'strict' is true}
 
 \item{strict}{enforce strict adherance to data format.}
 }

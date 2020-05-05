@@ -15,7 +15,7 @@
 #'  The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to \code{\link[readr]{read_delim}})
 #' @param file path to file with LSS landings
 #' @param encoding encoding for 'file'
-#' @param guessMax passed to readr::read_delim, unless 'strict' is true
+#' @param guessMax passed to \code{\link[readr]{read_delim}}, unless 'strict' is true
 #' @param strict enforce strict adherance to data format.
 #' @return data.table with LSS landings
 #' @import data.table
