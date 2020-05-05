@@ -117,7 +117,7 @@
     <p>Parses sales notes data from the Norwegian Directorate of Fisheries (FDIR) on the LSS format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>readLssFile</span>(<span class='no'>file</span>, <span class='kw'>encoding</span> <span class='kw'>=</span> <span class='st'>"latin1"</span>, <span class='kw'>guessMax</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>)</pre>
+    <pre class="usage"><span class='fu'>readLssFile</span>(<span class='no'>file</span>, <span class='kw'>encoding</span> <span class='kw'>=</span> <span class='st'>"latin1"</span>, <span class='kw'>guessMax</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>strict</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,7 +132,11 @@
     </tr>
     <tr>
       <th>guessMax</th>
-      <td><p>passed to readr::read_delim</p></td>
+      <td><p>passed to <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_delim</a></code>, unless 'strict' is true</p></td>
+    </tr>
+    <tr>
+      <th>strict</th>
+      <td><p>enforce strict adherance to data format.</p></td>
     </tr>
     </table>
 
@@ -146,7 +150,9 @@
  Column headers are in Norwegian.</p>
 <p>Historically, columns in the landings provided from FDIR has been adapted for each data delivery
  Lately data deliveries has become standardized, but in order to support variants
- adherence to the standardization is not enfored by this function, and data types are inferred from data.
+ adherence to the standardization is not enfored by this function, unless option 'strict' is selected.
+ If column names does not match specification, but data is otherwise parseable, a warning will be issued.</p> 
+<p>If 'strict' is not selection, data types may be inferred from data.
  The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_delim</a></code>)</p>
 
   </div>
