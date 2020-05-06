@@ -96,7 +96,7 @@ getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, sta
     start <- as.POSIXct(t0)
     end <- as.POSIXct(t1)
 
-    return(round(difftime(end, start)/60))
+    return(round(difftime(end, start, units = "mins")))
 }
 
 # Get ICES ship data
