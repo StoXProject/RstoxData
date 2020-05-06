@@ -60,9 +60,9 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 					    key <- intersect(names(y[[parent + 1]]), names(y[[parent - goUp]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
-							deleted <- fsetdiff(y[[parent - goUp]][, ..key], ret[[names(y)[parent - goUp]]][, ..key])
-							# Propagate to child (using Map)
-							ret[[names(y)[parent+1]]] <- y[[parent+1]][do.call(pmin, Map(`%in%`, y[[parent+1]][, names(deleted), with=FALSE], deleted)) != 1L]
+							deleted <- fsetdiff(unique(y[[parent - goUp]][, ..key]), unique(ret[[names(y)[parent - goUp]]][, ..key]))
+							# Propagate to child
+							ret[[names(y)[parent+1]]] <- y[[parent+1]][!deleted, on = names(deleted)]
 						}
 					}
 				}
@@ -78,9 +78,9 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 					    key <- intersect(names(y[[parent - 1]]), names(y[[parent]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
-							deleted <- fsetdiff(y[[parent]][, ..key], ret[[names(y)[parent]]][, ..key])
-							# Propagate to child (using Map)
-							ret[[names(y)[parent-1]]] <- y[[parent-1]][do.call(pmin, Map(`%in%`, y[[parent-1]][, names(deleted), with=FALSE], deleted)) != 1L]
+							deleted <- fsetdiff(unique(y[[parent]][, ..key]), unique(ret[[names(y)[parent]]][, ..key]))
+							# Propagate to parent
+							ret[[names(y)[parent-1]]] <- y[[parent-1]][!deleted, on = names(deleted)]
 						}
 					}
 				}
@@ -151,8 +151,6 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		names(ret) <- names(pFilters)
 		merged <- replace(inputData, intersect(names(ret), names(inputData)), ret[intersect(names(ret), names(inputData))])
 	}
-
-	# 4. (TODO) Propagate up
 
 	return(merged)
 }
