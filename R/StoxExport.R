@@ -383,8 +383,6 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
 #' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
-#' @param SurveyCode use this parameter to specify a SurveyCode value in the resulting CSV file.
-#' @param GearCode use this parameter to specify a GearCode value in the resulting CSV file.
 #' @param allowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 #'        https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.
 #' @param save an output file in collated CSV format will be created if this parameter is set to TRUE.
@@ -392,7 +390,7 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
-writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", allowRemoveSpecies = TRUE, save = TRUE) {
+writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) {
 
   doGenBiotic <- function(raw, save) {
 
@@ -406,7 +404,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", a
     Cruise <- cruiseRaw[, .(
       Cruise = "Cruise",
       Header = "Record",
-      CruiseSurvey = SurveyCode,
+      CruiseSurvey = NA,
       CruiseCountry = "NO",
       CruiseOrganisation = 612,
       CruisePlatform = getICESShipCode(platformname),
@@ -422,7 +420,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", a
       Haul = "Haul",
       Header = "Record",
       CruiseLocalID = CruiseLocalID,
-      HaulGear = GearCode,
+      HaulGear = gear,
       HaulNumber = serialnumber,
       HaulStationName = station,
       HaulStartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
@@ -466,7 +464,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", a
       HaulStratum = NA
     )]
 
-    catchRaw <- raw$catchsample
+    catchRaw <- merge(raw$catchsample, haulRaw)
 
     # We must filter records with aphia == NA
     catchRaw <- catchRaw[!is.na(aphia)]
@@ -475,7 +473,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", a
       Catch = "Catch",
       Header = "Record",
       CruiseLocalID = CruiseLocalID,
-      HaulGear = GearCode,
+      HaulGear = gear,
       HaulNumber = serialnumber,
       CatchDataType = "R",
       CatchSpeciesCode = aphia,
@@ -519,7 +517,7 @@ writeICESBiotic <- function(BioticData, SurveyCode = "NONE", GearCode = "CAM", a
       Biology = "Biology",
       Header = "Record",
       CruiseLocalID = CruiseLocalID,
-      HaulGear = GearCode,
+      HaulGear = gear,
       HaulNumber = serialnumber,
       CatchSpeciesCode = aphia,
       CatchSpeciesCategory = catchpartnumber,
