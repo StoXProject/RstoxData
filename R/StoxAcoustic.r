@@ -189,6 +189,8 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
       # 2020-02-03: Removed bottom depth, as we need to decide whether to include this or not, given its arbitrary interpretation for different frequencies:
       #data_list$Beam$BottomDepth<-rowMeans(cbind(data_list$Beam$min_bot_depth,data_list$Beam$max_bot_depth),na.rm = TRUE)
       #tmp2 <- data_list$Beam[,c('LogKey','BeamKey','BottomDepth','upper_integrator_depth')]
+      
+      # See note 2020-04-29:
       tmp2 <- data_list$Beam[,c('LogKey','BeamKey', 'upper_integrator_depth')]
       data_list$Log <- merge(data_list$Log,tmp2,by='LogKey')
       
@@ -463,6 +465,10 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
     data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReferenceType', 'ChannelReferenceDepth', 'ChannelReferenceOrientation')]
     
     data_list$NASC <- data_list$NASC[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'NASCKey', 'Channel', 'MaxChannelRange', 'MinChannelRange', 'NASC')]
+    
+    
+    # The following is a hack added on 2020-04-29 by Holmin to remove duplicate rows in Log, which were added due to the merging of log and frequency at the comment "# See note 2020-04-29:". The frequency info contains upper_interpret_depth which is needed to generate the channels in the NASC table. Previously the merge was important also for adding BottomDepth, which is stored in each frequency. However, the BottomDepth is now set to NA for NMDAcoustic. The StoxAcoustic funciton should be revised to avoid the following line (e.g., by not merging to Log but rather merging the pel_ch_thickness into the Beam):
+    data_list$Log <- unique(data_list$Log)
     
     
     return(data_list)

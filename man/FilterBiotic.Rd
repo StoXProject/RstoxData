@@ -4,7 +4,7 @@
 \alias{FilterBiotic}
 \title{Filter (raw) Biotic data}
 \usage{
-FilterBiotic(BioticData, FilterExpression)
+FilterBiotic(BioticData, FilterExpression, FilterUpwards = FALSE)
 }
 \arguments{
 \item{BioticData}{Input \code{\link{BioticData}} data.}

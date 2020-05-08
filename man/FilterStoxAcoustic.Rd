@@ -4,7 +4,7 @@
 \alias{FilterStoxAcoustic}
 \title{Filter StoxAcoustic data}
 \usage{
-FilterStoxAcoustic(StoxAcousticData, FilterExpression)
+FilterStoxAcoustic(StoxAcousticData, FilterExpression, FilterUpwards = FALSE)
 }
 \arguments{
 \item{StoxAcousticData}{Input \code{\link{StoxAcousticData}} data.}
