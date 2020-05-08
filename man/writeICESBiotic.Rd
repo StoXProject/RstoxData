@@ -4,10 +4,20 @@
 \alias{writeICESBiotic}
 \title{Write ICES biotic CSV format file}
 \usage{
-writeICESBiotic(BioticData, allowRemoveSpecies = TRUE, save = TRUE)
+writeICESBiotic(
+  BioticData,
+  cruiseSurvey = "NONE",
+  cruiseOrganisation = 612,
+  allowRemoveSpecies = TRUE,
+  save = TRUE
+)
 }
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
+
+\item{cruiseSurvey}{set to specify the CruiseSurvey column content. Default to NONE.}
+
+\item{cruiseOrganisation}{set to specify the CruiseOrganisation column content. Default to 612 (IMR's NMD).}
 
 \item{allowRemoveSpecies}{ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.}

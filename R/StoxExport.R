@@ -383,6 +383,8 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
 #' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#' @param cruiseSurvey set to specify the CruiseSurvey column content. Default to NONE.
+#' @param cruiseOrganisation set to specify the CruiseOrganisation column content. Default to 612 (IMR's NMD).
 #' @param allowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 #'        https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.
 #' @param save an output file in collated CSV format will be created if this parameter is set to TRUE.
@@ -390,7 +392,7 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
-writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) {
+writeICESBiotic <- function(BioticData, cruiseSurvey = "NONE", cruiseOrganisation = 612, allowRemoveSpecies = TRUE, save = TRUE) {
 
   doGenBiotic <- function(raw, save) {
 
@@ -404,9 +406,9 @@ writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) 
     Cruise <- cruiseRaw[, .(
       Cruise = "Cruise",
       Header = "Record",
-      CruiseSurvey = NA,
+      CruiseSurvey = cruiseSurvey,
       CruiseCountry = "NO",
-      CruiseOrganisation = 612,
+      CruiseOrganisation = cruiseOrganisation,
       CruisePlatform = getICESShipCode(platformname),
       CruiseStartDate = gsub("Z", "", missionstartdate),
       CruiseEndDate = gsub("Z", "", missionstopdate),
@@ -415,11 +417,12 @@ writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) 
 
     CruiseLocalID <- Cruise$CruiseLocalID
 
-    haulRaw <- raw$fishstation
+    haulRaw <- merge(cruiseRaw, raw$fishstation)
+
     Haul <- haulRaw[, .(
       Haul = "Haul",
       Header = "Record",
-      CruiseLocalID = CruiseLocalID,
+      CruiseLocalID = cruise,
       HaulGear = gear,
       HaulNumber = serialnumber,
       HaulStationName = station,
@@ -464,7 +467,7 @@ writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) 
       HaulStratum = NA
     )]
 
-    catchRaw <- merge(raw$catchsample, haulRaw)
+    catchRaw <- merge(raw$catchsample, haulRaw, by = intersect(names(raw$catchsample), names(haulRaw)))
 
     # We must filter records with aphia == NA
     catchRaw <- catchRaw[!is.na(aphia)]
@@ -472,7 +475,7 @@ writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) 
     Catch <- catchRaw[, .(
       Catch = "Catch",
       Header = "Record",
-      CruiseLocalID = CruiseLocalID,
+      CruiseLocalID = cruise,
       HaulGear = gear,
       HaulNumber = serialnumber,
       CatchDataType = "R",
@@ -510,13 +513,12 @@ writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) 
 
     baseAge <- intersect(names(indRaw), names(raw$agedetermination))
     indRaw <- merge(indRaw, raw$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
-    indRaw <- merge(raw$catchsample, indRaw, by = intersect(names(raw$catchsample), names(indRaw)))
-    indRaw <- merge(raw$fishstation, indRaw, by = intersect(names(raw$fishstation), names(indRaw)))
+    indRaw <- merge(catchRaw, indRaw, by = intersect(names(catchRaw), names(indRaw)))
     
     Biology <- indRaw[, .(
       Biology = "Biology",
       Header = "Record",
-      CruiseLocalID = CruiseLocalID,
+      CruiseLocalID = cruise,
       HaulGear = gear,
       HaulNumber = serialnumber,
       CatchSpeciesCode = aphia,
@@ -547,7 +549,7 @@ writeICESBiotic <- function(BioticData, allowRemoveSpecies = TRUE, save = TRUE) 
         Catch <- Catch[CatchSpeciesCode %in% validCodes, ]
         Biology <- Biology[CatchSpeciesCode %in% validCodes, ]
     } else {
-        print("allowRemoveSpecies is set to TRUE. Will only give warning for records with species that is not accepted by the ICES system.")
+        print("allowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
         compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$CatchSpeciesCode))
     }
 
