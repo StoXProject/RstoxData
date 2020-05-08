@@ -73,7 +73,7 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.7</span>
       </span>
     </div>
 
@@ -121,8 +121,8 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
 
     <pre class="usage"><span class='fu'>writeICESBiotic</span>(
   <span class='no'>BioticData</span>,
-  <span class='kw'>SurveyCode</span> <span class='kw'>=</span> <span class='st'>"NONE"</span>,
-  <span class='kw'>GearCode</span> <span class='kw'>=</span> <span class='st'>"CAM"</span>,
+  <span class='kw'>cruiseSurvey</span> <span class='kw'>=</span> <span class='st'>"NONE"</span>,
+  <span class='kw'>cruiseOrganisation</span> <span class='kw'>=</span> <span class='fl'>612</span>,
   <span class='kw'>allowRemoveSpecies</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>save</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
@@ -135,12 +135,12 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       <td><p>a <code>BioticData</code> object from an XML file with NMD biotic version 3 format.</p></td>
     </tr>
     <tr>
-      <th>SurveyCode</th>
-      <td><p>use this parameter to specify a SurveyCode value in the resulting CSV file.</p></td>
+      <th>cruiseSurvey</th>
+      <td><p>set to specify the CruiseSurvey column content. Default to NONE.</p></td>
     </tr>
     <tr>
-      <th>GearCode</th>
-      <td><p>use this parameter to specify a GearCode value in the resulting CSV file.</p></td>
+      <th>cruiseOrganisation</th>
+      <td><p>set to specify the CruiseOrganisation column content. Default to 612 (IMR's NMD).</p></td>
     </tr>
     <tr>
       <th>allowRemoveSpecies</th>
