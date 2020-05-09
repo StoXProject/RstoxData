@@ -21,19 +21,6 @@ DefineBioticVariableConversion <- function(processData, FileName, UseProcessData
 	)
 }
 
-# General function for creating a variable conversion table:
-readVariableConversionTable <- function(processData, FileName, UseProcessData = FALSE) {
-	# Return immediately if UseProcessData = TRUE:
-	if(UseProcessData) {
-		return(processData)
-	}
-	
-	VariableConversionTable <- data.table::fread(FileName)
-	
-	return(VariableConversionTable)
-}
-
-
 ##################################################
 #' Convert Biotic variables
 #' 
@@ -63,81 +50,6 @@ ConvertBioticVariables <- function(BioticData, ConversionMethod = c("Table", "Pr
 }
 
 
-getVariableConversionTable <- function(ConversionMethod = c("Table", "PreDefined"), VariableConversionTable, PreDefinedVariableConversionTable) {
-	
-	ConversionMethod <- match.arg(ConversionMethod)
-	
-	if(ConversionMethod == "Table") {
-		if(length(VariableConversionTable) == 0) {
-			stop("VariableConversionTable must be given if ConversionMethod = \"Table\"")
-		}
-	}
-	else if(ConversionMethod == "PreDefined") {
-		VariableConversionTable <- PreDefinedVariableConversionTable
-	}
-	else {
-		stop("Wrong ConversionMethod")
-	}
-	
-	VariableConversionTable
-}
-
-# This function needs to be defined:
-convertVariables <- function(data, VariableConversionTable) {
-	
-	dataCopy <- data.table::copy(data)
-	
-	requiredColumns1 <- c("TableName", "VariableName", "Value", "NewValue")
-	requiredColumns2 <- c("FileName", requiredColumns1)
-	
-	if(is.list(dataCopy[[1]]) && !data.table::is.data.table(dataCopy[[1]])) {
-		if(! all(requiredColumns1 %in% names(VariableConversionTable))) {
-			stop("The VariableConversionTable must contain the columns ", paste(requiredColumns1, collapse = ", "))
-		}
-		else {
-			# Extract the FileNames and TableNames:
-			s <- strsplit(VariableConversionTable$TableName, "/")
-			s <- lapply(s, function(x) data.table::data.table(FileName = x[1], TableName = x[2]))
-			s <- data.table::rbindlist(s)
-			VariableConversionTable <- data.table::data.table(
-				s, 
-				VariableConversionTable[, TableName := NULL]
-			)
-		}
-	}
-	else {
-		if(! all(requiredColumns2 %in% names(VariableConversionTable))) {
-			stop("The VariableConversionTable must contain the columns ", paste(requiredColumns2, collapse = ", "))
-		}
-	}
-	
-	# Split into a list, thus treatin only one row at the time. This is probably sloppy coding:
-	conversionList <- split(VariableConversionTable, seq_len(nrow(VariableConversionTable)))
-	# Run the conversion for each row of the VariableConversionTable:
-	lapply(conversionList, convertVariable, data = dataCopy)
-	
-	return(dataCopy[])
-}
-
-convertVariable <- function(conversionList, data) {
-	stop("We need to add types from the metadata here, and interpret the type of the Value. The column Value will always be character , and needs to be parsed to the right type to make the conversion work. Maybe we also need a warning or an error if the user tries to modify a key?")
-	# If FileName is given, step into the files:
-	if(length(conversionList$FileName)) {
-		data[[conversionList$FileName]][[conversionList$TableName]][, c(conversionList$VariableName) := replace(
-			x = get(conversionList$VariableName), 
-			list = get(conversionList$VariableName) %in% conversionList$Value, 
-			values = conversionList$NewValue)]
-	}
-	# Otherwise, only treat tables:
-	else {
-		data[[conversionList$TableName]][, c(conversionList$VariableName) := replace(
-			x = get(conversionList$VariableName), 
-			list = get(conversionList$VariableName) %in% conversionList$Value, 
-			values = conversionList$NewValue)]
-	}
-}
-
-
 ##################################################
 #' StoxBiotic variable conversion
 #' 
@@ -158,7 +70,6 @@ DefineStoxBioticVariableConversion <- function(processData, FileName, UseProcess
 		UseProcessData = UseProcessData
 	)
 }
-
 
 ##################################################
 #' Convert StoxBiotic variables
@@ -186,7 +97,6 @@ ConvertStoxBioticVariables <- function(StoxBioticData, ConversionMethod = c("Tab
 	# Apply the conversion:
 	convertVariables(data = StoxBioticData, VariableConversionTable = VariableConversionTable)
 }
-
 
 
 ##################################################
@@ -262,7 +172,6 @@ DefineStoxAcousticVariableConversion <- function(processData, FileName, UseProce
 	)
 }
 
-
 ##################################################
 #' Convert StoxAcoustic variables
 #' 
@@ -292,3 +201,129 @@ ConvertStoxAcousticVariables <- function(StoxAcousticData, ConversionMethod = c(
 
 
 
+
+# General function for creating a variable conversion table:
+readVariableConversionTable <- function(processData, FileName, UseProcessData = FALSE) {
+	# Return immediately if UseProcessData = TRUE:
+	if(UseProcessData) {
+		return(processData)
+	}
+	
+	VariableConversionTable <- data.table::fread(FileName)
+	
+	return(VariableConversionTable)
+}
+
+# Function to treat the ConversionMethod:
+getVariableConversionTable <- function(ConversionMethod = c("Table", "PreDefined"), VariableConversionTable, PreDefinedVariableConversionTable) {
+	
+	ConversionMethod <- match.arg(ConversionMethod)
+	
+	if(ConversionMethod == "Table") {
+		if(length(VariableConversionTable) == 0) {
+			stop("VariableConversionTable must be given if ConversionMethod = \"Table\"")
+		}
+	}
+	else if(ConversionMethod == "PreDefined") {
+		VariableConversionTable <- PreDefinedVariableConversionTable
+	}
+	else {
+		stop("Wrong ConversionMethod")
+	}
+	
+	VariableConversionTable
+}
+
+# Function to convert variables given a conversion table:
+convertVariables <- function(data, VariableConversionTable) {
+	
+	dataCopy <- data.table::copy(data)
+	
+	requiredColumns <- c("TableName", "VariableName", "Value", "NewValue")
+	#requiredColumns2 <- c("FileName", requiredColumns)
+	
+	if(is.list(dataCopy[[1]]) && !data.table::is.data.table(dataCopy[[1]])) {
+		#if(! all(requiredColumns2 %in% names(VariableConversionTable))) {
+		if(! all(requiredColumns %in% names(VariableConversionTable))) {
+			stop("The VariableConversionTable must contain the columns ", paste(requiredColumns, collapse = ", "))
+		}
+		else if(all(grepl("/", VariableConversionTable$TableName, fixed = TRUE))){
+			# Extract the FileNames and TableNames:
+			s <- strsplit(VariableConversionTable$TableName, "/")
+			s <- lapply(s, function(x) data.table::data.table(FileName = x[1], TableName = x[2]))
+			s <- data.table::rbindlist(s)
+			VariableConversionTable <- data.table::data.table(
+				s, 
+				VariableConversionTable[, TableName := NULL]
+			)
+		}
+		else {
+			# Repeat the file names of the input data:
+			VariableConversionTable <- cbind(
+				data.table::data.table(
+					FileName = rep(names(data), nrow(VariableConversionTable))
+				), 
+				VariableConversionTable
+			)
+		}
+	}
+	else {
+		if(! all(requiredColumns %in% names(VariableConversionTable))) {
+			stop("The VariableConversionTable must contain the columns ", paste(requiredColumns, collapse = ", "))
+		}
+	}
+	
+	# Split into a list, thus treatin only one row at the time. This is probably sloppy coding:
+	conversionList <- split(VariableConversionTable, seq_len(nrow(VariableConversionTable)))
+	# Run the conversion for each row of the VariableConversionTable:
+	lapply(conversionList, convertVariable, data = dataCopy)
+	
+	return(dataCopy[])
+}
+
+# Function to convert variables given one row of a conversion table:
+convertVariable <- function(conversionList, data) {
+	
+	# Convert the NewValue to the class of the existing value:
+	if(length(conversionList$FileName)) {
+		existingClass <- class(data[[conversionList$FileName]][[conversionList$TableName]][[conversionList$VariableName]])[1]
+	}
+	else {
+		existingClass <- class(data[[conversionList$TableName]][[conversionList$VariableName]])[1]
+	}
+	newClass <- class(conversionList$Value)[1]
+	if(!identical(existingClass, newClass)) {
+		class(conversionList$Value) <- existingClass
+	}
+	
+	# If FileName is given, step into the files:
+	if(length(conversionList$FileName)) {
+		# Do nothing if the variable is a key:
+		isKeys <- VariableConversionTable$VariableName %in% getKeys(data[[conversionList$FileName]])
+		if(isKeys) {
+			warning("The variable", conversionList$VariableName, " is a key and cannot be modified ")
+		}
+		else {
+			# Replace by the new value:
+			data[[conversionList$FileName]][[conversionList$TableName]][, c(conversionList$VariableName) := replace(
+				x = get(conversionList$VariableName), 
+				list = get(conversionList$VariableName) %in% conversionList$Value, 
+				values = conversionList$NewValue)]
+		}
+	}
+	# Otherwise, only treat tables:
+	else {
+		# Do nothing if the variable is a key:
+		isKeys <- endsWith(VariableConversionTable$VariableName, "Key")
+		if(isKeys) {
+			warning("The variable", conversionList$VariableName, " is a key and cannot be modified ")
+		}
+		else {
+			# Replace by the new value:
+			data[[conversionList$TableName]][, c(conversionList$VariableName) := replace(
+				x = get(conversionList$VariableName), 
+				list = get(conversionList$VariableName) %in% conversionList$Value, 
+				values = conversionList$NewValue)]
+		}
+	}
+}

@@ -1,54 +1,6 @@
 #' Convert BioticData to StoxBioticData
 #'
 #' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
-#'
-#' @return An object of StoX data type \code{\link{StoxBioticData}}.
-#'
-#' @import data.table
-#' @importFrom parallel makeCluster parLapply stopCluster mclapply
-#' @export
-#' 
-StoxBiotic_old <- function(BioticData) {
-
-	# Function to get the StoxBiotic on one file:
-	StoxBioticOne <- function(BioticData) {
-		# Get data type: 
-		datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
-		
-		if(!exists("stoxBioticObject"))
-			data(stoxBioticObject, package="RstoxData", envir = environment())
-		
-		# Do first phase
-		first <- firstPhase(BioticData, datatype, stoxBioticObject)
-		# Do second phase	
-		second <- secondPhase(first, datatype, stoxBioticObject)
-		
-		return(second)
-	}
-
-	# Process Biotic data in parallel
-	cores <- getCores()
-	if(get_os() == "win") {
-		cl <- parallel::makeCluster(cores)
-		StoxBioticData <- parallel::parLapply(cl, BioticData, StoxBioticOne)
-		parallel::stopCluster(cl)
-	} else {
-		StoxBioticData <- parallel::mclapply(BioticData, StoxBioticOne, mc.cores = cores)
-	}
-
-	tableNames <- names(StoxBioticData[[1]])
-	StoxBioticData <- lapply(
-		tableNames, 
-		function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
-	)
-	names(StoxBioticData) <- tableNames
-	
-	StoxBioticData
-}
-
-#' Convert BioticData to StoxBioticData
-#'
-#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
 #' @param cores Overrides multi-core auto detection. Default to NULL.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
