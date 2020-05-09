@@ -299,7 +299,7 @@ convertVariable <- function(conversionList, data) {
 	# If FileName is given, step into the files:
 	if(length(conversionList$FileName)) {
 		# Do nothing if the variable is a key:
-		isKeys <- VariableConversionTable$VariableName %in% getKeys(data[[conversionList$FileName]])
+		isKeys <- conversionList$VariableName %in% getKeys(data[[conversionList$FileName]])
 		if(isKeys) {
 			warning("The variable", conversionList$VariableName, " is a key and cannot be modified ")
 		}
@@ -314,7 +314,7 @@ convertVariable <- function(conversionList, data) {
 	# Otherwise, only treat tables:
 	else {
 		# Do nothing if the variable is a key:
-		isKeys <- endsWith(VariableConversionTable$VariableName, "Key")
+		isKeys <- endsWith(conversionList$VariableName, "Key")
 		if(isKeys) {
 			warning("The variable", conversionList$VariableName, " is a key and cannot be modified ")
 		}
