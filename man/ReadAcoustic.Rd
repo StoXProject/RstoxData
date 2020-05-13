@@ -4,7 +4,7 @@
 \alias{ReadAcoustic}
 \title{Read acoustic XML files}
 \usage{
-ReadAcoustic(FileNames)
+ReadAcoustic(FileNames, cores = 1)
 }
 \arguments{
 \item{FileNames}{The paths of the acoustic files.}

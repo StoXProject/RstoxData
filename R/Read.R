@@ -20,21 +20,29 @@
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadBiotic <- function(FileNames) {
-
-	# Read files in parallel
-	cores <- getCores()
-	if(get_os() == "win") {
-		cl <- makeCluster(cores)
-		out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
-		stopCluster(cl)
-	} else {
-		out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
+ReadBiotic <- function(FileNames, cores = 1) {
+	
+	# Process Biotic data in parallel if specified:
+	if(length(cores) == 0) {
+		cores <- getCores()
 	}
-
+	if(cores == 1) {
+		out <- lapply(FileNames, RstoxData::readXmlFile)
+	}
+	else {
+		if(get_os() == "win") {
+			cl <- makeCluster(cores)
+			out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
+			stopCluster(cl)
+		} else {
+			out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
+		}
+	}
+	
+	# Add names as the file names:
 	names(out) <- basename(FileNames)
-
-	out
+	
+	return(out)
 }
 
 
@@ -61,22 +69,28 @@ ReadBiotic <- function(FileNames) {
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadAcoustic <- function(FileNames) {
-
-	# Read files in parallel
-        cores <- getCores()
-        if(get_os() == "win") {
-                cl <- makeCluster(cores)
-                out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
-                stopCluster(cl)
-        } else {
-                out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
-        }
-
-        names(out) <- basename(FileNames)
-
-	out
+ReadAcoustic <- function(FileNames, cores = 1) {
+	
+	# Process Biotic data in parallel if specified:
+	if(length(cores) == 0) {
+		cores <- getCores()
+	}
+	if(cores == 1) {
+		out <- lapply(FileNames, RstoxData::readXmlFile)
+	}
+	else {
+		if(get_os() == "win") {
+			cl <- makeCluster(cores)
+			out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
+			stopCluster(cl)
+		} else {
+			out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
+		}
+	}
+	
+	# Add names as the file names:
+	names(out) <- basename(FileNames)
+	
+	return(out)
 }
-
-
 
