@@ -231,7 +231,7 @@ getVariableConversionTable <- function(ConversionMethod = c("Table", "PreDefined
 		stop("Wrong ConversionMethod")
 	}
 	
-	VariableConversionTable
+	return(VariableConversionTable)
 }
 
 # Function to convert variables given a conversion table:

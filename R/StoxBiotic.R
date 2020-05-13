@@ -333,8 +333,15 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #'
 #' @export
 #' 
-MergeStoxBiotic <- function(StoxBioticData) {
-    mergeDataTables(StoxBioticData, tableNames = NULL, output.only.last = TRUE, all = TRUE)
+MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
+	# Get the tables to merge:
+	StoxBioticDataTableNames <- names(StoxBioticData)
+	if(! TargetTable %in% StoxBioticDataTableNames) {
+		stop("TargetTable must be one of ", paste(StoxBioticDataTableNames, collapse = ", "))
+	}
+	tableNames <- StoxBioticDataTableNames[seq_len(which(StoxBioticDataTableNames == TargetTable))]
+	# Merge:
+    mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
 }
 
 

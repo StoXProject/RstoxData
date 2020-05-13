@@ -1,0 +1,89 @@
+{
+	"BioticVariableConversion": {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"type": "array",
+		"items": [
+			{
+				"type": "object",
+				"properties": {
+					"TableName": { "type": "string" },
+					"VariableName": { "type": "string" },
+					"Value": { "type": "string" },
+					"NewValue": { "type": "string" }
+				},
+				"required": [
+					"TableName", 
+					"VariableName", 
+					"Value", 
+					"NewValue"
+					]
+			}
+			]
+	}, 
+	
+	"StoxBioticVariableConversion": {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"type": "array",
+		"items": [
+			{
+				"type": "object",
+				"properties": {
+					"TableName": { "type": "string" },
+					"VariableName": { "type": "string" },
+					"Value": { "type": "string" },
+					"NewValue": { "type": "string" }
+				},
+				"required": [
+					"TableName", 
+					"VariableName", 
+					"Value", 
+					"NewValue"
+					]
+			}
+			]
+	}, 
+	
+	"AcousticVariableConversion": {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"type": "array",
+		"items": [
+			{
+				"type": "object",
+				"properties": {
+					"TableName": { "type": "string" },
+					"VariableName": { "type": "string" },
+					"Value": { "type": "string" },
+					"NewValue": { "type": "string" }
+				},
+				"required": [
+					"TableName", 
+					"VariableName", 
+					"Value", 
+					"NewValue"
+					]
+			}
+			]
+	}, 
+	
+	"StoxAcousticVariableConversion": {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"type": "array",
+		"items": [
+			{
+				"type": "object",
+				"properties": {
+					"TableName": { "type": "string" },
+					"VariableName": { "type": "string" },
+					"Value": { "type": "string" },
+					"NewValue": { "type": "string" }
+				},
+				"required": [
+					"TableName", 
+					"VariableName", 
+					"Value", 
+					"NewValue"
+					]
+			}
+			]
+	}
+}

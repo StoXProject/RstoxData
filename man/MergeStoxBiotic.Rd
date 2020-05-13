@@ -4,7 +4,7 @@
 \alias{MergeStoxBiotic}
 \title{Merge StoxBioticData}
 \usage{
-MergeStoxBiotic(StoxBioticData)
+MergeStoxBiotic(StoxBioticData, TargetTable = "Individual")
 }
 \arguments{
 \item{StoxBioticData}{A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).}
