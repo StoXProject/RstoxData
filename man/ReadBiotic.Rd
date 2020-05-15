@@ -4,7 +4,7 @@
 \alias{ReadBiotic}
 \title{Read biotic XML files}
 \usage{
-ReadBiotic(FileNames, cores = 1)
+ReadBiotic(FileNames, Cores = 1)
 }
 \arguments{
 \item{FileNames}{The paths of the biotic files.}

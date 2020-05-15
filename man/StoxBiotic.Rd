@@ -4,12 +4,12 @@
 \alias{StoxBiotic}
 \title{Convert BioticData to StoxBioticData}
 \usage{
-StoxBiotic(BioticData, cores = NULL)
+StoxBiotic(BioticData, Cores = NULL)
 }
 \arguments{
 \item{BioticData}{A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.}
 
-\item{cores}{Overrides multi-core auto detection. Default to NULL.}
+\item{Cores}{Overrides multi-core auto detection. Default to NULL.}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.
