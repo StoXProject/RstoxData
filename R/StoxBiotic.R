@@ -1,67 +1,19 @@
 #' Convert BioticData to StoxBioticData
 #'
 #' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
-#'
-#' @return An object of StoX data type \code{\link{StoxBioticData}}.
-#'
-#' @import data.table
-#' @importFrom parallel makeCluster parLapply stopCluster mclapply
-#' @export
-#' 
-StoxBiotic_old <- function(BioticData) {
-
-	# Function to get the StoxBiotic on one file:
-	StoxBioticOne <- function(BioticData) {
-		# Get data type: 
-		datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
-		
-		if(!exists("stoxBioticObject"))
-			data(stoxBioticObject, package="RstoxData", envir = environment())
-		
-		# Do first phase
-		first <- firstPhase(BioticData, datatype, stoxBioticObject)
-		# Do second phase	
-		second <- secondPhase(first, datatype, stoxBioticObject)
-		
-		return(second)
-	}
-
-	# Process Biotic data in parallel
-	cores <- getCores()
-	if(get_os() == "win") {
-		cl <- parallel::makeCluster(cores)
-		StoxBioticData <- parallel::parLapply(cl, BioticData, StoxBioticOne)
-		parallel::stopCluster(cl)
-	} else {
-		StoxBioticData <- parallel::mclapply(BioticData, StoxBioticOne, mc.cores = cores)
-	}
-
-	tableNames <- names(StoxBioticData[[1]])
-	StoxBioticData <- lapply(
-		tableNames, 
-		function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
-	)
-	names(StoxBioticData) <- tableNames
-	
-	StoxBioticData
-}
-
-#' Convert BioticData to StoxBioticData
-#'
-#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
-#' @param cores Overrides multi-core auto detection. Default to NULL.
+#' @param Cores Overrides multi-core auto detection. Default to NULL.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
 #' @export
 #' 
-StoxBiotic <- function(BioticData, cores = NULL) {
+StoxBiotic <- function(BioticData, Cores = NULL) {
     
     # Convert from BioticData to the general sampling hierarchy:
-    GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, cores = cores)
+    GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, Cores = Cores)
     
     # Extract the StoxBiotic data and rbind across files:
-    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, cores = cores)
+    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, Cores = Cores)
     
     # Ensure that the numeric values are rounded to the defined number of digits:
     RstoxData::setRstoxPrecisionLevel(StoxBioticData)
@@ -70,23 +22,23 @@ StoxBiotic <- function(BioticData, cores = NULL) {
 }
 
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
-BioticData2GeneralSamplingHierarchy <- function(BioticData, cores = NULL) {
+BioticData2GeneralSamplingHierarchy <- function(BioticData, Cores = NULL) {
     
     # Process Biotic data in parallel
-    if(length(cores) == 0) {
-        cores <- getCores()
+    if(length(Cores) == 0) {
+        Cores <- getCores()
     }
-    if(cores == 1) {
+    if(Cores == 1) {
         GeneralSamplingHierarchy <- lapply(BioticData, StoxBiotic_firstPhase)
     }
     else {
         if(get_os() == "win") {
-            cl <- parallel::makeCluster(cores)
+            cl <- parallel::makeCluster(Cores)
             GeneralSamplingHierarchy <- parallel::parLapply(cl, BioticData, StoxBiotic_firstPhase)
             parallel::stopCluster(cl)
         } 
         else {
-            GeneralSamplingHierarchy <- parallel::mclapply(BioticData, StoxBiotic_firstPhase, mc.cores = cores)
+            GeneralSamplingHierarchy <- parallel::mclapply(BioticData, StoxBiotic_firstPhase, mc.cores = Cores)
         }
     }
     
@@ -94,23 +46,23 @@ BioticData2GeneralSamplingHierarchy <- function(BioticData, cores = NULL) {
 }
 
 # Function to convert rbind :
-GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, cores = NULL) {
+GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Cores = NULL) {
     
     # Process Biotic data in parallel
-    if(length(cores) == 0) {
-        cores <- getCores()
+    if(length(Cores) == 0) {
+        Cores <- getCores()
     }
-    if(cores == 1) {
+    if(Cores == 1) {
         StoxBioticData <- lapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase)
     }
     else {
         if(get_os() == "win") {
-            cl <- parallel::makeCluster(cores)
+            cl <- parallel::makeCluster(Cores)
             StoxBioticData <- parallel::parLapply(cl, GeneralSamplingHierarchy, StoxBiotic_secondPhase)
             parallel::stopCluster(cl)
         } 
         else {
-            StoxBioticData <- parallel::mclapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase, mc.cores = cores)
+            StoxBioticData <- parallel::mclapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase, mc.cores = Cores)
         }
     }
     
@@ -381,8 +333,15 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #'
 #' @export
 #' 
-MergeStoxBiotic <- function(StoxBioticData) {
-    mergeDataTables(StoxBioticData, tableNames = NULL, output.only.last = TRUE, all = TRUE)
+MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
+	# Get the tables to merge:
+	StoxBioticDataTableNames <- names(StoxBioticData)
+	if(! TargetTable %in% StoxBioticDataTableNames) {
+		stop("TargetTable must be one of ", paste(StoxBioticDataTableNames, collapse = ", "))
+	}
+	tableNames <- StoxBioticDataTableNames[seq_len(which(StoxBioticDataTableNames == TargetTable))]
+	# Merge:
+    mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
 }
 
 
@@ -394,13 +353,13 @@ MergeStoxBiotic <- function(StoxBioticData) {
 #'
 #' @export
 #' 
-AddStoxBioticVariables <- function(StoxBioticData, BioticData, TableName, VariableName, cores = NULL) {
+AddStoxBioticVariables <- function(StoxBioticData, BioticData, TableName, VariableName, Cores = NULL) {
 	
 	# Check the the BioticData are all from the same source (ICES/NMD):
 	checkDataSource(BioticData)
 	
 	# Convert from BioticData to the general sampling hierarchy:
-	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, cores = cores)
+	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, Cores = Cores)
 	
 	# Get the variables:
 	if(length(TableName) != length(VariableName)) {

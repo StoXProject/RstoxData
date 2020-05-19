@@ -20,21 +20,32 @@
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadBiotic <- function(FileNames) {
-
-	# Read files in parallel
-	cores <- getCores()
-	if(get_os() == "win") {
-		cl <- makeCluster(cores)
-		out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
-		stopCluster(cl)
-	} else {
-		out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
+ReadBiotic <- function(FileNames, Cores = NULL) {
+	
+	# Process Biotic data in parallel if specified:
+	if(length(Cores) == 0) {
+		Cores <- getCores()
 	}
 
-	names(out) <- basename(FileNames)
+	Cores <- min(length(FileNames), Cores)
 
-	out
+	if(Cores == 1) {
+		out <- lapply(FileNames, RstoxData::readXmlFile)
+	}
+	else {
+		if(get_os() == "win") {
+			cl <- makeCluster(Cores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
+			stopCluster(cl)
+		} else {
+			out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = Cores)
+		}
+	}
+	
+	# Add names as the file names:
+	names(out) <- basename(FileNames)
+	
+	return(out)
 }
 
 
@@ -61,22 +72,31 @@ ReadBiotic <- function(FileNames) {
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadAcoustic <- function(FileNames) {
+ReadAcoustic <- function(FileNames, Cores = NULL) {
+	
+	# Process Biotic data in parallel if specified:
+	if(length(Cores) == 0) {
+		Cores <- getCores()
+	}
 
-	# Read files in parallel
-        cores <- getCores()
-        if(get_os() == "win") {
-                cl <- makeCluster(cores)
-                out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
-                stopCluster(cl)
-        } else {
-                out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = cores)
-        }
+	Cores <- min(length(FileNames), Cores)
 
-        names(out) <- basename(FileNames)
-
-	out
+	if(Cores == 1) {
+		out <- lapply(FileNames, RstoxData::readXmlFile)
+	}
+	else {
+		if(get_os() == "win") {
+			cl <- makeCluster(Cores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
+			stopCluster(cl)
+		} else {
+			out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = Cores)
+		}
+	}
+	
+	# Add names as the file names:
+	names(out) <- basename(FileNames)
+	
+	return(out)
 }
-
-
 

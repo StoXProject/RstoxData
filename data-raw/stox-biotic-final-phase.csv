@@ -5,9 +5,9 @@ CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Station,StationKey,StationKey,StationKey,Y
 Station,Station,"paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)","paste0(CruiseKey, '/', StationKey)",
 CatchPlatform,Station,catchplatform,platform,Platform,
+DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')",StartTime,
 Latitude,Station,latitudestart,latitudestart,StartLatitude,
 Longitude,Station,longitudestart,longitudestart,StartLongitude,
-DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')",StartTime,
 BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
 CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Haul,StationKey,StationKey,StationKey,Y

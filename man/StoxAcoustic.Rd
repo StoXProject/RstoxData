@@ -4,12 +4,12 @@
 \alias{StoxAcoustic}
 \title{Convert AcousticData to StoxAcousticData}
 \usage{
-StoxAcoustic(AcousticData, cores = NULL)
+StoxAcoustic(AcousticData, Cores = NULL)
 }
 \arguments{
 \item{AcousticData}{A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.}
 
-\item{cores}{Overrides multi-core auto detection. Default to NULL.}
+\item{Cores}{Overrides multi-core auto detection. Default to NULL.}
 }
 \value{
 An object of StoX data type \code{\link{StoxAcousticData}}.

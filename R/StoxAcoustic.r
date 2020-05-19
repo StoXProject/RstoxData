@@ -1,13 +1,13 @@
 #' Convert AcousticData to StoxAcousticData
 #'
 #' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
-#' @param cores Overrides multi-core auto detection. Default to NULL.
+#' @param Cores Overrides multi-core auto detection. Default to NULL.
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData, cores = NULL){
+StoxAcoustic <- function(AcousticData, Cores = NULL){
     
 	
 	## For flexibility accept a list of the input data, named by the data type:
@@ -474,20 +474,20 @@ StoxAcoustic <- function(AcousticData, cores = NULL){
     return(data_list)
   }
 
-  # Process Biotic data in parallel
-	if(length(cores) == 0) {
-	    cores <- getCores()
+  # Process acoustic data in parallel
+	if(length(Cores) == 0) {
+	    Cores <- getCores()
 	}
-	if(cores == 1) {
+	if(Cores == 1) {
 	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
 	}
   else {
       if(get_os() == "win") {
-          cl <- makeCluster(cores)
+          cl <- makeCluster(Cores)
           data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
           stopCluster(cl)
       } else {
-          data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = cores)
+          data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = Cores)
       }
   }
   

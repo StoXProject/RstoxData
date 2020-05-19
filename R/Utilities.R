@@ -24,6 +24,15 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	if(length(tableNames) == 0) {
 		tableNames <- names(data)
 	}
+	# No merging if only one table given in 'tableNames':
+	else if(length(tableNames) == 1)  {
+		return(data)
+	}
+	
+	# Make sure tableNames are ordered as in the data:
+	dataNames <- names(data)
+	tableNames <- dataNames[match(tableNames, dataNames)]
+	tableNames <- tableNames[!is.na(tableNames)]
 	
 	# Merge
 	for(ii in 2:length(tableNames)) {
@@ -47,7 +56,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 
 	# If tableNamestableNames == "last", return the last table:
 	if(output.only.last) {
-		data <- data[[length(data)]]
+		data <- data[[utils::tail(tableNames, 1)]]
 	}
 	
 	return(data)
