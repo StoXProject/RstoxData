@@ -20,18 +20,21 @@
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadBiotic <- function(FileNames, Cores = 1) {
+ReadBiotic <- function(FileNames, Cores = NULL) {
 	
 	# Process Biotic data in parallel if specified:
 	if(length(Cores) == 0) {
 		Cores <- getCores()
 	}
+
+	Cores <- min(length(FileNames), Cores)
+
 	if(Cores == 1) {
 		out <- lapply(FileNames, RstoxData::readXmlFile)
 	}
 	else {
 		if(get_os() == "win") {
-			cl <- makeCluster(Cores)
+			cl <- makeCluster(Cores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
 			out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
 			stopCluster(cl)
 		} else {
@@ -69,18 +72,21 @@ ReadBiotic <- function(FileNames, Cores = 1) {
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadAcoustic <- function(FileNames, Cores = 1) {
+ReadAcoustic <- function(FileNames, Cores = NULL) {
 	
 	# Process Biotic data in parallel if specified:
 	if(length(Cores) == 0) {
 		Cores <- getCores()
 	}
+
+	Cores <- min(length(FileNames), Cores)
+
 	if(Cores == 1) {
 		out <- lapply(FileNames, RstoxData::readXmlFile)
 	}
 	else {
 		if(get_os() == "win") {
-			cl <- makeCluster(Cores)
+			cl <- makeCluster(Cores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
 			out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
 			stopCluster(cl)
 		} else {
