@@ -196,7 +196,11 @@ StoxAcoustic <- function(AcousticData, Cores = NULL){
       
       data_list$Log[, EDSU := paste(data_list$Cruise$CruiseKey, LogKey, sep='/')]
       
-      data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
+      # Add DateTime as POSIXct
+      #data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
+      data_list$Log[, DateTime:= as.POSIXct(start_time, format='%Y-%m-%d %H:%M:%OS', tz='GMT')]
+      
+      
       
       data_list$Log$LogOrigin <- "start"
       
@@ -519,6 +523,15 @@ StoxAcoustic <- function(AcousticData, Cores = NULL){
 #'
 #' @export
 #' 
-MergeStoxAcoustic <- function(StoxAcousticData) {
-    mergeDataTables(StoxAcousticData, tableNames = NULL, output.only.last = TRUE, all = TRUE)
+MergeStoxAcoustic <- function(StoxAcousticData, TargetTable = "NASC") {
+	# Get the tables to merge:
+	StoxAcousticDataTableNames <- names(StoxAcousticData)
+	if(! TargetTable %in% StoxAcousticDataTableNames) {
+		stop("TargetTable must be one of ", paste(StoxAcousticDataTableNames, collapse = ", "))
+	}
+	tableNames <- StoxAcousticDataTableNames[seq_len(which(StoxAcousticDataTableNames == TargetTable))]
+	# Merge:
+	mergeDataTables(StoxAcousticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
 }
+
+
