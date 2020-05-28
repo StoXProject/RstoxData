@@ -485,7 +485,7 @@ StoxAcoustic <- function(AcousticData, Cores = NULL){
 	if(Cores == 1) {
 	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
 	}
-  else {
+	else {
       if(get_os() == "win") {
           cl <- makeCluster(Cores)
           data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
