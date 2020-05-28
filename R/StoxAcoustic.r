@@ -7,7 +7,7 @@
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData, Cores = NULL){
+StoxAcoustic <- function(AcousticData, Cores = integer()){
     
 	
 	## For flexibility accept a list of the input data, named by the data type:
@@ -486,8 +486,11 @@ StoxAcoustic <- function(AcousticData, Cores = NULL){
 	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
 	}
 	else {
-      if(get_os() == "win") {
-          cl <- makeCluster(Cores)
+		# Do not use more cores than the number of files:
+		Cores <- min(length(AcousticData), Cores)
+		
+		if(get_os() == "win") {
+			cl <- parallel::makeCluster(Cores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
           data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
           stopCluster(cl)
       } else {
