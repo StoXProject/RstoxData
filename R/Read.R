@@ -20,13 +20,14 @@
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadBiotic <- function(FileNames, Cores = NULL) {
+ReadBiotic <- function(FileNames, Cores = integer()) {
 	
 	# Process Biotic data in parallel if specified:
 	if(length(Cores) == 0) {
 		Cores <- getCores()
 	}
 
+	# Do not use more cores than the number of files:
 	Cores <- min(length(FileNames), Cores)
 
 	if(Cores == 1) {
@@ -72,13 +73,14 @@ ReadBiotic <- function(FileNames, Cores = NULL) {
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadAcoustic <- function(FileNames, Cores = NULL) {
+ReadAcoustic <- function(FileNames, Cores = integer()) {
 	
 	# Process Biotic data in parallel if specified:
 	if(length(Cores) == 0) {
 		Cores <- getCores()
 	}
 
+	# Do not use more cores than the number of files:
 	Cores <- min(length(FileNames), Cores)
 
 	if(Cores == 1) {

@@ -18,41 +18,6 @@ initiateRstoxData <- function(){
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")
 	
-	# Define the process property formats:
-	processPropertyFormats <- list(
-		single = list(), 
-		vector = list(
-			"filePaths"
-		), 
-		list = list(
-			"filterExpressionList"
-		), 
-		table = list(
-			"variableConversionTable"
-		)
-	)
-	
-	# Define the column names of the different parameter tables:
-	parameterTableInfo <- list(
-		variableConversionTable = list(
-			title = "Define new values for spcific variables", 
-			info = data.table::data.table(
-				name = c(
-					"TableName", 
-					"VariableName", 
-					"Value", 
-					"NewValue"
-				), 
-				type = c(
-					"character",
-					"character",
-					"character",
-					"character"
-				)
-			)
-		)
-	)
-	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())
@@ -67,6 +32,41 @@ initiateRstoxData <- function(){
 	#### Return the definitions: ####
 	definitions
 }
+
+# Define the process property formats:
+#' 
+#' @export
+#' 
+processPropertyFormats <- list(
+	filePaths = list(
+		title = "The path to one or more files", 
+		type = "vector"
+		
+	), 
+	filterExpressionList = list(
+		title = "A list of filter expressions, one for each table to filter on", 
+		type = "list"
+	), 
+	variableConversionTable = list(
+		title = "Define new values for spcific variables", 
+		type = "table", 
+		info = data.table::data.table(
+			name = c(
+				"TableName", 
+				"VariableName", 
+				"Value", 
+				"NewValue"
+			), 
+			type = c(
+				"character",
+				"character",
+				"character",
+				"character"
+			)
+		)
+	)
+)
+
 
 
 ##################################################

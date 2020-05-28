@@ -4,7 +4,7 @@
 \alias{MergeStoxAcoustic}
 \title{Merge StoxAcousticData}
 \usage{
-MergeStoxAcoustic(StoxAcousticData)
+MergeStoxAcoustic(StoxAcousticData, TargetTable = "NASC")
 }
 \arguments{
 \item{StoxBioticData}{A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).}

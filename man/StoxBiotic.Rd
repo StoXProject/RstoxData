@@ -4,7 +4,7 @@
 \alias{StoxBiotic}
 \title{Convert BioticData to StoxBioticData}
 \usage{
-StoxBiotic(BioticData, Cores = NULL)
+StoxBiotic(BioticData, Cores = integer())
 }
 \arguments{
 \item{BioticData}{A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.}
