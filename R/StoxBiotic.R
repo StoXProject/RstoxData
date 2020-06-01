@@ -334,6 +334,7 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #' Merge StoxBioticData
 #'
 #' @param StoxBioticData A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).
+#' @param TargetTable The name of the table up until which to merge (the default "Individual" implies merging all tables)
 #'
 #' @return An object of StoX data type \code{\link{MergedStoxBioticData}}.
 #'

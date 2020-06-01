@@ -7,7 +7,9 @@
 MergeStoxAcoustic(StoxAcousticData, TargetTable = "NASC")
 }
 \arguments{
-\item{StoxBioticData}{A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).}
+\item{StoxAcousticData}{A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).}
+
+\item{TargetTable}{The name of the table up until which to merge (the default "NASC" implies merging all tables)}
 }
 \value{
 An object of StoX data type \code{\link{MergedStoxAcousticData}}.

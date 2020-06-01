@@ -30,8 +30,10 @@
 #' \itemize{
 #' \item{\code{\link{BioticData}}}
 #' \item{\code{\link{StoxBioticData}}}
+#' \item{\code{\link{MergedStoxBioticData}}}
 #' \item{\code{\link{AcousticData}}}
 #' \item{\code{\link{StoxAcousticData}}}
+#' \item{\code{\link{MergedStoxAcousticData}}}
 #' \item{\code{\link{LandingData}}}
 #' \item{\code{\link{StoxLandingData}}}
 #' }
@@ -76,6 +78,22 @@ NULL
 
 ##################################################
 ##################################################
+#' StoX data type MergedStoxBioticData
+#' 
+#' Merged \code{\link{StoxBioticData}}.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{MergeStoxBiotic}}, and contains one merged table of \code{\link{StoxBioticData}}.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name MergedStoxBioticData
+#' 
+NULL
+
+
+##################################################
+##################################################
 #' StoX data type AcousticData
 #' 
 #' Biotic data read from biotic xml files.
@@ -102,6 +120,22 @@ NULL
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
 #' @name StoxAcousticData
+#' 
+NULL
+
+
+##################################################
+##################################################
+#' StoX data type MergedStoxAcousticData
+#' 
+#' Merged \code{\link{StoxAcousticData}}.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{MergeStoxAcoustic}}, and contains one merged table of \code{\link{StoxAcousticData}}.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name MergedStoxAcousticData
 #' 
 NULL
 

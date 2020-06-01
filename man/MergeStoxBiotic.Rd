@@ -8,6 +8,8 @@ MergeStoxBiotic(StoxBioticData, TargetTable = "Individual")
 }
 \arguments{
 \item{StoxBioticData}{A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).}
+
+\item{TargetTable}{The name of the table up until which to merge (the default "Individual" implies merging all tables)}
 }
 \value{
 An object of StoX data type \code{\link{MergedStoxBioticData}}.

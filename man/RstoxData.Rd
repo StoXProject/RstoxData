@@ -4,7 +4,7 @@
 \name{RstoxData}
 \alias{RstoxData}
 \alias{RstoxData-package}
-\title{R libraries to parse and write fisheries biotic and acoustic data format}
+\title{Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats}
 \description{
 Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
 }
