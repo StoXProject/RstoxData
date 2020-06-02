@@ -520,7 +520,8 @@ StoxAcoustic <- function(AcousticData, Cores = integer()){
 
 #' Merge StoxAcousticData
 #'
-#' @param StoxBioticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
+#' @param StoxAcousticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
+#' @param TargetTable The name of the table up until which to merge (the default "NASC" implies merging all tables)
 #'
 #' @return An object of StoX data type \code{\link{MergedStoxAcousticData}}.
 #'

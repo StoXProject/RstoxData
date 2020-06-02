@@ -1,4 +1,4 @@
-#' R libraries to parse and write fisheries biotic and acoustic data format
+#' Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats
 #'
 #' Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
 #'
