@@ -41,6 +41,7 @@ before_deploy:
   - ps: copy $env:BINSRC .\drat
   # Do drat deploy whenever it is not a pull request and only for the master branch
   - ps: |
+          Write-Host "$env:APPVEYOR_PULL_REQUEST_NUMBER - $env:APPVEYOR_REPO_BRANCH"
           if( !$env:APPVEYOR_PULL_REQUEST_NUMBER ) {
             if( $env:APPVEYOR_REPO_BRANCH  -eq "master" ) {
               .\deploy.sh
