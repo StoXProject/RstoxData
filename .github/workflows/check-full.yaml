@@ -1,0 +1,159 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: R-CMD-check
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macOS-latest,   r: 'oldrel',  pkgext: '.tgz'}
+          - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
+          - {os: windows-latest, r: 'oldrel',  pkgext: '.zip', rtools: '35'}
+          - {os: windows-latest, r: 'release', pkgext: '.zip'}
+          - {os: ubuntu-18.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: 'release', pkgext: '.tar.gz', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      RSPM: ${{ matrix.config.rspm }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Do autorelease increment, tagging, and environment setup
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/checktag-actions.sh" --output checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/deploy-actions.sh" --output deploy.sh
+          chmod +x ./checktag.sh ./deploy.sh
+          . checktag.sh
+          echo "::set-env name=FINAL_TAG::${FINAL_TAG}"
+          echo "::set-env name=PKG_FILE_PREFIX::${PKG_FILE_PREFIX}"
+          echo "::set-env name=PKG_FILE::${PKG_FILE_PREFIX}${{ matrix.config.pkgext }}"
+          echo "::set-env name=PKG_FREL::${PKG_FILE_PREFIX}-R.${{ matrix.config.r }}-${{ runner.os }}${{ matrix.config.pkgext }}"
+          echo "::set-env name=PKG_REPO::${GITHUB_WORKSPACE}"
+        shell: bash
+
+      - uses: r-lib/actions/setup-r@master
+        with:
+          r-version: ${{ matrix.config.r }}
+          rtools-version: ${{ matrix.config.rtools }}
+
+      - uses: r-lib/actions/setup-pandoc@master
+
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        if: runner.os != 'Windows'
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        env:
+          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        run: |
+          Rscript -e "remotes::install_github('r-hub/sysreqs')"
+          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
+          sudo -s eval "$sysreqs"
+
+      - name: Install dependencies
+        run: |
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+          remotes::install_cran("git2r")
+          remotes::install_cran("drat")
+        shell: Rscript {0}
+
+      - name: Session info
+        run: |
+          options(width = 100)
+          pkgs <- installed.packages()[, "Package"]
+          sessioninfo::session_info(pkgs, include_base = TRUE)
+        shell: Rscript {0}
+
+      - name: Check
+        env:
+          _R_CHECK_CRAN_INCOMING_: false
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "error", check_dir = "check")
+        shell: Rscript {0}
+
+      - name: Show testthat output
+        if: always()
+        run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: Upload check results
+        if: failure()
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ runner.os }}-${{ matrix.config.r }}-results
+          path: check
+
+      - name: Build package source archive
+        if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          pkgbuild::build(".", dest_path = ".", binary = FALSE)
+          cat(paste0("::set-env name=PKG_FREL::", Sys.getenv("PKG_FILE"), "\n"))
+        shell: Rscript {0}
+
+      - name: Build package binary archive
+        if: (runner.os == 'Windows' || runner.os == 'macOS') && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          pkgbuild::build(".", dest_path = ".", binary = TRUE)
+          file.copy(Sys.getenv("PKG_FILE"), Sys.getenv("PKG_FREL"))
+        shell: Rscript {0}
+
+      # - name: Upload package source as artifact
+      #   if: runner.os == 'Linux' && matrix.config.r == 'release'
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: ${{ env.PKG_FILE }}
+      #     path: '${{ github.workspace }}/${{ env.PKG_FILE }}'
+
+      # - name: Upload package binary as artifact
+      #   if: runner.os == 'Windows' || runner.os == 'macOS'
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: ${{ runner.os }}-${{ matrix.config.r }}-pkg
+      #     path: '${{ github.workspace }}/*${{ matrix.config.pkgext }}'
+
+      - name: Upload to DRAT repo
+        if: (runner.os == 'Windows' || runner.os == 'macOS' || (runner.os == 'Linux' && matrix.config.r == 'release')) && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          BUILD_NUMBER: ${{ github.sha  }}
+          DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
+        run: . deploy.sh
+        shell: bash
+
+      - name: Create release and upload files
+        if: (runner.os == 'Windows' || runner.os == 'macOS' || (runner.os == 'Linux' && matrix.config.r == 'release')) && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          commit: master
+          tag: ${{ env.FINAL_TAG }}
+          name: ${{ env.FINAL_TAG }}
+          artifacts: ${{ env.PKG_REPO }}/${{ env.PKG_FREL }}
+          token: ${{ secrets.GITHUB_TOKEN }}
