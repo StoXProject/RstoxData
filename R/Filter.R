@@ -57,7 +57,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 							goUp <- goUp + 1
 						}
 						# Find similar columns (assume those are keys)
-					    key <- intersect(names(y[[parent + 1]]), names(y[[parent - goUp]]))
+						key <- intersect(names(y[[parent + 1]]), names(y[[parent - goUp]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
 							deleted <- fsetdiff(unique(y[[parent - goUp]][, ..key]), unique(ret[[names(y)[parent - goUp]]][, ..key]))
@@ -74,11 +74,16 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 				# Don't propage if it's the only table
 				if(length(range) > 1) {
 					for(parent in head(rev(range), -1)) {
+						# Sometimes we need to hop (some) empty tables that were originally empty (e.g., NMD's prey)
+						goDown <- 0
+						while(nrow(y[[parent + goDown]]) == 0 && parent + goDown <= length(y)) {
+							goDown <- goDown + 1
+						}
 						# Find similar columns (assume those are keys)
-					    key <- intersect(names(y[[parent - 1]]), names(y[[parent]]))
+						key <- intersect(names(y[[parent - 1]]), names(y[[parent + goDown]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
-							deleted <- fsetdiff(unique(y[[parent]][, ..key]), unique(ret[[names(y)[parent]]][, ..key]))
+							deleted <- fsetdiff(unique(y[[parent + goDown]][, ..key]), unique(ret[[names(y)[parent + goDown]]][, ..key]))
 							# Propagate to parent
 							ret[[names(y)[parent-1]]] <- y[[parent-1]][!deleted, on = names(deleted)]
 						}
