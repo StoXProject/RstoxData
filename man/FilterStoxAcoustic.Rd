@@ -19,5 +19,5 @@ FilterStoxAcoustic(StoxAcousticData, FilterExpression, FilterUpwards = FALSE)
 An object of filtered data in the same format as the input data.
 }
 \description{
-Filter StoxAcoustic data
+Filters \code{\link{StoxAcousticData}}.
 }

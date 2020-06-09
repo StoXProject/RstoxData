@@ -19,5 +19,5 @@ FilterAcoustic(AcousticData, FilterExpression, FilterUpwards = FALSE)
 An object of filtered data in the same format as the input data.
 }
 \description{
-Filter (raw) Acoustic data
+Filters \code{\link{AcousticData}}.
 }

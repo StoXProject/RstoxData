@@ -4,10 +4,12 @@
 \alias{ReadAcoustic}
 \title{Read acoustic XML files}
 \usage{
-ReadAcoustic(FileNames, Cores = integer())
+ReadAcoustic(FileNames, NumberOfCores = integer())
 }
 \arguments{
 \item{FileNames}{The paths of the acoustic files.}
+
+\item{NumberOfCores}{Overrides multi-core auto detection (default).}
 }
 \value{
 An object of StoX data type AcousticData: A list of a list of data.tables of the different levels of the input acoustic files.

@@ -4,10 +4,12 @@
 \alias{ReadBiotic}
 \title{Read biotic XML files}
 \usage{
-ReadBiotic(FileNames, Cores = integer())
+ReadBiotic(FileNames, NumberOfCores = integer())
 }
 \arguments{
 \item{FileNames}{The paths of the biotic files.}
+
+\item{NumberOfCores}{Overrides multi-core auto detection (default).}
 }
 \value{
 An object of StoX data type BioticData: A list of a list of data.tables of the different levels of the input biotic files.

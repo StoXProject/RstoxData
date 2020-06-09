@@ -19,5 +19,5 @@ FilterBiotic(BioticData, FilterExpression, FilterUpwards = FALSE)
 An object of filtered data in the same format as the input data.
 }
 \description{
-Filter (raw) Biotic data
+Filters \code{\link{BioticData}}.
 }

@@ -1,13 +1,13 @@
 #' Convert AcousticData to StoxAcousticData
 #'
 #' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
-#' @param Cores Overrides multi-core auto detection. Default to NULL.
+#' @param NumberOfCores Overrides multi-core auto detection (default).
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData, Cores = integer()){
+StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
     
 	
 	## For flexibility accept a list of the input data, named by the data type:
@@ -479,22 +479,22 @@ StoxAcoustic <- function(AcousticData, Cores = integer()){
   }
 
   # Process acoustic data in parallel
-	if(length(Cores) == 0) {
-	    Cores <- getCores()
+	if(length(NumberOfCores) == 0) {
+		NumberOfCores <- getCores()
 	}
-	if(Cores == 1) {
+	if(NumberOfCores == 1) {
 	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
 	}
 	else {
 		# Do not use more cores than the number of files:
-		Cores <- min(length(AcousticData), Cores)
+		NumberOfCores <- min(length(AcousticData), NumberOfCores)
 		
 		if(get_os() == "win") {
-			cl <- parallel::makeCluster(Cores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
           data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
           stopCluster(cl)
       } else {
-          data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = Cores)
+          data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = NumberOfCores)
       }
   }
   
