@@ -1,5 +1,5 @@
 # RstoxData version: 0.8.12 (latest alpha, 2020-06-09)
-# R version: 3.5
+# R version: 3.6
 
 # Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
 
