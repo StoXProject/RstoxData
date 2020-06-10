@@ -19,5 +19,5 @@ FilterStoxBiotic(StoxBioticData, FilterExpression, FilterUpwards = FALSE)
 An object of filtered data in the same format as the input data.
 }
 \description{
-Filter StoxBiotic data
+Filters \code{\link{StoxBioticData}}.
 }

@@ -33,41 +33,6 @@ initiateRstoxData <- function(){
 	definitions
 }
 
-# Define the process property formats:
-#' 
-#' @export
-#' 
-processPropertyFormats <- list(
-	filePaths = list(
-		title = "The path to one or more files", 
-		type = "vector"
-		
-	), 
-	filterExpressionList = list(
-		title = "A list of filter expressions, one for each table to filter on", 
-		type = "list"
-	), 
-	variableConversionTable = list(
-		title = "Define new values for spcific variables", 
-		type = "table", 
-		info = data.table::data.table(
-			name = c(
-				"TableName", 
-				"VariableName", 
-				"Value", 
-				"NewValue"
-			), 
-			type = c(
-				"character",
-				"character",
-				"character",
-				"character"
-			)
-		)
-	)
-)
-
-
 
 ##################################################
 ##################################################

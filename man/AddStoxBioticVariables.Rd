@@ -9,7 +9,7 @@ AddStoxBioticVariables(
   BioticData,
   TableName,
   VariableName,
-  Cores = integer()
+  NumberOfCores = integer()
 )
 }
 \arguments{

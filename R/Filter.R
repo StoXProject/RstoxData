@@ -199,6 +199,8 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
 
 
 #' Filter (raw) Biotic data
+#' 
+#' Filters \code{\link{BioticData}}.
 #'
 #' @param BioticData  Input \code{\link{BioticData}} data.
 #' @param FilterExpression Filter expression givevn as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \%in\% or the special operator \%notin\%, which is defined in RstoxData.
@@ -224,6 +226,8 @@ FilterBiotic <- function(BioticData, FilterExpression, FilterUpwards = FALSE) {
 
 #' Filter (raw) Acoustic data
 #'
+#' Filters \code{\link{AcousticData}}.
+#' 
 #' @param AcousticData  Input \code{\link{AcousticData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
@@ -249,6 +253,8 @@ FilterAcoustic <- function(AcousticData, FilterExpression, FilterUpwards = FALSE
 
 #' Filter StoxBiotic data
 #'
+#' Filters \code{\link{StoxBioticData}}.
+#' 
 #' @param StoxBioticData  Input \code{\link{StoxBioticData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
@@ -270,6 +276,8 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression, FilterUpwards = F
 
 #' Filter StoxAcoustic data
 #'
+#' Filters \code{\link{StoxAcousticData}}.
+#' 
 #' @param StoxAcousticData  Input \code{\link{StoxAcousticData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param PropagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
