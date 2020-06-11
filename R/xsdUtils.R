@@ -303,6 +303,7 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 		print("Do manual detection")
 
 	# Do manual detection
+	# Later We need to distinguish Biotic v3&v3.1, Biotic v1.4&earlier
 	if( length(xml_find_all(bits, "//mission[@startyear]")) )
 		xmlXsd <- "nmdbioticv3"
 	else if( length(xml_find_all(bits, "//mission[@year]")) )

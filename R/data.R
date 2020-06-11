@@ -9,6 +9,7 @@
 #'   \item{\code{nmdbioticv1.3.xsd}}{List NMD Biotic Format v1.3}
 #'   \item{\code{nmdbioticv1.4.xsd}}{List NMD Biotic Format v1.4}
 #'   \item{\code{nmdbioticv3.xsd}}{List NMD Biotic Format v3}
+#'   \item{\code{nmdbioticv3.1.xsd}}{List NMD Biotic Format v3.1}
 #'   \item{\code{nmdechosounderv1.xsd}}{List NMD Echosounder Format v1}
 #' }
 #' @source \url{https://www.imr.no/formats}

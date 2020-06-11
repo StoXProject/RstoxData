@@ -1,12 +1,27 @@
-# NMD Biotic
+# NMD Biotic v3.1
+example <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
+
+context("test-readXmlFile: DOM parse NMD Biotic v3.1")
+defaultParseBiotic <- readXmlFile(example, stream = F)
+expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(defaultParseBiotic)))
+expect_equal(nrow(defaultParseBiotic$fishstation), 2)
+expect_equal(defaultParseBiotic$fishstation$fishingbait[[1]], "1")
+
+context("test-readXmlFile: stream parse NMD Biotic v3.1")
+streamParseBiotic <- readXmlFile(example, stream = T)
+expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(streamParseBiotic)))
+expect_equal(nrow(streamParseBiotic$fishstation), 2)
+expect_equal(streamParseBiotic$fishstation$fishingbait[[1]], "1")
+
+# NMD Biotic v3
 example <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
 
-context("test-readXmlFile: DOM biotic")
+context("test-readXmlFile: DOM parse NMD biotic v3")
 defaultParseBiotic <- readXmlFile(example, stream = F)
 expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(defaultParseBiotic)))
 expect_equal(nrow(defaultParseBiotic$fishstation), 2)
 
-context("test-readXmlFile: stream parse biotic")
+context("test-readXmlFile: stream parse NMD biotic v3")
 streamParseBiotic <- readXmlFile(example, stream = T)
 expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(streamParseBiotic)))
 expect_equal(nrow(streamParseBiotic$fishstation), 2)

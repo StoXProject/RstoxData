@@ -2,15 +2,31 @@
 options("mc.cores" = 2)
 
 # StoxBiotic
-## NMD Biotic v3
-example <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
+## NMD Biotic v3.1
+example <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
 
-context("test-StoxBiotic: using DOM biotic")
+context("test-StoxBiotic: using DOM biotic v3.1")
 defaultParseBiotic <- readXmlFile(example, stream = F)
 sb1 <- StoxBiotic(list(defaultParseBiotic))
 expect_equal(nrow(sb1$Haul), 2)
 
-context("test-StoxBiotic: using stream parse biotic")
+context("test-StoxBiotic: using stream parse biotic v3.1")
+streamParseBiotic <- readXmlFile(example, stream = T)
+sb2 <- StoxBiotic(list(streamParseBiotic))
+expect_equal(nrow(sb2$Haul), 2)
+
+context("test-StoxBiotic: all.equal")
+expect_true(all.equal(sb1, sb2))
+
+## NMD Biotic v3
+example <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
+
+context("test-StoxBiotic: using DOM biotic v3")
+defaultParseBiotic <- readXmlFile(example, stream = F)
+sb1 <- StoxBiotic(list(defaultParseBiotic))
+expect_equal(nrow(sb1$Haul), 2)
+
+context("test-StoxBiotic: using stream parse biotic v3.1")
 streamParseBiotic <- readXmlFile(example, stream = T)
 sb2 <- StoxBiotic(list(streamParseBiotic))
 expect_equal(nrow(sb2$Haul), 2)

@@ -19,6 +19,8 @@ xsdObjects[["nmdbioticv1.2.xsd"]]$tableOrder <- c("missions", "mission", "fishst
 xsdObjects[["nmdbioticv1.3.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
 xsdObjects[["nmdbioticv1.4.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
 xsdObjects[["nmdbioticv3.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylengthfrequencytable", "copepodedevstagefrequencytable", "tag")
+xsdObjects[["nmdbioticv3.1.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylengthfrequencytable", "copepodedevstagefrequencytable", "tag")
+
 
 xsdObjects[["nmdechosounderv1.xsd"]]$tableOrder <- c("echosounder_dataset", "distance_list", "distance", "frequency", "ch_type", "sa_by_acocat", "sa", "acocat_list", "acocat")
 xsdObjects[["landingerv2.xsd"]]$tableOrder <- c("Landingsdata", "Seddellinje", "Art", "Produkt", "Dellanding", "Redskap", "Kvote", "Mottakendefartøy", "Fartøy", "Fisker", "Fangstdata", "Produksjon", "Mottaker", "Salgslagdata")

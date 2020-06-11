@@ -396,9 +396,9 @@ writeICESBiotic <- function(BioticData, cruiseSurvey = "NONE", cruiseOrganisatio
 
   doGenBiotic <- function(raw, save) {
 
-    if(raw$metadata$useXsd != "nmdbioticv3") {
-	warning("writeICESBiotic: Only NMD Biotic version 3 data is accepted as input!")
-	return(NA)
+    if(!(raw$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
+      warning("writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
+      return(NA)
     }
 
     cruiseRaw <- raw$mission
@@ -586,9 +586,9 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
 
     doGenDATRAS <- function(raw, addStationType, save) {
       # Check input is a NMD Biotic v3 data
-      if(raw$metadata$useXsd != "nmdbioticv3") {
-          warning("writeICESDatras: Only NMD Biotic version 3 data is accepted as input!")
-          return(NA)
+      if(!(raw$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
+        warning("writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
+        return(NA)
       }
 
       # Construct user-defined additional stations (default to NA stationtypes)
