@@ -187,3 +187,60 @@ NULL
 #' @name StoxLandingData
 #'
 NULL
+
+
+##################################################
+##################################################
+#' Conversion table for \code{\link{BioticData}}.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{DefineBioticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name BioticVariableConversion
+#' 
+NULL
+
+
+##################################################
+##################################################
+#' Conversion table for \code{\link{StoxBioticData}}.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{DefineStoxBioticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name StoxBioticVariableConversion
+#' 
+NULL
+
+
+##################################################
+##################################################
+#' Conversion table for \code{\link{AcousticData}}.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{DefineAcousticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name BioticAcousticConversion
+#' 
+NULL
+
+
+##################################################
+#' Conversion table for \code{\link{StoxAcousticData}}.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{DefineStoxAcousticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name StoxAcousticVariableConversion
+#' 
+NULL
+
+

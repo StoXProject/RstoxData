@@ -1,12 +1,12 @@
 Package: RstoxData
 Title: Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats
-Version: 0.8.13
+Version: 0.8.14
 Authors@R: c(
   person(given = "Ibrahim", family = "Umar", role = c("cre", "aut"), email = "ibrahim.umar@hi.no"), 
   person(given = "Sindre", family = "Vatnehol", role = "aut"), 
   person(given = "Arne Johannes", family = "Holmin", role = "aut"), 
   person(given = "Edvin", family = "Fuglebakk", role = "aut"))
-Depends: R (>= 3.5)
+Depends: R (>= 3.6)
 Description: Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
 URL: https://github.com/StoXProject/RstoxData
 BugReports: https://github.com/StoXProject/RstoxData/issues

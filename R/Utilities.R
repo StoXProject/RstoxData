@@ -131,3 +131,21 @@ setPrecisionLevelOneDT <- function(DT, digits) {
 	}
 }
 
+
+# Function to get the formats of StoX raw data:
+getStoxRawDataFormat <- function(x, unlist = FALSE) {
+	formats <- lapply(x, function(this) this$metadata$useXsd)
+	names(x) <- names(x)
+	if(unlist) {
+		formats <- unlist(formats)
+	}
+	return(formats)
+}
+	
+# Check that the formats are unique:
+checkUniqueFormat <- function(x) {
+	nonUniqueFormats <- getRstoxDataDefinitions("nonUniqueFormats")
+	uniqueFormat <- !any(getStoxRawDataFormat(x, unlist = TRUE) %in% inapplicableFormats)
+	return(uniqueFormat)
+}
+

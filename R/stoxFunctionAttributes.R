@@ -114,7 +114,10 @@ stoxFunctionAttributes <- list(
 	DefineBioticVariableConversion = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "BioticVariableConversion"
+		functionOutputDataType = "BioticVariableConversion", 
+		functionParameterFormat = list(
+			FileName = "filePath"
+		)
 	),
 	
 	ConvertBioticVariables = list(
@@ -128,17 +131,24 @@ stoxFunctionAttributes <- list(
 			VariableConversionTable = list(
 				ConversionMethod = "Table"
 			), 
+			BioticVariableConversion = list(
+				ConversionMethod = "PreDefined"
+			), 
 			FileName = list(
 				ConversionMethod = "PreDefined"
 			)
 		)
 	),
 	
+	
 	# StoxBiotic:
 	DefineStoxBioticVariableConversion = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticVariableConversion"
+		functionOutputDataType = "StoxBioticVariableConversion", 
+		functionParameterFormat = list(
+			FileName = "filePath"
+		)
 	),
 	
 	ConvertStoxBioticVariables = list(
@@ -146,14 +156,30 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			VariableConversionTable = "variableConversionTable"
+			VariableConversionTable = "variableConversionTable",
+			VariableReplacementTable = "variableReplacementTable"
 		), 
 		functionArgumentHierarchy = list(
+			ConversionMethod = list(
+				ConversionType = "Mapping"
+			), 
+			BioticData = list(
+				ConversionType = "Replacement"
+			), 
+			VariableReplacementTable = list(
+				ConversionType = "Replacement"
+			), 
 			VariableConversionTable = list(
-				ConversionMethod = "Table"
+				ConversionMethod = "Table", 
+				ConversionType = "Mapping"
+			), 
+			StoxBioticVariableConversion = list(
+				ConversionMethod = "PreDefined", 
+				ConversionType = "Mapping"
 			), 
 			FileName = list(
-				ConversionMethod = "PreDefined"
+				ConversionMethod = "PreDefined", 
+				ConversionType = "Mapping"
 			)
 		)
 	),
@@ -162,7 +188,10 @@ stoxFunctionAttributes <- list(
 	DefineAcousticVariableConversion = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "AcousticVariableConversion"
+		functionOutputDataType = "AcousticVariableConversion", 
+		functionParameterFormat = list(
+			FileName = "filePath"
+		)
 	),
 	
 	ConvertAcousticVariables = list(
@@ -176,6 +205,9 @@ stoxFunctionAttributes <- list(
 			VariableConversionTable = list(
 				ConversionMethod = "Table"
 			), 
+			AcousticVariableConversion = list(
+				ConversionMethod = "PreDefined"
+			), 
 			FileName = list(
 				ConversionMethod = "PreDefined"
 			)
@@ -186,7 +218,10 @@ stoxFunctionAttributes <- list(
 	DefineStoxAcousticVariableConversion = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxAcousticVariableConversion"
+		functionOutputDataType = "StoxAcousticVariableConversion", 
+		functionParameterFormat = list(
+			FileName = "filePath"
+		)
 	),
 	
 	ConvertStoxAcousticVariables = list(
@@ -194,16 +229,29 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxAcousticData", 
 		functionParameterFormat = list(
-			VariableConversionTable = "variableConversionTable"
+			VariableConversionTable = "variableConversionTable",
+			VariableReplacementTable = "variableReplacementTable"
 		), 
 		functionArgumentHierarchy = list(
 			VariableConversionTable = list(
 				ConversionMethod = "Table"
 			), 
+			StoxAcousticVariableConversion = list(
+				ConversionMethod = "PreDefined"
+			), 
 			FileName = list(
 				ConversionMethod = "PreDefined"
 			)
 		)
+	), 
+	
+	AddStoxBioticVariables = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticData"#, 
+		#functionParameterFormat = list(
+		#	VariableNames = "variableNames"
+		#)
 	)
 )
 
@@ -212,6 +260,11 @@ stoxFunctionAttributes <- list(
 #' @export
 #' 
 processPropertyFormats <- list(
+	filePath = list(
+		title = "The path to a single file", 
+		type = "single"
+		
+	), 
 	filePaths = list(
 		title = "The path to one or more files", 
 		type = "vector"
@@ -226,7 +279,6 @@ processPropertyFormats <- list(
 		type = "table", 
 		info = data.table::data.table(
 			name = c(
-				"TableName", 
 				"VariableName", 
 				"Value", 
 				"NewValue"
@@ -234,10 +286,27 @@ processPropertyFormats <- list(
 			type = c(
 				"character",
 				"character",
+				"character"
+			)
+		)
+	), 
+	variableReplacementTable = list(
+		title = "Repla columns in raw data to replace for spcific variables by", 
+		type = "table", 
+		info = data.table::data.table(
+			name = c(
+				"VariableName", 
+				"Replacement"
+			), 
+			type = c(
 				"character",
 				"character"
 			)
 		)
-	)
+	)#, 
+	#variableNames = list(
+	#	title = "One or more variables to add to the StoxBioticData from BioticData", 
+	#	type = "vector"
+	#)
 )
 

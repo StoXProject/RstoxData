@@ -18,6 +18,26 @@ initiateRstoxData <- function(){
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")
 	
+	# Define formats that contain non-unique variables, i.e., columns with the same name in different tables:
+	nonUniqueFormats <- c(
+		"nmdbioticv1", 
+		"nmdbioticv1.1", 
+		"nmdbioticv1.2", 
+		"nmdbioticv1.3", 
+		"nmdbioticv1.4"
+	)
+	
+	# StoxBioticKeys: 
+	StoxBioticKeys <- c(
+		"CruiseKey", 
+		"StationKey", 
+		"HaulKey", 
+		"SpeciesCategoryKey", 
+		"SampleKey", 
+		"IndividualKey", 
+		"SubIndividualKey"
+	)
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())
