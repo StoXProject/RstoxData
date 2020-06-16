@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LandingData — LandingData • RstoxData</title>
+<title>Run a function on all elements of x on one or more cores — runOnCores • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="LandingData — LandingData" />
-<meta property="og:description" content="LandingData" />
+<meta property="og:title" content="Run a function on all elements of x on one or more cores — runOnCores" />
+<meta property="og:description" content="Run a function on all elements of x on one or more cores" />
 
 
 
@@ -108,34 +108,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>LandingData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>LandingData.Rd</code></div>
+    <h1>Run a function on all elements of x on one or more cores</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxBiotic.R'><code>R/StoxBiotic.R</code></a></small>
+    <div class="hidden name"><code>runOnCores.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>LandingData</p>
+    <p>Run a function on all elements of x on one or more cores</p>
     </div>
 
+    <pre class="usage"><span class='fu'>runOnCores</span>(<span class='kw'>x</span>, <span class='kw'>FUN</span>, NumberOfCores = <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span>(), <span class='kw'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An object to apply <code>FUN</code> to.</p></td>
+    </tr>
+    <tr>
+      <th>FUN</th>
+      <td><p>The function to apply.</p></td>
+    </tr>
+    <tr>
+      <th>NumberOfCores</th>
+      <td><p>The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of <code>x</code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments to <code>FUN</code>.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="data"><a class="anchor" href="#data"></a>Data</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
-<p>One entry 'Seddellinje' is one line of a sales-note or landing-note. 
-These are issued as fish is landed, and a complete set of these for a period
-can be considered a census of all first hand sale of fish sold from Norwegian vessels.</p>
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    
-
-<p>list() of <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> 
-representing the different complexTypes in namespace http://www.imr.no/formats/landinger/v2
-For ease of merging: all top level attributes are repeated for all tables. And all line-identifying variables are included as top-level attributes.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code>DataTypes</code> for a list of all StoX data types produced by <code>RstoxData</code></p></div>
+    <p>A list of outputs from <code>FUN</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

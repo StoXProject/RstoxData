@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.14</span>
       </span>
     </div>
 
@@ -118,10 +118,10 @@
     </div>
 
     <pre class="usage"><span class='fu'>ConvertBioticVariables</span>(
-  <span class='no'>BioticData</span>,
-  <span class='kw'>ConversionMethod</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Table"</span>, <span class='st'>"PreDefined"</span>),
-  <span class='kw'>VariableConversionTable</span> <span class='kw'>=</span> <span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(),
-  <span class='no'>BioticVariableConversion</span>
+  <span class='kw'>BioticData</span>,
+  ConversionMethod = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Table"</span>, <span class='st'>"PreDefined"</span>),
+  VariableConversionTable = <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(),
+  <span class='kw'>BioticVariableConversion</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -129,7 +129,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>BioticData</th>
-      <td><p>Input <code><a href='BioticData.html'>BioticData</a></code> data.</p></td>
+      <td><p>Input <code>BioticData</code> data.</p></td>
     </tr>
     <tr>
       <th>ConversionMethod</th>
@@ -137,7 +137,7 @@
     </tr>
     <tr>
       <th>VariableConversionTable</th>
-      <td><p>A table of the columns <code>TableName</code>, <code>VariableName</code>, <code>Value</code> and <code>NewValue</code>, specifying the conversion from Value to NewValue for any number of variables of any number of tables of <code><a href='BioticData.html'>BioticData</a></code>.</p></td>
+      <td><p>A table of the columns <code>VariableName</code>, <code>Value</code> and <code>NewValue</code>, specifying the conversion from Value to NewValue for any number of variables of any number of tables of <code>BioticData</code>.</p></td>
     </tr>
     <tr>
       <th>BioticVariableConversion</th>
@@ -147,7 +147,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='BioticData.html'>BioticData</a></code> object.</p>
+    <p>A <code>BioticData</code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

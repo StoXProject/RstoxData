@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.14</span>
       </span>
     </div>
 
@@ -116,13 +116,13 @@
 
     <div class="ref-description">
     <p>StoX function
- Convert landing data to the aggregated format <code><a href='StoxLandingData.html'>StoxLandingData</a></code></p>
+ Convert landing data to the aggregated format <code><a href='https://rdrr.io/pkg/RstoxData/man/StoxLandingData.html'>StoxLandingData</a></code></p>
     </div>
 
     <pre class="usage"><span class='fu'>StoxLanding</span>(
-  <span class='no'>LandingData</span>,
-  <span class='kw'>appendColumns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(),
-  <span class='kw'>appendColumnsNames</span> <span class='kw'>=</span> <span class='no'>appendColumns</span>
+  <span class='kw'>LandingData</span>,
+  appendColumns = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(),
+  appendColumnsNames = <span class='kw'>appendColumns</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -130,11 +130,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>LandingData</th>
-      <td><p>Sales-notes data. See <code><a href='LandingData.html'>LandingData</a></code></p></td>
+      <td><p>Sales-notes data. See <code><a href='https://rdrr.io/pkg/RstoxData/man/LandingData.html'>LandingData</a></code></p></td>
     </tr>
     <tr>
       <th>appendColumns</th>
-      <td><p>character() vector that identifies additional columns in <code><a href='LandingData.html'>LandingData</a></code> to append to <code><a href='StoxLandingData.html'>StoxLandingData</a></code>.</p></td>
+      <td><p>character() vector that identifies additional columns in <code><a href='https://rdrr.io/pkg/RstoxData/man/LandingData.html'>LandingData</a></code> to append to <code><a href='https://rdrr.io/pkg/RstoxData/man/StoxLandingData.html'>StoxLandingData</a></code>.</p></td>
     </tr>
     <tr>
       <th>appendColumnsNames</th>
@@ -144,7 +144,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code><a href='StoxLandingData.html'>StoxLandingData</a></code>, aggregated landings data.</p>
+    <p><code><a href='https://rdrr.io/pkg/RstoxData/man/StoxLandingData.html'>StoxLandingData</a></code>, aggregated landings data.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>All columns that are not the ones aggregated (weight), will be used as aggregation variables.
