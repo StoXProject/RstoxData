@@ -10,7 +10,7 @@
 StoxBiotic <- function(BioticData, NumberOfCores = integer()) {
     
     # Convert from BioticData to the general sampling hierarchy:
-    GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
+	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
     
     # Extract the StoxBiotic data and rbind across files:
     StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = NumberOfCores)
@@ -23,63 +23,136 @@ StoxBiotic <- function(BioticData, NumberOfCores = integer()) {
 
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
 BioticData2GeneralSamplingHierarchy <- function(BioticData, NumberOfCores = integer()) {
-    
-    # Process Biotic data in parallel
-    if(length(NumberOfCores) == 0) {
-    	NumberOfCores <- getCores()
-    }
-    if(NumberOfCores == 1) {
-        GeneralSamplingHierarchy <- lapply(BioticData, StoxBiotic_firstPhase)
-    }
-    else {
-    	# Do not use more cores than the number of files:
-    	NumberOfCores <- min(length(BioticData), NumberOfCores)
-    	
-        if(get_os() == "win") {
-            cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-            GeneralSamplingHierarchy <- parallel::parLapply(cl, BioticData, StoxBiotic_firstPhase)
-            parallel::stopCluster(cl)
-        } 
-        else {
-            GeneralSamplingHierarchy <- parallel::mclapply(BioticData, StoxBiotic_firstPhase, mc.cores = NumberOfCores)
-        }
-    }
-    
-    GeneralSamplingHierarchy
+    # Run the first phase possibly on several cores:
+	runOnCores(
+		BioticData, 
+		FUN = StoxBiotic_firstPhase, 
+		NumberOfCores = NumberOfCores
+	)
+		
+	#	
+    ## Process Biotic data in parallel
+    #if(length(NumberOfCores) == 0) {
+    #	NumberOfCores <- getCores()
+    #}
+    #if(NumberOfCores == 1) {
+    #    GeneralSamplingHierarchy <- lapply(BioticData, StoxBiotic_firstPhase)
+    #}
+    #else {
+    #	# Do not use more cores than the number of files:
+    #	NumberOfCores <- min(length(BioticData), NumberOfCores)
+    #	
+    #    if(get_os() == "win") {
+    #        cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+    #        GeneralSamplingHierarchy <- parallel::parLapply(cl, BioticData, StoxBiotic_firstPhase)
+    #        parallel::stopCluster(cl)
+    #    } 
+    #    else {
+    #        GeneralSamplingHierarchy <- parallel::mclapply(BioticData, StoxBiotic_firstPhase, mc.cores = NumberOfCores)
+    #    }
+    #}
+    #
+    #GeneralSamplingHierarchy
 }
 
 # Function to convert rbind :
 GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, NumberOfCores = integer()) {
     
-    # Process Biotic data in parallel
-    if(length(NumberOfCores) == 0) {
-    	NumberOfCores <- getCores()
-    }
-    if(NumberOfCores == 1) {
-        StoxBioticData <- lapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase)
-    }
-    else {
-    	# Do not use more cores than the number of files:
-    	NumberOfCores <- min(length(GeneralSamplingHierarchy), NumberOfCores)
-    	
-    	if(get_os() == "win") {
-        	cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-            StoxBioticData <- parallel::parLapply(cl, GeneralSamplingHierarchy, StoxBiotic_secondPhase)
-            parallel::stopCluster(cl)
-        } 
-        else {
-            StoxBioticData <- parallel::mclapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase, mc.cores = NumberOfCores)
-        }
-    }
+	# Run the second phase possibly on several cores:
+	StoxBioticData <- runOnCores(
+		GeneralSamplingHierarchy, 
+		FUN = StoxBiotic_secondPhase, 
+		NumberOfCores = NumberOfCores
+	)
+	
+	
+   ## Process Biotic data in parallel
+   #if(length(NumberOfCores) == 0) {
+   #	NumberOfCores <- getCores()
+   #}
+   #if(NumberOfCores == 1) {
+   #    StoxBioticData <- lapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase)
+   #}
+   #else {
+   #	# Do not use more cores than the number of files:
+   #	NumberOfCores <- min(length(GeneralSamplingHierarchy), NumberOfCores)
+   #	
+   #	if(get_os() == "win") {
+   #    	cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+   #        StoxBioticData <- parallel::parLapply(cl, GeneralSamplingHierarchy, StoxBiotic_secondPhase)
+   #        parallel::stopCluster(cl)
+   #    } 
+   #    else {
+   #        StoxBioticData <- parallel::mclapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase, mc.cores = NumberOfCores)
+   #    }
+   #}
+	
+	
+	# Rbind for each StoxBiotic table:
+	StoxBioticData <- rbindlist_StoxFormat(StoxBioticData)
     
-    tableNames <- names(StoxBioticData[[1]])
-    StoxBioticData <- lapply(
-        tableNames, 
-        function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
-    )
-    names(StoxBioticData) <- tableNames
+	## Rbind for each StoxBiotic table:
+    #tableNames <- names(StoxBioticData[[1]])
+    #StoxBioticData <- lapply(
+    #    tableNames, 
+    #    function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
+    #)
+    #names(StoxBioticData) <- tableNames
     
-    StoxBioticData
+    return(StoxBioticData)
+}
+
+
+# Function to rbind each table of the StoX format. The input is a list of either StoxBiotic or StoxAcoustic formats (not mixed in the same list):
+rbindlist_StoxFormat <- function(x) {
+	# Rbind for each StoX format table:
+	tableNames <- names(x[[1]])
+	x <- lapply(
+		tableNames, 
+		function(name) data.table::rbindlist(lapply(x, "[[", name))
+	)
+	names(x) <- tableNames
+	return(x)
+}
+
+
+#' Run a function on all elements of x on one or more cores
+#'
+#' @param x An object to apply \code{FUN} to.
+#' @param FUN The function to apply.
+#' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @param ... Additional arguments to \code{FUN}.
+#'
+#' @return A list of outputs from \code{FUN}.
+#'
+#' @export
+#' 
+runOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
+	# Get the number of cores to use:
+	if(length(NumberOfCores) == 0) {
+		NumberOfCores <- getCores()
+	}
+	# Simple Lapply if onle one core:
+	if(NumberOfCores == 1) {
+		out <- lapply(x, FUN, ...)
+	}
+	# Run in parallel on Windows and other platforms:
+	else {
+		# Do not use more cores than the number of files:
+		NumberOfCores <- min(length(x), NumberOfCores)
+		
+		# On Windows run special args to speed up:
+		if(get_os() == "win") {
+			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			out <- parallel::parLapply(cl, x, FUN, ...)
+			parallel::stopCluster(cl)
+		} 
+		else {
+			out <- parallel::mclapply(x, FUN, mc.cores = NumberOfCores, ...)
+		}
+	}
+	
+	return(out)
 }
 
 
@@ -310,7 +383,8 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     # Remove duplicated rows from SpeciesCategory
-    secondPhaseTables[["SpeciesCategory"]] <- unique(secondPhaseTables[["SpeciesCategory"]])
+    #secondPhaseTables[["SpeciesCategory"]] <- unique(secondPhaseTables[["SpeciesCategory"]])
+    secondPhaseTables <- lapply(secondPhaseTables, unique)
     
     return(secondPhaseTables)
     
@@ -352,15 +426,22 @@ MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
 }
 
 
-#' Merge StoxBioticData
+#' Add variables to StoxBioticData from BioticData
 #'
-#' @param StoxBioticData A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).
+#' @inheritParams MergeStoxBiotic
+#' @inheritParams StoxBiotic
+#' @param VariableName A character vector with names of the variables to add from the \code{BioticData}.
 #'
-#' @return An object of StoX data type \code{\link{MergedStoxBioticData}}.
+#' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
 #' @export
 #' 
-AddStoxBioticVariables <- function(StoxBioticData, BioticData, TableName, VariableName, NumberOfCores = integer()) {
+AddStoxBioticVariables <- function(StoxBioticData, BioticData, VariableName = character(), NumberOfCores = integer()) {
+	
+	if(length(VariableName) == 0) {
+		warning("No variables specified to extract. Returning StoxBioticData unchcanged")
+		return(StoxBioticData)
+	}
 	
 	# Check the the BioticData are all from the same source (ICES/NMD):
 	checkDataSource(BioticData)
@@ -368,26 +449,37 @@ AddStoxBioticVariables <- function(StoxBioticData, BioticData, TableName, Variab
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
 	
-	# Get the variables:
-	if(length(TableName) != length(VariableName)) {
-		stop("TableName and VariableName must have the same length")
+	# Define a vector of the variables to extract:
+	toExtract <- c(
+		getRstoxDataDefinitions("StoxBioticKeys"), 
+		VariableName
+	)
+	
+	# Extract the variables to add:
+	toAdd <- lapply(GeneralSamplingHierarchy, function(x) lapply(x, extractVariables, var = toExtract))
+	# Rbind for each StoxBiotic table:
+	toAdd <- rbindlist_StoxFormat(toAdd)
+	# Extract only those tables present in StoxBioticData:
+	toAdd <- toAdd[names(StoxBioticData)]
+	# Keep only unique rows:
+	toAdd <- lapply(toAdd, unique)
+	
+	# Merge with the present StoxBioticData:
+	StoxBioticData <- mapply(merge, StoxBioticData, toAdd)
+	
+	return(StoxBioticData)
+}
+
+# Function to extracct variables from a table:
+extractVariables <- function(x, var) {
+	varToExtract <- intersect(names(x), var)
+	if(length(varToExtract)) {
+		x[, ..varToExtract]
 	}
-	
-	# Split the TableName and VariableName into lists by the TableName:
-	VariableName <- split(VariableName, TableName)
-	TableName <- split(TableName, TableName)
-	
-	# Get the variables:
-	extractVariablesFromTable <- function(tab, var, data) {
-		if(length(tableName)) {
-			data[[tab]]
-		}
-		
+	else {
+		#warning("None of the variables present")
+		data.table::data.table()
 	}
-	
-	
-	
-	
 }
 
 checkDataSource <- function(BioticData) {

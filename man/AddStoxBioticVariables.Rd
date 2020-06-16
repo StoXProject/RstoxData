@@ -2,22 +2,27 @@
 % Please edit documentation in R/StoxBiotic.R
 \name{AddStoxBioticVariables}
 \alias{AddStoxBioticVariables}
-\title{Merge StoxBioticData}
+\title{Add variables to StoxBioticData from BioticData}
 \usage{
 AddStoxBioticVariables(
   StoxBioticData,
   BioticData,
-  TableName,
-  VariableName,
+  VariableName = character(),
   NumberOfCores = integer()
 )
 }
 \arguments{
 \item{StoxBioticData}{A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).}
+
+\item{BioticData}{A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.}
+
+\item{VariableName}{A character vector with names of the variables to add from the \code{BioticData}.}
+
+\item{NumberOfCores}{Overrides multi-core auto detection (default).}
 }
 \value{
-An object of StoX data type \code{\link{MergedStoxBioticData}}.
+An object of StoX data type \code{\link{StoxBioticData}}.
 }
 \description{
-Merge StoxBioticData
+Add variables to StoxBioticData from BioticData
 }

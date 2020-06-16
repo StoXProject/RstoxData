@@ -6,17 +6,22 @@
 \usage{
 ConvertStoxBioticVariables(
   StoxBioticData,
+  BioticData,
+  ConversionType = c("Mapping", "Replacement"),
   ConversionMethod = c("Table", "PreDefined"),
   VariableConversionTable = data.table::data.table(),
-  StoxBioticVariableConversion
+  StoxBioticVariableConversion,
+  VariableReplacementTable = data.table::data.table()
 )
 }
 \arguments{
 \item{StoxBioticData}{Input \code{\link{StoxBioticData}} data.}
 
+\item{BioticData}{Input \code{\link{BioticData}} data.}
+
 \item{ConversionMethod}{Character: A string naming the method to use, one of "Table", for providing the old and new values of the variables in the table \code{VariableConversionTable}; and "PreDefined" for providing the table using the argument \code{BioticVariableConversion}.}
 
-\item{VariableConversionTable}{A table of the columns \code{TableName}, \code{VariableName}, \code{Value} and \code{NewValue}, specifying the conversion from Value to NewValue for any number of variables of any number of tables of \code{\link{BioticData}}.}
+\item{VariableConversionTable}{A table of the columns \code{VariableName}, \code{Value} and \code{NewValue}, specifying the conversion from Value to NewValue for any number of variables of any number of tables of \code{\link{BioticData}}.}
 
 \item{StoxBioticVariableConversion}{The (optional) \code{\link{StoxBioticVariableConversion}} process data.}
 }
