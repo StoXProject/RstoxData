@@ -177,7 +177,7 @@ readLssFile <- function(file, encoding="latin1", guessMax = 100000, strict=T){
     }
     if (!all(headers == names(spec_land$cols))){
       differences <- sum(headers != names(spec_land$cols))
-      warning(paste("Header names does not match specification,", differences, "column names differ."))
+      warning(paste("StoX: Header names does not match specification,", differences, "column names differ."))
     }
       
     db <- readr::read_delim(file, delim="|", col_names=names(spec_land$cols), trim_ws=TRUE, na=c("", "na", "NA"), locale=loc, col_types = spec_land, skip = 1) 

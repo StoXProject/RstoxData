@@ -164,10 +164,10 @@ stoxFunctionAttributes <- list(
 				ConversionType = "Mapping"
 			), 
 			BioticData = list(
-				ConversionType = "Replacement"
+				ConversionType = "ReplaceFromBioticData"
 			), 
 			VariableReplacementTable = list(
-				ConversionType = "Replacement"
+				ConversionType = "ReplaceFromBioticData"
 			), 
 			VariableConversionTable = list(
 				ConversionMethod = "Table", 
@@ -248,10 +248,10 @@ stoxFunctionAttributes <- list(
 	AddStoxBioticVariables = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticData"#, 
-		#functionParameterFormat = list(
-		#	VariableNames = "variableNames"
-		#)
+		functionOutputDataType = "StoxBioticData", 
+		functionParameterFormat = list(
+			VariableNames = "variableNames"
+		)
 	)
 )
 
@@ -303,10 +303,10 @@ processPropertyFormats <- list(
 				"character"
 			)
 		)
-	)#, 
-	#variableNames = list(
-	#	title = "One or more variables to add to the StoxBioticData from BioticData", 
-	#	type = "vector"
-	#)
+	), 
+	variableNames = list(
+		title = "One or more variables to add to the StoxBioticData from BioticData", 
+		type = "vector"
+	)
 )
 

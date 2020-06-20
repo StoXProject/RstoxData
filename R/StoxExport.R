@@ -5,7 +5,7 @@ compareICES <- function(url, field) {
          read_xml(url)
         },
         error = function(e){
-                warning(paste("Url", url, "is not exist or no internet connection available."))
+                warning(paste("StoX: Url", url, "is not exist or no internet connection available."))
                 return(NA)
         }
   )
@@ -13,7 +13,7 @@ compareICES <- function(url, field) {
   vals <- trimws(xml_text(recs))
   for(x in field){
     if(!x %in% vals){
-      warning(paste0(x, " not defined in ", url))
+      warning(paste0("StoX: ", x, " not defined in ", url))
     }
   }
 }     
@@ -370,7 +370,7 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
         exportCSV(filename, tmp, combine = TRUE, overwrite = TRUE)
       }
       
-    }else{warning('only ices acoustic format is allowed')}
+    }else{warning('StoX: only ices acoustic format is allowed')}
 
   }
   
@@ -397,7 +397,7 @@ writeICESBiotic <- function(BioticData, cruiseSurvey = "NONE", cruiseOrganisatio
   doGenBiotic <- function(raw, save) {
 
     if(!(raw$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
-      warning("writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
+      warning("StoX: writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
       return(NA)
     }
 
@@ -587,7 +587,7 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
     doGenDATRAS <- function(raw, addStationType, save) {
       # Check input is a NMD Biotic v3 data
       if(!(raw$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
-        warning("writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
+        warning("StoX: writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
         return(NA)
       }
 
