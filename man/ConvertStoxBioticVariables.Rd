@@ -7,7 +7,7 @@
 ConvertStoxBioticVariables(
   StoxBioticData,
   BioticData,
-  ConversionType = c("Mapping", "Replacement"),
+  ConversionType = c("Mapping", "ReplaceFromBioticData"),
   ConversionMethod = c("Table", "PreDefined"),
   VariableConversionTable = data.table::data.table(),
   StoxBioticVariableConversion,

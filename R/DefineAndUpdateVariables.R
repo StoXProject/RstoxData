@@ -90,7 +90,7 @@ DefineStoxBioticVariableConversion <- function(processData, FileName, UseProcess
 #' 
 #' @export
 #' 
-ConvertStoxBioticVariables <- function(StoxBioticData, BioticData, ConversionType = c("Mapping", "Replacement"), ConversionMethod = c("Table", "PreDefined"), VariableConversionTable = data.table::data.table(), StoxBioticVariableConversion, VariableReplacementTable = data.table::data.table()) {
+ConvertStoxBioticVariables <- function(StoxBioticData, BioticData, ConversionType = c("Mapping", "ReplaceFromBioticData"), ConversionMethod = c("Table", "PreDefined"), VariableConversionTable = data.table::data.table(), StoxBioticVariableConversion, VariableReplacementTable = data.table::data.table()) {
 	
 	ConversionType <- match.arg(ConversionType)
 	
@@ -105,14 +105,12 @@ ConvertStoxBioticVariables <- function(StoxBioticData, BioticData, ConversionTyp
 		# Apply the conversion:
 		convertVariables(data = StoxBioticData, VariableConversionTable = VariableConversionTable)
 	}
-	else if(ConversionType == "Replacement") {
+	else if(ConversionType == "ReplaceFromBioticData") {
 		replaceVariables(StoxBioticData = StoxBioticData, BioticData = BioticData, VariableReplacementTable = VariableReplacementTable)
 	}
 	else {
-		stop("ConversionType must be one of \"Mapping\" and \"Replacement\"")
+		stop("ConversionType must be one of \"Mapping\" and \"ReplaceFromBioticData\"")
 	}
-	
-	
 }
 
 
@@ -228,6 +226,21 @@ readVariableConversionTable <- function(processData, FileName, UseProcessData = 
 	
 	VariableConversionTable <- data.table::fread(FileName)
 	
+	# Check columns and store only valid columns:
+	requiredColumns <- getRstoxDataDefinitions("variableConversionTableRequiredColumns")
+	if(! all(requiredColumns %in% names(VariableConversionTable))) {
+		stop("The VariableConversionTable must contain the columns ", paste(requiredColumns, collapse = ", "))
+	}
+	
+	# Keep only required columns:
+	VariableConversionTable <- VariableConversionTable[, ..requiredColumns]
+	
+	## Error if any of the cells are missing:
+	#rowsWithMissingValues <- rowSums(VariableConversionTable[, lapply(.SD, function(x) nchar(x) == 0 | is.na(x))])
+	#if(any(rowsWithMissingValues)) {
+	#	stop("The columns ", paste(requiredColumns, collapse = ", "), " of the file FileName contain missing cells (empty string or NA). All #cells must be given to map from old to new values. (rows ", paste(which(as.numeric(rowsWithMissingValues)), collapse = ", "))
+	#}
+	
 	return(VariableConversionTable)
 }
 
@@ -256,7 +269,7 @@ convertVariables <- function(data, VariableConversionTable) {
 	
 	dataCopy <- data.table::copy(data)
 	
-	requiredColumns <- c("VariableName", "Value", "NewValue")
+	requiredColumns <- getRstoxDataDefinitions("variableConversionTableRequiredColumns")
 	if(! all(requiredColumns %in% names(VariableConversionTable))) {
 		stop("The VariableConversionTable must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}
@@ -282,7 +295,7 @@ convertOneTable <- function(x, conversionList) {
 		# Do nothing if the variable is a key:
 		isKeys <- endsWith(conversionList$VariableName, "Key")
 		if(isKeys) {
-			warning("The variable", conversionList$VariableName, " is a key and cannot be modified ")
+			warning("StoX: The variable", conversionList$VariableName, " is a key and cannot be modified ")
 		}
 		else {
 			# Convert the class to the class of the existing value in the table:

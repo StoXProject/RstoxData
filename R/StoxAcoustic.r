@@ -82,8 +82,6 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		
-		
-		
 		#################################################################
 		#                       RENAME general level                    #
 		#################################################################
@@ -148,7 +146,14 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		
-		
+		if(any(duplicated(data_list$Log[,c('LogKey')]))) {
+			originalNrow <- nrow(data_list$Log)
+			data_list$Log <- subset(data_list$Log, !duplicated(LogKey))
+			newNrow <- nrow(data_list$Log)
+			
+			warning("StoX: The data with CruiseKey ", data_list$Log$CruiseKey[1], " have non-unique LogKey (defined as time in StoxAcoustic). Check whether the input data have time where seconds has been set to 00. This mau cause non-unique LogKey for high spatial resolution (e.g., 0.1 nautical miles). The rows with duplicated LogKey will be removed! (number of rows reduced from ", originalNrow, " to ", newNrow, ")")
+			data_list$Log <- subset(data_list$Log, !duplicated(LogKey))
+		}
 		
 		
 		
@@ -292,7 +297,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		data_list$ChannelReference$ChannelReferenceType <- data_list$ChannelReference$type
 		data_list$ChannelReference$ChannelReferenceDepth <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 0, NA) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
-		data_list$ChannelReference$ChannelReferenceOrientation <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vvertically upwards for bottom channels ("B"):
+		data_list$ChannelReference$ChannelReferenceOrientation <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
 		
 		
 		
@@ -317,6 +322,7 @@ StoxAcousticOne <- function(data_list) {
 		#     - Do stuff to the bottom mode
 		#temp <- merge(data_list$Beam[,c('upper_integrator_depth','LogKey')],data_list$Log[,c('pel_ch_thickness','LogKey')],by='LogKey')
 		data_list$NASC <- merge(data_list$NASC, data_list$Log[,c('upper_integrator_depth','pel_ch_thickness','LogKey','BeamKey')],by=c('LogKey','BeamKey'))
+		
 		
 		
 		data_list$NASC$MinChannelRange <- data_list$NASC$pel_ch_thickness * (as.integer(data_list$NASC$ch) - 1)

@@ -38,6 +38,9 @@ initiateRstoxData <- function(){
 		"SubIndividualKey"
 	)
 	
+	# Define the columns required for VariableConversionTable:
+	variableConversionTableRequiredColumns <- c("VariableName", "Value", "NewValue")
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())

@@ -36,13 +36,13 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		filts <- x[[tableName]]
 
 		if(!nrow( y[[tableName]])) {
-			warning(paste("Empty table", tableName))
+			warning("StoX: Empty table ", tableName)
 			return(ret)
 		}
 		
 		test <- try(ret[[tableName]] <- y[[tableName]][eval(filts),], silent = TRUE)
 		if(class(test)[1] == "try-error") {
-			warning(paste0("Apply filter error:\n", test[1]))
+			warning("StoX: Apply filter error:\n", test[1])
 		} else {
 			# 3. propagate down
 			if(propDown) {
