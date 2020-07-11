@@ -261,52 +261,46 @@ stoxFunctionAttributes <- list(
 #' 
 processPropertyFormats <- list(
 	filePath = list(
-		title = "The path to a single file", 
-		type = "single"
-		
+		class = "single", 
+		title = "The path to a single file"
 	), 
 	filePaths = list(
-		title = "The path to one or more files", 
-		type = "vector"
-		
+		class = "vector", 
+		title = "The path to one or more files"
 	), 
 	filterExpressionList = list(
-		title = "A list of filter expressions, one for each table to filter on", 
-		type = "list"
+		class = "list", 
+		title = "A list of filter expressions, one for each table to filter on"
 	), 
 	variableConversionTable = list(
+		class = "table", 
 		title = "Define new values for spcific variables", 
-		type = "table", 
-		info = data.table::data.table(
-			name = c(
-				"VariableName", 
-				"Value", 
-				"NewValue"
-			), 
-			type = c(
-				"character",
-				"character",
-				"character"
-			)
+		columnNames = c(
+			"VariableName", 
+			"Value", 
+			"NewValue"
+		), 
+		variableTypes = c(
+			"character",
+			"character",
+			"character"
 		)
 	), 
 	variableReplacementTable = list(
+		class = "table", 
 		title = "Repla columns in raw data to replace for spcific variables by", 
-		type = "table", 
-		info = data.table::data.table(
-			name = c(
-				"VariableName", 
-				"Replacement"
-			), 
-			type = c(
-				"character",
-				"character"
-			)
+		columnNames = c(
+			"VariableName", 
+			"Replacement"
+		), 
+		variableTypes = c(
+			"character",
+			"character"
 		)
 	), 
 	variableNames = list(
-		title = "One or more variables to add to the StoxBioticData from BioticData", 
-		type = "vector"
+		type = "vector", 
+		title = "One or more variables to add to the StoxBioticData from BioticData"
 	)
 )
 
