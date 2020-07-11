@@ -98,9 +98,9 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		
-		#################################################################
-		#   Reorder the leevels to AcousticCategory > ChannelReference  #
-		#################################################################
+		################################################################
+		#   Reorder the levels to AcousticCategory > ChannelReference  #
+		################################################################
 		merged <- merge(data_list$ChannelReference, data_list$AcousticCategory)
 		data_list$AcousticCategory <- unique(merged[, !"type"])
 		data_list$ChannelReference <- unique(merged)
@@ -175,9 +175,10 @@ StoxAcousticOne <- function(data_list) {
 		#################################################################
 		#        Add AcousticCategoryKey to all list                    #
 		#################################################################
-		data_list$AcousticCategory$AcousticCategoryKey  <- data_list$AcousticCategory$acocat
-		data_list$ChannelReference$AcousticCategoryKey  <- data_list$ChannelReference$acocat
-		data_list$NASC$AcousticCategoryKey              <- data_list$NASC$acocat
+		# Added as.character() here to convert the integer acocat of LUF20 to character:
+		data_list$AcousticCategory$AcousticCategoryKey  <- as.character(data_list$AcousticCategory$acocat)
+		data_list$ChannelReference$AcousticCategoryKey  <- as.character(data_list$ChannelReference$acocat)
+		data_list$NASC$AcousticCategoryKey              <- as.character(data_list$NASC$acocat)
 		
 		
 		

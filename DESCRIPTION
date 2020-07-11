@@ -1,6 +1,6 @@
 Package: RstoxData
-Version: 0.8.15
-Date: 2020-06-20
+Version: 1.0.1
+Date: 2020-07-11
 Title: Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats
 Authors@R: c(
   person(given = "Ibrahim", family = "Umar", role = c("cre", "aut"), email = "ibrahim.umar@hi.no"), 
