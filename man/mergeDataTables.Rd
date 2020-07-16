@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utilities.R
 \name{mergeDataTables}
 \alias{mergeDataTables}
-\title{Merge data tables}
+\title{Merge list of data tables recursively}
 \usage{
 mergeDataTables(data, tableNames = NULL, output.only.last = FALSE, ...)
 }
@@ -17,5 +17,5 @@ mergeDataTables(data, tableNames = NULL, output.only.last = FALSE, ...)
 A merged data table.
 }
 \description{
-Merge data tables
+Merge list of data tables recursively
 }
