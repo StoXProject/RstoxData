@@ -94,15 +94,17 @@ ConvertData <- function(
 	
 	# Merge in the ConversionTable:
 	StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, ConversionTable, all.x = TRUE)
-		
+	
+	# Apply the conversion function for each row of the ConversionTable:
 	ConversionList <- split(ConversionTable, seq_len(nrow(ConversionTable)))
 	for(Conversion in ConversionList) {
 		applyConversionFunction(
 			data = StoxDataCopyMerged, 
 			ConversionFunction = ConversionFunction, 
 			TargetVariable = Conversion$TargetVariable, 
-			SourceVariable = Conversion$SourceVariable
-		) 
+			SourceVariable = Conversion$SourceVariable, 
+			RoundOffTo = Conversion$RoundOffTo
+		)
 	}
 	
 	# Extract the StoxData from the merged:
@@ -113,64 +115,29 @@ ConvertData <- function(
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	###
-	###
-	#### Merge in the ConversionTable:
-	###StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, ConversionTable, all.x = TRUE)
-	#### Apply the conversion function:
-	###applyConversionFunction(StoxDataCopyMerged, ConversionFunction)
-	###
-	#### Split the converted data by target variable:
-	###TargetVariable <- getRstoxDataDefinitions("targetAndSourceVariables")$target
-	###StoxDataCopyMergedSplit <- split(StoxDataCopyMerged, by = TargetVariable)
-	###
-	###
-	###for(var in names(StoxDataCopyMergedSplit)) {
-	###	for(name in names(StoxDataCopy)) {
-	###		StoxDataCopy[[name]] <- mergeByKeys(
-	###			x = StoxDataCopy[[name]], 
-	###			y = StoxDataCopyMergedSplit[[var]], 
-	###			toMergeFromY = var, 
-	###			replace = TRUE, 
-	###			all.x = TRUE
-	###		)
-	###	}	
-	###}
-	
-	# Merge in the changes to each table of the data:
-	
-	
-	
-	#for(name in names(StoxDataCopy)) {
-	#	StoxDataCopy[[name]] <- mergeByIntersect(StoxDataCopy[[name]], StoxDataCopyMerged, all.x = TRUE)
-	#}
-	#StoxDataCopy <- mapply(mergeByIntersect, StoxDataCopy, StoxDataCopyMerged, all.x = TRUE)
-	
+
 	return(StoxDataCopy)
 }
 
 
 getStoxDataFromMerged <- function(StoxDataMerged, StoxData) {
 	toExtract <- lapply(StoxData, names)
-	lapply(toExtract, function(x) StoxDataMerged[, ..x])
+	lapply(toExtract, function(x) unique(StoxDataMerged[, ..x]))
 }
 
 
 # Function to convert one or more variables of StoxData:
-applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable) {
+applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo) {
 	
 	# Get the conversion function:
 	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	do.call(ConversionFunctionName, list(data, TargetVariable = TargetVariable, SourceVariable = SourceVariable))
+	do.call(ConversionFunctionName, list(
+		data, 
+		TargetVariable = TargetVariable, 
+		SourceVariable = SourceVariable, 
+		RoundOffTo = RoundOffTo
+		)
+	)
 	
 	return(data)
 }
@@ -223,36 +190,65 @@ applyConversionFunction <- function(data, ConversionFunction, TargetVariable, So
 ###  }
 
 # The different available conversion functions, reflecting the methods listed as default in ConvertData (parameter ConversionFunction):
-#ConversionFunction_Constant <- function(data, SourceVariable) {
-#	data[, Constant]
-#}
-ConversionFunction_Constant <- function(data, TargetVariable, SourceVariable) {
+ConversionFunction_Constant <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
 	valid <- !is.na(data$Constant)
+	# Apply the function:
 	data[valid, eval(TargetVariable) := Constant]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
+	#data[valid, eval(TargetVariable) := RoundOff(get(TargetVariable), get(RoundOffTo))]
 }
 
-#ConversionFunction_Addition <- function(data, SourceVariable) {
-#	data[, Addition + get(SourceVariable)]
-#}
-ConversionFunction_Addition <- function(data, TargetVariable, SourceVariable) {
+ConversionFunction_Addition <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
 	valid <- !is.na(data$Addition)
+	# Apply the function:
 	data[valid, eval(TargetVariable) := Addition + get(SourceVariable)]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
 }
 
-#ConversionFunction_Scaling <- function(data, SourceVariable) {
-#	data[, Scaling * get(SourceVariable)]
-#}
-ConversionFunction_Scaling <- function(data, TargetVariable, SourceVariable) {
+ConversionFunction_Scaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
 	valid <- !is.na(data$Scaling)
+	# Apply the function:
 	data[valid, eval(TargetVariable) := Scaling * get(SourceVariable)]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
 }
 
-#ConversionFunction_AdditionAndScaling <- function(data, SourceVariable) {
-#	data[, Addition + Scaling * get(SourceVariable)]
-#}
-ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVariable) {
+ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
 	valid <- !is.na(data$Addition) & !is.na(data$Scaling)
+	# Apply the function:
 	data[valid, eval(TargetVariable) := Addition + Scaling * get(SourceVariable)]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
+}
+
+
+roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
+	# Round off either to the values of a column or to oa numeric:
+	if(!RoundOffTo %in% names(data)) {
+		RoundOffToNumeric <- as.numeric(RoundOffTo)
+		if(!is.na(RoundOffToNumeric)) {
+			# Round off to the RoundOffToNumeric by reference:
+			#RoundOffTo <- RoundOffToNumeric
+			data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
+		}
+		else {
+			stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
+		}
+	}
+	else {
+		# Round off by reference:
+		data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), get(RoundOffTo))]	
+	}
+}
+
+roundOff <- function(x, RoundOffTo) {
+	round(x / RoundOffTo) * RoundOffTo
 }
 
 

@@ -152,7 +152,7 @@ stoxFunctionAttributes <- list(
 	ConvertStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticTranslation", 
+		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
 			ConversionTable = "conversionTable"
 		)
@@ -258,7 +258,8 @@ processPropertyFormats <- list(
 			columnNames <- c(
 				GruopingVariables, 
 				c("TargetVariable", "SourceVariable"), 
-				parameters
+				parameters, 
+				"RoundOffTo"
 			)
 			
 			return(columnNames)
@@ -267,13 +268,13 @@ processPropertyFormats <- list(
 			ConversionFunction <- match.arg(ConversionFunction)
 			
 			if(identical(ConversionFunction, "Constant")) {
-				types <- c("double")
+				types <- "double"
 			}
 			else if(identical(ConversionFunction, "Addition")) {
 				types <- "double"
 			}
 			else if(identical(ConversionFunction, "Scaling")) {
-				types <- c("double")
+				types <- "double"
 			}
 			else if(identical(ConversionFunction, "AdditionAndScaling")) {
 				types <- c("double", "double")
@@ -285,7 +286,8 @@ processPropertyFormats <- list(
 			variableTypes <- c(
 				rep("character", length(GruopingVariables)), 
 				c("character", "character"), 
-				types
+				types, 
+				"character"
 			)
 			
 			return(variableTypes)
