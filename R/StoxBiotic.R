@@ -495,10 +495,11 @@ checkDataSource <- function(BioticData) {
 	
 	# Detect the data source:
 	possibleDataSources <- c("nmd", "ices")
-	detectedDataSources <- sapply(possibleDataSources, matchSource, BioticData = BioticData)
-	detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
+	detectedDataSources <- sapply(possibleDataSources, matchSource, BioticData = BioticData, simplify = FALSE)
+	numberOfFormats <- sum(sapply(detectedDataSources, function(x) any(!is.na(x))))
+	#detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
 	# Accept only BioticData from a single source:
-	if(any(detectedDataSources[1] != detectedDataSources)) {
+	if(numberOfFormats > 1) {
 		stop("The function AddToStoxBiotic can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
 	}
 	
