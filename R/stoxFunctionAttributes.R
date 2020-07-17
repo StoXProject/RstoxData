@@ -1,18 +1,6 @@
 #' Function specification for inclusion in StoX projects
 #' @export
 stoxFunctionAttributes <- list(
-	#DefineGear = list(
-	#  functionType = "modelData",
-	#  functionCategory = "baseline",
-	#  functionOutputDataType = "StoxLandingData",
-	#  functionParameterType = list(StoxLandingData = "character"),
-	#  functionParameterFormat = list(),
-	#  functionArgumentHierarchy = list(),
-	#  functionAlias = list(),
-	#  functionParameterAlias = list(),
-	#  functionParameterValueAilas = list()
-	#), 
-	
 	# Read input biotic data:
 	ReadBiotic = list(
 		functionType = "modelData", 
@@ -108,144 +96,69 @@ stoxFunctionAttributes <- list(
 		functionArgumentHierarchy = list()
 	),
 	
+	
 	##### Define and Convert variables: #####
-	
-	# Biotic:
-	DefineBioticVariableConversion = list(
-		functionType = "processData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "BioticVariableConversion", 
-		functionParameterFormat = list(
-			FileName = "filePath"
-		)
-	),
-	
-	ConvertBioticVariables = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "BioticData", 
-		functionParameterFormat = list(
-			VariableConversionTable = "variableConversionTable"
-		), 
-		functionArgumentHierarchy = list(
-			VariableConversionTable = list(
-				ConversionMethod = "Table"
-			), 
-			BioticVariableConversion = list(
-				ConversionMethod = "PreDefined"
-			), 
-			FileName = list(
-				ConversionMethod = "PreDefined"
-			)
-		)
-	),
-	
-	
 	# StoxBiotic:
-	DefineStoxBioticVariableConversion = list(
-		functionType = "processData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticVariableConversion", 
-		functionParameterFormat = list(
-			FileName = "filePath"
-		)
-	),
-	
-	ConvertStoxBioticVariables = list(
+	RedefineStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			VariableConversionTable = "variableConversionTable",
-			VariableReplacementTable = "variableReplacementTable"
-		), 
-		functionArgumentHierarchy = list(
-			ConversionMethod = list(
-				ConversionType = "Mapping"
-			), 
-			BioticData = list(
-				ConversionType = "ReplaceFromBioticData"
-			), 
-			VariableReplacementTable = list(
-				ConversionType = "ReplaceFromBioticData"
-			), 
-			VariableConversionTable = list(
-				ConversionMethod = "Table", 
-				ConversionType = "Mapping"
-			), 
-			StoxBioticVariableConversion = list(
-				ConversionMethod = "PreDefined", 
-				ConversionType = "Mapping"
-			), 
-			FileName = list(
-				ConversionMethod = "PreDefined", 
-				ConversionType = "Mapping"
-			)
+			RedefinitionTable = "redefinitionTable"
 		)
 	),
 	
-	# Acoustic:
-	DefineAcousticVariableConversion = list(
+	DefineStoxBioticTranslation = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "AcousticVariableConversion", 
+		functionOutputDataType = "StoxBioticTranslation", 
 		functionParameterFormat = list(
-			FileName = "filePath"
-		)
-	),
-	
-	ConvertAcousticVariables = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "AcousticData", 
-		functionParameterFormat = list(
-			VariableConversionTable = "variableConversionTable"
+			TranslationTable = "translationTable"
 		), 
 		functionArgumentHierarchy = list(
-			VariableConversionTable = list(
-				ConversionMethod = "Table"
+			DefinitionMethod = list(
+				UseProcessData = FALSE
 			), 
-			AcousticVariableConversion = list(
-				ConversionMethod = "PreDefined"
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				DefinitionMethod = "Table", 
+				UseProcessData = FALSE
 			), 
+			# These two are joined with AND, and must both be fulfilled:
 			FileName = list(
-				ConversionMethod = "PreDefined"
+				DefinitionMethod = "ResourceFile", 
+				UseProcessData = FALSE
 			)
 		)
 	),
 	
-	# StoxAcoustic:
-	DefineStoxAcousticVariableConversion = list(
-		functionType = "processData", 
+	TranslateStoxBiotic = list(
+		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxAcousticVariableConversion", 
+		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			FileName = "filePath"
+			TranslationTable = "translationTable"
+		), 
+		functionArgumentHierarchy = list(
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			StoxBioticTranslation = list(
+				TranslationDefinition = "FunctionInput"
+			)
 		)
 	),
 	
-	ConvertStoxAcousticVariables = list(
+	ConvertStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxAcousticData", 
+		functionOutputDataType = "StoxBioticTranslation", 
 		functionParameterFormat = list(
-			VariableConversionTable = "variableConversionTable",
-			VariableReplacementTable = "variableReplacementTable"
-		), 
-		functionArgumentHierarchy = list(
-			VariableConversionTable = list(
-				ConversionMethod = "Table"
-			), 
-			StoxAcousticVariableConversion = list(
-				ConversionMethod = "PreDefined"
-			), 
-			FileName = list(
-				ConversionMethod = "PreDefined"
-			)
+			ConversionTable = "conversionTable"
 		)
-	), 
+	),
 	
-	AddStoxBioticVariables = list(
+	AddToStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
@@ -272,9 +185,22 @@ processPropertyFormats <- list(
 		class = "list", 
 		title = "A list of filter expressions, one for each table to filter on"
 	), 
-	variableConversionTable = list(
+	
+	redefinitionTable = list(
 		class = "table", 
-		title = "Define new values for spcific variables", 
+		title = "Define columns of StoX data by columns of the raw data", 
+		columnNames = c(
+			"VariableName", 
+			"ReplaceBy"
+		), 
+		variableTypes = c(
+			"character",
+			"character"
+		)
+	), 
+	translationTable = list(
+		class = "table", 
+		title = "Translate columns of StoX data", 
 		columnNames = c(
 			"VariableName", 
 			"Value", 
@@ -286,21 +212,93 @@ processPropertyFormats <- list(
 			"character"
 		)
 	), 
-	variableReplacementTable = list(
+	
+	conversionTable = list(
 		class = "table", 
-		title = "Repla columns in raw data to replace for spcific variables by", 
-		columnNames = c(
-			"VariableName", 
-			"Replacement"
-		), 
-		variableTypes = c(
-			"character",
-			"character"
-		)
+		title = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling")) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				title <- "Replace variables of StoX data by a constant \"Constant\""
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				title <- "Add the value \"Addition\" to variables of StoX data"
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				title <- "Multiply variables of StoX data by the value \"Scaling\""
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				title <- "Multiply variables of StoX data by the value \"Scaling\" and add the value \"Addition\""
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			return(title)
+		}, 
+		columnNames = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				parameters <- c("Constant")
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				parameters <- "Addition"
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				parameters <- c("Scaling")
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				parameters <- c("Addition", "Scaling")
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			columnNames <- c(
+				GruopingVariables, 
+				c("TargetVariable", "SourceVariable"), 
+				parameters
+			)
+			
+			return(columnNames)
+		}, 
+		variableTypes = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				types <- c("double")
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				types <- "double"
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				types <- c("double")
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				types <- c("double", "double")
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			variableTypes <- c(
+				rep("character", length(GruopingVariables)), 
+				c("character", "character"), 
+				types
+			)
+			
+			return(variableTypes)
+		}
 	), 
+	
 	variableNames = list(
 		type = "vector", 
 		title = "One or more variables to add to the StoxBioticData from BioticData"
 	)
 )
+
+
+
+
 

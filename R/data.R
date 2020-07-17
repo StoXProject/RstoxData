@@ -22,6 +22,30 @@
 
 ##################################################
 ##################################################
+#' General parameters of RstoxFramework.
+#' 
+#' All functions referring to a project, a model, a process or an output table use the same parameters, listed here.
+#' 
+#' @param processData The current data produced by a previous instance of the function.
+#' @param UseProcessData Logical: If TRUE use the existing function output in the process. 
+#' 
+#' @name general_arguments
+#' 
+NULL
+
+
+##################################################
+##################################################
+#' StoX data types of the RstoxData package
+#' 
+#' StoX data types are the data types used to transfer data and information between processes in a StoX estimation model. The data types are divided into two types, the \code{\link{ModelData}} and \code{\link{ProcessData}}.
+#' 
+#' @name DataTypes
+#' 
+NULL
+
+##################################################
+##################################################
 #' StoX data types of the RstoxData package
 #' 
 #' StoX data types are the data types used to transfer data and information between processes in a StoX estimation model.
@@ -41,7 +65,22 @@
 #' 
 #' @seealso \code{\link[RstoxBase]{RstoxBase}} and \code{\link[RstoxFDA]{RstoxFDA}} for a list of all StoX data types produced by the other official StoX function packages.
 #' 
-#' @name DataTypes
+#' @name ModelData
+#' 
+NULL
+
+
+##################################################
+##################################################
+#' Process data used in estimation models in StoX
+#' 
+#' The process data of the RstoxData package. 
+#' 
+#' \item{\code{\link{StoxBioticTranslation}}}
+#' 
+#' @name ProcessData
+#' 
+#' @seealso \code{\link{ModelData}} for model data types and \code{\link{DataTypes}} for all data types produced by \code{\link{RstoxData}}.
 #' 
 NULL
 
@@ -191,55 +230,14 @@ NULL
 
 ##################################################
 ##################################################
-#' Conversion table for \code{\link{BioticData}}.
+#' Translation definition (from file) for \code{\link{StoxBioticData}}.
 #' 
 #' @details
-#' This StoX data type is produced by \code{\link{DefineBioticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
+#' This StoX data type is produced by \code{\link{DefineStoxBioticTranslation}}, and contains the columns VariableName, Value and NewValue.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name BioticVariableConversion
-#' 
-NULL
-
-
-##################################################
-##################################################
-#' Conversion table for \code{\link{StoxBioticData}}.
-#' 
-#' @details
-#' This StoX data type is produced by \code{\link{DefineStoxBioticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
-#' 
-#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
-#' 
-#' @name StoxBioticVariableConversion
-#' 
-NULL
-
-
-##################################################
-##################################################
-#' Conversion table for \code{\link{AcousticData}}.
-#' 
-#' @details
-#' This StoX data type is produced by \code{\link{DefineAcousticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
-#' 
-#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
-#' 
-#' @name BioticAcousticConversion
-#' 
-NULL
-
-
-##################################################
-#' Conversion table for \code{\link{StoxAcousticData}}.
-#' 
-#' @details
-#' This StoX data type is produced by \code{\link{DefineStoxAcousticVariableConversion}}, and contains the columns VariableName, Value and NewValue.
-#' 
-#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
-#' 
-#' @name StoxAcousticVariableConversion
+#' @name StoxBioticTranslation
 #' 
 NULL
 

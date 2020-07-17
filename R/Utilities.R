@@ -1,4 +1,4 @@
-#' Merge data tables
+#' Merge list of data tables recursively
 #'
 #' @param data A list of data tables.
 #' @param tableNames A character vector holding the names of the tables to merge.
@@ -61,6 +61,72 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	
 	return(data)
 }
+
+#' Merge two data tables by the intersect of the names
+#'
+#' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
+#'
+#' @return A merged data table.
+#'
+#' @export
+#' 
+mergeByIntersect <- function(x, y, ...) {
+	by <- intersect(names(x), names(y))
+	if(length(by)) {
+		merge(x, y, by = by, ...)
+	}
+	else {
+		x
+	}
+}
+
+
+#' Merge two data tables by keys (variables ending with "Key")
+#'
+#' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
+#'
+#' @return A merged data table.
+#'
+#' @export
+#' 
+mergeByKeys <- function(x, y, toMergeFromY = NULL, replace = FALSE, ...) {
+	# Get the keys:
+	keys_x <- getKeys(x)
+	keys_y <- getKeys(y)
+	keys <- intersect(keys_x, keys_y)
+	
+	# Define the columns to merge:
+	if(!length(toMergeFromY)) {
+		toMergeFromY <- names(y)
+	}
+	# Make sure the toMergeFromY are present in y:
+	toMergeFromY <- intersect(names(y), toMergeFromY)
+	# Exclcude the keys:
+	toMergeFromY <- setdiff(toMergeFromY, keys_y)
+	
+	#  Replace the variable in the target:
+	if(replace) {
+		keep <- setdiff(names(x), toMergeFromY)
+		x <- x[, ..keep]
+	}
+	
+	# If there are any left, extract the keys and toMergeFromY:
+	if(length(toMergeFromY)) {
+		y <- y[, c(keys, toMergeFromY), with = FALSE]
+		# Then merge:
+		merge(x, y, by = keys, ...)
+	}
+	else {
+		x
+	}
+}
+
+getKeys <- function(x, keystring = "Key", ignore.case = FALSE) {
+	namesx <- names(x)
+	namesx[endsWith(if(ignore.case) tolower(namesx) else namesx, if(ignore.case) tolower(keystring) else keystring)]
+}
+
+
 
 # Detect OS
 get_os <- function() {

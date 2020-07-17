@@ -8,7 +8,7 @@
 #'
 "_PACKAGE"
 
-.onLoad <- function(libname, pkgname){
+.onLoad <- function(libname, pkgname) {
 	# Initiate the RstoxData environment:
 	initiateRstoxData()
 } 

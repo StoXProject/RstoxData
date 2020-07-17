@@ -9,7 +9,7 @@
 #' 
 StoxBiotic <- function(BioticData, NumberOfCores = integer()) {
     
-    # Convert from BioticData to the general sampling hierarchy:
+	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
     
     # Extract the StoxBiotic data and rbind across files:
@@ -119,13 +119,12 @@ rbindlist_StoxFormat <- function(x) {
 # Function to convert the data read from one type of biotic data into the general sampling hierarchy for biotic data defined by StoX:
 firstPhase <- function(data, datatype, stoxBioticObject) {
     
-    # Getting data for the datatype
+	# Getting data for the datatype
     tableKey <- stoxBioticObject$tableKeyList[[datatype]]
     tableMap <- stoxBioticObject$tableMapList[[datatype]]
     indageHeaders <- stoxBioticObject$indageHeadersList[[datatype]]
     
     # 1. Merge: a) Cruise number with everything b) age reading and individual (specific to data source type)
-    
     if( datatype %in% c("nmdbioticv3", "nmdbioticv3.1") ) {
         
         ## If preferredagereading in indivdiual is NA, use 1 as the preferred reading
@@ -135,9 +134,10 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
         
         ## Cascading merge tables
-        toMerge <- c("mission", "fishstation", "catchsample", "individual")
+        toMerge <- c("mission", "fishstation", "catchsample", "individual", "prey")
         data <- mergeDataTables(data, toMerge)
-    } else if(datatype == "nmdbioticv1.4") {
+    } 
+    else if(datatype == "nmdbioticv1.4") {
 
 	    ## Merge individual and age
 	    indageHeaders <- intersect(names(data$agedetermination), names(data$individual))
@@ -149,7 +149,8 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Use custom suffixes as it contains duplicate header name between tables
 	    data <- mergeDataTables(data, toMerge)
-	  } else if(datatype == "icesBiotic") {
+	  } 
+    else if(datatype == "icesBiotic") {
 
 	    # Merge Cruise and Survey name
 	    data[["Cruise"]][, Survey:=tail(data[["Survey"]],1)]
@@ -238,7 +239,8 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
 			stop("Error in merging.")
 	    }
-	  } else {
+	  } 
+    else {
 	    print("Error: Invalid data input format. Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
 	    return(NULL)
 	  }
@@ -263,14 +265,14 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         firstPhaseTables[[map[[2]]]] <- data[[map[[1]]]]
     }
     
-    
     # 4. "COMPLEX" mapping
     complexMap <- stoxBioticObject$complexMaps[[datatype]]
-    for(origin in unlist(unique(complexMap[, "level"]))) {
-        for (dest in unlist(unique(complexMap[level == origin, "target"]))) {
+    levels <- unlist(unique(complexMap[, "level"]))
+    for(origin in levels) {
+    	for (dest in unlist(unique(complexMap[level == origin, "target"]))) {
             colList <- unlist(complexMap[target==dest & level==origin, "variable"])
             if(!is.null(firstPhaseTables[[dest]])) stop("Error")
-            firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
+            	firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
         }
     }
     
@@ -329,6 +331,21 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     
     # Data placeholder
     secondPhaseTables <- list()
+    
+    # Borrow variables for use in the conversion defined by complexMap:
+    borrowVariables <- stoxBioticObject$borrowVariables[[datatype]]
+    if(length(borrowVariables)) {
+    	for(ind in seq_along(borrowVariables)) {
+    		data[[borrowVariables[[ind]]$target]] <- mergeByKeys(
+    			x = data[[borrowVariables[[ind]]$target]], 
+    			y = data[[borrowVariables[[ind]]$source]], 
+    			toMergeFromY = borrowVariables[[ind]]$variable, 
+    			all.x = TRUE
+    		)
+    	}
+    }
+    
+    
     
     for (i in unique(convertTable[, level])) {
         # Process conversion table
@@ -396,38 +413,63 @@ MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
 #'
 #' @export
 #' 
-AddStoxBioticVariables <- function(StoxBioticData, BioticData, VariableName = character(), NumberOfCores = integer()) {
+AddToStoxBiotic <- function(StoxBioticData, BioticData, VariableName = character(), NumberOfCores = integer()) {
+	AddToStoxData(
+		StoxData = StoxBioticData, 
+		RawData = BioticData, 
+		VariableName = VariableName, 
+		NumberOfCores = NumberOfCores, 
+		StoxDataFormat = "Biotic"
+	)
+}
+
+
+AddToStoxData <- function(
+	StoxData, 
+	RawData, 
+	VariableName = character(), 
+	NumberOfCores = integer(), 
+	StoxDataFormat = c("Biotic", "Acoustic")
+) {
 	
 	if(length(VariableName) == 0) {
-		warning("StoX: No variables specified to extract. Returning StoxBioticData unchcanged")
-		return(StoxBioticData)
+		warning("StoX: No variables specified to extract. Returning data unchcanged")
+		return(StoxData)
 	}
 	
 	# Check the the BioticData are all from the same source (ICES/NMD):
-	checkDataSource(BioticData)
+	checkDataSource(RawData)
 	
 	# Convert from BioticData to the general sampling hierarchy:
-	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
-	
-	# Define a vector of the variables to extract:
-	toExtract <- c(
-		getRstoxDataDefinitions("StoxBioticKeys"), 
-		VariableName
-	)
+	StoxDataFormat <- match.arg(StoxDataFormat)
+	if(StoxDataFormat == "Biotic") {
+		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
+		# Define a vector of the variables to extract:
+		toExtract <- c(
+			getRstoxDataDefinitions("StoxBioticKeys"), 
+			VariableName
+		)
+	}
+	else if(StoxDataFormat == "Acoustic") {
+		stop("Not yet implemented")
+	}
+	else {
+		stop("Invalid StoxDataFormat")
+	}
 	
 	# Extract the variables to add:
 	toAdd <- lapply(GeneralSamplingHierarchy, function(x) lapply(x, extractVariables, var = toExtract))
 	# Rbind for each StoxBiotic table:
 	toAdd <- rbindlist_StoxFormat(toAdd)
 	# Extract only those tables present in StoxBioticData:
-	toAdd <- toAdd[names(StoxBioticData)]
+	toAdd <- toAdd[names(StoxData)]
 	# Keep only unique rows:
 	toAdd <- lapply(toAdd, unique)
 	
 	# Merge with the present StoxBioticData:
-	StoxBioticData <- mapply(merge, StoxBioticData, toAdd)
+	StoxData <- mapply(merge, StoxData, toAdd)
 	
-	return(StoxBioticData)
+	return(StoxData)
 }
 
 # Function to extracct variables from a table:
@@ -457,7 +499,7 @@ checkDataSource <- function(BioticData) {
 	detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
 	# Accept only BioticData from a single source:
 	if(any(detectedDataSources[1] != detectedDataSources)) {
-		stop("The function AddStoxBioticVariables can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
+		stop("The function AddToStoxBiotic can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
 	}
 	
 	return(detectedDataSources)
