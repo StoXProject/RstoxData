@@ -506,6 +506,9 @@ StoxAcousticOne <- function(data_list) {
 		data_list$NASC[, CruiseKey:= LocalID]
 		
 		
+		data_list$Cruise[, Cruise := CruiseKey]
+		
+		
 	}
 	
 	
