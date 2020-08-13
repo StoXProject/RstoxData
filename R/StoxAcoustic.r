@@ -73,6 +73,7 @@ StoxAcousticOne <- function(data_list) {
 		return(NULL)
 	}
 	
+	
 	if(ices_format==FALSE){
 		#################################################################
 		# Description: protocol to convert NMDacoustic to StoxAcoustic  #
@@ -234,6 +235,9 @@ StoxAcousticOne <- function(data_list) {
 		names(data_list$Log)[names(data_list$Log)=='lat_start']       <- 'Latitude'
 		names(data_list$Log)[names(data_list$Log)=='lon_stop']       <- 'Longitude2'
 		names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'Latitude2'
+		
+		data_list$Cruise[, Cruise := CruiseKey]
+		
 		
 		
 		#################################################################
@@ -514,7 +518,7 @@ StoxAcousticOne <- function(data_list) {
 	#################################################################
 	data_list<-data_list[c('Cruise','Log','Beam','AcousticCategory','ChannelReference','NASC')]  
 	
-	data_list$Cruise<-data_list$Cruise[, c('CruiseKey', 'Platform')]
+	data_list$Cruise<-data_list$Cruise[, c('CruiseKey', 'Cruise', 'Platform')]
 	# 2020-02-03: Removed BottomDepth, which is mandatory:
 	data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance', 'BottomDepth')]
 	#data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance')]

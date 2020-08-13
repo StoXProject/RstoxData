@@ -42,9 +42,9 @@ stoxFunctionAttributes <- list(
 	 functionType = "modelData",
 	 functionCategory = "baseline",
 	 functionOutputDataType = "StoxLandingData",
-	 functionParameterType = list(StoxLanding = "character",
-	                              appendColumns = "character",
-	                              appendColumnsNames = "character"),
+	 #functionParameterType = list(StoxLanding = "character",
+	 #                             appendColumns = "character",
+	 #                             appendColumnsNames = "character"),
 	 functionArgumentHierarchy = list()
 	), 
 	
@@ -113,7 +113,8 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticTranslation", 
 		functionParameterFormat = list(
-			TranslationTable = "translationTable"
+			TranslationTable = "translationTable", 
+			FileName = "filePath"
 		), 
 		functionArgumentHierarchy = list(
 			DefinitionMethod = list(
