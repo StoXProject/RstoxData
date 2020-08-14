@@ -69,7 +69,7 @@ StoxAcousticOne <- function(data_list) {
 	} else if(useXsd == 'icesAcoustic') {
 		ices_format <- TRUE
 	} else {
-		print("Unsupported input for StoxAcoustic")
+		message("Unsupported input for StoxAcoustic")
 		return(NULL)
 	}
 	
