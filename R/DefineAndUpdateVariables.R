@@ -30,6 +30,11 @@ DefineDataTranslation <- function(
 	FileName
 ) {
 	
+	# Return immediately if UseProcessData = TRUE:
+	if(UseProcessData) {
+		return(processData)
+	}
+	
 	DefinitionMethod = match.arg(DefinitionMethod)
 	
 	if(DefinitionMethod == "ResourceFile") {
