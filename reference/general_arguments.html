@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge list of data tables recursively — mergeDataTables • RstoxData</title>
+<title>General parameters of RstoxFramework. — general_arguments • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge list of data tables recursively — mergeDataTables" />
-<meta property="og:description" content="Merge list of data tables recursively" />
+<meta property="og:title" content="General parameters of RstoxFramework. — general_arguments" />
+<meta property="og:description" content="All functions referring to a project, a model, a process or an output table use the same parameters, listed here." />
 
 
 
@@ -108,37 +108,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge list of data tables recursively</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>mergeDataTables.Rd</code></div>
+    <h1>General parameters of RstoxFramework.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>general_arguments.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge list of data tables recursively</p>
+    <p>All functions referring to a project, a model, a process or an output table use the same parameters, listed here.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mergeDataTables</span>(<span class='kw'>data</span>, tableNames = <span class='kw'>NULL</span>, output.only.last = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A list of data tables.</p></td>
+      <th>processData</th>
+      <td><p>The current data produced by a previous instance of the function.</p></td>
     </tr>
     <tr>
-      <th>tableNames</th>
-      <td><p>A character vector holding the names of the tables to merge.</p></td>
-    </tr>
-    <tr>
-      <th>output.only.last</th>
-      <td><p>Only returns last merged table.</p></td>
+      <th>UseProcessData</th>
+      <td><p>Logical: If TRUE use the existing function output in the process.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A merged data table.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

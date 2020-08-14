@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge list of data tables recursively — mergeDataTables • RstoxData</title>
+<title>Translate StoxBioticData — TranslateStoxBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge list of data tables recursively — mergeDataTables" />
-<meta property="og:description" content="Merge list of data tables recursively" />
+<meta property="og:title" content="Translate StoxBioticData — TranslateStoxBiotic" />
+<meta property="og:description" content="This function translates one or more columns of StoxBioticData to new values given by the table TranslationTable or by the input StoxBioticTranslation." />
 
 
 
@@ -108,37 +108,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge list of data tables recursively</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>mergeDataTables.Rd</code></div>
+    <h1>Translate StoxBioticData</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/DefineAndUpdateVariables.R'><code>R/DefineAndUpdateVariables.R</code></a></small>
+    <div class="hidden name"><code>TranslateStoxBiotic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge list of data tables recursively</p>
+    <p>This function translates one or more columns of <code><a href='StoxBioticData.html'>StoxBioticData</a></code> to new values given by the table <code>TranslationTable</code> or by the input <code>StoxBioticTranslation</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mergeDataTables</span>(<span class='kw'>data</span>, tableNames = <span class='kw'>NULL</span>, output.only.last = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>TranslateStoxBiotic</span>(
+  <span class='kw'>StoxBioticData</span>,
+  TranslationDefinition = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"FunctionParameter"</span>, <span class='st'>"FunctionInput"</span>),
+  TranslationTable = <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>(),
+  <span class='kw'>StoxBioticTranslation</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A list of data tables.</p></td>
+      <th>TranslationDefinition</th>
+      <td><p>Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the <code>TranslationTable</code>, and "FunctionInput" for using the table produced by the process given by the function input <code>StoxBioticTranslation</code>.</p></td>
     </tr>
     <tr>
-      <th>tableNames</th>
-      <td><p>A character vector holding the names of the tables to merge.</p></td>
+      <th>TranslationTable</th>
+      <td><p>A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.</p></td>
     </tr>
     <tr>
-      <th>output.only.last</th>
-      <td><p>Only returns last merged table.</p></td>
+      <th>StoxBioticTranslation</th>
+      <td><p>The process from which to get the <code><a href='StoxBioticTranslation.html'>StoxBioticTranslation</a></code> definition.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A merged data table.</p>
+    <p>A <code><a href='StoxBioticData.html'>StoxBioticData</a></code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

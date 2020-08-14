@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge list of data tables recursively — mergeDataTables • RstoxData</title>
+<title>Convert StoxBioticData — ConvertStoxBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge list of data tables recursively — mergeDataTables" />
-<meta property="og:description" content="Merge list of data tables recursively" />
+<meta property="og:title" content="Convert StoxBioticData — ConvertStoxBiotic" />
+<meta property="og:description" content="This function converts one or more columns of StoxBioticData by the function given by ConversionFunction." />
 
 
 
@@ -108,37 +108,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge list of data tables recursively</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>mergeDataTables.Rd</code></div>
+    <h1>Convert StoxBioticData</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/DefineAndUpdateVariables.R'><code>R/DefineAndUpdateVariables.R</code></a></small>
+    <div class="hidden name"><code>ConvertStoxBiotic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge list of data tables recursively</p>
+    <p>This function converts one or more columns of <code><a href='StoxBioticData.html'>StoxBioticData</a></code> by the function given by <code>ConversionFunction</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mergeDataTables</span>(<span class='kw'>data</span>, tableNames = <span class='kw'>NULL</span>, output.only.last = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>ConvertStoxBiotic</span>(
+  <span class='kw'>StoxBioticData</span>,
+  ConversionFunction = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Constant"</span>, <span class='st'>"Addition"</span>, <span class='st'>"Scaling"</span>, <span class='st'>"AdditionAndScaling"</span>),
+  GruopingVariables = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SpeciesCategory"</span>),
+  ConversionTable = <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A list of data tables.</p></td>
+      <th>ConversionFunction</th>
+      <td><p>Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.</p></td>
     </tr>
     <tr>
-      <th>tableNames</th>
-      <td><p>A character vector holding the names of the tables to merge.</p></td>
+      <th>GruopingVariables</th>
+      <td><p>A vector of variables to specify in the <code>ConversionTable</code>. The parameters specified in the table are valid for the combination of the <code>GruopingVariables</code> in the data.</p></td>
     </tr>
     <tr>
-      <th>output.only.last</th>
-      <td><p>Only returns last merged table.</p></td>
+      <th>ConversionTable</th>
+      <td><p>A table of the <code>GruopingVariables</code> and the columns "TargetVariable", "SourceVariable" and the parameters of the <code>ConversionFunction</code> (see details).</p>
+<p>The parameters of the <code>ConversionFunction</code> are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A merged data table.</p>
+    <p>A <code><a href='StoxBioticData.html'>StoxBioticData</a></code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

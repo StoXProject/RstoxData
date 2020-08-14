@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge list of data tables recursively — mergeDataTables • RstoxData</title>
+<title>Redefine StoxBioticData variables by data from BioticData — RedefineStoxBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge list of data tables recursively — mergeDataTables" />
-<meta property="og:description" content="Merge list of data tables recursively" />
+<meta property="og:title" content="Redefine StoxBioticData variables by data from BioticData — RedefineStoxBiotic" />
+<meta property="og:description" content="This function redefines one or more columns of StoxBioticData by columns of BioticData." />
 
 
 
@@ -108,37 +108,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge list of data tables recursively</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>mergeDataTables.Rd</code></div>
+    <h1>Redefine StoxBioticData variables by data from BioticData</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/DefineAndUpdateVariables.R'><code>R/DefineAndUpdateVariables.R</code></a></small>
+    <div class="hidden name"><code>RedefineStoxBiotic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge list of data tables recursively</p>
+    <p>This function redefines one or more columns of <code><a href='StoxBioticData.html'>StoxBioticData</a></code> by columns of <code><a href='BioticData.html'>BioticData</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mergeDataTables</span>(<span class='kw'>data</span>, tableNames = <span class='kw'>NULL</span>, output.only.last = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>RedefineStoxBiotic</span>(
+  <span class='kw'>StoxBioticData</span>,
+  <span class='kw'>BioticData</span>,
+  RedefinitionTable = <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A list of data tables.</p></td>
-    </tr>
-    <tr>
-      <th>tableNames</th>
-      <td><p>A character vector holding the names of the tables to merge.</p></td>
-    </tr>
-    <tr>
-      <th>output.only.last</th>
-      <td><p>Only returns last merged table.</p></td>
+      <th>RedefinitionTable</th>
+      <td><p>A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A merged data table.</p>
+    <p>A <code><a href='StoxBioticData.html'>StoxBioticData</a></code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
