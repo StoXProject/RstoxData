@@ -296,7 +296,7 @@ processPropertyFormats <- list(
 	), 
 	
 	variableNames = list(
-		type = "vector", 
+		class = "vector", 
 		title = "One or more variables to add to the StoxBioticData from BioticData"
 	)
 )
