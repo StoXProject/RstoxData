@@ -201,6 +201,46 @@ runOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
 }
 
 
+#' Run a function on all elements of x on one or more cores
+#'
+#' @param x An object to apply \code{FUN} to.
+#' @param FUN The function to apply.
+#' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @param ... Additional arguments to \code{FUN}.
+#'
+#' @return A list of outputs from \code{FUN}.
+#'
+#' @export
+#' 
+mapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, SIMPLIFY = FALSE) {
+	# Get the number of cores to use:
+	if(length(NumberOfCores) == 0) {
+		NumberOfCores <- getCores()
+	}
+	# Simple Lapply if onle one core:
+	if(NumberOfCores == 1) {
+		out <- lapply(x, FUN, ...)
+	}
+	# Run in parallel on Windows and other platforms:
+	else {
+		# Do not use more cores than the number of files:
+		NumberOfCores <- min(length(x), NumberOfCores)
+		
+		# On Windows run special args to speed up:
+		if(get_os() == "win") {
+			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			out <- parallel::clusterMap(cl, x, FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
+			parallel::stopCluster(cl)
+		} 
+		else {
+			out <- parallel::mcmapply(x, FUN, mc.cores = NumberOfCores, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
+		}
+	}
+	
+	return(out)
+}
+
+
 #' Round off to number of digits
 #'
 #' @param data A list of data tables.

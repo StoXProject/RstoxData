@@ -126,7 +126,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     
     # 1. Merge: a) Cruise number with everything b) age reading and individual (specific to data source type)
     if( datatype %in% c("nmdbioticv3", "nmdbioticv3.1") ) {
-        
+    	
         ## If preferredagereading in indivdiual is NA, use 1 as the preferred reading
         data$individual[,preferredagereading:= ifelse(is.na(preferredagereading), 1, preferredagereading)]
         
