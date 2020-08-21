@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Filter StoxAcoustic data — FilterStoxAcoustic • RstoxData</title>
+<title>Run a function on all elements of x on one or more cores — mapplyOnCores • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Filter StoxAcoustic data — FilterStoxAcoustic" />
-<meta property="og:description" content="Filters StoxAcousticData." />
+<meta property="og:title" content="Run a function on all elements of x on one or more cores — mapplyOnCores" />
+<meta property="og:description" content="Run a function on all elements of x on one or more cores" />
 
 
 
@@ -108,41 +108,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Filter StoxAcoustic data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Filter.R'><code>R/Filter.R</code></a></small>
-    <div class="hidden name"><code>FilterStoxAcoustic.Rd</code></div>
+    <h1>Run a function on all elements of x on one or more cores</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
+    <div class="hidden name"><code>mapplyOnCores.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Filters <code><a href='StoxAcousticData.html'>StoxAcousticData</a></code>.</p>
+    <p>Run a function on all elements of x on one or more cores</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FilterStoxAcoustic</span>(<span class='kw'>StoxAcousticData</span>, <span class='kw'>FilterExpression</span>, FilterUpwards = <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>mapplyOnCores</span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>FUN</span>,
+  NumberOfCores = <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span>(),
+  <span class='kw'>...</span>,
+  MoreArgs = <span class='kw'>NULL</span>,
+  SIMPLIFY = <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>StoxAcousticData</th>
-      <td><p>Input <code><a href='StoxAcousticData.html'>StoxAcousticData</a></code> data.</p></td>
+      <th>x</th>
+      <td><p>An object to apply <code>FUN</code> to.</p></td>
     </tr>
     <tr>
-      <th>FilterExpression</th>
-      <td><p>Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.</p></td>
+      <th>FUN</th>
+      <td><p>The function to apply.</p></td>
     </tr>
     <tr>
-      <th>PropagateDownwards</th>
-      <td><p>Whether the filter action will propagate in the downwards direction. Default to TRUE.</p></td>
+      <th>NumberOfCores</th>
+      <td><p>The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of <code>x</code>.</p></td>
     </tr>
     <tr>
-      <th>PropagateUpwards</th>
-      <td><p>Whether the filter action will propagate in the upwards direction. Default to FALSE.</p></td>
+      <th>...</th>
+      <td><p>Additional arguments to <code>FUN</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of filtered data in the same format as the input data.</p>
+    <p>A list of outputs from <code>FUN</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
