@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
 
@@ -118,7 +118,6 @@
     </div>
 
     <pre class="usage"><span class='fu'>mapplyOnCores</span>(
-  <span class='kw'>x</span>,
   <span class='kw'>FUN</span>,
   NumberOfCores = <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span>(),
   <span class='kw'>...</span>,
@@ -130,10 +129,6 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object to apply <code>FUN</code> to.</p></td>
-    </tr>
-    <tr>
       <th>FUN</th>
       <td><p>The function to apply.</p></td>
     </tr>
@@ -142,8 +137,8 @@
       <td><p>The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of <code>x</code>.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Additional arguments to <code>FUN</code>.</p></td>
+      <th>..., MoreArgs, SIMPLIFY</th>
+      <td><p>See <code><a href='https://rdrr.io/r/base/mapply.html'>mapply</a></code>.</p></td>
     </tr>
     </table>
 
