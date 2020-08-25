@@ -172,20 +172,20 @@ getCores <- function() {
 #'
 #' @export
 #' 
-runOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
+lapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
 	# Get the number of cores to use:
 	if(length(NumberOfCores) == 0) {
 		NumberOfCores <- getCores()
 	}
+	# Do not use more cores than the number of files:
+	NumberOfCores <- min(length(x), NumberOfCores)
+	
 	# Simple Lapply if onle one core:
 	if(NumberOfCores == 1) {
 		out <- lapply(x, FUN, ...)
 	}
 	# Run in parallel on Windows and other platforms:
 	else {
-		# Do not use more cores than the number of files:
-		NumberOfCores <- min(length(x), NumberOfCores)
-		
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
@@ -203,37 +203,44 @@ runOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
 
 #' Run a function on all elements of x on one or more cores
 #'
-#' @param x An object to apply \code{FUN} to.
 #' @param FUN The function to apply.
 #' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
-#' @param ... Additional arguments to \code{FUN}.
+#' @param ...,MoreArgs,SIMPLIFY See \code{\link[base]{mapply}}.
 #'
 #' @return A list of outputs from \code{FUN}.
 #'
 #' @export
 #' 
-mapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, SIMPLIFY = FALSE) {
+mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, SIMPLIFY = FALSE) {
 	# Get the number of cores to use:
 	if(length(NumberOfCores) == 0) {
 		NumberOfCores <- getCores()
 	}
-	# Simple Lapply if onle one core:
+	# Do not use more cores than the number of files:
+	lll <- list(...)
+	if(length(lll)) {
+		NumberOfCores <- min(length(lll[[1]]), NumberOfCores)
+	}
+	else {
+		NumberOfCores <- 1
+	}
+	
+	browser()
+	
+	# Simple mapply if onle one core:
 	if(NumberOfCores == 1) {
-		out <- lapply(x, FUN, ...)
+		out <- mapply(FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 	}
 	# Run in parallel on Windows and other platforms:
 	else {
-		# Do not use more cores than the number of files:
-		NumberOfCores <- min(length(x), NumberOfCores)
-		
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-			out <- parallel::clusterMap(cl, x, FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
+			out <- parallel::clusterMap(cl, FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 			parallel::stopCluster(cl)
 		} 
 		else {
-			out <- parallel::mcmapply(x, FUN, mc.cores = NumberOfCores, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
+			out <- parallel::mcmapply(FUN, mc.cores = NumberOfCores, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 		}
 	}
 	

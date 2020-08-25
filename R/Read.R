@@ -24,7 +24,7 @@
 ReadBiotic <- function(FileNames, NumberOfCores = integer()) {
 	
 	# Read BioticData possibly on several cores:
-	BioticData <- runOnCores(
+	BioticData <- lapplyOnCores(
 		FileNames, 
 		FUN = RstoxData::readXmlFile, 
 		NumberOfCores = NumberOfCores
@@ -85,7 +85,7 @@ ReadBiotic <- function(FileNames, NumberOfCores = integer()) {
 ReadAcoustic <- function(FileNames, NumberOfCores = integer()) {
 	
 	# Read AcousticData possibly on several cores:
-	AcousticData <- runOnCores(
+	AcousticData <- lapplyOnCores(
 		FileNames, 
 		FUN = RstoxData::readXmlFile, 
 		NumberOfCores = NumberOfCores
