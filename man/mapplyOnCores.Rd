@@ -5,7 +5,6 @@
 \title{Run a function on all elements of x on one or more cores}
 \usage{
 mapplyOnCores(
-  x,
   FUN,
   NumberOfCores = integer(),
   ...,
@@ -14,13 +13,11 @@ mapplyOnCores(
 )
 }
 \arguments{
-\item{x}{An object to apply \code{FUN} to.}
-
 \item{FUN}{The function to apply.}
 
 \item{NumberOfCores}{The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.}
 
-\item{...}{Additional arguments to \code{FUN}.}
+\item{..., MoreArgs, SIMPLIFY}{See \code{\link[base]{mapply}}.}
 }
 \value{
 A list of outputs from \code{FUN}.

@@ -24,7 +24,7 @@ StoxBiotic <- function(BioticData, NumberOfCores = integer()) {
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
 BioticData2GeneralSamplingHierarchy <- function(BioticData, NumberOfCores = integer()) {
     # Run the first phase possibly on several cores:
-	runOnCores(
+	lapplyOnCores(
 		BioticData, 
 		FUN = StoxBiotic_firstPhase, 
 		NumberOfCores = NumberOfCores
@@ -59,7 +59,7 @@ BioticData2GeneralSamplingHierarchy <- function(BioticData, NumberOfCores = inte
 GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, NumberOfCores = integer()) {
     
 	# Run the second phase possibly on several cores:
-	StoxBioticData <- runOnCores(
+	StoxBioticData <- lapplyOnCores(
 		GeneralSamplingHierarchy, 
 		FUN = StoxBiotic_secondPhase, 
 		NumberOfCores = NumberOfCores

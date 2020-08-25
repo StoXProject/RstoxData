@@ -10,7 +10,7 @@
 StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
     
 	# Convert to StoxAcosuticData possibly on several cores:
-    StoxAcousticData <- runOnCores(
+    StoxAcousticData <- lapplyOnCores(
     	AcousticData, 
     	FUN = StoxAcousticOne, 
     	NumberOfCores = NumberOfCores
