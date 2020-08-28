@@ -33,9 +33,9 @@ HaulKey,Sample,HaulKey,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,SampleKey,Y
 Sample,Sample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')",
-CatchFractionWeightKilogram,Sample,"ifelse(catchproducttype == 1, catchweight, NA)","ifelse(catchproducttype == 1, catchweight, NA)","ifelse(producttype == 1, weight, NA)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
+CatchFractionWeight,Sample,"ifelse(catchproducttype == 1, catchweight, NA)","ifelse(catchproducttype == 1, catchweight, NA)","ifelse(producttype == 1, weight, NA)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
 CatchFractionCount,Sample,catchcount,catchcount,count,SpeciesCategoryNumber,
-SampleWeightKilogram,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
+SampleWeight,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
 SampleCount,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Individual,StationKey,StationKey,StationKey,StationKey,Y
@@ -44,9 +44,9 @@ SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCateg
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y
 Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, IndividualKey, sep = '-')",
-IndividualRoundWeightGram,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(producttype.individual == 1, weight.individual * 1000, NA)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
-IndividualTotalLengthCentimeter,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
-LengthResolutionCentimeter,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),
+IndividualRoundWeight,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(producttype.individual == 1, weight.individual * 1000, NA)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
+IndividualTotalLength,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
+LengthResolution,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),
 WeightMeasurement,Individual,'IndividualWeight','IndividualWeight','IndividualWeight',"ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",
 IndividualAge,Individual,age,age,age,IndividualAge,
 IndividualSex,Individual,"ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(substr(IndividualSex, nchar(IndividualSex), nchar(IndividualSex)) == 'F', 'F', ifelse(substr(IndividualSex, nchar(IndividualSex), nchar(IndividualSex)) == 'M', 'M', NA))",

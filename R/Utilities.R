@@ -225,8 +225,6 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 		NumberOfCores <- 1
 	}
 	
-	browser()
-	
 	# Simple mapply if onle one core:
 	if(NumberOfCores == 1) {
 		out <- mapply(FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
