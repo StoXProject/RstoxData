@@ -259,27 +259,45 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 setRstoxPrecisionLevel <- function(x) {
 	# Get the defines number of digits:
 	digits <- getRstoxDataDefinitions("digits")
+	signifDigits <- getRstoxDataDefinitions("signifDigits")
 	
 	# If a data.table run setPrecisionLevelOneDT() directly:
 	if(data.table::is.data.table(x)) {
-		setPrecisionLevelOneDT(x, digits = digits)
+		setPrecisionLevelOneDT(x, digits = digits, signifDigits = signifDigits)
 	}
 	# If a list of data tables, loop through the list and set precision:
 	else if(is.list(x)) {
 		for(tableName in names(x)) {
-			setPrecisionLevelOneDT(x[[tableName]], digits = digits)
+			setPrecisionLevelOneDT(x[[tableName]], digits = digits, signifDigits = signifDigits)
 		}
 	}
 }
-# Functino setting the precision of one data table:
-setPrecisionLevelOneDT <- function(DT, digits) {
+# Function setting the precision of one data table:
+setPrecisionLevelOneDT <- function(DT, digits, signifDigits) {
 	# Detect numeric columns and round off to the specified number of digits:
 	atNumeric <- sapply(DT, is.numeric)
 	if(any(atNumeric)) {
 		numericCols <- names(DT)[atNumeric]
-		DT[, (numericCols) := round(.SD, digits), .SDcols = numericCols]
+		# DT[, (numericCols) := round(.SD, digits), .SDcols = numericCols]
+		#DT[, (numericCols) := roundSignif(.SD, digits = ..digits, signifDigits = ..signifDigits), .SDcols = numericCols]
+		for(numericCol in numericCols) {
+			DT[, eval(numericCol) := roundSignif(get(numericCol), digits = ..digits, signifDigits = ..signifDigits)]
+		}
 	}
 }
+
+
+roundSignif <- function(x, digits = 12, signifDigits = 6) {
+	digits <- pmax(signifDigits - floor(log10(abs(x))) - 1, digits)
+	round(x, digits)
+}
+
+## Stolen from https://stackoverflow.com/questions/47190693/count-the-number-of-integer-digits:
+#n_int_digits = function(x) {
+#	result = floor(log10(abs(x)))
+#	result[!is.finite(result)] = 0
+#	result
+#}
 
 
 # Function to get the formats of StoX raw data:

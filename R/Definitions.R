@@ -12,8 +12,9 @@
 #' 
 initiateRstoxData <- function(){
 	
-	# Define the number of digits used by the Rstox packages:
+	# Define the number of digits and the number of significant digits used by the Rstox packages:
 	digits <- 12
+	signifDigits <- 6
 	
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")
