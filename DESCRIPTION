@@ -1,5 +1,5 @@
 Package: RstoxData
-Version: 1.0.7
+Version: 1.0.8
 Date: 2020-09-01
 Title: Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats
 Authors@R: c(

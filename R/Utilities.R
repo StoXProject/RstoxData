@@ -287,8 +287,10 @@ setPrecisionLevelOneDT <- function(DT, digits, signifDigits) {
 }
 
 
-roundSignif <- function(x, digits = 12, signifDigits = 6) {
-	digits <- pmax(signifDigits - floor(log10(abs(x))) - 1, digits)
+roundSignif <- function(x, digits = 12, signifDigits = NULL) {
+	if(length(signifDigits)) {
+		digits <- pmax(signifDigits - floor(log10(abs(x))) - 1, digits)
+	}
 	round(x, digits)
 }
 
