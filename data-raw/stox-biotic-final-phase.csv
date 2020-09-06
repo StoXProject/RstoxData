@@ -1,6 +1,6 @@
 variable,level,nmdbioticv3.1,nmdbioticv3,nmdbioticv1.4,icesBiotic,key
 CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-Cruise,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+Cruise,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,
 Platform,Cruise,platform,platform,platform,Platform,
 CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Station,StationKey,StationKey,StationKey,StationKey,Y
