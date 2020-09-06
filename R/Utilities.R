@@ -81,7 +81,7 @@ mergeByIntersect <- function(x, y, ...) {
 }
 
 
-#' Merge two data tables by keys (variables ending with "Key")
+#' Merge two data tables by StoX keys
 #'
 #' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
 #'
@@ -89,21 +89,28 @@ mergeByIntersect <- function(x, y, ...) {
 #'
 #' @export
 #' 
-mergeByKeys <- function(x, y, toMergeFromY = NULL, replace = FALSE, ...) {
+mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = FALSE, ...) {
 	# Get the keys:
-	keys_x <- getKeys(x)
-	keys_y <- getKeys(y)
-	keys <- intersect(keys_x, keys_y)
+	#keys_x <- getKeys(x)
+	#keys_y <- getKeys(y)
+	#keys <- intersect(keys_x, keys_y)
+    keys <- Reduce(intersect, 
+        list(
+            names(x), 
+            names(y), 
+            getStoxKeys(StoxDataType = StoxDataType)
+        )
+    )
 	
 	# Define the columns to merge:
 	if(!length(toMergeFromY)) {
 		toMergeFromY <- names(y)
 	}
 	# Make sure the toMergeFromY are present in y:
-	toMergeFromY <- intersect(names(y), toMergeFromY)
-	# Exclcude the keys:
-	toMergeFromY <- setdiff(toMergeFromY, keys_y)
-	
+    toMergeFromY <- intersect(names(y), toMergeFromY)
+    # Exclcude the keys:
+	toMergeFromY <- setdiff(toMergeFromY, getStoxKeys(StoxDataType = StoxDataType))
+
 	#  Replace the variable in the target:
 	if(replace) {
 		keep <- setdiff(names(x), toMergeFromY)
@@ -121,10 +128,37 @@ mergeByKeys <- function(x, y, toMergeFromY = NULL, replace = FALSE, ...) {
 	}
 }
 
-getKeys <- function(x, keystring = "Key", ignore.case = FALSE) {
-	namesx <- names(x)
-	namesx[endsWith(if(ignore.case) tolower(namesx) else namesx, if(ignore.case) tolower(keystring) else keystring)]
+#getKeys <- function(x, keystring = "Key", ignore.case = FALSE) {
+#	namesx <- names(x)
+#	namesx[endsWith(if(ignore.case) tolower(namesx) else namesx, if(ignore.case) tolower(keystring) else keystring#)]
+#}
+
+
+#'
+#' @export
+#' 
+getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, all.keys = TRUE) {
+	StoxDataType <- match.arg(StoxDataType)
+	if(StoxDataType == "StoxBiotic") {
+	    keys <- stoxBioticObject$convertTable[key == "Y", c("variable", "level")]
+	    keys <- split(keys, by = "level")
+	    keys <- lapply(keys, "[[", "variable")
+	}
+	else if(StoxDataType == "StoxAcoustic") {
+		stop("Not yet implemented")
+	}
+	if(length(level)) {
+		keys <- keys[[level]]
+	}
+	else {
+	    keys <- unique(unlist(keys))
+	}
+	if(!all.keys) {
+		keys <- utils::tail(keys)
+	}
+	return(keys)
 }
+
 
 
 

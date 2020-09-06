@@ -336,9 +336,10 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     borrowVariables <- stoxBioticObject$borrowVariables[[datatype]]
     if(length(borrowVariables)) {
     	for(ind in seq_along(borrowVariables)) {
-    		data[[borrowVariables[[ind]]$target]] <- mergeByKeys(
+    		data[[borrowVariables[[ind]]$target]] <- mergeByStoxKeys(
     			x = data[[borrowVariables[[ind]]$target]], 
     			y = data[[borrowVariables[[ind]]$source]], 
+    			StoxDataType = "StoxBiotic", 
     			toMergeFromY = borrowVariables[[ind]]$variable, 
     			all.x = TRUE
     		)
@@ -392,14 +393,30 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #' @export
 #' 
 MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
+	
 	# Get the tables to merge:
 	StoxBioticDataTableNames <- names(StoxBioticData)
 	if(! TargetTable %in% StoxBioticDataTableNames) {
 		stop("TargetTable must be one of ", paste(StoxBioticDataTableNames, collapse = ", "))
 	}
 	tableNames <- StoxBioticDataTableNames[seq_len(which(StoxBioticDataTableNames == TargetTable))]
+	
+	# Get the variable names of the different tables, to add as attributes to the merged data:
+	stoxDataVariableNames <- lapply(StoxBioticData, names)
+	stoxDataVariableNames <- stoxDataVariableNames[tableNames]
+	
+	
 	# Merge:
-    mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
+    MergedStoxBioticData <- mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
+    
+    # Add the variable names as attributes:
+    setattr(
+    	MergedStoxBioticData, 
+    	"stoxDataVariableNames",
+    	stoxDataVariableNames
+    )
+    
+    return(MergedStoxBioticData)
 }
 
 
