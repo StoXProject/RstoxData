@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>StoX data type StoxBioticData — StoxBioticData • RstoxData</title>
+<title>Merge two data tables by StoX keys — mergeByStoxKeys • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="StoX data type StoxBioticData — StoxBioticData" />
-<meta property="og:description" content="Biotic data stored in the StoxBiotic format, which contains the variables needed for most estimation models used by StoX." />
+<meta property="og:title" content="Merge two data tables by StoX keys — mergeByStoxKeys" />
+<meta property="og:description" content="Merge two data tables by StoX keys" />
 
 
 
@@ -108,23 +108,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>StoX data type StoxBioticData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>StoxBioticData.Rd</code></div>
+    <h1>Merge two data tables by StoX keys</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
+    <div class="hidden name"><code>mergeByStoxKeys.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Biotic data stored in the StoxBiotic format, which contains the variables needed for most estimation models used by StoX.</p>
+    <p>Merge two data tables by StoX keys</p>
     </div>
 
+    <pre class="usage"><span class='fu'>mergeByStoxKeys</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>StoxDataType</span>, toMergeFromY = <span class='kw'>NULL</span>, replace = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x, y</th>
+      <td><p>Data tables of class <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code>).</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>This StoX data type is produced by <code><a href='StoxBiotic.html'>StoxBiotic</a></code>, and contains the tables Cruise, Station, Haul, SpeciesCategory, Sample and Individual in that hierachical order.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
+    <p>A merged data table.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
