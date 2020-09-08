@@ -133,11 +133,15 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 #	namesx[endsWith(if(ignore.case) tolower(namesx) else namesx, if(ignore.case) tolower(keystring) else keystring#)]
 #}
 
-
+#' Get the keys of a StoX format
+#' 
+#' @param StoxDataType The name of the StoX format (only StoxBiotic implemented yet).
+#' @param level The name of the level/table to get keys for.
+#' @param keys.out Specification of what to return. One of "all", to return all keys of the level; "only.present", to return only the key of the \code{level}; and "all.but.present", to return all keys except the present key.
 #'
 #' @export
 #' 
-getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, all.keys = TRUE) {
+getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, keys.out = c("all", "only.present", "all.but.present")) {
 	StoxDataType <- match.arg(StoxDataType)
 	if(StoxDataType == "StoxBiotic") {
 	    keys <- stoxBioticObject$convertTable[key == "Y", c("variable", "level")]
@@ -147,15 +151,23 @@ getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = 
 	else if(StoxDataType == "StoxAcoustic") {
 		stop("Not yet implemented")
 	}
+	
 	if(length(level)) {
 		keys <- keys[[level]]
 	}
 	else {
 	    keys <- unique(unlist(keys))
+	    return(keys)
 	}
-	if(!all.keys) {
-		keys <- utils::tail(keys)
+	
+	keys.out <- match.arg(keys.out)
+	if(keys.out == "only.present") {
+		keys <- utils::tail(keys, 1)
 	}
+	else if(keys.out == "all.but.present") {
+		keys <- keys[-length(keys)]
+	}
+	
 	return(keys)
 }
 
