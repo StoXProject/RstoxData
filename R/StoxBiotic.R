@@ -7,7 +7,10 @@
 #'
 #' @export
 #' 
-StoxBiotic <- function(BioticData, NumberOfCores = integer()) {
+StoxBiotic <- function(
+	BioticData, 
+	NumberOfCores = integer()
+) {
     
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
@@ -392,7 +395,10 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #'
 #' @export
 #' 
-MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
+MergeStoxBiotic <- function(
+	StoxBioticData, 
+	TargetTable = "Individual"
+) {
 	
 	# Get the tables to merge:
 	StoxBioticDataTableNames <- names(StoxBioticData)
@@ -430,7 +436,12 @@ MergeStoxBiotic <- function(StoxBioticData, TargetTable = "Individual") {
 #'
 #' @export
 #' 
-AddToStoxBiotic <- function(StoxBioticData, BioticData, VariableName = character(), NumberOfCores = integer()) {
+AddToStoxBiotic <- function(
+	StoxBioticData, 
+	BioticData, 
+	VariableName = character(), 
+	NumberOfCores = integer()
+) {
 	AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 

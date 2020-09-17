@@ -566,7 +566,7 @@ MergeStoxAcoustic <- function(StoxAcousticData, TargetTable = "NASC") {
 #'
 #' @export
 #' 
-StoxAcousticStartMiddleEndDateTime <- function(StoxAcousticData) {
+StoxAcousticStartMiddleStopDateTime <- function(StoxAcousticData) {
 	# Fill the start, middle and end DateTime with the DateTime directly, given the LogOrigin:
 	# Fill the StartDateTime with the DateTime directly, given the LogOrigin:
 	StoxAcousticData$Log[LogOrigin == "start", StartDateTime := DateTime]
@@ -576,7 +576,7 @@ StoxAcousticStartMiddleEndDateTime <- function(StoxAcousticData) {
 	
 	# Extrapolate to the middle and end times:
 	StoxAcousticData$Log[, MiddleDateTime := StartDateTime + LogDuration / 2]
-	StoxAcousticData$Log[, EndDateTime := StartDateTime + LogDuration]
+	StoxAcousticData$Log[, StopDateTime := StartDateTime + LogDuration]
 	
 	return(StoxAcousticData)
 }

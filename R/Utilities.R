@@ -70,14 +70,31 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 #'
 #' @export
 #' 
-mergeByIntersect <- function(x, y, ...) {
-	by <- intersect(names(x), names(y))
-	if(length(by)) {
-		merge(x, y, by = by, ...)
+mergeByIntersect <- function(x, y, ..., msg = FALSE) {
+	# Cascading merge if a list of tables is given:
+	if(length(x) > 1  && 
+	   is.list(x)  &&  
+	   !data.table::is.data.table(x)  && 
+	   data.table::is.data.table(x[[1]])) {
+		for(ind in seq(2, length(x))) {
+			x[[ind]] <- mergeByIntersect(x[[ind - 1]], x[[ind]], ..., msg = msg)
+		}
+		output <- x[[ind]]
 	}
 	else {
-		x
+		by <- intersect(names(x), names(y))
+		if(msg) {
+			message("Merging by ", paste(by, collapse = ", "))
+		}
+		if(length(by)) {
+			output <- merge(x, y, by = by, ...)
+		}
+		else {
+			stop("No intersect between the names of x and y")
+		}
 	}
+	
+	return(output)
 }
 
 
