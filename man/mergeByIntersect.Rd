@@ -4,7 +4,7 @@
 \alias{mergeByIntersect}
 \title{Merge two data tables by the intersect of the names}
 \usage{
-mergeByIntersect(x, y, ...)
+mergeByIntersect(x, y, ..., msg = FALSE)
 }
 \arguments{
 \item{x, y}{Data tables of class \code{\link[data.table]{data.table}}).}

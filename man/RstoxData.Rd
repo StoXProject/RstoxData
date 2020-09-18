@@ -27,6 +27,7 @@ Authors:
   \item Sindre Vatnehol
   \item Arne Johannes Holmin
   \item Edvin Fuglebakk
+  \item Espen Johnsen
 }
 
 }
