@@ -100,6 +100,7 @@ getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, sta
 }
 
 # Get ICES ship data
+#' @importFrom xml2 xml_ns_strip xml_find_all xml_text
 getICESShipCode <- function(platformname) {
 
     construct <- function(shipName) {
@@ -120,14 +121,15 @@ getICESShipCode <- function(platformname) {
         if (is.na(data))
             return(NA)
 
-        nodes <- xml_find_all(data, paste0("//d1:Code[contains(translate(d1:Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/d1:Key"))
+        xml_ns_strip(data)
+        nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/Key"))
 
         # Ship not found
         if (length(nodes) < 1) {
           return(NA)
         }
 
-	# Get the latest matching ships
+        # Get the latest matching ships
         shipCode <- xml_text(tail(nodes,1))
 
         return(shipCode)
