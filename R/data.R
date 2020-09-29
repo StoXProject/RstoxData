@@ -76,7 +76,10 @@ NULL
 #' 
 #' The process data of the RstoxData package. 
 #' 
+#' @details
+#' \itemize{
 #' \item{\code{\link{StoxBioticTranslation}}}
+#' }
 #' 
 #' @name ProcessData
 #' 

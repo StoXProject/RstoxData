@@ -100,6 +100,7 @@ getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, sta
 }
 
 # Get ICES ship data
+#' @importFrom xml2 xml_ns_strip xml_find_all xml_text
 getICESShipCode <- function(platformname) {
 
     construct <- function(shipName) {
@@ -120,14 +121,15 @@ getICESShipCode <- function(platformname) {
         if (is.na(data))
             return(NA)
 
-        nodes <- xml_find_all(data, paste0("//d1:Code[contains(translate(d1:Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/d1:Key"))
+        xml_ns_strip(data)
+        nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/Key"))
 
         # Ship not found
         if (length(nodes) < 1) {
           return(NA)
         }
 
-	# Get the latest matching ships
+        # Get the latest matching ships
         shipCode <- xml_text(tail(nodes,1))
 
         return(shipCode)
@@ -791,7 +793,15 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
           "SurSal" = NA,
           "BotSal" = NA,
           "ThermoCline" = NA,
-          "ThClineDepth" = NA
+          "ThClineDepth" = NA,
+          "CodendMesh" = NA ,
+          "SecchiDepth" = NA,
+          "Turbidity" = NA,
+          "TidePhase" = NA,
+          "TideSpeed" = NA,
+          "PelSampType" = NA,
+          "MinTrawlDepth" = NA,
+          "MaxTrawlDepth" = NA
       )]
 
       HHraw <- copy(finalHH[is.na(stationtype) | stationtype %in% targetStationType, c("RecordType", "Quarter", "Country", "Ship", "Gear",
@@ -801,7 +811,8 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
                               "Rigging", "Tickler", "Distance", "Warpingt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
                               "DoorSpread", "WingSpread", "Buoyancy", "KiteDim", "WgtGroundRope", "TowDir", "GroundSpeed",
                               "SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir", "WindSpeed",
-                              "SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth")]
+                              "SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth",
+                              "CodendMesh", "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelSampType", "MinTrawlDepth", "MaxTrawlDepth")]
                               )
 
       ## 2. HL ##
@@ -830,6 +841,23 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
           temp[hv == "I", res:="0"]
 
           return(temp$res)
+      }
+
+      # Convert Length Measurement Type
+      # http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/lengthmeasurement?version=2.0
+      # http://vocab.ices.dk/?ref=1392
+      convLenMeasType <- function(LenMeasType) {
+          # Convert table
+          ct <- c("B" = 5,
+                  "C" = 6,
+                  "E" = 1,
+                  "F" = 8,
+                  "G" = 4,
+                  "H" = 3,
+                  "J" = 2,
+                  "L" = 7,
+                  "S" = 9)
+          return(ct[LenMeasType])
       }
 
       mergedHL[, SpecVal := getSpecVal(HaulVal, catchcount, lengthsamplecount, catchweight)]
@@ -891,7 +919,7 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
                               "Country",
                               "Ship",
                               "Gear",
-                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype")]
+                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement")]
 
       finalHL <- finalHL[!duplicated(finalHL)]
       finalHL[,`:=`(noMeas = sum(lsCountTot)), by = groupHL]
@@ -920,8 +948,10 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
           "CatCatchWgt" = round(catCatchWgt),
           "LngtCode" = lngtCode,
           "LngtClass" = lngtClass,
-          "HLNoAtLngt" = round(lsCountTot, 2))
-          ]
+          "HLNoAtLngt" = round(lsCountTot, 2),
+          "DevStage" = NA,
+          "LenMeasType" = convLenMeasType(lengthmeasurement)
+          )]
       )
 
 
@@ -945,8 +975,23 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
                               "Country",
                               "Ship",
                               "Gear",
-                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight")]
+                              "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight",
+                              "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
       finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
+
+      # Convert aging structure source
+      # http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/agingstructure?version=2.0
+      # http://vocab.ices.dk/?ref=1507
+      convAgeSource <- function(AgeSource) {
+          # Convert table
+          ct <- c("1" = "scale",
+                  "2" = "otolith",
+                  "4" = "df-spine",
+                  "6" = "spine",
+                  "7" = "vertebra",
+                  "8" = "caudal-thorn")
+          return(ct[AgeSource])
+      }
 
       CAraw <- copy(finalCA[is.na(stationtype) | stationtype %in% targetStationType, .("RecordType" = "CA",
           "Quarter" = Quarter,
@@ -970,8 +1015,16 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
           "PlusGr" = as.character(NA),
           "AgeRings" = ifelse(!is.na(age), age, NA),
           "CANoAtLngt" = nInd,
-          "IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA))
-          ]
+          "IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA),
+          "MaturityScale" = "M6",
+          "FishID" = specimenid,
+          "GenSamp" = ifelse(!is.na(tissuesample), "Y", "N"),
+          "StomSamp" = ifelse(!is.na(stomach), "Y", "N"),
+          "AgeSource" = convAgeSource(agingstructure),
+          "AgePrepMet" = NA,
+          "OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
+          "ParSamp" = ifelse(!is.na(parasite), "Y", "N")
+        )]
       )
 
 
