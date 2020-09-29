@@ -72,19 +72,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.12</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -117,12 +111,12 @@
     <p>This function converts one or more columns of <code><a href='StoxBioticData.html'>StoxBioticData</a></code> by the function given by <code>ConversionFunction</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ConvertStoxBiotic</span>(
-  <span class='kw'>StoxBioticData</span>,
-  ConversionFunction = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Constant"</span>, <span class='st'>"Addition"</span>, <span class='st'>"Scaling"</span>, <span class='st'>"AdditionAndScaling"</span>),
-  GruopingVariables = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SpeciesCategory"</span>),
-  ConversionTable = <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>ConvertStoxBiotic</span><span class='op'>(</span>
+  <span class='va'>StoxBioticData</span>,
+  ConversionFunction <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Constant"</span>, <span class='st'>"Addition"</span>, <span class='st'>"Scaling"</span>, <span class='st'>"AdditionAndScaling"</span><span class='op'>)</span>,
+  GruopingVariables <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SpeciesCategory"</span><span class='op'>)</span>,
+  ConversionTable <span class='op'>=</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
