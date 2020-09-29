@@ -7,7 +7,9 @@
 The process data of the RstoxData package.
 }
 \details{
+\itemize{
 \item{\code{\link{StoxBioticTranslation}}}
+}
 }
 \seealso{
 \code{\link{ModelData}} for model data types and \code{\link{DataTypes}} for all data types produced by \code{\link{RstoxData}}.
