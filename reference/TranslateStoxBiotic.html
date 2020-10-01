@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Translate StoxBioticData — TranslateStoxBiotic" />
-<meta property="og:description" content="This function translates one or more columns of StoxBioticData to new values given by the table TranslationTable or by the input StoxBioticTranslation." />
+<meta property="og:description" content="This function translates one or more columns of StoxBioticData to new values given by the table Translation or by the input StoxBioticTranslation." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.13</span>
       </span>
     </div>
 
@@ -108,13 +108,13 @@
     </div>
 
     <div class="ref-description">
-    <p>This function translates one or more columns of <code><a href='StoxBioticData.html'>StoxBioticData</a></code> to new values given by the table <code>TranslationTable</code> or by the input <code>StoxBioticTranslation</code>.</p>
+    <p>This function translates one or more columns of <code><a href='StoxBioticData.html'>StoxBioticData</a></code> to new values given by the table <code>Translation</code> or by the input <code>StoxBioticTranslation</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>TranslateStoxBiotic</span><span class='op'>(</span>
   <span class='va'>StoxBioticData</span>,
   TranslationDefinition <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"FunctionParameter"</span>, <span class='st'>"FunctionInput"</span><span class='op'>)</span>,
-  TranslationTable <span class='op'>=</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span><span class='op'>(</span><span class='op'>)</span>,
+  Translation <span class='op'>=</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span><span class='op'>(</span><span class='op'>)</span>,
   <span class='va'>StoxBioticTranslation</span>
 <span class='op'>)</span></pre>
 
@@ -123,10 +123,10 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>TranslationDefinition</th>
-      <td><p>Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the <code>TranslationTable</code>, and "FunctionInput" for using the table produced by the process given by the function input <code>StoxBioticTranslation</code>.</p></td>
+      <td><p>Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the <code>Translation</code>, and "FunctionInput" for using the table produced by the process given by the function input <code>StoxBioticTranslation</code>.</p></td>
     </tr>
     <tr>
-      <th>TranslationTable</th>
+      <th>Translation</th>
       <td><p>A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.</p></td>
     </tr>
     <tr>
