@@ -382,3 +382,27 @@ checkUniqueFormat <- function(x) {
 	return(uniqueFormat)
 }
 
+
+# Function to remove rows with duplicated keys in StoxBioticData:
+removeRowsOfDuplicatedKeysFromStoxBioticData <- function(StoxBioticData) {
+	StoxBioticKeys <- getRstoxDataDefinitions("StoxBioticKeys")
+	
+	# Run through the tables of the StoxBioticData and remove duplicate rows:
+	for(tableName in names(StoxBioticData)) {
+		# Get the names of the columns which are keys:
+		presentKeys <- intersect(names(StoxBioticData[[tableName]]), StoxBioticKeys)
+		# Find rows of duplicated keys:
+		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
+		# Remove the rows with duplicated keys:
+		rowToKeep <- !duplicatedKeys
+		if(any(duplicatedKeys)) {
+			warning("Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
+			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowToKeep, ]
+		}
+	}
+	
+	return(StoxBioticData)
+}
+
+
+

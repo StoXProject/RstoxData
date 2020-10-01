@@ -18,6 +18,9 @@ StoxBiotic <- function(
     # Extract the StoxBiotic data and rbind across files:
     StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = NumberOfCores)
     
+    # Remove rows of duplicated keys:
+    StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
+    
     # Ensure that the numeric values are rounded to the defined number of digits:
     RstoxData::setRstoxPrecisionLevel(StoxBioticData)
     
@@ -364,11 +367,11 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     # Remove duplicated rows from SpeciesCategory
+    # This has been moved to **** and made general for all tables. The rule is to remove dows of duplicated keys.
     #secondPhaseTables[["SpeciesCategory"]] <- unique(secondPhaseTables[["SpeciesCategory"]])
-    secondPhaseTables <- lapply(secondPhaseTables, unique)
+    # secondPhaseTables <- lapply(secondPhaseTables, unique)
     
     return(secondPhaseTables)
-    
 }
 
 # Function to get the StoxBiotic on one file:

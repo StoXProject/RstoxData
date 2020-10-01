@@ -20,7 +20,8 @@ stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- list(
                  Station = list("station", "StationKey"),
                  Haul = list("serialnumber", "HaulKey"),
                  SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-                 Sample = list("catchpartnumber", "SampleKey"),
+                 #Sample = list("catchpartnumber", "SampleKey"),
+                 Sample = list("catchsampleid", "SampleKey"),
                  Individual = list("specimenid", "IndividualKey"),
                  SubIndividual = list("preysampleid", "SubIndividualKey")
                 )
@@ -58,7 +59,8 @@ stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
                  Station = list("station", "StationKey"),
                  Haul = list("serialnumber", "HaulKey"),
                  SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-                 Sample = list("catchpartnumber", "SampleKey"),
+                 #Sample = list("catchpartnumber", "SampleKey"),
+                 Sample = list("catchsampleid", "SampleKey"),
                  Individual = list("specimenid", "IndividualKey"),
                  SubIndividual = list("preysampleid", "SubIndividualKey")
                 )
