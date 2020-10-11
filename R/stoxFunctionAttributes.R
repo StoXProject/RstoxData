@@ -84,7 +84,7 @@ stoxFunctionAttributes <- list(
 	MergeStoxAcoustic = list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
-	    functionOutputDataType = "MergedStoxAcousticData", 
+	    functionOutputDataType = "MergeStoxAcousticData", 
 	    functionArgumentHierarchy = list()
 	),
 	
@@ -92,7 +92,7 @@ stoxFunctionAttributes <- list(
 	MergeStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "MergedStoxBioticData", 
+		functionOutputDataType = "MergeStoxBioticData", 
 		functionArgumentHierarchy = list()
 	),
 	
@@ -297,10 +297,7 @@ processPropertyFormats <- list(
 	
 	variableNames = list(
 		class = "vector", 
-		title = "One or more variables to add to the StoxBioticData from BioticData", 
-		possibleValues = function(BioticData) {
-			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
-		}
+		title = "One or more variables to add to the StoxBioticData from BioticData"
 	)
 )
 

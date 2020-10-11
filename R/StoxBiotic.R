@@ -394,7 +394,7 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #' @param StoxBioticData A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).
 #' @param TargetTable The name of the table up until which to merge (the default "Individual" implies merging all tables)
 #'
-#' @return An object of StoX data type \code{\link{MergedStoxBioticData}}.
+#' @return An object of StoX data type \code{\link{MergeStoxBioticData}}.
 #'
 #' @export
 #' 
@@ -416,16 +416,25 @@ MergeStoxBiotic <- function(
 	
 	
 	# Merge:
-    MergedStoxBioticData <- mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
+    MergeStoxBioticData <- mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
+    
+    # Move all keys to the start of the table:
+    data.table::setcolorder(
+    	MergeStoxBioticData, 
+    	intersect(
+    		names(MergeStoxBioticData), 
+    		getRstoxDataDefinitions("StoxBioticKeys")
+    	)
+    )
     
     # Add the variable names as attributes:
     setattr(
-    	MergedStoxBioticData, 
+    	MergeStoxBioticData, 
     	"stoxDataVariableNames",
     	stoxDataVariableNames
     )
     
-    return(MergedStoxBioticData)
+    return(MergeStoxBioticData)
 }
 
 
@@ -433,7 +442,7 @@ MergeStoxBiotic <- function(
 #'
 #' @inheritParams MergeStoxBiotic
 #' @inheritParams StoxBiotic
-#' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
+#' @param VariableName A character vector with names of the variables to add from the \code{BioticData}.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -442,20 +451,100 @@ MergeStoxBiotic <- function(
 AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
-	VariableNames = character(), 
+	VariableName = character(), 
 	NumberOfCores = integer()
 ) {
 	AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 
-		VariableNames = VariableNames, 
+		VariableName = VariableName, 
 		NumberOfCores = NumberOfCores, 
 		StoxDataFormat = "Biotic"
 	)
 }
 
 
+AddToStoxData <- function(
+	StoxData, 
+	RawData, 
+	VariableName = character(), 
+	NumberOfCores = integer(), 
+	StoxDataFormat = c("Biotic", "Acoustic")
+) {
+	
+	if(length(VariableName) == 0) {
+		warning("StoX: No variables specified to extract. Returning data unchcanged")
+		return(StoxData)
+	}
+	
+	# Check the the BioticData are all from the same source (ICES/NMD):
+	checkDataSource(RawData)
+	
+	# Convert from BioticData to the general sampling hierarchy:
+	StoxDataFormat <- match.arg(StoxDataFormat)
+	if(StoxDataFormat == "Biotic") {
+		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
+		# Define a vector of the variables to extract:
+		toExtract <- c(
+			getRstoxDataDefinitions("StoxBioticKeys"), 
+			VariableName
+		)
+	}
+	else if(StoxDataFormat == "Acoustic") {
+		stop("Not yet implemented")
+	}
+	else {
+		stop("Invalid StoxDataFormat")
+	}
+	
+	# Extract the variables to add:
+	toAdd <- lapply(GeneralSamplingHierarchy, function(x) lapply(x, extractVariables, var = toExtract))
+	# Rbind for each StoxBiotic table:
+	toAdd <- rbindlist_StoxFormat(toAdd)
+	# Extract only those tables present in StoxBioticData:
+	toAdd <- toAdd[names(StoxData)]
+	# Keep only unique rows:
+	toAdd <- lapply(toAdd, unique)
+	
+	# Merge with the present StoxBioticData:
+	StoxData <- mapply(merge, StoxData, toAdd)
+	
+	return(StoxData)
+}
 
+# Function to extracct variables from a table:
+extractVariables <- function(x, var) {
+	varToExtract <- intersect(names(x), var)
+	if(length(varToExtract)) {
+		x[, ..varToExtract]
+	}
+	else {
+		#warning("None of the variables present")
+		data.table::data.table()
+	}
+}
+
+checkDataSource <- function(BioticData) {
+	# Function to match the metadata against data source strings:
+	matchSource <- function(x, BioticData) {
+		matched <- startsWith(sapply(lapply(BioticData, "[[", "metadata"), "[[", "useXsd"), x)
+		output <- rep(NA, length(matched))
+		output[matched] <- x
+		return(output)
+	}
+	
+	# Detect the data source:
+	possibleDataSources <- c("nmd", "ices")
+	detectedDataSources <- sapply(possibleDataSources, matchSource, BioticData = BioticData, simplify = FALSE)
+	numberOfFormats <- sum(sapply(detectedDataSources, function(x) any(!is.na(x))))
+	#detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
+	# Accept only BioticData from a single source:
+	if(numberOfFormats > 1) {
+		stop("The function AddToStoxBiotic can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
+	}
+	
+	return(detectedDataSources)
+}
 
 
 

@@ -545,7 +545,7 @@ StoxAcousticOne <- function(data_list) {
 #' @param StoxAcousticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
 #' @param TargetTable The name of the table up until which to merge (the default "NASC" implies merging all tables)
 #'
-#' @return An object of StoX data type \code{\link{MergedStoxAcousticData}}.
+#' @return An object of StoX data type \code{\link{MergeStoxAcousticData}}.
 #'
 #' @export
 #' 
