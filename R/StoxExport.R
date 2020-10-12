@@ -600,7 +600,7 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
 
       ## 1. HH ##
       getTSCountryByIOC <- function(nation) {
-          cnvTbl <- c("58" = "NOR")
+          cnvTbl <- c("58" = "NO")
 
           x <- cnvTbl[as.character(nation)]
           x[is.null(x)] <- NA
