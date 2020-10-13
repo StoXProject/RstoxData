@@ -11,7 +11,7 @@ RedefineData <- function(
 	StoxData <- AddToStoxData(
 		StoxData = StoxData, 
 		RawData = RawData, 
-		VariableName = Redefinition$ReplaceBy, 
+		VariableNames = Redefinition$ReplaceBy, 
 		NumberOfCores = NumberOfCores, 
 		StoxDataFormat = "Biotic"
 	)

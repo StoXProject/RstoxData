@@ -442,7 +442,7 @@ MergeStoxBiotic <- function(
 #'
 #' @inheritParams MergeStoxBiotic
 #' @inheritParams StoxBiotic
-#' @param VariableName A character vector with names of the variables to add from the \code{BioticData}.
+#' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -451,66 +451,19 @@ MergeStoxBiotic <- function(
 AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
-	VariableName = character(), 
+	VariableNames = character(), 
 	NumberOfCores = integer()
 ) {
 	AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 
-		VariableName = VariableName, 
+		VariableNames = VariableNames, 
 		NumberOfCores = NumberOfCores, 
 		StoxDataFormat = "Biotic"
 	)
 }
 
 
-AddToStoxData <- function(
-	StoxData, 
-	RawData, 
-	VariableName = character(), 
-	NumberOfCores = integer(), 
-	StoxDataFormat = c("Biotic", "Acoustic")
-) {
-	
-	if(length(VariableName) == 0) {
-		warning("StoX: No variables specified to extract. Returning data unchcanged")
-		return(StoxData)
-	}
-	
-	# Check the the BioticData are all from the same source (ICES/NMD):
-	checkDataSource(RawData)
-	
-	# Convert from BioticData to the general sampling hierarchy:
-	StoxDataFormat <- match.arg(StoxDataFormat)
-	if(StoxDataFormat == "Biotic") {
-		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
-		# Define a vector of the variables to extract:
-		toExtract <- c(
-			getRstoxDataDefinitions("StoxBioticKeys"), 
-			VariableName
-		)
-	}
-	else if(StoxDataFormat == "Acoustic") {
-		stop("Not yet implemented")
-	}
-	else {
-		stop("Invalid StoxDataFormat")
-	}
-	
-	# Extract the variables to add:
-	toAdd <- lapply(GeneralSamplingHierarchy, function(x) lapply(x, extractVariables, var = toExtract))
-	# Rbind for each StoxBiotic table:
-	toAdd <- rbindlist_StoxFormat(toAdd)
-	# Extract only those tables present in StoxBioticData:
-	toAdd <- toAdd[names(StoxData)]
-	# Keep only unique rows:
-	toAdd <- lapply(toAdd, unique)
-	
-	# Merge with the present StoxBioticData:
-	StoxData <- mapply(merge, StoxData, toAdd)
-	
-	return(StoxData)
-}
 
 # Function to extracct variables from a table:
 extractVariables <- function(x, var) {

@@ -255,7 +255,9 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Add DateTime as POSIXct
 		#data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$Log[, DateTime:= as.POSIXct(start_time, format='%Y-%m-%d %H:%M:%OS', tz='GMT')]
+		StoxDateTimeFormat <- getRstoxDataDefinitions("StoxDateTimeFormat")
+		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
+		data_list$Log[, DateTime:= as.POSIXct(start_time, format = StoxDateTimeFormat, tz = StoxTimeZone)]
 		
 		
 		
@@ -264,8 +266,8 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log$LogOrigin2 <- "end"
 		
 		data_list$Log$LogDuration <- as.numeric(
-			as.POSIXct(data_list$Log$stop_time, format="%Y-%m-%d %H:%M:%S") - 
-				as.POSIXct(data_list$Log$start_time, format="%Y-%m-%d %H:%M:%S"), 
+			as.POSIXct(data_list$Log$stop_time, format=StoxDateTimeFormat) - 
+				as.POSIXct(data_list$Log$start_time, format=StoxDateTimeFormat), 
 			units ="secs"
 		)
 		

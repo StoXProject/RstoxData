@@ -7,7 +7,7 @@
 AddToStoxBiotic(
   StoxBioticData,
   BioticData,
-  VariableName = character(),
+  VariableNames = character(),
   NumberOfCores = integer()
 )
 }
@@ -16,7 +16,7 @@ AddToStoxBiotic(
 
 \item{BioticData}{A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.}
 
-\item{VariableName}{A character vector with names of the variables to add from the \code{BioticData}.}
+\item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
 
 \item{NumberOfCores}{Overrides multi-core auto detection (default).}
 }
