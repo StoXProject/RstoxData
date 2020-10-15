@@ -180,7 +180,8 @@ processPropertyFormats <- list(
 	), 
 	filePaths = list(
 		class = "vector", 
-		title = "The path to one or more files"
+		title = "The path to one or more files", 
+		variableTypes <- "character"
 	), 
 	filterExpressionList = list(
 		class = "list", 
@@ -300,7 +301,8 @@ processPropertyFormats <- list(
 		title = "One or more variables to add to the StoxBioticData from BioticData", 
 		possibleValues = function(BioticData) {
 			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
-		}
+		}, 
+		variableTypes <- "character"
 	)
 )
 
