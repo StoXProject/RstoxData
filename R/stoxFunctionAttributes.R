@@ -297,7 +297,10 @@ processPropertyFormats <- list(
 	
 	variableNames = list(
 		class = "vector", 
-		title = "One or more variables to add to the StoxBioticData from BioticData"
+		title = "One or more variables to add to the StoxBioticData from BioticData", 
+		possibleValues = function(BioticData) {
+			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
+		}
 	)
 )
 

@@ -42,6 +42,15 @@ initiateRstoxData <- function(){
 		"IndividualKey", 
 		"SubIndividualKey"
 	)
+	# StoxBioticKeys: 
+	StoxAcousticKeys <- c(
+		"CruiseKey", 
+		"LogKey", 
+		"BeamKey", 
+		"AcousticCategoryKey", 
+		"ChannelReferenceKey", 
+		"NASCKey"
+	)
 	
 	targetAndSourceVariables <- list(
 		target = "TargetVariable", 

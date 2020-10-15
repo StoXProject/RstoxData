@@ -41,6 +41,12 @@ StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
     # Rbind for each StoxAcoustic table:
     StoxAcousticData <- rbindlist_StoxFormat(StoxAcousticData)
     
+    # Remove rows of duplicated keys:
+    StoxAcousticData <- removeRowsOfDuplicatedKeys(
+    	StoxData = StoxAcousticData, 
+    	stoxDataFormat = "Acoustic"
+    )
+    
     
   #tableNames <- names(data_list_out[[1]])
 #

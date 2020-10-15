@@ -383,25 +383,49 @@ checkUniqueFormat <- function(x) {
 }
 
 
+## Function to remove rows with duplicated keys in StoxBioticData:
+#removeRowsOfDuplicatedKeysFromStoxBioticData <- function(StoxBioticData) {
+#	StoxBioticKeys <- getRstoxDataDefinitions("StoxBioticKeys")
+#	
+#	# Run through the tables of the StoxBioticData and remove duplicate rows:
+#	for(tableName in names(StoxBioticData)) {
+#		# Get the names of the columns which are keys:
+#		presentKeys <- intersect(names(StoxBioticData[[tableName]]), StoxBioticKeys)
+#		# Find rows of duplicated keys:
+#		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
+#		# Remove the rows with duplicated keys:
+#		rowToKeep <- !duplicatedKeys
+#		if(any(duplicatedKeys)) {
+#			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
+#			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowToKeep, ]
+#		}
+#	}
+#	
+#	return(StoxBioticData)
+#}
+
+
 # Function to remove rows with duplicated keys in StoxBioticData:
-removeRowsOfDuplicatedKeysFromStoxBioticData <- function(StoxBioticData) {
-	StoxBioticKeys <- getRstoxDataDefinitions("StoxBioticKeys")
+removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
-	# Run through the tables of the StoxBioticData and remove duplicate rows:
-	for(tableName in names(StoxBioticData)) {
+	stoxDataFormat <- match.arg(stoxDataFormat)
+	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
+	
+	# Run through the tables of the StoxData and remove duplicate rows:
+	for(tableName in names(StoxData)) {
 		# Get the names of the columns which are keys:
-		presentKeys <- intersect(names(StoxBioticData[[tableName]]), StoxBioticKeys)
+		presentKeys <- intersect(names(StoxData[[tableName]]), StoxKeys)
 		# Find rows of duplicated keys:
-		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
+		duplicatedKeys <- duplicated(StoxData[[tableName]][, ..presentKeys])
 		# Remove the rows with duplicated keys:
 		rowToKeep <- !duplicatedKeys
 		if(any(duplicatedKeys)) {
-			warning("Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
-			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowToKeep, ]
+			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ".")
+			StoxData[[tableName]] <- StoxData[[tableName]][rowToKeep, ]
 		}
 	}
 	
-	return(StoxBioticData)
+	return(StoxData)
 }
 
 

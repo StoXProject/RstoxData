@@ -19,7 +19,11 @@ StoxBiotic <- function(
     StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = NumberOfCores)
     
     # Remove rows of duplicated keys:
-    StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
+    #StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
+    StoxBioticData <- removeRowsOfDuplicatedKeys(
+    	StoxData = StoxBioticData, 
+    	stoxDataFormat = "Biotic"
+    )
     
     # Ensure that the numeric values are rounded to the defined number of digits:
     RstoxData::setRstoxPrecisionLevel(StoxBioticData)
@@ -465,17 +469,6 @@ AddToStoxBiotic <- function(
 
 
 
-# Function to extracct variables from a table:
-extractVariables <- function(x, var) {
-	varToExtract <- intersect(names(x), var)
-	if(length(varToExtract)) {
-		x[, ..varToExtract]
-	}
-	else {
-		#warning("None of the variables present")
-		data.table::data.table()
-	}
-}
 
 checkDataSource <- function(BioticData) {
 	# Function to match the metadata against data source strings:
