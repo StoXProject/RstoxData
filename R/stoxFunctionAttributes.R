@@ -164,7 +164,7 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			VariableNames = "variableNames"
+			VariableNames = "variableNames_AddToStoxBiotic"
 		)
 	)
 )
@@ -296,7 +296,7 @@ processPropertyFormats <- list(
 		}
 	), 
 	
-	variableNames = list(
+	variableNames_AddToStoxBiotic = list(
 		class = "vector", 
 		title = "One or more variables to add to the StoxBioticData from BioticData", 
 		possibleValues = function(BioticData) {
