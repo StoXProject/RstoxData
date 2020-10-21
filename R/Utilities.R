@@ -394,10 +394,10 @@ checkUniqueFormat <- function(x) {
 #		# Find rows of duplicated keys:
 #		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
 #		# Remove the rows with duplicated keys:
-#		rowToKeep <- !duplicatedKeys
+#		rowsToKeep <- !duplicatedKeys
 #		if(any(duplicatedKeys)) {
 #			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
-#			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowToKeep, ]
+#			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowsToKeep, ]
 #		}
 #	}
 #	
@@ -416,12 +416,20 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 		# Get the names of the columns which are keys:
 		presentKeys <- intersect(names(StoxData[[tableName]]), StoxKeys)
 		# Find rows of duplicated keys:
-		duplicatedKeys <- duplicated(StoxData[[tableName]][, ..presentKeys])
+		duplicatedKeys <- duplicated(StoxData[[tableName]], by = presentKeys)
 		# Remove the rows with duplicated keys:
-		rowToKeep <- !duplicatedKeys
 		if(any(duplicatedKeys)) {
-			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ".")
-			StoxData[[tableName]] <- StoxData[[tableName]][rowToKeep, ]
+			# Get the rows with equall keys, and indicate this in a copy of the data, and write to a tempfile:
+			allDuplicated <- duplicated(StoxData[[tableName]], by = presentKeys) | duplicated(StoxData[[tableName]], by = presentKeys, fromLast = TRUE)
+			dupData <- data.table::copy(StoxData[[tableName]])
+			dupData[, duplicated := ..allDuplicated]
+			dupData[, rowIndex := .I]
+			fileToWriteDupDataTo <- tempfile()
+			data.table::fwrite(dupData, fileToWriteDupDataTo)
+			
+			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
+			#rowsToKeep <- !duplicatedKeys
+			StoxData[[tableName]] <- StoxData[[tableName]][!duplicatedKeys, ]
 		}
 	}
 	
