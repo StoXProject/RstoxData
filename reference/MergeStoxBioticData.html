@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Filter (raw) Biotic data — FilterBiotic • RstoxData</title>
+<title>StoX data type MergeStoxBioticData — MergeStoxBioticData • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Filter (raw) Biotic data — FilterBiotic" />
-<meta property="og:description" content="Filters BioticData." />
+<meta property="og:title" content="StoX data type MergeStoxBioticData — MergeStoxBioticData" />
+<meta property="og:description" content="Merged StoxBioticData." />
 
 
 
@@ -102,41 +102,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Filter (raw) Biotic data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Filter.R'><code>R/Filter.R</code></a></small>
-    <div class="hidden name"><code>FilterBiotic.Rd</code></div>
+    <h1>StoX data type MergeStoxBioticData</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>MergeStoxBioticData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Filters <code><a href='BioticData.html'>BioticData</a></code>.</p>
+    <p>Merged <code><a href='StoxBioticData.html'>StoxBioticData</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FilterBiotic</span><span class='op'>(</span><span class='va'>BioticData</span>, <span class='va'>FilterExpression</span>, FilterUpwards <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>BioticData</th>
-      <td><p>Input <code><a href='BioticData.html'>BioticData</a></code> data.</p></td>
-    </tr>
-    <tr>
-      <th>FilterExpression</th>
-      <td><p>Filter expression givevn as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator %in% or the special operator %notin%, which is defined in RstoxData.</p></td>
-    </tr>
-    <tr>
-      <th>PropagateDownwards</th>
-      <td><p>Whether the filter action will propagate in the downwards direction. Default to TRUE.</p></td>
-    </tr>
-    <tr>
-      <th>PropagateUpwards</th>
-      <td><p>Whether the filter action will propagate in the upwards direction. Default to FALSE.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>An object of filtered data in the same format as the input data.</p>
+    <p>This StoX data type is produced by <code><a href='MergeStoxBiotic.html'>MergeStoxBiotic</a></code>, and contains one merged table of <code><a href='StoxBioticData.html'>StoxBioticData</a></code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
