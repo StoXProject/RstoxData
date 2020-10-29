@@ -383,26 +383,140 @@ checkUniqueFormat <- function(x) {
 }
 
 
+## Function to remove rows with duplicated keys in StoxBioticData:
+#removeRowsOfDuplicatedKeysFromStoxBioticData <- function(StoxBioticData) {
+#	StoxBioticKeys <- getRstoxDataDefinitions("StoxBioticKeys")
+#	
+#	# Run through the tables of the StoxBioticData and remove duplicate rows:
+#	for(tableName in names(StoxBioticData)) {
+#		# Get the names of the columns which are keys:
+#		presentKeys <- intersect(names(StoxBioticData[[tableName]]), StoxBioticKeys)
+#		# Find rows of duplicated keys:
+#		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
+#		# Remove the rows with duplicated keys:
+#		rowsToKeep <- !duplicatedKeys
+#		if(any(duplicatedKeys)) {
+#			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
+#			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowsToKeep, ]
+#		}
+#	}
+#	
+#	return(StoxBioticData)
+#}
+
+
 # Function to remove rows with duplicated keys in StoxBioticData:
-removeRowsOfDuplicatedKeysFromStoxBioticData <- function(StoxBioticData) {
-	StoxBioticKeys <- getRstoxDataDefinitions("StoxBioticKeys")
+removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
-	# Run through the tables of the StoxBioticData and remove duplicate rows:
-	for(tableName in names(StoxBioticData)) {
+	stoxDataFormat <- match.arg(stoxDataFormat)
+	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
+	
+	# Run through the tables of the StoxData and remove duplicate rows:
+	for(tableName in names(StoxData)) {
 		# Get the names of the columns which are keys:
-		presentKeys <- intersect(names(StoxBioticData[[tableName]]), StoxBioticKeys)
+		presentKeys <- intersect(names(StoxData[[tableName]]), StoxKeys)
 		# Find rows of duplicated keys:
-		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
+		duplicatedKeys <- duplicated(StoxData[[tableName]], by = presentKeys)
 		# Remove the rows with duplicated keys:
-		rowToKeep <- !duplicatedKeys
 		if(any(duplicatedKeys)) {
-			warning("Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
-			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowToKeep, ]
+			# Get the rows with equall keys, and indicate this in a copy of the data, and write to a tempfile:
+			allDuplicated <- duplicated(StoxData[[tableName]], by = presentKeys) | duplicated(StoxData[[tableName]], by = presentKeys, fromLast = TRUE)
+			dupData <- data.table::copy(StoxData[[tableName]])
+			dupData[, duplicated := ..allDuplicated]
+			dupData[, rowIndex := .I]
+			fileToWriteDupDataTo <- tempfile()
+			data.table::fwrite(dupData, fileToWriteDupDataTo)
+			
+			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
+			#rowsToKeep <- !duplicatedKeys
+			StoxData[[tableName]] <- StoxData[[tableName]][!duplicatedKeys, ]
 		}
 	}
 	
-	return(StoxBioticData)
+	return(StoxData)
 }
 
 
+
+AddToStoxData <- function(
+	StoxData, 
+	RawData, 
+	VariableNames = character(), 
+	NumberOfCores = integer(), 
+	StoxDataFormat = c("Biotic", "Acoustic")
+) {
+	
+	if(length(VariableNames) == 0) {
+		warning("StoX: No variables specified to extract. Returning data unchcanged")
+		return(StoxData)
+	}
+	
+	# Check the the BioticData are all from the same source (ICES/NMD):
+	checkDataSource(RawData)
+	
+	# Convert from BioticData to the general sampling hierarchy:
+	StoxDataFormat <- match.arg(StoxDataFormat)
+	if(StoxDataFormat == "Biotic") {
+		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
+		# Define a vector of the variables to extract:
+		toExtract <- c(
+			getRstoxDataDefinitions("StoxBioticKeys"), 
+			VariableNames
+		)
+	}
+	else if(StoxDataFormat == "Acoustic") {
+		stop("Not yet implemented")
+	}
+	else {
+		stop("Invalid StoxDataFormat")
+	}
+	
+	# Extract the variables to add:
+	toAdd <- lapply(GeneralSamplingHierarchy, function(x) lapply(x, extractVariables, var = toExtract))
+	# Rbind for each StoxBiotic table:
+	toAdd <- rbindlist_StoxFormat(toAdd)
+	# Extract only those tables present in StoxBioticData:
+	toAdd <- toAdd[names(StoxData)]
+	# Keep only unique rows:
+	toAdd <- lapply(toAdd, unique)
+	
+	# Merge with the present StoxBioticData:
+	StoxData <- mapply(merge, StoxData, toAdd)
+	
+	return(StoxData)
+}
+
+# Function to extracct variables from a table:
+extractVariables <- function(x, var) {
+	varToExtract <- intersect(names(x), var)
+	if(length(varToExtract)) {
+		x[, ..varToExtract]
+	}
+	else {
+		#warning("None of the variables present")
+		data.table::data.table()
+	}
+}
+
+checkDataSource <- function(BioticData) {
+	# Function to match the metadata against data source strings:
+	matchSource <- function(x, BioticData) {
+		matched <- startsWith(sapply(lapply(BioticData, "[[", "metadata"), "[[", "useXsd"), x)
+		output <- rep(NA, length(matched))
+		output[matched] <- x
+		return(output)
+	}
+	
+	# Detect the data source:
+	possibleDataSources <- c("nmd", "ices")
+	detectedDataSources <- sapply(possibleDataSources, matchSource, BioticData = BioticData, simplify = FALSE)
+	numberOfFormats <- sum(sapply(detectedDataSources, function(x) any(!is.na(x))))
+	#detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
+	# Accept only BioticData from a single source:
+	if(numberOfFormats > 1) {
+		stop("The function AddToStoxBiotic can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
+	}
+	
+	return(detectedDataSources)
+}
 

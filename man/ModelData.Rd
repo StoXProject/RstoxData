@@ -11,10 +11,10 @@ This RstoxData package produces the folliwing StoX data types:
 \itemize{
 \item{\code{\link{BioticData}}}
 \item{\code{\link{StoxBioticData}}}
-\item{\code{\link{MergedStoxBioticData}}}
+\item{\code{\link{MergeStoxBioticData}}}
 \item{\code{\link{AcousticData}}}
 \item{\code{\link{StoxAcousticData}}}
-\item{\code{\link{MergedStoxAcousticData}}}
+\item{\code{\link{MergeStoxAcousticData}}}
 \item{\code{\link{LandingData}}}
 \item{\code{\link{StoxLandingData}}}
 }

@@ -55,10 +55,10 @@ NULL
 #' \itemize{
 #' \item{\code{\link{BioticData}}}
 #' \item{\code{\link{StoxBioticData}}}
-#' \item{\code{\link{MergedStoxBioticData}}}
+#' \item{\code{\link{MergeStoxBioticData}}}
 #' \item{\code{\link{AcousticData}}}
 #' \item{\code{\link{StoxAcousticData}}}
-#' \item{\code{\link{MergedStoxAcousticData}}}
+#' \item{\code{\link{MergeStoxAcousticData}}}
 #' \item{\code{\link{LandingData}}}
 #' \item{\code{\link{StoxLandingData}}}
 #' }
@@ -121,7 +121,7 @@ NULL
 
 ##################################################
 ##################################################
-#' StoX data type MergedStoxBioticData
+#' StoX data type MergeStoxBioticData
 #' 
 #' Merged \code{\link{StoxBioticData}}.
 #' 
@@ -130,7 +130,7 @@ NULL
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name MergedStoxBioticData
+#' @name MergeStoxBioticData
 #' 
 NULL
 
@@ -169,7 +169,7 @@ NULL
 
 ##################################################
 ##################################################
-#' StoX data type MergedStoxAcousticData
+#' StoX data type MergeStoxAcousticData
 #' 
 #' Merged \code{\link{StoxAcousticData}}.
 #' 
@@ -178,7 +178,7 @@ NULL
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name MergedStoxAcousticData
+#' @name MergeStoxAcousticData
 #' 
 NULL
 

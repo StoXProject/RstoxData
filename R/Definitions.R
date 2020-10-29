@@ -12,9 +12,13 @@
 #' 
 initiateRstoxData <- function(){
 	
-	# Define the number of digits and the number of significant digits used by the Rstox packages:
+	# Define the number of digits (12) and the number of significant digits (6, used if values are very low) used by the Rstox packages:
 	digits <- 12
 	signifDigits <- 6
+	
+	# Define the time format used by Stox formats:
+	StoxDateTimeFormat <- "%Y-%m-%d %H:%M:%OS"
+	StoxTimeZone <- "UTC"
 	
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")
@@ -37,6 +41,15 @@ initiateRstoxData <- function(){
 		"SampleKey", 
 		"IndividualKey", 
 		"SubIndividualKey"
+	)
+	# StoxBioticKeys: 
+	StoxAcousticKeys <- c(
+		"CruiseKey", 
+		"LogKey", 
+		"BeamKey", 
+		"AcousticCategoryKey", 
+		"ChannelReferenceKey", 
+		"NASCKey"
 	)
 	
 	targetAndSourceVariables <- list(

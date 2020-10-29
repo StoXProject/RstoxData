@@ -7,13 +7,15 @@ RedefineData <- function(
 	NumberOfCores = integer()
 ) {
 	
+	StoxDataFormat <- match.arg(StoxDataFormat)
+	
 	# Add the requested variable:
 	StoxData <- AddToStoxData(
 		StoxData = StoxData, 
 		RawData = RawData, 
-		VariableName = Redefinition$ReplaceBy, 
+		VariableNames = Redefinition$ReplaceBy, 
 		NumberOfCores = NumberOfCores, 
-		StoxDataFormat = "Biotic"
+		StoxDataFormat = StoxDataFormat
 	)
 	
 	# Remove the old:
