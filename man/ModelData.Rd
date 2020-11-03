@@ -20,5 +20,5 @@ This RstoxData package produces the folliwing StoX data types:
 }
 }
 \seealso{
-\code{\link[RstoxBase]{RstoxBase}} and \code{\link[RstoxFDA]{RstoxFDA}} for a list of all StoX data types produced by the other official StoX function packages.
+\href{https://github.com/StoXProject/RstoxBase}{RstoxBase} and \href{https://github.com/StoXProject/RstoxFDA}{RstoxFDA} for a list of all StoX data types produced by the other official StoX function packages.
 }

@@ -12,6 +12,8 @@ TranslateStoxBiotic(
 )
 }
 \arguments{
+\item{StoxBioticData}{An input of \link{ModelData} object}
+
 \item{TranslationDefinition}{Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{Translation}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.}
 
 \item{Translation}{A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.}

@@ -169,7 +169,7 @@ stoxFunctionAttributes <- list(
 	)
 )
 
-# Define the process property formats:
+#' Define the process property formats:
 #' 
 #' @export
 #' 

@@ -573,7 +573,11 @@ MergeStoxAcoustic <- function(StoxAcousticData, TargetTable = "NASC") {
 
 
 
-
+#' Generate Start, Middle and Stop DateTime variables
+#'
+#' @param StoxAcousticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
+#' 
+#' @return An object of StoX data type \code{\link{MergeStoxAcousticData}}.
 #'
 #' @export
 #' 

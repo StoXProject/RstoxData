@@ -3,6 +3,7 @@
 #' @param data A list of data tables.
 #' @param tableNames A character vector holding the names of the tables to merge.
 #' @param output.only.last Only returns last merged table.
+#' @param ... Extra parameters that will be passed into \code{\link[data.table]{merge}}.
 #'
 #' @return A merged data table.
 #'
@@ -64,7 +65,9 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 
 #' Merge two data tables by the intersect of the names
 #'
-#' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
+#' @param x,y Data tables of class \code{\link[data.table]{data.table}}.
+#' @param ... Various overrides.
+#' @param msg Verbose message switch, default to \code{FALSE}.
 #'
 #' @return A merged data table.
 #'
@@ -100,7 +103,15 @@ mergeByIntersect <- function(x, y, ..., msg = FALSE) {
 
 #' Merge two data tables by StoX keys
 #'
-#' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
+#' @param x,y Data tables of class \code{\link[data.table]{data.table}}.
+#' @param StoxDataType Input data type. Text string of \code{StoxBiotic}
+#' 			or \code{StoxAcoustic}.
+#' @param toMergeFromY Specify key columns from \code{y}. \code{NULL} means
+#' 			all similarly named columns from \code{x} and \code{y} will be
+#' 			merged. Default to \code{NULL}.
+#' @param replace Whether to replace the variables in the target.
+#' 			Default to \code{FALSE}.
+#' @param ... Extra parameters that will be passed into \code{\link[data.table]{merge}}.
 #'
 #' @return A merged data table.
 #'
@@ -311,11 +322,9 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 
 #' Round off to number of digits
 #'
-#' @param data A list of data tables.
-#' @param tableNames A character vector holding the names of the tables to merge.
-#' @param output.only.last Only returns last merged table.
+#' @param x A list of \code{data.table}s or a single \code{data.table} object.
 #'
-#' @return A merged data table.
+#' @return A transformed object.
 #'
 #' @export
 #' 
