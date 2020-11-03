@@ -11,9 +11,7 @@ FilterBiotic(BioticData, FilterExpression, FilterUpwards = FALSE)
 
 \item{FilterExpression}{Filter expression givevn as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \%in\% or the special operator \%notin\%, which is defined in RstoxData.}
 
-\item{PropagateDownwards}{Whether the filter action will propagate in the downwards direction. Default to TRUE.}
-
-\item{PropagateUpwards}{Whether the filter action will propagate in the upwards direction. Default to FALSE.}
+\item{FilterUpwards}{Whether the filter action will propagate in the upwards direction. Default to FALSE.}
 }
 \value{
 An object of filtered data in the same format as the input data.
