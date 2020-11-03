@@ -1,8 +1,3 @@
-# Properly unload gadget shared lib
-.onUnload <- function (libpath) {
-  library.dynam.unload("RstoxData", libpath)
-}
-
 # Global variables
 utils::globalVariables(c("RstoxDataEnv", "xsdObjects", ".", "..allDuplicated", "..colAgg",
     "..colList", "..columns", "..digits", "..keep", "..key",
