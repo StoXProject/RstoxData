@@ -4,8 +4,8 @@
 }
 
 # Global variables
-utils::globalVariables(c("RstoxDataEnv", "xsdObjects", ":=", "..allDuplicated", "..colAgg",
-    ".", "..colList", "..columns", "..digits", "..keep", "..key",
+utils::globalVariables(c("RstoxDataEnv", "xsdObjects", ".", "..allDuplicated", "..colAgg",
+    "..colList", "..columns", "..digits", "..keep", "..key",
     "..signifDigits", "..sourceColumns", "..targetAndSourceVariables",
     "..varToExtract", "..x", "AcousticCategory", "Addition", "age", "agingstructure", "ap",
     "aphia", "BeamKey", "bottomdepthstart", "bottomdepthstop", "catCatchWgt", "catchcount",
