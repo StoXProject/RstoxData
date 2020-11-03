@@ -66,8 +66,6 @@ initiateRstoxData <- function(){
 	names(definitions) <- definitionsNames
 	
 	#### Create the RstoxDataEnv environment, holding definitions on folder structure and all the projects. This environment cna be accesses using RstoxData:::RstoxDataEnv: ####
-	#utils::globalVariables("RstoxDataEnv")
-	utils::globalVariables(c("RstoxDataEnv", ":=", "xsdObjects") )
 	assign("RstoxDataEnv", new.env(), parent.env(environment()))
 	assign("definitions", definitions, envir=get("RstoxDataEnv"))
 	
