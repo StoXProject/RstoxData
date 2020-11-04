@@ -403,7 +403,7 @@ RedefineStoxBiotic <- function(
 #' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} to translate values of one or more columns of \code{\link{StoxBioticData}} to new values given by a table or read from a CSV file.
 #' 
 #' @inheritParams general_arguments
-#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file gievn by \code{FileName}.
+#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
 #' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
 #' @param FileName The csv file holding a table with the three variables listed for \code{Translation}.
 #' 

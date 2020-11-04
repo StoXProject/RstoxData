@@ -7,7 +7,7 @@
 Acoustic data stored in the StoxAcoustic format, which contains the variables needed for most estimation models used by StoX.
 }
 \details{
-This StoX data type is produced by \code{\link{StoxAcoustic}}, and contains the tables Cruise, Log, Beam, AcousticCategory, ChannelReference and NASC in that hierachical order.
+This StoX data type is produced by \code{\link{StoxAcoustic}}, and contains the tables Cruise, Log, Beam, AcousticCategory, ChannelReference and NASC in that hierarchical order.
 }
 \seealso{
 \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}

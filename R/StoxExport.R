@@ -583,6 +583,7 @@ writeICESBiotic <- function(BioticData, cruiseSurvey = "NONE", cruiseOrganisatio
 #' @return List of data.table objects in the ICES DATRAS CSV format.
 #'
 #' @importFrom stats aggregate
+#' @importFrom data.table copy
 #' @export
 writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
 

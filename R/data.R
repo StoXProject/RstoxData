@@ -51,7 +51,7 @@ NULL
 #' StoX data types are the data types used to transfer data and information between processes in a StoX estimation model.
 #' 
 #' @details
-#' This RstoxData package produces the folliwing StoX data types:
+#' This RstoxData package produces the following StoX data types:
 #' \itemize{
 #' \item{\code{\link{BioticData}}}
 #' \item{\code{\link{StoxBioticData}}}
@@ -110,7 +110,7 @@ NULL
 #' Biotic data stored in the StoxBiotic format, which contains the variables needed for most estimation models used by StoX.
 #' 
 #' @details
-#' This StoX data type is produced by \code{\link{StoxBiotic}}, and contains the tables Cruise, Station, Haul, SpeciesCategory, Sample and Individual in that hierachical order.
+#' This StoX data type is produced by \code{\link{StoxBiotic}}, and contains the tables Cruise, Station, Haul, SpeciesCategory, Sample and Individual in that hierarchical order.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -158,7 +158,7 @@ NULL
 #' Acoustic data stored in the StoxAcoustic format, which contains the variables needed for most estimation models used by StoX.
 #' 
 #' @details
-#' This StoX data type is produced by \code{\link{StoxAcoustic}}, and contains the tables Cruise, Log, Beam, AcousticCategory, ChannelReference and NASC in that hierachical order.
+#' This StoX data type is produced by \code{\link{StoxAcoustic}}, and contains the tables Cruise, Log, Beam, AcousticCategory, ChannelReference and NASC in that hierarchical order.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -212,12 +212,12 @@ NULL
 #'   \item{Year}{integer() Year of catch}
 #'   \item{CatchDate}{POSIXct() Date of catch (last catch on trip) in UTC}
 #'   \item{Gear}{character() Code for gear used for catch (dominant gear for trip)}
-#'   \item{Area}{character() Area code for the position where the catch was cought (dominant area for trip)}
-#'   \item{SubArea}{character() Subdivision of area code for the position where the catch was cought (dominant area for trip)}
-#'   \item{Coastal}{character() Code indidcating whether catch was taken within coastal delimitation line (dominant side for trip)}
-#'   \item{N62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
+#'   \item{Area}{character() Area code for the position where the catch was caught (dominant area for trip)}
+#'   \item{SubArea}{character() Subdivision of area code for the position where the catch was caught (dominant area for trip)}
+#'   \item{Coastal}{character() Code indicating whether catch was taken within coastal delimitation line (dominant side for trip)}
+#'   \item{N62Code}{character() Code indicating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
 #'   \item{VesselLengthGroup}{character() Length group for vessel}
-#'   \item{CountryVessel}{character() Country of the vessel that caugth the catch}
+#'   \item{CountryVessel}{character() Country of the vessel that caught the catch}
 #'   \item{LandingSite}{character() Code identifying landing site (buyer of catch)}
 #'   \item{CountryLanding}{character() Country where catch was landed}
 #'   \item{Usage}{character() Code for market usage of catch.}

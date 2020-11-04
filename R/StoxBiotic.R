@@ -127,6 +127,7 @@ rbindlist_StoxFormat <- function(x) {
 
 
 # Function to convert the data read from one type of biotic data into the general sampling hierarchy for biotic data defined by StoX:
+#' @importFrom data.table .N setindexv
 firstPhase <- function(data, datatype, stoxBioticObject) {
     
 	# Getting data for the datatype
@@ -319,6 +320,7 @@ StoxBiotic_firstPhase <- function(BioticData) {
 }
 
 # Function to convert from the general sampling hierarchy to the StoxBiotic format for each file:
+#' @importFrom data.table indices
 secondPhase <- function(data, datatype, stoxBioticObject) {
     
     # Getting conversion function for datatype
@@ -400,6 +402,7 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #'
 #' @return An object of StoX data type \code{\link{MergeStoxBioticData}}.
 #'
+#' @importFrom data.table setattr
 #' @export
 #' 
 MergeStoxBiotic <- function(

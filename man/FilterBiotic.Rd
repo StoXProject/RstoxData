@@ -9,7 +9,7 @@ FilterBiotic(BioticData, FilterExpression, FilterUpwards = FALSE)
 \arguments{
 \item{BioticData}{Input \code{\link{BioticData}} data.}
 
-\item{FilterExpression}{Filter expression givevn as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \%in\% or the special operator \%notin\%, which is defined in RstoxData.}
+\item{FilterExpression}{Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \code{\%in\%} or the special operator \code{\%notin\%}, which is defined in RstoxData.}
 
 \item{FilterUpwards}{Whether the filter action will propagate in the upwards direction. Default to FALSE.}
 }

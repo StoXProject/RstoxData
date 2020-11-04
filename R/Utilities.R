@@ -167,6 +167,7 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 #' @param level The name of the level/table to get keys for.
 #' @param keys.out Specification of what to return. One of "all", to return all keys of the level; "only.present", to return only the key of the \code{level}; and "all.but.present", to return all keys except the present key.
 #'
+#' @importFrom data.table key
 #' @export
 #' 
 getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, keys.out = c("all", "only.present", "all.but.present")) {
@@ -239,7 +240,7 @@ getCores <- function() {
 #'
 #' @param x An object to apply \code{FUN} to.
 #' @param FUN The function to apply.
-#' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @param NumberOfCores The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.
 #' @param ... Additional arguments to \code{FUN}.
 #'
 #' @return A list of outputs from \code{FUN}.
@@ -278,7 +279,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
 #' Run a function on all elements of x on one or more cores
 #'
 #' @param FUN The function to apply.
-#' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @param NumberOfCores The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.
 #' @param ...,MoreArgs,SIMPLIFY See \code{\link[base]{mapply}}.
 #'
 #' @return A list of outputs from \code{FUN}.
@@ -415,6 +416,7 @@ checkUniqueFormat <- function(x) {
 
 
 # Function to remove rows with duplicated keys in StoxBioticData:
+#' @importFrom data.table .I
 removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
 	stoxDataFormat <- match.arg(stoxDataFormat)

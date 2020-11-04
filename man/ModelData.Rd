@@ -7,7 +7,7 @@
 StoX data types are the data types used to transfer data and information between processes in a StoX estimation model.
 }
 \details{
-This RstoxData package produces the folliwing StoX data types:
+This RstoxData package produces the following StoX data types:
 \itemize{
 \item{\code{\link{BioticData}}}
 \item{\code{\link{StoxBioticData}}}
