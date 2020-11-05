@@ -375,7 +375,8 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' 
 #' This function redefines one or more columns of \code{\link{StoxBioticData}} by columns of \code{\link{BioticData}}.
 #' 
-#' @inheritParams ModelData
+#' @param StoxBioticData An input of \link{ModelData} object
+#' @param BioticData An input of \link{ModelData} object
 #' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by. 
 #' 
 #' @return
@@ -402,7 +403,7 @@ RedefineStoxBiotic <- function(
 #' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} to translate values of one or more columns of \code{\link{StoxBioticData}} to new values given by a table or read from a CSV file.
 #' 
 #' @inheritParams general_arguments
-#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file gievn by \code{FileName}.
+#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
 #' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
 #' @param FileName The csv file holding a table with the three variables listed for \code{Translation}.
 #' 
@@ -431,8 +432,7 @@ DefineStoxBioticTranslation <- function(
 #' 
 #' This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the table \code{Translation} or by the input \code{StoxBioticTranslation}.
 #' 
-#' @inheritParams ModelData
-#' @inheritParams ProcessData
+#' @param StoxBioticData An input of \link{ModelData} object
 #' @param TranslationDefinition  Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{Translation}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.
 #' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
 #' @param StoxBioticTranslation The process from which to get the \code{\link{StoxBioticTranslation}} definition.
@@ -463,7 +463,7 @@ TranslateStoxBiotic <- function(
 #' 
 #' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
 #' 
-#' @inheritParams ModelData
+#' @param StoxBioticData An input of \link{ModelData} object
 #' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
 #' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
 #' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).

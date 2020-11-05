@@ -12,6 +12,8 @@ ConvertStoxBiotic(
 )
 }
 \arguments{
+\item{StoxBioticData}{An input of \link{ModelData} object}
+
 \item{ConversionFunction}{Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.}
 
 \item{GruopingVariables}{A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.}

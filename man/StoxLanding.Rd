@@ -26,13 +26,13 @@ StoX function
 }
 \details{
 All columns that are not the ones aggregated (weight), will be used as aggregation variables.
- This includes any columns added with 'appendColumns' and may not make much sense for continous variables.
+ This includes any columns added with 'appendColumns' and may not make much sense for continuous variables.
  
  If 'LandingData' does not contain columns identified by 'appendColumns'. NA columns will be added.
 
- Correspondances indicate which field a value is derived from, not necessarily verbatim copied.
+ Correspondences indicate which field a value is derived from, not necessarily verbatim copied.
 
- Correspondance to LandingData (http://www.imr.no/formats/landinger/v2):
+ Correspondence to LandingData (http://www.imr.no/formats/landinger/v2):
  \describe{
   \item{Species}{Art_kode}
   \item{Year}{Fangstår}

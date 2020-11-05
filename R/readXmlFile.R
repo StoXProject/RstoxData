@@ -21,9 +21,7 @@
 #' three <- readXmlFile("./test.zip")
 #' }
 #'
-#' @useDynLib RstoxData
-#' @importFrom Rcpp sourceCpp
-#' @importFrom data.table as.data.table transpose
+#' @importFrom data.table as.data.table transpose data.table := .SD
 #' @importFrom utils data
 #'
 #' @export

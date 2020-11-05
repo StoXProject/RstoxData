@@ -8,18 +8,18 @@
 #'
 #'  Historically, columns in the landings provided from FDIR has been adapted for each data delivery
 #'  Lately data deliveries has become standardized, but in order to support variants
-#'  adherence to the standardization is not enfored by this function, unless option 'strict' is selected.
-#'  If column names does not match specification, but data is otherwise parseable, a warning will be issued.
+#'  adherence to the standardization is not enforced by this function, unless option 'strict' is selected.
+#'  If column names does not match specification, but data is otherwise parse-able, a warning will be issued.
 #'  
 #'  If 'strict' is not selection, data types may be inferred from data.
 #'  The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to \code{\link[readr]{read_delim}})
 #' @param file path to file with LSS landings
 #' @param encoding encoding for 'file'
 #' @param guessMax passed to \code{\link[readr]{read_delim}}, unless 'strict' is true
-#' @param strict enforce strict adherance to data format.
+#' @param strict enforce strict adherence to data format.
 #' @return data.table with LSS landings
-#' @import data.table
-#' @import readr
+#' @importFrom data.table as.data.table
+#' @importFrom readr default_locale read_delim col_character col_date col_datetime col_double col_integer col_number cols
 #' @export
 readLssFile <- function(file, encoding="latin1", guessMax = 100000, strict=T){
   

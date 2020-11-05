@@ -7,14 +7,10 @@
 setRstoxPrecisionLevel(x)
 }
 \arguments{
-\item{data}{A list of data tables.}
-
-\item{tableNames}{A character vector holding the names of the tables to merge.}
-
-\item{output.only.last}{Only returns last merged table.}
+\item{x}{A list of \code{data.table}s or a single \code{data.table} object.}
 }
 \value{
-A merged data table.
+A transformed object.
 }
 \description{
 Round off to number of digits

@@ -3,6 +3,7 @@
 #' @param data A list of data tables.
 #' @param tableNames A character vector holding the names of the tables to merge.
 #' @param output.only.last Only returns last merged table.
+#' @param ... Extra parameters that will be passed into \code{\link[data.table]{merge}}.
 #'
 #' @return A merged data table.
 #'
@@ -64,7 +65,9 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 
 #' Merge two data tables by the intersect of the names
 #'
-#' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
+#' @param x,y Data tables of class \code{\link[data.table]{data.table}}.
+#' @param ... Various overrides.
+#' @param msg Verbose message switch, default to \code{FALSE}.
 #'
 #' @return A merged data table.
 #'
@@ -100,7 +103,15 @@ mergeByIntersect <- function(x, y, ..., msg = FALSE) {
 
 #' Merge two data tables by StoX keys
 #'
-#' @param x,y Data tables of class \code{\link[data.table]{data.table}}).
+#' @param x,y Data tables of class \code{\link[data.table]{data.table}}.
+#' @param StoxDataType Input data type. Text string of \code{StoxBiotic}
+#' 			or \code{StoxAcoustic}.
+#' @param toMergeFromY Specify key columns from \code{y}. \code{NULL} means
+#' 			all similarly named columns from \code{x} and \code{y} will be
+#' 			merged. Default to \code{NULL}.
+#' @param replace Whether to replace the variables in the target.
+#' 			Default to \code{FALSE}.
+#' @param ... Extra parameters that will be passed into \code{\link[data.table]{merge}}.
 #'
 #' @return A merged data table.
 #'
@@ -156,6 +167,7 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 #' @param level The name of the level/table to get keys for.
 #' @param keys.out Specification of what to return. One of "all", to return all keys of the level; "only.present", to return only the key of the \code{level}; and "all.but.present", to return all keys except the present key.
 #'
+#' @importFrom data.table key
 #' @export
 #' 
 getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, keys.out = c("all", "only.present", "all.but.present")) {
@@ -228,7 +240,7 @@ getCores <- function() {
 #'
 #' @param x An object to apply \code{FUN} to.
 #' @param FUN The function to apply.
-#' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @param NumberOfCores The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.
 #' @param ... Additional arguments to \code{FUN}.
 #'
 #' @return A list of outputs from \code{FUN}.
@@ -267,7 +279,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
 #' Run a function on all elements of x on one or more cores
 #'
 #' @param FUN The function to apply.
-#' @param NumberOfCores The number of cores to use, defaulted to detect the avavilable number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @param NumberOfCores The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.
 #' @param ...,MoreArgs,SIMPLIFY See \code{\link[base]{mapply}}.
 #'
 #' @return A list of outputs from \code{FUN}.
@@ -311,11 +323,9 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 
 #' Round off to number of digits
 #'
-#' @param data A list of data tables.
-#' @param tableNames A character vector holding the names of the tables to merge.
-#' @param output.only.last Only returns last merged table.
+#' @param x A list of \code{data.table}s or a single \code{data.table} object.
 #'
-#' @return A merged data table.
+#' @return A transformed object.
 #'
 #' @export
 #' 
@@ -406,6 +416,7 @@ checkUniqueFormat <- function(x) {
 
 
 # Function to remove rows with duplicated keys in StoxBioticData:
+#' @importFrom data.table .I
 removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
 	stoxDataFormat <- match.arg(stoxDataFormat)

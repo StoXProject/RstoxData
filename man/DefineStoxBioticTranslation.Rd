@@ -17,7 +17,7 @@ DefineStoxBioticTranslation(
 
 \item{UseProcessData}{Logical: If TRUE use the existing function output in the process.}
 
-\item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file gievn by \code{FileName}.}
+\item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
 
 \item{Translation}{A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.}
 

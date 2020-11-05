@@ -1,15 +1,24 @@
 Package: RstoxData
-Version: 1.0.14
-Date: 2020-10-21
-Title: Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats
+Version: 1.0.15
+Date: 2020-11-05
+Title: Utilities to Read and Manipulate Fisheries' Trawl Survey, Acoustic Survey and
+  Commercial Landings Data Formats
 Authors@R: c(
-  person(given = "Ibrahim", family = "Umar", role = c("cre", "aut"), email = "ibrahim.umar@hi.no"), 
-  person(given = "Sindre", family = "Vatnehol", role = "aut"), 
-  person(given = "Arne Johannes", family = "Holmin", role = "aut"), 
-  person(given = "Edvin", family = "Fuglebakk", role = "aut"), 
-  person(given = "Espen", family = "Johnsen", role = "aut"))
+  person(given = "Ibrahim", family = "Umar", role = c("cre", "aut"),
+    email = "ibrahim.umar@hi.no"),
+  person(given = "Sindre", family = "Vatnehol", role = "aut"),
+  person(given = "Arne Johannes", family = "Holmin", role = "aut"),
+  person(given = "Edvin", family = "Fuglebakk", role = "aut"),
+  person(given = "Espen", family = "Johnsen", role = "aut"),
+  person(given = "Norwegian Institute of Marine Research",
+    role = c("cph", "fnd")))
 Depends: R (>= 3.6)
-Description: Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
+Description: Set of tools to read and manipulate various data formats for
+  fisheries. Mainly catered towards scientific trawl survey sampling ('biotic')
+  data, acoustic trawl data, and commercial fishing catch ('landings') data. 
+  Among the supported data formats are the data products from the Norwegian 
+  Institute Marine Research ('IMR') and the International Council for the
+  Exploration of the Sea (ICES).
 URL: https://github.com/StoXProject/RstoxData
 BugReports: https://github.com/StoXProject/RstoxData/issues
 License: LGPL-3
@@ -24,4 +33,4 @@ Suggests:
     testthat
 LinkingTo: 
     Rcpp
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

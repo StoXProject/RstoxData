@@ -159,9 +159,12 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "
     }
   }
 
+  print("Resulting CSV file is saved as:")
+
   if (combine) {
     ovw(filename, overwrite)
     suppressWarnings(lapply(data, write.table, file = filename, append = TRUE, na = na, row.names = FALSE, quote = FALSE, sep = ","))
+    print(filename)
   } else {
     subname <- names(data)
 
@@ -172,6 +175,7 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "
       subfilename <- paste0(tools::file_path_sans_ext(filename), "_", subname[i], ".", tools::file_ext(filename))
       ovw(subfilename, overwrite)
       suppressWarnings(write.table(data[[i]], file = subfilename, append = FALSE, na = na, row.names = FALSE, quote = FALSE, sep = ","))
+      print(subfilename)
     }
   }
   return(TRUE)
@@ -368,7 +372,7 @@ writeICESAcoustic <- function(Acoustic, save = TRUE){
       )
 
       if(save == TRUE){
-        filename = gsub('.xml','.csv',aco$metadata$file)
+        filename = tempfile(fileext = '.csv')
         exportCSV(filename, tmp, combine = TRUE, overwrite = TRUE)
       }
       
@@ -559,7 +563,7 @@ writeICESBiotic <- function(BioticData, cruiseSurvey = "NONE", cruiseOrganisatio
 
     # Save to file
     if(save == TRUE){
-      filename = gsub('.xml','.csv',raw$metadata$file)
+      filename = tempfile(fileext = '.csv')
       exportCSV(filename, bioticOutput, combine = TRUE, overwrite = TRUE)
     }
 
@@ -583,6 +587,7 @@ writeICESBiotic <- function(BioticData, cruiseSurvey = "NONE", cruiseOrganisatio
 #' @return List of data.table objects in the ICES DATRAS CSV format.
 #'
 #' @importFrom stats aggregate
+#' @importFrom data.table copy
 #' @export
 writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
 
@@ -1198,7 +1203,7 @@ writeICESDatras <- function(BioticData, addStationType = NA, save = TRUE) {
 
     # Save to file
     if(save == TRUE){
-      filename = gsub('.xml','.csv',raw$metadata$file)
+      filename = tempfile(fileext = '.csv')
       exportCSV(filename, datrasOutput, combine = TRUE, na = "-9", overwrite = TRUE)
     }
 
