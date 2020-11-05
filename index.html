@@ -5,14 +5,21 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats • RstoxData</title>
+<title>Utilities to Read and Manipulate Fisheries' Trawl Survey, Acoustic Survey and
+  Commercial Landings Data Formats • RstoxData</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Utilities to Read Fisheries Biotic, Acoustic and Landing Data Formats">
-<meta property="og:description" content="Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).">
+<script src="pkgdown.js"></script><meta property="og:title" content="Utilities to Read and Manipulate Fisheries' Trawl Survey, Acoustic Survey and
+  Commercial Landings Data Formats">
+<meta property="og:description" content="Set of tools to read and manipulate various data formats for
+  fisheries. Mainly catered towards scientific trawl survey sampling (biotic)
+  data, acoustic trawl data, and commercial fishing catch (landings) data. 
+  Among the supported data formats are the data products from the Norwegian 
+  Institute Marine Research (IMR) and the International Council for the
+  Exploration of the Sea (ICES).">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -31,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.15</span>
       </span>
     </div>
 
@@ -39,6 +46,9 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -60,7 +70,69 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-Tools to fetch and manipulate various data formats for fisheries (mainly geared towards biotic and acoustic data).
+<div id="rstoxdata" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#rstoxdata" class="anchor"></a>RstoxData</h1></div>
+<p><img src="https://github.com/StoXProject/RstoxData/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></p>
+<div id="introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h2>
+<p>RstoxData is a package to parse and manipulate various data formats for fisheries.</p>
+<p>The package contains functions for reading, filtering and writing fisheries’ trawl survey samples (biotic), acoustic trawl survey and commercial catch samples (landings) data in XML formats.</p>
+<p>Loaded data can also be filtered by using any supported R conditional syntax such as <code>longitude &gt; 10</code>, or by user pre-defined functions such as <code>inside()</code>.</p>
+<div id="supported-formats" class="section level3">
+<h3 class="hasAnchor">
+<a href="#supported-formats" class="anchor"></a>Supported formats:</h3>
+<div id="a-norwegian-institute-of-marine-research-imr-data-definitions" class="section level4">
+<h4 class="hasAnchor">
+<a href="#a-norwegian-institute-of-marine-research-imr-data-definitions" class="anchor"></a>A. Norwegian Institute of Marine Research (IMR) (<a href="https://www.imr.no/formats/">data definitions</a>):</h4>
+<ol>
+<li>Biotic (fish trawl survey) XML format (up to version 3.1).</li>
+<li>Acoustic (acoustic/echosounder trawl surveys) XML format (version 1).</li>
+<li>Landings (commercial catch samples) XML format (version 2).</li>
+</ol>
+</div>
+<div id="b-norwegian-directorate-of-fisheries" class="section level4">
+<h4 class="hasAnchor">
+<a href="#b-norwegian-directorate-of-fisheries" class="anchor"></a>B. Norwegian Directorate of Fisheries:</h4>
+<ol>
+<li>Sales Notes data in the LSS format.</li>
+<li>Electronic logbooks (ERS) in tabular format.</li>
+</ol>
+</div>
+<div id="c-international-council-for-the-exploration-of-the-sea-ices-data-definitions" class="section level4">
+<h4 class="hasAnchor">
+<a href="#c-international-council-for-the-exploration-of-the-sea-ices-data-definitions" class="anchor"></a>C. International Council for the Exploration of the Sea (ICES) (<a href="https://ices.dk/data/data-portals/Pages/acoustic.aspx">data definitions</a>):</h4>
+<ol>
+<li>Biotic (fish trawl survey) XML format.</li>
+<li>Acoustic (acoustic/echosounder trawl surveys) XML format.</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<ol>
+<li><p>Install the latest release: <code>r  install.package("RstoxData", repos = "https://stoxproject.github.io/repo/")</code></p></li>
+<li><p>Install the latest version from GitHub: <code>r  devtools::install_github("https://github.com/StoXProject/RstoxData")</code></p></li>
+</ol>
+<p>On computers that return errors when trying to run the Rtools through RStudio (most institutional Windows machines), install the binary directly from <a href="https://github.com/StoXProject/RstoxData/releases" class="uri">https://github.com/StoXProject/RstoxData/releases</a>. Download the newest RstoxData zip file, click the <code>Packages</code> tab -&gt; <code>Install</code> -&gt; <code>Install from:</code> <code>Package Archive File</code> -&gt; <code>Install</code>. If the installer does not complain, the package is installed correctly.</p>
+</div>
+<div id="license" class="section level2">
+<h2 class="hasAnchor">
+<a href="#license" class="anchor"></a>License</h2>
+<p>LGPL-3 © Norwegian Institute of Marine research (IMR) (<a href="https://www.hi.no/en">homepage</a>).</p>
+<p>The development of RstoxData package is mainly supported by IMR’s <a href="http://www.redus.no">REDUS</a> and SEA2DATA projects.</p>
+<p>RstoxData is part of the bigger <a href="https://stoxproject.github.io">StoX ecosystem</a>.</p>
+<hr>
+<div id="for-historical-release-notes-see-httpsgithubcomstoxprojectrstoxdatablobmasternewsmd" class="section level3">
+<h3 class="hasAnchor">
+<a href="#for-historical-release-notes-see-httpsgithubcomstoxprojectrstoxdatablobmasternewsmd" class="anchor"></a>For historical release notes, see: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="uri">https://github.com/StoXProject/RstoxData/blob/master/NEWS.md</a>
+</h3>
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -87,6 +159,7 @@ Tools to fetch and manipulate various data formats for fisheries (mainly geared 
 <li>Arne Johannes Holmin <br><small class="roles"> Author </small>  </li>
 <li>Edvin Fuglebakk <br><small class="roles"> Author </small>  </li>
 <li>Espen Johnsen <br><small class="roles"> Author </small>  </li>
+<li>Norwegian Institute of Marine Research <br><small class="roles"> Copyright holder, funder </small>  </li>
 </ul>
 </div>
 
@@ -95,7 +168,7 @@ Tools to fetch and manipulate various data formats for fisheries (mainly geared 
 
 
       <footer><div class="copyright">
-  <p>Developed by Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Edvin Fuglebakk, Espen Johnsen.</p>
+  <p>Developed by Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Edvin Fuglebakk, Espen Johnsen, Norwegian Institute of Marine Research.</p>
 </div>
 
 <div class="pkgdown">
