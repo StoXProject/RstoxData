@@ -293,7 +293,7 @@ translateVariables <- function(data, Translation) {
 	dataCopy <- data.table::copy(data)
 	
 	# Currently not defined
-	requiredColumns <- getRstoxDataDefinitions("variableTranslationRequiredColumns")
+	requiredColumns <- getRstoxDataDefinitions("StoxBioticTranslationRequiredColumns")
 	if(! all(requiredColumns %in% names(Translation))) {
 		stop("The Translation must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}
