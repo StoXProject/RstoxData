@@ -14,3 +14,8 @@
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
+
+## Re-submission fixes
+* Remove all attempts to modify the global environment in functions from
+`DefineAndUpdateVariables.R` and `xsdUtils.R` files.
+* Shorten the package title.
