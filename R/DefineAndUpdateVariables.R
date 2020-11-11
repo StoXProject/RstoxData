@@ -265,7 +265,7 @@ getUniqueTargetAndSource <- function(data) {
 	targetAndSourceVariables <- unlist(getRstoxDataDefinitions("targetAndSourceVariables"))
 	#targetAndSourceVariablesPresent <- intersect(names(data), targetAndSourceVariables)
 	# Uniquify and rename:
-	output <<- unique(data[, ..targetAndSourceVariables])
+	output <- unique(data[, ..targetAndSourceVariables])
 	setnames(output, c("target", "source"))
 	# Remoev rows with all NAs:
 	valid <- rowSums(is.na(output)) < ncol(output)
