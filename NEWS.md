@@ -1,3 +1,10 @@
+# RstoxData v1.0.16 (2020-11-11)
+
+* Prepare for CRAN submission: Remove all attempts to modify the global environment.
+* Prepare for CRAN submission: Shorten the package title.
+* Update variables in `processDataSchema.json`.
+* Delete `zzz.R` and `pkgname.R` and moved the contents to `RstoxData-package.R`.
+
 # RstoxData v1.0.15 (2020-11-05)
 
 * Added a `NEWS.md` file to track changes to the package.
