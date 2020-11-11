@@ -265,7 +265,7 @@ getUniqueTargetAndSource <- function(data) {
 	targetAndSourceVariables <- unlist(getRstoxDataDefinitions("targetAndSourceVariables"))
 	#targetAndSourceVariablesPresent <- intersect(names(data), targetAndSourceVariables)
 	# Uniquify and rename:
-	output <<- unique(data[, ..targetAndSourceVariables])
+	output <- unique(data[, ..targetAndSourceVariables])
 	setnames(output, c("target", "source"))
 	# Remoev rows with all NAs:
 	valid <- rowSums(is.na(output)) < ncol(output)
@@ -293,7 +293,7 @@ translateVariables <- function(data, Translation) {
 	dataCopy <- data.table::copy(data)
 	
 	# Currently not defined
-	requiredColumns <- getRstoxDataDefinitions("variableTranslationRequiredColumns")
+	requiredColumns <- getRstoxDataDefinitions("StoxBioticTranslationRequiredColumns")
 	if(! all(requiredColumns %in% names(Translation))) {
 		stop("The Translation must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}

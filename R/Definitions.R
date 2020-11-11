@@ -58,7 +58,7 @@ initiateRstoxData <- function(){
 	)
 	
 	# Define the columns required for VariableConversionTable:
-	#conversionTableRequiredColumns <- c("VariableName", "Value", "NewValue")
+	StoxBioticTranslationRequiredColumns <- c("VariableName", "Value", "NewValue")
 	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
