@@ -166,6 +166,23 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(
 			VariableNames = "variableNames_AddToStoxBiotic"
 		)
+	), 
+	
+	
+	WriteICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESAcousticData"
+	), 
+	WriteICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBioticData"
+	), 
+	WriteICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData"
 	)
 )
 

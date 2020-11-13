@@ -161,7 +161,7 @@ stoxBioticObject$convertLen[["icesBiotic"]] <- function(x, y) {
     } else if (y == "mm") {
         z <- c(100, 1, 1)
     } else {
-        print("Invalid length conversion!")
+    	message("Invalid length conversion!")
         return(NA)
     }
 
@@ -180,7 +180,7 @@ stoxBioticObject$convertWt[["icesBiotic"]] <- function(x, y) {
     } else if (y == "gr") {
         z <- c(1000, 1)
     } else {
-        print("Invalid length conversion!")
+        message("Invalid length conversion!")
         return(NA)
     }
 

@@ -1,7 +1,7 @@
 #' Convert BioticData to StoxBioticData
 #'
-#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
-#' @param NumberOfCores Overrides multi-core auto detection (default).
+#' @inheritParams ModelData
+#' @inheritParams general_arguments
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -9,7 +9,7 @@
 #' 
 StoxBiotic <- function(
 	BioticData, 
-	NumberOfCores = integer()
+	NumberOfCores = 1L
 ) {
     
 	# Convert from BioticData to the general sampling hierarchy:
@@ -32,37 +32,16 @@ StoxBiotic <- function(
 }
 
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
-BioticData2GeneralSamplingHierarchy <- function(BioticData, NumberOfCores = integer()) {
+BioticData2GeneralSamplingHierarchy <- function(
+	BioticData, 
+	NumberOfCores = 1L
+) {
     # Run the first phase possibly on several cores:
 	lapplyOnCores(
 		BioticData, 
 		FUN = StoxBiotic_firstPhase, 
 		NumberOfCores = NumberOfCores
 	)
-		
-	#	
-    ## Process Biotic data in parallel
-    #if(length(NumberOfCores) == 0) {
-    #	NumberOfCores <- getCores()
-    #}
-    #if(NumberOfCores == 1) {
-    #    GeneralSamplingHierarchy <- lapply(BioticData, StoxBiotic_firstPhase)
-    #}
-    #else {
-    #	# Do not use more cores than the number of files:
-    #	NumberOfCores <- min(length(BioticData), NumberOfCores)
-    #	
-    #    if(get_os() == "win") {
-    #        cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-    #        GeneralSamplingHierarchy <- parallel::parLapply(cl, BioticData, StoxBiotic_firstPhase)
-    #        parallel::stopCluster(cl)
-    #    } 
-    #    else {
-    #        GeneralSamplingHierarchy <- parallel::mclapply(BioticData, StoxBiotic_firstPhase, mc.cores = NumberOfCores)
-    #    }
-    #}
-    #
-    #GeneralSamplingHierarchy
 }
 
 # Function to convert rbind :
@@ -74,42 +53,11 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 		FUN = StoxBiotic_secondPhase, 
 		NumberOfCores = NumberOfCores
 	)
-	
-	
-   ## Process Biotic data in parallel
-   #if(length(NumberOfCores) == 0) {
-   #	NumberOfCores <- getCores()
-   #}
-   #if(NumberOfCores == 1) {
-   #    StoxBioticData <- lapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase)
-   #}
-   #else {
-   #	# Do not use more cores than the number of files:
-   #	NumberOfCores <- min(length(GeneralSamplingHierarchy), NumberOfCores)
-   #	
-   #	if(get_os() == "win") {
-   #    	cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-   #        StoxBioticData <- parallel::parLapply(cl, GeneralSamplingHierarchy, StoxBiotic_secondPhase)
-   #        parallel::stopCluster(cl)
-   #    } 
-   #    else {
-   #        StoxBioticData <- parallel::mclapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase, mc.cores = NumberOfCores)
-   #    }
-   #}
-	
-	
+
 	# Rbind for each StoxBiotic table:
 	StoxBioticData <- rbindlist_StoxFormat(StoxBioticData)
     
-	## Rbind for each StoxBiotic table:
-    #tableNames <- names(StoxBioticData[[1]])
-    #StoxBioticData <- lapply(
-    #    tableNames, 
-    #    function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
-    #)
-    #names(StoxBioticData) <- tableNames
-    
-    return(StoxBioticData)
+	return(StoxBioticData)
 }
 
 
@@ -248,11 +196,11 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
 	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
-			stop("Error in merging.")
+			stop("StoX: Error in merging.")
 	    }
 	  } 
     else {
-	    print("Error: Invalid data input format. Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
+	    warning("Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
 	    return(NULL)
 	  }
     
@@ -447,8 +395,8 @@ MergeStoxBiotic <- function(
 
 #' Add variables to StoxBioticData from BioticData
 #'
-#' @inheritParams MergeStoxBiotic
-#' @inheritParams StoxBiotic
+#' @inheritParams ModelData
+#' @inheritParams general_arguments
 #' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
@@ -459,7 +407,7 @@ AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
 	VariableNames = character(), 
-	NumberOfCores = integer()
+	NumberOfCores = 1L
 ) {
 	AddToStoxData(
 		StoxData = StoxBioticData, 

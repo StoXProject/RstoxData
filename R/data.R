@@ -22,12 +22,13 @@
 
 ##################################################
 ##################################################
-#' General parameters of RstoxFramework.
+#' General parameters of RstoxData.
 #' 
 #' All functions referring to a project, a model, a process or an output table use the same parameters, listed here.
 #' 
 #' @param processData The current data produced by a previous instance of the function.
 #' @param UseProcessData Logical: If TRUE use the existing function output in the process. 
+#' @param NumberOfCores The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.
 #' 
 #' @name general_arguments
 #' 

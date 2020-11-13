@@ -4,7 +4,7 @@ RedefineData <- function(
 	StoxData, RawData, 
 	Redefinition = data.table::data.table(), 
 	StoxDataFormat = c("Biotic", "Acoustic"), 
-	NumberOfCores = integer()
+	NumberOfCores = 1L
 ) {
 	
 	StoxDataFormat <- match.arg(StoxDataFormat)

@@ -48,7 +48,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 		# There can be duplicate names between two tables, see that we fix them by adding appropriate suffix before merging
 		duplicates <- intersect(setdiff(names(data[[prev]]), vars), setdiff(names(data[[curr]]), vars))
 		for(ddpl in duplicates) {
-			print(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
+			message(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
 			setnames(data[[curr]], ddpl, paste0(ddpl, ".", curr))
 		}
 		
@@ -240,14 +240,14 @@ getCores <- function() {
 #'
 #' @param x An object to apply \code{FUN} to.
 #' @param FUN The function to apply.
-#' @param NumberOfCores The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @inheritParams general_arguments
 #' @param ... Additional arguments to \code{FUN}.
 #'
 #' @return A list of outputs from \code{FUN}.
 #'
 #' @export
 #' 
-lapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
+lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 	# Get the number of cores to use:
 	if(length(NumberOfCores) == 0) {
 		NumberOfCores <- getCores()
@@ -278,8 +278,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = integer(), ...) {
 
 #' Run a function on all elements of x on one or more cores
 #'
-#' @param FUN The function to apply.
-#' @param NumberOfCores The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.
+#' @inheritParams lapplyOnCores
 #' @param ...,MoreArgs,SIMPLIFY See \code{\link[base]{mapply}}.
 #'
 #' @return A list of outputs from \code{FUN}.
@@ -453,7 +452,7 @@ AddToStoxData <- function(
 	StoxData, 
 	RawData, 
 	VariableNames = character(), 
-	NumberOfCores = integer(), 
+	NumberOfCores = 1L, 
 	StoxDataFormat = c("Biotic", "Acoustic")
 ) {
 	
