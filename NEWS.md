@@ -1,3 +1,11 @@
+# RstoxData v1.0.17 (2020-11-23)
+
+* In `writeICESDatras()`: Change country code 'NOR' to 'NO'.
+* Change the default NumberOfCores to 1L in all parallel-able functions.
+* Refactor `WriteICESAcoustic()`, `WriteICESBiotic()`, `WriteICESDatras()`.
+* Tests: do not attempt to copy file outside `tempdir()` in `test-readXmlFile.R` file.
+* Github actions: Update `check-full.yaml` file.
+
 # RstoxData v1.0.16 (2020-11-11)
 
 * Prepare for CRAN submission: Remove all attempts to modify the global environment.
