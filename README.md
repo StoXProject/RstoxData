@@ -29,12 +29,18 @@ Loaded data can also be filtered by using any supported R conditional syntax suc
 
 ## Installation
 
-1. Install the latest release:
+1. Install from CRAN:
+
     ```r
-    install.package("RstoxData", repos = "https://stoxproject.github.io/repo/")
+    install.packages("RstoxData")
     ```
 
-2. Install the latest version from GitHub:
+2. Install the latest release from our local repository:
+    ```r
+    install.packages("RstoxData", repos = c("https://stoxproject.github.io/repo/", "https://cloud.r-project.org/"))
+    ```
+
+3. Install the latest version from GitHub:
     ```r
     devtools::install_github("https://github.com/StoXProject/RstoxData")
     ```
