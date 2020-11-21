@@ -20,7 +20,8 @@ stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- list(
                  Station = list("station", "StationKey"),
                  Haul = list("serialnumber", "HaulKey"),
                  SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-                 Sample = list("catchpartnumber", "SampleKey"),
+                 #Sample = list("catchpartnumber", "SampleKey"),
+                 Sample = list("catchsampleid", "SampleKey"),
                  Individual = list("specimenid", "IndividualKey"),
                  SubIndividual = list("preysampleid", "SubIndividualKey")
                 )
@@ -58,7 +59,8 @@ stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
                  Station = list("station", "StationKey"),
                  Haul = list("serialnumber", "HaulKey"),
                  SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-                 Sample = list("catchpartnumber", "SampleKey"),
+                 #Sample = list("catchpartnumber", "SampleKey"),
+                 Sample = list("catchsampleid", "SampleKey"),
                  Individual = list("specimenid", "IndividualKey"),
                  SubIndividual = list("preysampleid", "SubIndividualKey")
                 )
@@ -159,7 +161,7 @@ stoxBioticObject$convertLen[["icesBiotic"]] <- function(x, y) {
     } else if (y == "mm") {
         z <- c(100, 1, 1)
     } else {
-        print("Invalid length conversion!")
+    	message("Invalid length conversion!")
         return(NA)
     }
 
@@ -178,7 +180,7 @@ stoxBioticObject$convertWt[["icesBiotic"]] <- function(x, y) {
     } else if (y == "gr") {
         z <- c(1000, 1)
     } else {
-        print("Invalid length conversion!")
+        message("Invalid length conversion!")
         return(NA)
     }
 

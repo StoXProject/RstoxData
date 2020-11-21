@@ -1,13 +1,16 @@
 #' Convert AcousticData to StoxAcousticData
 #'
-#' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
-#' @param NumberOfCores Overrides multi-core auto detection (default).
+#' @inheritParams ModelData
+#' @inheritParams general_arguments
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
+StoxAcoustic <- function(
+	AcousticData, 
+	NumberOfCores = 1L
+){
     
 	# Convert to StoxAcosuticData possibly on several cores:
     StoxAcousticData <- lapplyOnCores(
@@ -16,48 +19,19 @@ StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
     	NumberOfCores = NumberOfCores
     )
     
-    
-  ## Process acoustic data in parallel
-#	if(length(NumberOfCores) == 0) {
-#		NumberOfCores <- getCores()
-#	}
-#	if(NumberOfCores == 1) {
-#	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
-#	}
-#	else {
-#		# Do not use more cores than the number of files:
-#		NumberOfCores <- min(length(AcousticData), NumberOfCores)
-#		
-#		if(get_os() == "win") {
-#			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-  #        data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
-  #        stopCluster(cl)
-  #    } else {
-  #        data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = NumberOfCores)
-  #    }
-  #}
-  
-
     # Rbind for each StoxAcoustic table:
     StoxAcousticData <- rbindlist_StoxFormat(StoxAcousticData)
     
+    # Remove rows of duplicated keys:
+    StoxAcousticData <- removeRowsOfDuplicatedKeys(
+    	StoxData = StoxAcousticData, 
+    	stoxDataFormat = "Acoustic"
+    )
     
-  #tableNames <- names(data_list_out[[1]])
-#
-  #StoxAcousticData <- lapply(
-  #    tableNames,
-  #    function(name) data.table::rbindlist(lapply(data_list_out, "[[", name))
-  #)
-#
-  #names(StoxAcousticData) <- tableNames
-  
-  # Ensure that the numeric values are rounded to the defined number of digits:
-  RstoxData::setRstoxPrecisionLevel(StoxAcousticData)
-  
+	# Ensure that the numeric values are rounded to the defined number of digits:
+ 	RstoxData::setRstoxPrecisionLevel(StoxAcousticData)
 
-  #Output stox acoustic data
-  return(StoxAcousticData)
-  
+ 	return(StoxAcousticData)
 }
 
 # Get the StoxAcoustic format of one list of AocusticData:
@@ -255,7 +229,9 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Add DateTime as POSIXct
 		#data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$Log[, DateTime:= as.POSIXct(start_time, format='%Y-%m-%d %H:%M:%OS', tz='GMT')]
+		StoxDateTimeFormat <- getRstoxDataDefinitions("StoxDateTimeFormat")
+		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
+		data_list$Log[, DateTime:= as.POSIXct(start_time, format = StoxDateTimeFormat, tz = StoxTimeZone)]
 		
 		
 		
@@ -264,8 +240,8 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log$LogOrigin2 <- "end"
 		
 		data_list$Log$LogDuration <- as.numeric(
-			as.POSIXct(data_list$Log$stop_time, format="%Y-%m-%d %H:%M:%S") - 
-				as.POSIXct(data_list$Log$start_time, format="%Y-%m-%d %H:%M:%S"), 
+			as.POSIXct(data_list$Log$stop_time, format=StoxDateTimeFormat) - 
+				as.POSIXct(data_list$Log$start_time, format=StoxDateTimeFormat), 
 			units ="secs"
 		)
 		
@@ -279,7 +255,7 @@ StoxAcousticOne <- function(data_list) {
 		#                       RENAME Frequency level                  #
 		#################################################################
 		names(data_list$Beam)[names(data_list$Beam)=='freq'] <- 'Frequency'
-		
+		data_list$Beam$Beam <- data_list$Beam$BeamKey
 		
 		
 		
@@ -408,7 +384,10 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		#tmp_beam$BeamKey <- tmp_beam$Frequency
-		tmp_beam$BeamKey <- paste(tmp_beam$Frequency, tmp_beam$ID, sep = '/')
+		# Changed on 2020-10-16 to only use the ID:
+		#tmp_beam$BeamKey <- paste(tmp_beam$Frequency, tmp_beam$ID, sep = '/')
+		tmp_beam$BeamKey <- tmp_beam$ID
+		tmp_beam$Beam <- tmp_beam$BeamKey
 		tmp$BeamKey <- tmp_beam$BeamKey
 		data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'AcousticCategory','Type','Unit','SvThreshold', 'SaCategory')])
 		
@@ -525,7 +504,7 @@ StoxAcousticOne <- function(data_list) {
 	# 2020-02-03: Removed BottomDepth, which is mandatory:
 	data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance', 'BottomDepth')]
 	#data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance')]
-	data_list$Beam <- data_list$Beam[,c('CruiseKey', 'LogKey', 'BeamKey', 'Frequency')]
+	data_list$Beam <- data_list$Beam[,c('CruiseKey', 'LogKey', 'BeamKey', 'Beam', 'Frequency')]
 	data_list$AcousticCategory <- data_list$AcousticCategory[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'AcousticCategory')]
 	data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReferenceType', 'ChannelReferenceDepth', 'ChannelReferenceOrientation')]
 	
@@ -545,7 +524,7 @@ StoxAcousticOne <- function(data_list) {
 #' @param StoxAcousticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
 #' @param TargetTable The name of the table up until which to merge (the default "NASC" implies merging all tables)
 #'
-#' @return An object of StoX data type \code{\link{MergedStoxAcousticData}}.
+#' @return An object of StoX data type \code{\link{MergeStoxAcousticData}}.
 #'
 #' @export
 #' 
@@ -562,7 +541,11 @@ MergeStoxAcoustic <- function(StoxAcousticData, TargetTable = "NASC") {
 
 
 
-
+#' Generate Start, Middle and Stop DateTime variables
+#'
+#' @param StoxAcousticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
+#' 
+#' @return An object of StoX data type \code{\link{MergeStoxAcousticData}}.
 #'
 #' @export
 #' 

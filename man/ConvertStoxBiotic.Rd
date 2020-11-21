@@ -8,15 +8,17 @@ ConvertStoxBiotic(
   StoxBioticData,
   ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"),
   GruopingVariables = c("SpeciesCategory"),
-  ConversionTable = data.table::data.table()
+  Conversion = data.table::data.table()
 )
 }
 \arguments{
+\item{StoxBioticData}{An input of \link{ModelData} object}
+
 \item{ConversionFunction}{Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.}
 
-\item{GruopingVariables}{A vector of variables to specify in the \code{ConversionTable}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.}
+\item{GruopingVariables}{A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.}
 
-\item{ConversionTable}{A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
+\item{Conversion}{A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
 
 The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".}
 }

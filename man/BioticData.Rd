@@ -7,7 +7,7 @@
 Biotic data read from biotic xml files.
 }
 \details{
-This StoX data type is produced by \code{\link{ReadBiotic}}, and contains one list per input biotic file holding the tables read from each file, added a table named "metadata" holding the input file path and format. Currently supported are NMDBiotic1.4 (\url{https://www.imr.no/formats/nmdbiotic/v1.4/}), NMDBiotic3.0 (\url{https://www.imr.no/formats/nmdbiotic/v3/}), and ICESBiotic (\url{https://www.ices.dk/marine-data/data-portals/Pages/acoustic.aspx}, click on "Acoustic data format" to download the format description).
+This StoX data type is produced by \code{\link{ReadBiotic}}, and contains one list per input biotic file holding the tables read from each file, added a table named "metadata" holding the input file path and format. Currently supported are NMDBiotic1.4 (\url{https://www.imr.no/formats/nmdbiotic/v1.4/}), NMDBiotic3.0 (\url{https://www.imr.no/formats/nmdbiotic/v3/}), and ICESBiotic (\url{https://ices.dk/data/data-portals/Pages/acoustic.aspx}, click on "Acoustic data format" to download the format description).
 }
 \seealso{
 \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}

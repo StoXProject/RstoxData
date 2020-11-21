@@ -84,7 +84,7 @@ stoxFunctionAttributes <- list(
 	MergeStoxAcoustic = list(
 	    functionType = "modelData", 
 	    functionCategory = "baseline", 
-	    functionOutputDataType = "MergedStoxAcousticData", 
+	    functionOutputDataType = "MergeStoxAcousticData", 
 	    functionArgumentHierarchy = list()
 	),
 	
@@ -92,7 +92,7 @@ stoxFunctionAttributes <- list(
 	MergeStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "MergedStoxBioticData", 
+		functionOutputDataType = "MergeStoxBioticData", 
 		functionArgumentHierarchy = list()
 	),
 	
@@ -104,7 +104,7 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			RedefinitionTable = "redefinitionTable"
+			Redefinition = "redefinitionTable"
 		)
 	),
 	
@@ -113,7 +113,7 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticTranslation", 
 		functionParameterFormat = list(
-			TranslationTable = "translationTable", 
+			Translation = "translationTable", 
 			FileName = "filePath"
 		), 
 		functionArgumentHierarchy = list(
@@ -121,7 +121,7 @@ stoxFunctionAttributes <- list(
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
-			TranslationTable = list(
+			Translation = list(
 				DefinitionMethod = "Table", 
 				UseProcessData = FALSE
 			), 
@@ -138,10 +138,10 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			TranslationTable = "translationTable"
+			Translation = "translationTable"
 		), 
 		functionArgumentHierarchy = list(
-			TranslationTable = list(
+			Translation = list(
 				TranslationDefinition = "FunctionParameter"
 			), 
 			StoxBioticTranslation = list(
@@ -155,7 +155,7 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			ConversionTable = "conversionTable"
+			Conversion = "conversionTable"
 		)
 	),
 	
@@ -164,12 +164,29 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
-			VariableNames = "variableNames"
+			VariableNames = "variableNames_AddToStoxBiotic"
 		)
+	), 
+	
+	
+	WriteICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESAcousticData"
+	), 
+	WriteICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBioticData"
+	), 
+	WriteICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData"
 	)
 )
 
-# Define the process property formats:
+#' Define the process property formats:
 #' 
 #' @export
 #' 
@@ -180,7 +197,8 @@ processPropertyFormats <- list(
 	), 
 	filePaths = list(
 		class = "vector", 
-		title = "The path to one or more files"
+		title = "The path to one or more files", 
+		variableTypes <- "character"
 	), 
 	filterExpressionList = list(
 		class = "list", 
@@ -295,9 +313,13 @@ processPropertyFormats <- list(
 		}
 	), 
 	
-	variableNames = list(
+	variableNames_AddToStoxBiotic = list(
 		class = "vector", 
-		title = "One or more variables to add to the StoxBioticData from BioticData"
+		title = "One or more variables to add to the StoxBioticData from BioticData", 
+		possibleValues = function(BioticData) {
+			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
+		}, 
+		variableTypes <- "character"
 	)
 )
 

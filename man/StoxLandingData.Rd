@@ -13,12 +13,12 @@ Table (\code{\link[data.table]{data.table}}) with aggregated weight of landings 
   \item{Year}{integer() Year of catch}
   \item{CatchDate}{POSIXct() Date of catch (last catch on trip) in UTC}
   \item{Gear}{character() Code for gear used for catch (dominant gear for trip)}
-  \item{Area}{character() Area code for the position where the catch was cought (dominant area for trip)}
-  \item{SubArea}{character() Subdivision of area code for the position where the catch was cought (dominant area for trip)}
-  \item{Coastal}{character() Code indidcating whether catch was taken within coastal delimitation line (dominant side for trip)}
-  \item{N62Code}{character() Code indidcating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
+  \item{Area}{character() Area code for the position where the catch was caught (dominant area for trip)}
+  \item{SubArea}{character() Subdivision of area code for the position where the catch was caught (dominant area for trip)}
+  \item{Coastal}{character() Code indicating whether catch was taken within coastal delimitation line (dominant side for trip)}
+  \item{N62Code}{character() Code indicating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
   \item{VesselLengthGroup}{character() Length group for vessel}
-  \item{CountryVessel}{character() Country of the vessel that caugth the catch}
+  \item{CountryVessel}{character() Country of the vessel that caught the catch}
   \item{LandingSite}{character() Code identifying landing site (buyer of catch)}
   \item{CountryLanding}{character() Country where catch was landed}
   \item{Usage}{character() Code for market usage of catch.}

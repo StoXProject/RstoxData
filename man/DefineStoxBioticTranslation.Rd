@@ -8,7 +8,7 @@ DefineStoxBioticTranslation(
   processData,
   UseProcessData = FALSE,
   DefinitionMethod = c("Table", "ResourceFile"),
-  TranslationTable = data.table::data.table(),
+  Translation = data.table::data.table(),
   FileName
 )
 }
@@ -17,11 +17,11 @@ DefineStoxBioticTranslation(
 
 \item{UseProcessData}{Logical: If TRUE use the existing function output in the process.}
 
-\item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file gievn by \code{FileName}.}
+\item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
 
-\item{TranslationTable}{A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.}
+\item{Translation}{A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.}
 
-\item{FileName}{The csv file holding a table with the three variables listed for \code{TranslationTable}.}
+\item{FileName}{The csv file holding a table with the three variables listed for \code{Translation}.}
 }
 \value{
 A \code{\link{StoxBioticTranslation}} object.

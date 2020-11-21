@@ -12,6 +12,8 @@ mergeDataTables(data, tableNames = NULL, output.only.last = FALSE, ...)
 \item{tableNames}{A character vector holding the names of the tables to merge.}
 
 \item{output.only.last}{Only returns last merged table.}
+
+\item{...}{Extra parameters that will be passed into \code{\link[data.table]{merge}}.}
 }
 \value{
 A merged data table.

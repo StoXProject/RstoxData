@@ -5,7 +5,7 @@
 #' This function reads multiple biotic file to a list with a list of tables for each file.
 #' 
 #' @param FileNames     The paths of the biotic files.
-#' @param NumberOfCores Overrides multi-core auto detection (default).
+#' @inheritParams general_arguments
 #' 
 #' @details
 #' This function is awesome and does excellent stuff.
@@ -21,7 +21,7 @@
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadBiotic <- function(FileNames, NumberOfCores = integer()) {
+ReadBiotic <- function(FileNames, NumberOfCores = 1L) {
 	
 	# Read BioticData possibly on several cores:
 	BioticData <- lapplyOnCores(
@@ -29,27 +29,6 @@ ReadBiotic <- function(FileNames, NumberOfCores = integer()) {
 		FUN = RstoxData::readXmlFile, 
 		NumberOfCores = NumberOfCores
 	)
-	
-	## Process Biotic data in parallel if specified:
-	#if(length(NumberOfCores) == 0) {
-	#	NumberOfCores <- getCores()
-	#}
-#
-	## Do not use more cores than the number of files:
-	#NumberOfCores <- min(length(FileNames), NumberOfCores)
-#
-	#if(NumberOfCores == 1) {
-	#	out <- lapply(FileNames, RstoxData::readXmlFile)
-	#}
-	#else {
-	#	if(get_os() == "win") {
-	#		cl <- makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-	#		out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
-	#		stopCluster(cl)
-	#	} else {
-	#		out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = NumberOfCores)
-	#	}
-	#}
 	
 	# Add names as the file names:
 	names(BioticData) <- basename(FileNames)
@@ -66,7 +45,7 @@ ReadBiotic <- function(FileNames, NumberOfCores = integer()) {
 #' This function reads multiple acoustic file to a list with a list of tables for each file.
 #' 
 #' @param FileNames     The paths of the acoustic files.
-#' @param NumberOfCores Overrides multi-core auto detection (default).
+#' @inheritParams general_arguments
 #' 
 #' @details
 #' This function is awesome and does excellent stuff.
@@ -82,7 +61,7 @@ ReadBiotic <- function(FileNames, NumberOfCores = integer()) {
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadAcoustic <- function(FileNames, NumberOfCores = integer()) {
+ReadAcoustic <- function(FileNames, NumberOfCores = 1L) {
 	
 	# Read AcousticData possibly on several cores:
 	AcousticData <- lapplyOnCores(
@@ -90,27 +69,6 @@ ReadAcoustic <- function(FileNames, NumberOfCores = integer()) {
 		FUN = RstoxData::readXmlFile, 
 		NumberOfCores = NumberOfCores
 	)
-	
-	## Process Biotic data in parallel if specified:
-	#if(length(NumberOfCores) == 0) {
-	#	NumberOfCores <- getCores()
-	#}
-#
-	## Do not use more cores than the number of files:
-	#NumberOfCores <- min(length(FileNames), NumberOfCores)
-#
-	#if(NumberOfCores == 1) {
-	#	out <- lapply(FileNames, RstoxData::readXmlFile)
-	#}
-	#else {
-	#	if(get_os() == "win") {
-	#		cl <- makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-	#		out <- parLapply(cl, FileNames, RstoxData::readXmlFile)
-	#		stopCluster(cl)
-	#	} else {
-	#		out <- mclapply(FileNames, RstoxData::readXmlFile, mc.cores = NumberOfCores)
-	#	}
-	#}
 	
 	# Add names as the file names:
 	names(AcousticData) <- basename(FileNames)

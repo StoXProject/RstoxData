@@ -12,9 +12,13 @@
 #' 
 initiateRstoxData <- function(){
 	
-	# Define the number of digits and the number of significant digits used by the Rstox packages:
+	# Define the number of digits (12) and the number of significant digits (6, used if values are very low) used by the Rstox packages:
 	digits <- 12
 	signifDigits <- 6
+	
+	# Define the time format used by Stox formats:
+	StoxDateTimeFormat <- "%Y-%m-%d %H:%M:%OS"
+	StoxTimeZone <- "UTC"
 	
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")
@@ -38,6 +42,15 @@ initiateRstoxData <- function(){
 		"IndividualKey", 
 		"SubIndividualKey"
 	)
+	# StoxBioticKeys: 
+	StoxAcousticKeys <- c(
+		"CruiseKey", 
+		"LogKey", 
+		"BeamKey", 
+		"AcousticCategoryKey", 
+		"ChannelReferenceKey", 
+		"NASCKey"
+	)
 	
 	targetAndSourceVariables <- list(
 		target = "TargetVariable", 
@@ -45,7 +58,7 @@ initiateRstoxData <- function(){
 	)
 	
 	# Define the columns required for VariableConversionTable:
-	#conversionTableRequiredColumns <- c("VariableName", "Value", "NewValue")
+	StoxBioticTranslationRequiredColumns <- c("VariableName", "Value", "NewValue")
 	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
@@ -53,8 +66,6 @@ initiateRstoxData <- function(){
 	names(definitions) <- definitionsNames
 	
 	#### Create the RstoxDataEnv environment, holding definitions on folder structure and all the projects. This environment cna be accesses using RstoxData:::RstoxDataEnv: ####
-	#utils::globalVariables("RstoxDataEnv")
-	utils::globalVariables(c("RstoxDataEnv", ":=", "xsdObjects") )
 	assign("RstoxDataEnv", new.env(), parent.env(environment()))
 	assign("definitions", definitions, envir=get("RstoxDataEnv"))
 	

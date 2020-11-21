@@ -7,7 +7,11 @@
 mergeByIntersect(x, y, ..., msg = FALSE)
 }
 \arguments{
-\item{x, y}{Data tables of class \code{\link[data.table]{data.table}}).}
+\item{x, y}{Data tables of class \code{\link[data.table]{data.table}}.}
+
+\item{...}{Various overrides.}
+
+\item{msg}{Verbose message switch, default to \code{FALSE}.}
 }
 \value{
 A merged data table.

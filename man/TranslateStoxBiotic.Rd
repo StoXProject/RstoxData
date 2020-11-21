@@ -7,14 +7,16 @@
 TranslateStoxBiotic(
   StoxBioticData,
   TranslationDefinition = c("FunctionParameter", "FunctionInput"),
-  TranslationTable = data.table::data.table(),
+  Translation = data.table::data.table(),
   StoxBioticTranslation
 )
 }
 \arguments{
-\item{TranslationDefinition}{Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{TranslationTable}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.}
+\item{StoxBioticData}{An input of \link{ModelData} object}
 
-\item{TranslationTable}{A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.}
+\item{TranslationDefinition}{Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{Translation}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.}
+
+\item{Translation}{A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.}
 
 \item{StoxBioticTranslation}{The process from which to get the \code{\link{StoxBioticTranslation}} definition.}
 }
@@ -22,5 +24,5 @@ TranslateStoxBiotic(
 A \code{\link{StoxBioticData}} object.
 }
 \description{
-This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the table \code{TranslationTable} or by the input \code{StoxBioticTranslation}.
+This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the table \code{Translation} or by the input \code{StoxBioticTranslation}.
 }

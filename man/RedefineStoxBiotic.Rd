@@ -7,11 +7,15 @@
 RedefineStoxBiotic(
   StoxBioticData,
   BioticData,
-  RedefinitionTable = data.table::data.table()
+  Redefinition = data.table::data.table()
 )
 }
 \arguments{
-\item{RedefinitionTable}{A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by.}
+\item{StoxBioticData}{An input of \link{ModelData} object}
+
+\item{BioticData}{An input of \link{ModelData} object}
+
+\item{Redefinition}{A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by.}
 }
 \value{
 A \code{\link{StoxBioticData}} object.

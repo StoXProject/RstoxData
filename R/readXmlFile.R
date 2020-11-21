@@ -21,9 +21,7 @@
 #' three <- readXmlFile("./test.zip")
 #' }
 #'
-#' @useDynLib RstoxData
-#' @importFrom Rcpp sourceCpp
-#' @importFrom data.table as.data.table transpose
+#' @importFrom data.table as.data.table transpose data.table := .SD
 #' @importFrom utils data
 #'
 #' @export
@@ -169,7 +167,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 
 	# Check file exists
 	if(!file.exists(xmlFilePath)) {
-		print(paste("File", xmlFilePath, "does not exist."))
+		message(paste("File", xmlFilePath, "does not exist."))
 		return(NULL)
 	}
 

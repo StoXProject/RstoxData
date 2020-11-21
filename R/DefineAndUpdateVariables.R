@@ -2,22 +2,24 @@
 # The general function for redefining StoxData:
 RedefineData <- function(
 	StoxData, RawData, 
-	RedefinitionTable = data.table::data.table(), 
+	Redefinition = data.table::data.table(), 
 	StoxDataFormat = c("Biotic", "Acoustic"), 
-	NumberOfCores = integer()
+	NumberOfCores = 1L
 ) {
+	
+	StoxDataFormat <- match.arg(StoxDataFormat)
 	
 	# Add the requested variable:
 	StoxData <- AddToStoxData(
 		StoxData = StoxData, 
 		RawData = RawData, 
-		VariableName = RedefinitionTable$ReplaceBy, 
+		VariableNames = Redefinition$ReplaceBy, 
 		NumberOfCores = NumberOfCores, 
-		StoxDataFormat = "Biotic"
+		StoxDataFormat = StoxDataFormat
 	)
 	
 	# Remove the old:
-	lapply(StoxData, replaceAndDelete, VariableReplacementTable = RedefinitionTable)
+	lapply(StoxData, replaceAndDelete, VariableReplacement = Redefinition)
 	
 	return(StoxData)
 }
@@ -26,7 +28,7 @@ RedefineData <- function(
 DefineDataTranslation <- function(
 	processData, UseProcessData = FALSE, 
 	DefinitionMethod = c("Table", "ResourceFile"), 
-	TranslationTable = data.table::data.table(), 
+	Translation = data.table::data.table(), 
 	FileName
 ) {
 	
@@ -39,7 +41,7 @@ DefineDataTranslation <- function(
 	
 	if(DefinitionMethod == "ResourceFile") {
 		# Get the conversion table:
-		TranslationTable <- readVariableConversionTable(
+		Translation <- readVariableConversion(
 			processData = processData, 
 			FileName = FileName, 
 			UseProcessData = UseProcessData
@@ -49,28 +51,28 @@ DefineDataTranslation <- function(
 		stop("Invalid DefinitionMethod")
 	}
 	
-	return(TranslationTable)
+	return(Translation)
 }
 
 # The general function for translating StoxData:
 TranslateData <- function(
 	StoxData, 
 	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
-	TranslationTable = data.table::data.table(), 
+	Translation = data.table::data.table(), 
 	TranslationProcessData
 ) {
 	
 	TranslationDefinition <- match.arg(TranslationDefinition)
 	
 	if(TranslationDefinition == "FunctionInput") {
-		TranslationTable <- TranslationProcessData
+		Translation <- TranslationProcessData
 	}
 	else if(TranslationDefinition != "FunctionParameter"){
 		stop("TranslationDefinition must be one of \"FunctionParameter\" and \"FunctionInput\"")
 	}
 	
 	# Apply the translation:
-	StoxData <- translateVariables(data = StoxData, TranslationTable = TranslationTable)
+	StoxData <- translateVariables(data = StoxData, Translation = Translation)
 	
 	return(StoxData)
 }
@@ -80,15 +82,15 @@ ConvertData <- function(
 	StoxData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
 	GruopingVariables = c("SpeciesCategory"), 
-	ConversionTable = data.table::data.table()
+	Conversion = data.table::data.table()
 ) {
 	
 	# Get the ConversionFunction input:
 	ConversionFunction <- match.arg(ConversionFunction)
 	
-	# Check the ConversionTable for unique grouping variables:
-	if(!all(GruopingVariables %in% names(ConversionTable))) {
-		stop("All grouping variables must be present in the ConversionTable")
+	# Check the Conversion for unique grouping variables:
+	if(!all(GruopingVariables %in% names(Conversion))) {
+		stop("All grouping variables must be present in the Conversion")
 	}
 	
 	# Make a copy to allow for applying functions by reference:
@@ -97,11 +99,11 @@ ConvertData <- function(
 	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
 	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
 	
-	# Merge in the ConversionTable:
-	StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, ConversionTable, all.x = TRUE)
+	# Merge in the Conversion:
+	StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, Conversion, all.x = TRUE)
 	
-	# Apply the conversion function for each row of the ConversionTable:
-	ConversionList <- split(ConversionTable, seq_len(nrow(ConversionTable)))
+	# Apply the conversion function for each row of the Conversion:
+	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
 	for(Conversion in ConversionList) {
 		applyConversionFunction(
 			data = StoxDataCopyMerged, 
@@ -167,7 +169,7 @@ applyConversionFunction <- function(data, ConversionFunction, TargetVariable, So
 ###  	# Get the conversion function:
 ###  	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
 ###  	
-###  	# Get the unique target	and source variable (since the ConversionTable has been merged with the data):
+###  	# Get the unique target	and source variable (since the Conversion has been merged with the data):
 ###  	uniqueTargetAndSource <- getUniqueTargetAndSource(data)
 ###  	
 ###  	# Loop through the rows of uniqueTargetAndSource:
@@ -263,7 +265,7 @@ getUniqueTargetAndSource <- function(data) {
 	targetAndSourceVariables <- unlist(getRstoxDataDefinitions("targetAndSourceVariables"))
 	#targetAndSourceVariablesPresent <- intersect(names(data), targetAndSourceVariables)
 	# Uniquify and rename:
-	output <<- unique(data[, ..targetAndSourceVariables])
+	output <- unique(data[, ..targetAndSourceVariables])
 	setnames(output, c("target", "source"))
 	# Remoev rows with all NAs:
 	valid <- rowSums(is.na(output)) < ncol(output)
@@ -273,31 +275,32 @@ getUniqueTargetAndSource <- function(data) {
 }
 
 # Function for reading a conversion table:
-readVariableConversionTable <- function(processData, FileName, UseProcessData = FALSE) {
+readVariableConversion <- function(processData, FileName, UseProcessData = FALSE) {
 	
 	# Return immediately if UseProcessData = TRUE:
 	if(UseProcessData) {
 		return(processData)
 	}
 	
-	conversionTable <- data.table::fread(FileName)
+	conversion <- data.table::fread(FileName)
 	
-	return(conversionTable)
+	return(conversion)
 }
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, TranslationTable) {
+translateVariables <- function(data, Translation) {
 	
 	dataCopy <- data.table::copy(data)
 	
-	requiredColumns <- getRstoxDataDefinitions("variableTranslationTableRequiredColumns")
-	if(! all(requiredColumns %in% names(TranslationTable))) {
-		stop("The TranslationTable must contain the columns ", paste(requiredColumns, collapse = ", "))
+	# Currently not defined
+	requiredColumns <- getRstoxDataDefinitions("StoxBioticTranslationRequiredColumns")
+	if(! all(requiredColumns %in% names(Translation))) {
+		stop("The Translation must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}
 	
 	# Split into a list, thus treating only one row at the time. This is probably sloppy coding:
-	translationList <- split(TranslationTable, seq_len(nrow(TranslationTable)))
-	# Run the conversion for each row of the TranslationTable:
+	translationList <- split(Translation, seq_len(nrow(Translation)))
+	# Run the conversion for each row of the Translation:
 	lapply(translationList, translateVariable, data = dataCopy)
 	
 	return(dataCopy[])
@@ -352,14 +355,14 @@ lapplyToStoxData <- function(x, fun, ...) {
 	}
 }
 
-# Function to replace the existing column by the new, as stored in the VariableReplacementTable:
-replaceAndDelete <- function(table, VariableReplacementTable) {
-	present <- which(VariableReplacementTable$VariableName %in% names(table))
+# Function to replace the existing column by the new, as stored in the VariableReplacement:
+replaceAndDelete <- function(table, VariableReplacement) {
+	present <- which(VariableReplacement$VariableName %in% names(table))
 	if(any(present)) {
 		# Delete the present column:
-		table[, (VariableReplacementTable[present, VariableName]) := NULL]
+		table[, (VariableReplacement[present, VariableName]) := NULL]
 		# ... and then rename the new to the old name:
-		setnames(table, VariableReplacementTable[present, ReplaceBy], VariableReplacementTable[present, VariableName])
+		setnames(table, VariableReplacement[present, ReplaceBy], VariableReplacement[present, VariableName])
 	}
 }
 
@@ -372,8 +375,9 @@ replaceAndDelete <- function(table, VariableReplacementTable) {
 #' 
 #' This function redefines one or more columns of \code{\link{StoxBioticData}} by columns of \code{\link{BioticData}}.
 #' 
-#' @inheritParams ModelData
-#' @param RedefinitionTable A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by. 
+#' @param StoxBioticData An input of \link{ModelData} object
+#' @param BioticData An input of \link{ModelData} object
+#' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by. 
 #' 
 #' @return
 #' A \code{\link{StoxBioticData}} object.
@@ -382,12 +386,12 @@ replaceAndDelete <- function(table, VariableReplacementTable) {
 #' 
 RedefineStoxBiotic <- function(
 	StoxBioticData, BioticData, 
-	RedefinitionTable = data.table::data.table()
+	Redefinition = data.table::data.table()
 ) {
 	# Redefine StoxBioticData:
 	RedefineData(
 		StoxData = StoxBioticData, RawData = BioticData, 
-		RedefinitionTable = RedefinitionTable, 
+		Redefinition = Redefinition, 
 		StoxDataFormat = "Biotic"
 	)
 }
@@ -399,9 +403,9 @@ RedefineStoxBiotic <- function(
 #' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} to translate values of one or more columns of \code{\link{StoxBioticData}} to new values given by a table or read from a CSV file.
 #' 
 #' @inheritParams general_arguments
-#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file gievn by \code{FileName}.
-#' @param TranslationTable A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
-#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}.
+#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
+#' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
+#' @param FileName The csv file holding a table with the three variables listed for \code{Translation}.
 #' 
 #' @return
 #' A \code{\link{StoxBioticTranslation}} object.
@@ -411,14 +415,14 @@ RedefineStoxBiotic <- function(
 DefineStoxBioticTranslation <- function(
 	processData, UseProcessData = FALSE, 
 	DefinitionMethod = c("Table", "ResourceFile"), 
-	TranslationTable = data.table::data.table(), 
+	Translation = data.table::data.table(), 
 	FileName
 ) {
 	# Define translation for StoxBioticData:
 	DefineDataTranslation(
 		processData = processData, UseProcessData = UseProcessData, 
 		DefinitionMethod = DefinitionMethod, 
-		TranslationTable = TranslationTable, 
+		Translation = Translation, 
 		FileName = FileName
 	)
 }
@@ -426,12 +430,11 @@ DefineStoxBioticTranslation <- function(
 ##################################################
 #' Translate StoxBioticData
 #' 
-#' This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the table \code{TranslationTable} or by the input \code{StoxBioticTranslation}.
+#' This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the table \code{Translation} or by the input \code{StoxBioticTranslation}.
 #' 
-#' @inheritParams ModelData
-#' @inheritParams ProcessData
-#' @param TranslationDefinition  Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{TranslationTable}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.
-#' @param TranslationTable A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
+#' @param StoxBioticData An input of \link{ModelData} object
+#' @param TranslationDefinition  Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{Translation}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.
+#' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
 #' @param StoxBioticTranslation The process from which to get the \code{\link{StoxBioticTranslation}} definition.
 #' 
 #' @return
@@ -442,14 +445,14 @@ DefineStoxBioticTranslation <- function(
 TranslateStoxBiotic <- function(
 	StoxBioticData, 
 	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
-	TranslationTable = data.table::data.table(), 
+	Translation = data.table::data.table(), 
 	StoxBioticTranslation
 ) {
 	# Translate StoxBioticData:
 	TranslateData(
 		StoxData = StoxBioticData, 
 		TranslationDefinition = TranslationDefinition, 
-		TranslationTable = TranslationTable, 
+		Translation = Translation, 
 		TranslationProcessData = StoxBioticTranslation
 	)
 }
@@ -460,10 +463,10 @@ TranslateStoxBiotic <- function(
 #' 
 #' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
 #' 
-#' @inheritParams ModelData
+#' @param StoxBioticData An input of \link{ModelData} object
 #' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
-#' @param GruopingVariables A vector of variables to specify in the \code{ConversionTable}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
-#' @param ConversionTable A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
+#' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
+#' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
 #' 
 #' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
 #' 
@@ -476,14 +479,14 @@ ConvertStoxBiotic <- function(
 	StoxBioticData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
 	GruopingVariables = c("SpeciesCategory"), 
-	ConversionTable = data.table::data.table()
+	Conversion = data.table::data.table()
 ) {
 	# Convert StoxBioticData:
 	ConvertData(
 		StoxData = StoxBioticData, 
 		ConversionFunction = ConversionFunction,
 		GruopingVariables = GruopingVariables,
-		ConversionTable = ConversionTable
+		Conversion = Conversion
 	)
 }
 

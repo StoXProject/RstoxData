@@ -1,7 +1,7 @@
 #' Convert BioticData to StoxBioticData
 #'
-#' @param BioticData A list of biotic data (StoX data type \code{\link{BioticData}}), one element for each input biotic file.
-#' @param NumberOfCores Overrides multi-core auto detection (default).
+#' @inheritParams ModelData
+#' @inheritParams general_arguments
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -9,7 +9,7 @@
 #' 
 StoxBiotic <- function(
 	BioticData, 
-	NumberOfCores = integer()
+	NumberOfCores = 1L
 ) {
     
 	# Convert from BioticData to the general sampling hierarchy:
@@ -18,6 +18,13 @@ StoxBiotic <- function(
     # Extract the StoxBiotic data and rbind across files:
     StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = NumberOfCores)
     
+    # Remove rows of duplicated keys:
+    #StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
+    StoxBioticData <- removeRowsOfDuplicatedKeys(
+    	StoxData = StoxBioticData, 
+    	stoxDataFormat = "Biotic"
+    )
+    
     # Ensure that the numeric values are rounded to the defined number of digits:
     RstoxData::setRstoxPrecisionLevel(StoxBioticData)
     
@@ -25,37 +32,16 @@ StoxBiotic <- function(
 }
 
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
-BioticData2GeneralSamplingHierarchy <- function(BioticData, NumberOfCores = integer()) {
+BioticData2GeneralSamplingHierarchy <- function(
+	BioticData, 
+	NumberOfCores = 1L
+) {
     # Run the first phase possibly on several cores:
 	lapplyOnCores(
 		BioticData, 
 		FUN = StoxBiotic_firstPhase, 
 		NumberOfCores = NumberOfCores
 	)
-		
-	#	
-    ## Process Biotic data in parallel
-    #if(length(NumberOfCores) == 0) {
-    #	NumberOfCores <- getCores()
-    #}
-    #if(NumberOfCores == 1) {
-    #    GeneralSamplingHierarchy <- lapply(BioticData, StoxBiotic_firstPhase)
-    #}
-    #else {
-    #	# Do not use more cores than the number of files:
-    #	NumberOfCores <- min(length(BioticData), NumberOfCores)
-    #	
-    #    if(get_os() == "win") {
-    #        cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-    #        GeneralSamplingHierarchy <- parallel::parLapply(cl, BioticData, StoxBiotic_firstPhase)
-    #        parallel::stopCluster(cl)
-    #    } 
-    #    else {
-    #        GeneralSamplingHierarchy <- parallel::mclapply(BioticData, StoxBiotic_firstPhase, mc.cores = NumberOfCores)
-    #    }
-    #}
-    #
-    #GeneralSamplingHierarchy
 }
 
 # Function to convert rbind :
@@ -67,42 +53,11 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 		FUN = StoxBiotic_secondPhase, 
 		NumberOfCores = NumberOfCores
 	)
-	
-	
-   ## Process Biotic data in parallel
-   #if(length(NumberOfCores) == 0) {
-   #	NumberOfCores <- getCores()
-   #}
-   #if(NumberOfCores == 1) {
-   #    StoxBioticData <- lapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase)
-   #}
-   #else {
-   #	# Do not use more cores than the number of files:
-   #	NumberOfCores <- min(length(GeneralSamplingHierarchy), NumberOfCores)
-   #	
-   #	if(get_os() == "win") {
-   #    	cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-   #        StoxBioticData <- parallel::parLapply(cl, GeneralSamplingHierarchy, StoxBiotic_secondPhase)
-   #        parallel::stopCluster(cl)
-   #    } 
-   #    else {
-   #        StoxBioticData <- parallel::mclapply(GeneralSamplingHierarchy, StoxBiotic_secondPhase, mc.cores = NumberOfCores)
-   #    }
-   #}
-	
-	
+
 	# Rbind for each StoxBiotic table:
 	StoxBioticData <- rbindlist_StoxFormat(StoxBioticData)
     
-	## Rbind for each StoxBiotic table:
-    #tableNames <- names(StoxBioticData[[1]])
-    #StoxBioticData <- lapply(
-    #    tableNames, 
-    #    function(name) data.table::rbindlist(lapply(StoxBioticData, "[[", name))
-    #)
-    #names(StoxBioticData) <- tableNames
-    
-    return(StoxBioticData)
+	return(StoxBioticData)
 }
 
 
@@ -120,6 +75,7 @@ rbindlist_StoxFormat <- function(x) {
 
 
 # Function to convert the data read from one type of biotic data into the general sampling hierarchy for biotic data defined by StoX:
+#' @importFrom data.table .N setindexv
 firstPhase <- function(data, datatype, stoxBioticObject) {
     
 	# Getting data for the datatype
@@ -240,11 +196,11 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
 	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
-			stop("Error in merging.")
+			stop("StoX: Error in merging.")
 	    }
 	  } 
     else {
-	    print("Error: Invalid data input format. Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
+	    warning("Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
 	    return(NULL)
 	  }
     
@@ -312,6 +268,7 @@ StoxBiotic_firstPhase <- function(BioticData) {
 }
 
 # Function to convert from the general sampling hierarchy to the StoxBiotic format for each file:
+#' @importFrom data.table indices
 secondPhase <- function(data, datatype, stoxBioticObject) {
     
     # Getting conversion function for datatype
@@ -364,11 +321,11 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     # Remove duplicated rows from SpeciesCategory
+    # This has been moved to **** and made general for all tables. The rule is to remove dows of duplicated keys.
     #secondPhaseTables[["SpeciesCategory"]] <- unique(secondPhaseTables[["SpeciesCategory"]])
-    secondPhaseTables <- lapply(secondPhaseTables, unique)
+    # secondPhaseTables <- lapply(secondPhaseTables, unique)
     
     return(secondPhaseTables)
-    
 }
 
 # Function to get the StoxBiotic on one file:
@@ -391,8 +348,9 @@ StoxBiotic_secondPhase <- function(BioticData) {
 #' @param StoxBioticData A list of StoX biotic data (StoX data type \code{\link{StoxBioticData}}).
 #' @param TargetTable The name of the table up until which to merge (the default "Individual" implies merging all tables)
 #'
-#' @return An object of StoX data type \code{\link{MergedStoxBioticData}}.
+#' @return An object of StoX data type \code{\link{MergeStoxBioticData}}.
 #'
+#' @importFrom data.table setattr
 #' @export
 #' 
 MergeStoxBiotic <- function(
@@ -413,24 +371,33 @@ MergeStoxBiotic <- function(
 	
 	
 	# Merge:
-    MergedStoxBioticData <- mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
+    MergeStoxBioticData <- mergeDataTables(StoxBioticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
+    
+    # Move all keys to the start of the table:
+    data.table::setcolorder(
+    	MergeStoxBioticData, 
+    	intersect(
+    		names(MergeStoxBioticData), 
+    		getRstoxDataDefinitions("StoxBioticKeys")
+    	)
+    )
     
     # Add the variable names as attributes:
     setattr(
-    	MergedStoxBioticData, 
+    	MergeStoxBioticData, 
     	"stoxDataVariableNames",
     	stoxDataVariableNames
     )
     
-    return(MergedStoxBioticData)
+    return(MergeStoxBioticData)
 }
 
 
 #' Add variables to StoxBioticData from BioticData
 #'
-#' @inheritParams MergeStoxBiotic
-#' @inheritParams StoxBiotic
-#' @param VariableName A character vector with names of the variables to add from the \code{BioticData}.
+#' @inheritParams ModelData
+#' @inheritParams general_arguments
+#' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -439,78 +406,20 @@ MergeStoxBiotic <- function(
 AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
-	VariableName = character(), 
-	NumberOfCores = integer()
+	VariableNames = character(), 
+	NumberOfCores = 1L
 ) {
 	AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 
-		VariableName = VariableName, 
+		VariableNames = VariableNames, 
 		NumberOfCores = NumberOfCores, 
 		StoxDataFormat = "Biotic"
 	)
 }
 
 
-AddToStoxData <- function(
-	StoxData, 
-	RawData, 
-	VariableName = character(), 
-	NumberOfCores = integer(), 
-	StoxDataFormat = c("Biotic", "Acoustic")
-) {
-	
-	if(length(VariableName) == 0) {
-		warning("StoX: No variables specified to extract. Returning data unchcanged")
-		return(StoxData)
-	}
-	
-	# Check the the BioticData are all from the same source (ICES/NMD):
-	checkDataSource(RawData)
-	
-	# Convert from BioticData to the general sampling hierarchy:
-	StoxDataFormat <- match.arg(StoxDataFormat)
-	if(StoxDataFormat == "Biotic") {
-		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
-		# Define a vector of the variables to extract:
-		toExtract <- c(
-			getRstoxDataDefinitions("StoxBioticKeys"), 
-			VariableName
-		)
-	}
-	else if(StoxDataFormat == "Acoustic") {
-		stop("Not yet implemented")
-	}
-	else {
-		stop("Invalid StoxDataFormat")
-	}
-	
-	# Extract the variables to add:
-	toAdd <- lapply(GeneralSamplingHierarchy, function(x) lapply(x, extractVariables, var = toExtract))
-	# Rbind for each StoxBiotic table:
-	toAdd <- rbindlist_StoxFormat(toAdd)
-	# Extract only those tables present in StoxBioticData:
-	toAdd <- toAdd[names(StoxData)]
-	# Keep only unique rows:
-	toAdd <- lapply(toAdd, unique)
-	
-	# Merge with the present StoxBioticData:
-	StoxData <- mapply(merge, StoxData, toAdd)
-	
-	return(StoxData)
-}
 
-# Function to extracct variables from a table:
-extractVariables <- function(x, var) {
-	varToExtract <- intersect(names(x), var)
-	if(length(varToExtract)) {
-		x[, ..varToExtract]
-	}
-	else {
-		#warning("None of the variables present")
-		data.table::data.table()
-	}
-}
 
 checkDataSource <- function(BioticData) {
 	# Function to match the metadata against data source strings:

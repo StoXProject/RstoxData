@@ -2,10 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 readXmlCpp <- function(inputFile, xsdObjects, xsdOverride = NULL, xmlEncoding = NULL, verbose = FALSE) {
-    .Call(`_RstoxData_readXmlCpp`, inputFile, xsdObjects, xsdOverride, xmlEncoding, verbose)
+    .Call('_RstoxData_readXmlCpp', PACKAGE = 'RstoxData', inputFile, xsdObjects, xsdOverride, xmlEncoding, verbose)
 }
 
 readXmlCppStream <- function(inputFile, xsdObjects, xsdOverride = NULL, xmlEncoding = NULL, verbose = FALSE) {
-    .Call(`_RstoxData_readXmlCppStream`, inputFile, xsdObjects, xsdOverride, xmlEncoding, verbose)
+    .Call('_RstoxData_readXmlCppStream', PACKAGE = 'RstoxData', inputFile, xsdObjects, xsdOverride, xmlEncoding, verbose)
 }
 
