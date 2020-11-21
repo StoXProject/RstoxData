@@ -1,6 +1,6 @@
 Package: RstoxData
 Version: 1.0.17
-Date: 2020-11-13
+Date: 2020-11-23
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
   person(given = "Ibrahim", 
