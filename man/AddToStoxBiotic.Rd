@@ -12,6 +12,10 @@ AddToStoxBiotic(
 )
 }
 \arguments{
+\item{StoxBioticData}{\code{\link{StoxBioticData}}.}
+
+\item{BioticData}{\code{\link{BioticData}}.}
+
 \item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
 
 \item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}

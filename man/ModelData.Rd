@@ -3,6 +3,15 @@
 \name{ModelData}
 \alias{ModelData}
 \title{StoX data types of the RstoxData package}
+\arguments{
+\item{BioticData}{\code{\link{BioticData}}.}
+
+\item{StoxBioticData}{\code{\link{StoxBioticData}}.}
+
+\item{AcousticData}{\code{\link{AcousticData}}.}
+
+\item{StoxAcousticData}{\code{\link{StoxAcousticData}}.}
+}
 \description{
 StoX data types are the data types used to transfer data and information between processes in a StoX estimation model.
 }

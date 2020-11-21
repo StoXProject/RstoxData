@@ -64,6 +64,11 @@ NULL
 #' \item{\code{\link{StoxLandingData}}}
 #' }
 #' 
+#' @param BioticData \code{\link{BioticData}}.
+#' @param StoxBioticData \code{\link{StoxBioticData}}.
+#' @param AcousticData \code{\link{AcousticData}}.
+#' @param StoxAcousticData \code{\link{StoxAcousticData}}.
+#'
 #' @seealso \href{https://github.com/StoXProject/RstoxBase}{RstoxBase} and \href{https://github.com/StoXProject/RstoxFDA}{RstoxFDA} for a list of all StoX data types produced by the other official StoX function packages.
 #' 
 #' @name ModelData

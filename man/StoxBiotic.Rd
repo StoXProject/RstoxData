@@ -7,6 +7,8 @@
 StoxBiotic(BioticData, NumberOfCores = 1L)
 }
 \arguments{
+\item{BioticData}{\code{\link{BioticData}}.}
+
 \item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 }
 \value{

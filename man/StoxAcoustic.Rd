@@ -7,6 +7,8 @@
 StoxAcoustic(AcousticData, NumberOfCores = 1L)
 }
 \arguments{
+\item{AcousticData}{\code{\link{AcousticData}}.}
+
 \item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 }
 \value{
