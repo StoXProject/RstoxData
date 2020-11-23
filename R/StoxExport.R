@@ -289,40 +289,48 @@ prepareICESAcoustic <- function(
 			hl<-c()
 			hl$Instrument <- 'Instrument'
 			hl$Header <- 'Record'
-			tmp <- data.frame(AcousticDataOne$Instrument)
+			#tmp <- data.frame(AcousticDataOne$Instrument)
+			tmp <- data.table::data.table(AcousticDataOne$Instrument)
 			names(tmp)<-paste0('Instrument',names(tmp))
 			hl <- cbind(hl,tmp)
-			HInst <- format(hl, trim=TRUE, width=0)
+			#HInst <- format(hl, trim=TRUE, width=0)
+			HInst <- hl
 			
 			
 			#Make the Calibration field
 			hl<-c()
 			hl$Calibration <- 'Calibration'
 			hl$Header <- 'Record'
-			tmp <- data.frame(AcousticDataOne$Calibration)
+			#tmp <- data.frame(AcousticDataOne$Calibration)
+			tmp <- data.table::data.table(AcousticDataOne$Calibration)
 			names(tmp)<-paste0('Calibration',names(tmp))
 			hl <- cbind(hl,tmp)
-			HCal <- format(hl, trim=TRUE, width=0)
+			#HCal <- format(hl, trim=TRUE, width=0)
+			HCal <- hl
 			
 			
 			#Make the DataAcquisition field
 			hl<-c()
 			hl$DataAcquisition <- 'DataAcquisition'
 			hl$Header <- 'Record'
-			tmp <- data.frame(AcousticDataOne$DataAcquisition)
+			#tmp <- data.frame(AcousticDataOne$DataAcquisition)
+			tmp <- data.table::data.table(AcousticDataOne$DataAcquisition)
 			names(tmp)<-paste0('DataAcquisition',names(tmp))
 			hl <- cbind(hl,tmp)
-			HDatA <- format(hl, trim=TRUE, width=0)
+			#HDatA <- format(hl, trim=TRUE, width=0)
+			HDatA <- hl
 			
 			
 			#Make the DataProcessing Field
 			hl<-c()
 			hl$DataProcessing <- 'DataProcessing'
 			hl$Header <- 'Record'
-			tmp <- data.frame(AcousticDataOne$DataProcessing)
+			#tmp <- data.frame(AcousticDataOne$DataProcessing)
+			tmp <- data.table::data.table(AcousticDataOne$DataProcessing)
 			names(tmp)<-paste0('DataProcessing',names(tmp))
 			hl <- cbind(hl,tmp)
-			HDatP <- format(hl, trim=TRUE, width=0)
+			#HDatP <- format(hl, trim=TRUE, width=0)
+			HDatP <- hl
 			
 			
 			#Make the Cruise Field
@@ -331,10 +339,12 @@ prepareICESAcoustic <- function(
 			hl$Header <- 'Record'
 			ttt <- unique(AcousticDataOne$Survey$Code)
 			hl$CruiseSurvey <- ttt[[1]]
-			tmp <- data.frame(AcousticDataOne$Cruise)
+			#tmp <- data.frame(AcousticDataOne$Cruise)
+			tmp <- data.table::data.table(AcousticDataOne$Cruise)
 			names(tmp)<-paste0('Cruise',names(tmp))
 			hl <- cbind(hl,tmp)
-			HCru <- format(hl, trim=TRUE, width=0)
+			#HCru <- format(hl, trim=TRUE, width=0)
+			HCru <- hl
 			
 			
 			#Make the Data Field
@@ -1237,8 +1247,10 @@ prepareICESDatras <- function(
 	#IU: Improved cleaning#
 	# Use join to find missing value in HL
 	if (nrow(ca) > 0) {
-		testca <- unique(data.frame(StNo=ca$StNo, SpecCode=ca$SpecCode, ca=TRUE))
-		testhl <- unique(data.frame(StNo=hl$StNo, SpecCode=hl$SpecCode, hl=TRUE))
+		#testca <- unique(data.frame(StNo=ca$StNo, SpecCode=ca$SpecCode, ca=TRUE))
+		#testhl <- unique(data.frame(StNo=hl$StNo, SpecCode=hl$SpecCode, hl=TRUE))
+		testca <- unique(data.table::data.table(StNo=ca$StNo, SpecCode=ca$SpecCode, ca=TRUE))
+		testhl <- unique(data.table::data.table(StNo=hl$StNo, SpecCode=hl$SpecCode, hl=TRUE))
 		tt <- merge(testca, testhl, by = c("StNo","SpecCode"), all=TRUE)
 		missingHL <- tt[is.na(tt$hl),]
 		
