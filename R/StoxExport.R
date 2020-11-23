@@ -198,7 +198,8 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "
 #' @export
 WriteICESAcoustic <- function(
 	AcousticData, 
-	Combine = FALSE){
+	Combine = FALSE
+){
 	
 	out <- lapply(
 		AcousticData, 
@@ -400,9 +401,8 @@ prepareICESAcoustic <- function(
 						Data=HDat
 			)
 			
-			
 			if(Combine) {
-				tmp <- data.table::rbindlist(tmp)
+				tmp <- data.table::rbindlist(tmp, fill = TRUE)
 			}
 			
 		}
@@ -444,7 +444,7 @@ WriteICESBiotic <- function(
 		CruiseSurvey = CruiseSurvey, 
 		CruiseOrganisation = CruiseOrganisation, 
 		AllowRemoveSpecies = AllowRemoveSpecies, 
-		Combine = FALSE
+		Combine = Combine
 	)
 	
 	return(out)
@@ -619,8 +619,11 @@ prepareICESBiotic <- function(
 	
 	bioticOutput <- list(Cruise = Cruise, Haul = Haul, Catch = Catch, Biology = Biology)
 	
+	
+	browser()
+	
 	if(Combine) {
-		bioticOutput <- data.table::rbindlist(bioticOutput)
+		bioticOutput <- data.table::rbindlist(bioticOutput, fill = TRUE)
 	}
 	
 	return(bioticOutput)
@@ -1276,7 +1279,7 @@ prepareICESDatras <- function(
 	datrasOutput <- list(HH=hh, HL=hl, CA=ca)
 	
 	if(Combine) {
-		datrasOutput <- data.table::rbindlist(datrasOutput)
+		datrasOutput <- data.table::rbindlist(datrasOutput, fill = TRUE)
 	}
 	
 	return(datrasOutput)
