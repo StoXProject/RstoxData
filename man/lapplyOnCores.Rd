@@ -4,14 +4,14 @@
 \alias{lapplyOnCores}
 \title{Run a function on all elements of x on one or more cores}
 \usage{
-lapplyOnCores(x, FUN, NumberOfCores = integer(), ...)
+lapplyOnCores(x, FUN, NumberOfCores = 1L, ...)
 }
 \arguments{
 \item{x}{An object to apply \code{FUN} to.}
 
 \item{FUN}{The function to apply.}
 
-\item{NumberOfCores}{The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.}
+\item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 
 \item{...}{Additional arguments to \code{FUN}.}
 }

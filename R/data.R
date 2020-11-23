@@ -22,12 +22,13 @@
 
 ##################################################
 ##################################################
-#' General parameters of RstoxFramework.
+#' General parameters of RstoxData.
 #' 
 #' All functions referring to a project, a model, a process or an output table use the same parameters, listed here.
 #' 
 #' @param processData The current data produced by a previous instance of the function.
 #' @param UseProcessData Logical: If TRUE use the existing function output in the process. 
+#' @param NumberOfCores The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.
 #' 
 #' @name general_arguments
 #' 
@@ -63,6 +64,11 @@ NULL
 #' \item{\code{\link{StoxLandingData}}}
 #' }
 #' 
+#' @param BioticData \code{\link{BioticData}}.
+#' @param StoxBioticData \code{\link{StoxBioticData}}.
+#' @param AcousticData \code{\link{AcousticData}}.
+#' @param StoxAcousticData \code{\link{StoxAcousticData}}.
+#'
 #' @seealso \href{https://github.com/StoXProject/RstoxBase}{RstoxBase} and \href{https://github.com/StoXProject/RstoxFDA}{RstoxFDA} for a list of all StoX data types produced by the other official StoX function packages.
 #' 
 #' @name ModelData

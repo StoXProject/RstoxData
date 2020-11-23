@@ -30,7 +30,7 @@ processXSD <- function(doc, path = NULL) {
 		# If no children and "KeyType" (This might be specific to NMDBioticv3) or "*IDREFType*" (specific to ICES XSDs)
 		if(length(y) > 0 && (!grepl("KeyType", sName) || !grepl("IDREFType", sName))) {
 
-			if(grepl("IDREFType", sName)) print("IDREFType\n")
+			if(grepl("IDREFType", sName)) message("IDREFType\n")
 
 			z <- lapply(lapply(y, getNameType), getRecNameType, rootName, recEnv)
 
@@ -74,7 +74,7 @@ processXSD <- function(doc, path = NULL) {
 	# See if we need to include more file(s) (include schemaLocation)
 	extraXSD <- xml_find_all(doc, paste0("//", defNS, "include"))
 	if(length(extraXSD) > 0) {
-		print("We have extra XSDs to be included!\n")
+		message("We have extra XSDs to be included!\n")
 		exFiles <- xml_attr(extraXSD, "schemaLocation")
 		exObj <- lapply(paste0(path, "/include/", exFiles), read_xml)
 		lapply(exObj, function(x) lapply(xml_children(x), function(y) xml_add_child(doc, y)))
@@ -241,7 +241,7 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 createXsdObject <- function(xsdFile) {
 
 	# Check if XSD exists
-	print(paste("Using:", xsdFile))
+	message(paste("Using:", xsdFile))
 
 	# If not exists
 	if(!file.exists(xsdFile)) {
@@ -250,7 +250,7 @@ createXsdObject <- function(xsdFile) {
 		fpath <- getRstoxDataDefinitions("fpath")
 		xsdFilePath <- paste0(fpath, "/", basename(xsdFile))
 		if(!file.exists(xsdFilePath)) {
-			print(paste("It seems that", xsdFile, "does not exist or the format is not supported."))
+			message(paste("It seems that", xsdFile, "does not exist or the format is not supported."))
 			return(NULL)
 		}
 	} else {
@@ -304,7 +304,7 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 		return(list(xsd = xmlXsd, encoding = xmlEnc))
 
 	if(verbose)
-		print("Do manual detection")
+		message("Do manual detection")
 
 	# Do manual detection
 	# Later We need to distinguish Biotic v3&v3.1, Biotic v1.4&earlier

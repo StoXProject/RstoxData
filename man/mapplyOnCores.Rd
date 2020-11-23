@@ -15,7 +15,7 @@ mapplyOnCores(
 \arguments{
 \item{FUN}{The function to apply.}
 
-\item{NumberOfCores}{The number of cores to use, defaulted to detect the available number of cores, but never to run on more cores than the number of elements of \code{x}.}
+\item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 
 \item{..., MoreArgs, SIMPLIFY}{See \code{\link[base]{mapply}}.}
 }

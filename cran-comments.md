@@ -1,7 +1,7 @@
 ## Test environments
 * local R installation (Fedora-31): R 3.6.3
 * local R installation (MacOS): R 4.0.3
-* Github actions (ubuntu 18.04): oldrel, release
+* Github actions (ubuntu 16.04): oldrel, release
 * Github actions (Windows): oldrel, release
 * Github actions (MacOS): oldrel, release
 * R-hub (fedora-clang-devel): r-devel
@@ -13,9 +13,13 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
+❯ checking CRAN incoming feasibility ... NOTE
 
-## Re-submission fixes
-* Remove all attempts to modify the global environment in functions from
-`DefineAndUpdateVariables.R` and `xsdUtils.R` files.
-* Shorten the package title.
+  Maintainer: 'Ibrahim Umar <ibrahim.umar@hi.no>'
+
+  Days since last update: 5
+
+## New version submission
+
+* Remove `file.copy()` to location outside of `tempdir()` in tests.
+* New version with several bug fixes and improvements.

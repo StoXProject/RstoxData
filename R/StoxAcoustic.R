@@ -1,13 +1,16 @@
 #' Convert AcousticData to StoxAcousticData
 #'
-#' @param AcousticData A list of acoustic data (StoX data type \code{\link{AcousticData}}), one element for each input acoustic file.
-#' @param NumberOfCores Overrides multi-core auto detection (default).
+#' @inheritParams ModelData
+#' @inheritParams general_arguments
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
+StoxAcoustic <- function(
+	AcousticData, 
+	NumberOfCores = 1L
+){
     
 	# Convert to StoxAcosuticData possibly on several cores:
     StoxAcousticData <- lapplyOnCores(
@@ -16,28 +19,6 @@ StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
     	NumberOfCores = NumberOfCores
     )
     
-    
-  ## Process acoustic data in parallel
-#	if(length(NumberOfCores) == 0) {
-#		NumberOfCores <- getCores()
-#	}
-#	if(NumberOfCores == 1) {
-#	    data_list_out <- lapply(AcousticData, StoxAcousticOne)
-#	}
-#	else {
-#		# Do not use more cores than the number of files:
-#		NumberOfCores <- min(length(AcousticData), NumberOfCores)
-#		
-#		if(get_os() == "win") {
-#			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
-  #        data_list_out <- parLapply(cl, AcousticData, StoxAcousticOne)
-  #        stopCluster(cl)
-  #    } else {
-  #        data_list_out <- mclapply(AcousticData, StoxAcousticOne, mc.cores = NumberOfCores)
-  #    }
-  #}
-  
-
     # Rbind for each StoxAcoustic table:
     StoxAcousticData <- rbindlist_StoxFormat(StoxAcousticData)
     
@@ -47,23 +28,10 @@ StoxAcoustic <- function(AcousticData, NumberOfCores = integer()){
     	stoxDataFormat = "Acoustic"
     )
     
-    
-  #tableNames <- names(data_list_out[[1]])
-#
-  #StoxAcousticData <- lapply(
-  #    tableNames,
-  #    function(name) data.table::rbindlist(lapply(data_list_out, "[[", name))
-  #)
-#
-  #names(StoxAcousticData) <- tableNames
-  
-  # Ensure that the numeric values are rounded to the defined number of digits:
-  RstoxData::setRstoxPrecisionLevel(StoxAcousticData)
-  
+	# Ensure that the numeric values are rounded to the defined number of digits:
+ 	RstoxData::setRstoxPrecisionLevel(StoxAcousticData)
 
-  #Output stox acoustic data
-  return(StoxAcousticData)
-  
+ 	return(StoxAcousticData)
 }
 
 # Get the StoxAcoustic format of one list of AocusticData:
@@ -569,29 +537,4 @@ MergeStoxAcoustic <- function(StoxAcousticData, TargetTable = "NASC") {
 	tableNames <- StoxAcousticDataTableNames[seq_len(which(StoxAcousticDataTableNames == TargetTable))]
 	# Merge:
 	mergeDataTables(StoxAcousticData, tableNames = tableNames, output.only.last = TRUE, all = TRUE)
-}
-
-
-
-#' Generate Start, Middle and Stop DateTime variables
-#'
-#' @param StoxAcousticData A list of StoX acoustic data (StoX data type \code{\link{StoxAcousticData}}).
-#' 
-#' @return An object of StoX data type \code{\link{MergeStoxAcousticData}}.
-#'
-#' @export
-#' 
-StoxAcousticStartMiddleStopDateTime <- function(StoxAcousticData) {
-	# Fill the start, middle and end DateTime with the DateTime directly, given the LogOrigin:
-	# Fill the StartDateTime with the DateTime directly, given the LogOrigin:
-	StoxAcousticData$Log[LogOrigin == "start", StartDateTime := DateTime]
-	# Interpret StartDateTime from LogDuration and LogOrigin:
-	StoxAcousticData$Log[LogOrigin == "middle", StartDateTime := DateTime - LogDuration / 2]
-	StoxAcousticData$Log[LogOrigin == "end", StartDateTime := DateTime - LogDuration]
-	
-	# Extrapolate to the middle and end times:
-	StoxAcousticData$Log[, MiddleDateTime := StartDateTime + LogDuration / 2]
-	StoxAcousticData$Log[, StopDateTime := StartDateTime + LogDuration]
-	
-	return(StoxAcousticData)
 }

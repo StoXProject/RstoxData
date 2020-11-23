@@ -167,7 +167,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 
 	# Check file exists
 	if(!file.exists(xmlFilePath)) {
-		print(paste("File", xmlFilePath, "does not exist."))
+		message(paste("File", xmlFilePath, "does not exist."))
 		return(NULL)
 	}
 

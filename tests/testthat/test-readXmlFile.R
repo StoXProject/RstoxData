@@ -56,12 +56,13 @@ encParse <- readXmlFile(example, stream = T)
 expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
 
 context("test-readXmlFile: Path encoding")
-testing <- paste0(dirname(example), "/", "bio_å_prøve.xml")
+testing <- paste0(tempfile(pattern=""), "_bio_å_prøve.xml")
 file.copy(example, testing)
 encParse <- readXmlFile(testing, stream = F)
 expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
 encParse <- readXmlFile(testing, stream = T)
 expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+unlink(testing)
 
 # ICES data
 context("test-readXmlFile: ICES acoustic and biotic data reading")
