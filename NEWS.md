@@ -2,9 +2,13 @@
 
 * In `writeICESDatras()`: Change country code 'NOR' to 'NO'.
 * Change the default NumberOfCores to 1L in all parallel-able functions.
-* Refactor `WriteICESAcoustic()`, `WriteICESBiotic()`, `WriteICESDatras()`.
+* Refactor `WriteICESAcoustic()`, `WriteICESBiotic()`, `WriteICESDatras()` into
+`prepareICESAcoustic()`, `prepareICESBiotic()`, `prepareICESDatras()`.
 * Tests: do not attempt to copy file outside `tempdir()` in `test-readXmlFile.R` file.
 * Github actions: Update `check-full.yaml` file.
+* `prepareICESAcoustic()` to use `data.table` and not use `format()`.
+* Fix parallel `lapplyOnCores()` behavior in Windows platform.
+* Remove `StoxAcousticStartMiddleStopDateTime()` function.
 
 # RstoxData v1.0.16 (2020-11-11)
 
