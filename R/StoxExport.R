@@ -619,9 +619,6 @@ prepareICESBiotic <- function(
 	
 	bioticOutput <- list(Cruise = Cruise, Haul = Haul, Catch = Catch, Biology = Biology)
 	
-	
-	browser()
-	
 	if(Combine) {
 		bioticOutput <- data.table::rbindlist(bioticOutput, fill = TRUE)
 	}
