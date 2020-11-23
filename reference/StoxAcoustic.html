@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.17</span>
       </span>
     </div>
 
@@ -114,18 +114,18 @@
     <p>Convert AcousticData to StoxAcousticData</p>
     </div>
 
-    <pre class="usage"><span class='fu'>StoxAcoustic</span><span class='op'>(</span><span class='va'>AcousticData</span>, NumberOfCores <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>StoxAcoustic</span><span class='op'>(</span><span class='va'>AcousticData</span>, NumberOfCores <span class='op'>=</span> <span class='fl'>1L</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>AcousticData</th>
-      <td><p>A list of acoustic data (StoX data type <code><a href='AcousticData.html'>AcousticData</a></code>), one element for each input acoustic file.</p></td>
+      <td><p><code><a href='AcousticData.html'>AcousticData</a></code>.</p></td>
     </tr>
     <tr>
       <th>NumberOfCores</th>
-      <td><p>Overrides multi-core auto detection (default).</p></td>
+      <td><p>The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.</p></td>
     </tr>
     </table>
 

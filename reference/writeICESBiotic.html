@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write ICES biotic CSV format file — writeICESBiotic • RstoxData</title>
+<title>Write ICES biotic CSV format file — WriteICESBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Write ICES biotic CSV format file — writeICESBiotic" />
+<meta property="og:title" content="Write ICES biotic CSV format file — WriteICESBiotic" />
 <meta property="og:description" content="Given an BioticData object, this function will write an ICES biotic CSV file. Note that this function only supports
 BioticData object that is created from reading an NMD biotic version 3 XML file." />
 
@@ -73,7 +73,7 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.17</span>
       </span>
     </div>
 
@@ -116,12 +116,12 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
 <code>BioticData</code> object that is created from reading an NMD biotic version 3 XML file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>writeICESBiotic</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>WriteICESBiotic</span><span class='op'>(</span>
   <span class='va'>BioticData</span>,
-  cruiseSurvey <span class='op'>=</span> <span class='st'>"NONE"</span>,
-  cruiseOrganisation <span class='op'>=</span> <span class='fl'>612</span>,
-  allowRemoveSpecies <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  save <span class='op'>=</span> <span class='cn'>TRUE</span>
+  CruiseSurvey <span class='op'>=</span> <span class='st'>"NONE"</span>,
+  CruiseOrganisation <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>,
+  AllowRemoveSpecies <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  Combine <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -132,21 +132,21 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       <td><p>a <code>BioticData</code> object from an XML file with NMD biotic version 3 format.</p></td>
     </tr>
     <tr>
-      <th>cruiseSurvey</th>
-      <td><p>set to specify the CruiseSurvey column content. Default to NONE.</p></td>
+      <th>CruiseSurvey</th>
+      <td><p>A string naming the survey. Must be one of the names listed on <a href='https://vocab.ices.dk/?ref=1453'>https://vocab.ices.dk/?ref=1453</a> or NONE (the default).</p></td>
     </tr>
     <tr>
-      <th>cruiseOrganisation</th>
-      <td><p>set to specify the CruiseOrganisation column content. Default to 612 (IMR's NMD).</p></td>
+      <th>CruiseOrganisation</th>
+      <td><p>An integer code representing the organization running the cruise. See <a href='https://vocab.ices.dk/?ref=1398'>https://vocab.ices.dk/?ref=1398</a> for a list of possible codes (e.g., Institute of Marine Research: 612).</p></td>
     </tr>
     <tr>
-      <th>allowRemoveSpecies</th>
+      <th>AllowRemoveSpecies</th>
       <td><p>ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.</p></td>
     </tr>
     <tr>
-      <th>save</th>
-      <td><p>an output file in collated CSV format will be created if this parameter is set to TRUE.</p></td>
+      <th>Combine</th>
+      <td><p>Logical: If TRUE stack the output tables for each acosutic file.</p></td>
     </tr>
     </table>
 

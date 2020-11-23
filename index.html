@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.17</span>
       </span>
     </div>
 
@@ -112,7 +112,12 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <ol>
-<li><p>Install the latest release: <code>r  install.package("RstoxData", repos = "https://stoxproject.github.io/repo/")</code></p></li>
+<li>
+<p>Install from CRAN:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"RstoxData"</span><span class="op">)</span></code></pre></div>
+</li>
+<li><p>Install the latest release from our local repository: <code>r  install.packages("RstoxData", repos = c("https://stoxproject.github.io/repo/", "https://cloud.r-project.org/"))</code></p></li>
 <li><p>Install the latest version from GitHub: <code>r  devtools::install_github("https://github.com/StoXProject/RstoxData")</code></p></li>
 </ol>
 <p>On computers that return errors when trying to run the Rtools through RStudio (most institutional Windows machines), install the binary directly from <a href="https://github.com/StoXProject/RstoxData/releases" class="uri">https://github.com/StoXProject/RstoxData/releases</a>. Download the newest RstoxData zip file, click the <code>Packages</code> tab -&gt; <code>Install</code> -&gt; <code>Install from:</code> <code>Package Archive File</code> -&gt; <code>Install</code>. If the installer does not complain, the package is installed correctly.</p>
@@ -137,6 +142,8 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=RstoxData">https://​cloud.r-project.org/​package=RstoxData</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/StoXProject/RstoxData/">https://​github.com/​StoXProject/​RstoxData/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/StoXProject/RstoxData/issues">https://​github.com/​StoXProject/​RstoxData/​issues</a>

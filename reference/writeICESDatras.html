@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write ICES DATRAS (NS-IBTS) format file — writeICESDatras • RstoxData</title>
+<title>Write ICES DATRAS (NS-IBTS) format file — WriteICESDatras • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Write ICES DATRAS (NS-IBTS) format file — writeICESDatras" />
+<meta property="og:title" content="Write ICES DATRAS (NS-IBTS) format file — WriteICESDatras" />
 <meta property="og:description" content="Given an BioticData object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
 BioticData object that is created from reading an NMD biotic version 3 XML file." />
 
@@ -73,7 +73,7 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.17</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
 <code>BioticData</code> object that is created from reading an NMD biotic version 3 XML file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>writeICESDatras</span><span class='op'>(</span><span class='va'>BioticData</span>, addStationType <span class='op'>=</span> <span class='cn'>NA</span>, save <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>WriteICESDatras</span><span class='op'>(</span><span class='va'>BioticData</span>, AddStationType <span class='op'>=</span> <span class='cn'>NA_character_</span>, Combine <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -126,12 +126,12 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       <td><p>a <code>BioticData</code> object from an XML file with NMD biotic version 3 format.</p></td>
     </tr>
     <tr>
-      <th>addStationType</th>
+      <th>AddStationType</th>
       <td><p>additional StationType to be included. By default only fish stations with StationType == NA are included.</p></td>
     </tr>
     <tr>
-      <th>save</th>
-      <td><p>an output file in collated CSV format will be created if this parameter is set to TRUE.</p></td>
+      <th>Combine</th>
+      <td><p>Logical: If TRUE stack the output tables for each acosutic file.</p></td>
     </tr>
     </table>
 
