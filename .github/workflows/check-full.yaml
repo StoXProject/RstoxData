@@ -40,11 +40,11 @@ jobs:
           curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/deploy-actions.sh" --output deploy.sh
           chmod +x ./checktag.sh ./deploy.sh
           . checktag.sh
-          echo "::set-env name=FINAL_TAG::${FINAL_TAG}"
-          echo "::set-env name=PKG_FILE_PREFIX::${PKG_FILE_PREFIX}"
-          echo "::set-env name=PKG_FILE::${PKG_FILE_PREFIX}${{ matrix.config.pkgext }}"
-          echo "::set-env name=PKG_FREL::${PKG_FILE_PREFIX}-R.${{ matrix.config.r }}-${{ runner.os }}${{ matrix.config.pkgext }}"
-          echo "::set-env name=PKG_REPO::${GITHUB_WORKSPACE}"
+          echo "FINAL_TAG=${FINAL_TAG}" >> $GITHUB_ENV
+          echo "PKG_FILE_PREFIX=${PKG_FILE_PREFIX}" >> $GITHUB_ENV
+          echo "PKG_FILE=${PKG_FILE_PREFIX}${{ matrix.config.pkgext }}" >> $GITHUB_ENV
+          echo "PKG_FREL=${PKG_FILE_PREFIX}-R.${{ matrix.config.r }}-${{ runner.os }}${{ matrix.config.pkgext }}" >> $GITHUB_ENV
+          echo "PKG_REPO=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
         shell: bash
 
       - uses: r-lib/actions/setup-r@v1
@@ -115,7 +115,7 @@ jobs:
         if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           pkgbuild::build(".", dest_path = ".", binary = FALSE)
-          cat(paste0("::set-env name=PKG_FREL::", Sys.getenv("PKG_FILE"), "\n"))
+          system(paste0("PKG_FREL=", Sys.getenv("PKG_FILE"), " >> ", Sys.getenv("GITHUB_ENV")))
         shell: Rscript {0}
 
       - name: Build package binary archive
