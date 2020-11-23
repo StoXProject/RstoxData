@@ -264,6 +264,9 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			parallel::clusterEvalQ(cl, {
+				library(RstoxData)
+			})
 			out <- parallel::parLapply(cl, x, FUN, ...)
 			parallel::stopCluster(cl)
 		} 
