@@ -81,7 +81,7 @@ TranslateData <- function(
 ConvertData <- function(
 	StoxData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = c("SpeciesCategory"), 
+	GruopingVariables = character(), 
 	Conversion = data.table::data.table()
 ) {
 	
@@ -238,14 +238,16 @@ ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVa
 roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
 	# Round off either to the values of a column or to oa numeric:
 	if(!RoundOffTo %in% names(data)) {
-		RoundOffToNumeric <- as.numeric(RoundOffTo)
-		if(!is.na(RoundOffToNumeric)) {
-			# Round off to the RoundOffToNumeric by reference:
-			#RoundOffTo <- RoundOffToNumeric
-			data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
-		}
-		else {
-			stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
+		if(length(RoundOffTo) && nchar(RoundOffTo)) {
+			RoundOffToNumeric <- as.numeric(RoundOffTo)
+			if(!is.na(RoundOffToNumeric)) {
+				# Round off to the RoundOffToNumeric by reference:
+				#RoundOffTo <- RoundOffToNumeric
+				data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
+			}
+			else {
+				stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
+			}
 		}
 	}
 	else {
@@ -255,7 +257,12 @@ roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
 }
 
 roundOff <- function(x, RoundOffTo) {
-	round(x / RoundOffTo) * RoundOffTo
+	if(length(RoundOffTo)) {
+		round(x / RoundOffTo) * RoundOffTo
+	}
+	else {
+		x
+	}
 }
 
 
@@ -478,7 +485,7 @@ TranslateStoxBiotic <- function(
 ConvertStoxBiotic <- function(
 	StoxBioticData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = c("SpeciesCategory"), 
+	GruopingVariables = character(),  
 	Conversion = data.table::data.table()
 ) {
 	# Convert StoxBioticData:

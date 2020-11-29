@@ -17,7 +17,8 @@ initiateRstoxData <- function(){
 	signifDigits <- 6
 	
 	# Define the time format used by Stox formats:
-	StoxDateTimeFormat <- "%Y-%m-%d %H:%M:%OS"
+	#StoxDateTimeFormat <- "%Y-%m-%d %H:%M:%OS"
+	StoxDateTimeFormat <- "%Y-%m-%dT%H:%M:%OS3Z"
 	StoxTimeZone <- "UTC"
 	
 	# Get the path to the extdata folder:
@@ -59,6 +60,14 @@ initiateRstoxData <- function(){
 	
 	# Define the columns required for VariableConversionTable:
 	StoxBioticTranslationRequiredColumns <- c("VariableName", "Value", "NewValue")
+	
+	# Define the ICESBiotic keys (check with the package author whether this is already defined when reading the data):
+	ICESBioticKeys <- list(
+		Cruise = "LocalID", 
+		Haul = c("LocalID", "Gear", "Number"), 
+		Catch = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory"), 
+		Biology = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "StockCode", "FishID")
+	)
 	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()

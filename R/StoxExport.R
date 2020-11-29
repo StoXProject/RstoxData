@@ -196,30 +196,20 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
-WriteICESAcoustic <- function(
-	AcousticData, 
-	Combine = FALSE
-){
+ICESAcousticCSV <- function(AcousticData){
 	
-	out <- lapply(
+	ICESAcousticCSVData <- lapply(
 		AcousticData, 
-		prepareICESAcoustic, 
-		Combine = Combine
+		ICESAcousticCSVOne
 	)
 	
-	return(out)
+	return(ICESAcousticCSVData)
 }
 
 
-prepareICESAcoustic <- function(
-	AcousticDataOne, 
-	Combine = FALSE
-){
+ICESAcousticCSVOne <- function(AcousticDataOne){
 	
 		if(AcousticDataOne$metadata$useXsd=='icesAcoustic'){
-			
-			#Remove echo type
-			AcousticDataOne$Data$EchoType<-NULL      
 			
 			#Fix notation of metadata
 			translate <- function(xx) {
@@ -229,6 +219,10 @@ prepareICESAcoustic <- function(
 				return(res)
 			}
 			
+			# Remove echo type, as this is not included in the CSV:
+			AcousticDataOne$Data$EchoType<-NULL
+			
+			# Translate according to the vocabulary:
 			AcousticDataOne$Instrument$TransducerLocation <- translate(AcousticDataOne$Instrument$TransducerLocation)
 			AcousticDataOne$Instrument$TransducerBeamType <- translate(AcousticDataOne$Instrument$TransducerBeamType)
 			AcousticDataOne$Calibration$AcquisitionMethod <- translate(AcousticDataOne$Calibration$AcquisitionMethod)
@@ -279,141 +273,120 @@ prepareICESAcoustic <- function(
 			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml',unique(AcousticDataOne$Data$Unit))
 			
 			
-			
-			# #Test to see if the log distance is always increasing
-			# if(is.unsorted((AcousticDataOne$Log$Distance))){warning('The log distance in Log field is not chronological with time')}
-			# if(is.unsorted((AcousticDataOne$Sample$Distance))){warning('The log distance in Sample field is not chronological with time')}
-			# if(is.unsorted((AcousticDataOne$Data$Distance))){warning('The log distance in Data field is not chronological with time')}
-			
-			
-			#Make the Instrument field
-			hl<-c()
-			hl$Instrument <- 'Instrument'
-			hl$Header <- 'Record'
-			#tmp <- data.frame(AcousticDataOne$Instrument)
-			tmp <- data.table::data.table(AcousticDataOne$Instrument)
-			names(tmp)<-paste0('Instrument',names(tmp))
-			hl <- cbind(hl,tmp)
-			#HInst <- format(hl, trim=TRUE, width=0)
-			HInst <- hl
-			
-			
-			#Make the Calibration field
-			hl<-c()
-			hl$Calibration <- 'Calibration'
-			hl$Header <- 'Record'
-			#tmp <- data.frame(AcousticDataOne$Calibration)
-			tmp <- data.table::data.table(AcousticDataOne$Calibration)
-			names(tmp)<-paste0('Calibration',names(tmp))
-			hl <- cbind(hl,tmp)
-			#HCal <- format(hl, trim=TRUE, width=0)
-			HCal <- hl
-			
-			
-			#Make the DataAcquisition field
-			hl<-c()
-			hl$DataAcquisition <- 'DataAcquisition'
-			hl$Header <- 'Record'
-			#tmp <- data.frame(AcousticDataOne$DataAcquisition)
-			tmp <- data.table::data.table(AcousticDataOne$DataAcquisition)
-			names(tmp)<-paste0('DataAcquisition',names(tmp))
-			hl <- cbind(hl,tmp)
-			#HDatA <- format(hl, trim=TRUE, width=0)
-			HDatA <- hl
-			
-			
-			#Make the DataProcessing Field
-			hl<-c()
-			hl$DataProcessing <- 'DataProcessing'
-			hl$Header <- 'Record'
-			#tmp <- data.frame(AcousticDataOne$DataProcessing)
-			tmp <- data.table::data.table(AcousticDataOne$DataProcessing)
-			names(tmp)<-paste0('DataProcessing',names(tmp))
-			hl <- cbind(hl,tmp)
-			#HDatP <- format(hl, trim=TRUE, width=0)
-			HDatP <- hl
-			
-			
-			#Make the Cruise Field
-			hl<-c()
-			hl$Cruise <- 'Cruise'
-			hl$Header <- 'Record'
-			ttt <- unique(AcousticDataOne$Survey$Code)
-			hl$CruiseSurvey <- ttt[[1]]
-			#tmp <- data.frame(AcousticDataOne$Cruise)
-			tmp <- data.table::data.table(AcousticDataOne$Cruise)
-			names(tmp)<-paste0('Cruise',names(tmp))
-			hl <- cbind(hl,tmp)
-			#HCru <- format(hl, trim=TRUE, width=0)
-			HCru <- hl
-			
-			
-			#Make the Data Field
-			hl<-c()
-			hl$Data <- 'Data'
-			hl$Header <- 'Record'
-			
-			
-			tmp_log <- unique(AcousticDataOne$Log)
-			tmp_log <- lapply(tmp_log, unlist)
-			# tmp_log$Origin<-unlist(tmp_log$Origin)
-			# tmp_log$Validity<-unlist(tmp_log$Validity)
-			names(tmp_log)[names(tmp_log)=='LocalID']<-'CruiseLocalID'
-			names(tmp_log)[names(tmp_log)!='CruiseLocalID']<-paste0('Log',names(tmp_log)[names(tmp_log)!='CruiseLocalID'])
-			
-			tmp_sample <- lapply(AcousticDataOne$Sample, unlist)
-			# tmp_sample$SamplePingAxisIntervalType<-unlist(tmp_sample$SamplePingAxisIntervalType)
-			# tmp_sample$SamplePingAxisIntervalUnit<-unlist(tmp_sample$SamplePingAxisIntervalUnit)
-			# tmp_sample$SamplePingAxisIntervalUnit<-unlist(tmp_sample$SamplePingAxisIntervalUnit)
-			names(tmp_sample)[names(tmp_sample)=='LocalID']<-'CruiseLocalID'
-			names(tmp_sample)[names(tmp_sample)=='Distance']<-'LogDistance'
-			names(tmp_sample)[names(tmp_sample)=='Instrument']<-'InstrumentID'
-			names(tmp_sample)[names(tmp_sample)=='Calibration']<-'CalibrationID'
-			names(tmp_sample)[names(tmp_sample)=='DataAcquisition']<-'DataAcquisitionID'
-			names(tmp_sample)[names(tmp_sample)=='DataProcessing']<-'DataProcessingID'
-			names(tmp_sample)[!names(tmp_sample)%in%c('CruiseLocalID','LogDistance','InstrumentID','CalibrationID','DataAcquisitionID','DataProcessingID')] <-paste0('Sample',names(tmp_sample)[!names(tmp_sample)%in%c('CruiseLocalID','LogDistance','InstrumentID','CalibrationID','DataAcquisitionID','DataProcessingID')])
-			
-			
-			tmp_data <- lapply(AcousticDataOne$Data, unlist)
-			
-			# tmp_data$SaCategory<-unlist(tmp_data$SaCategory)
-			# tmp_data$Type<-unlist(tmp_data$Type)
-			# tmp_data$Unit<-unlist(tmp_data$Unit)
-			# tmp_data$Value<-formatC(tmp_data$Value,format='fg')
-			
-			names(tmp_data)[names(tmp_data)=='LocalID']<-'CruiseLocalID'
-			names(tmp_data)[names(tmp_data)=='Distance']<-'LogDistance'
-			names(tmp_data)[names(tmp_data)=='ChannelDepthUpper']<-'SampleChannelDepthUpper'
-			names(tmp_data)[!names(tmp_data)%in%c('CruiseLocalID','LogDistance','SampleChannelDepthUpper')]<-paste0('Data',names(tmp_data)[!names(tmp_data)%in%c('CruiseLocalID','LogDistance','SampleChannelDepthUpper')])
-			
-			
-			
-			tmp_sub <- merge(as.data.table(tmp_log), as.data.table(tmp_sample), by=intersect(names(tmp_log), names(tmp_sample)))
-			tmp_sub <- merge(as.data.table(tmp_data), as.data.table(tmp_sub), by=intersect(names(tmp_data), names(tmp_sub)))
-			
-			HDat <- cbind(as.data.table(hl), tmp_sub)
-			
-			tmp <- list(Instrument=HInst,
-						Calibration=HCal,
-						DataAcquisition=HDatA,
-						DataProcessing=HDatP,
-						Cruise=HCru,
-						Data=HDat
+			#### Rename columns to start with the table name:
+			# Rename the independent tables:
+			independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
+			independentTablesColumnNames <- lapply(AcousticDataOne[independentTables], names)
+			independentTablesNewColumnNames <- mapply(paste0, independentTables, independentTablesColumnNames)
+			mapply(
+				data.table::setnames, 
+				AcousticDataOne[independentTables], 
+				old = independentTablesColumnNames, 
+				new = independentTablesNewColumnNames
 			)
 			
-			if(Combine) {
-				tmp <- data.table::rbindlist(tmp, fill = TRUE)
-			}
+			# For the hierarchical tables create a table fo the original and new column names, but remove keys:
+			hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
+			hierarchicalTablesColumnNames <- lapply(AcousticDataOne[hierarchicalTables], names)
+			hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
+			hierarchicalNamesTable <- data.table::data.table(
+				columnNames = unlist(hierarchicalTablesColumnNames), 
+				newColumnNames = unlist(hierarchicalTablesNewColumnNames)
+			)
+			hierarchicalNamesTable <- hierarchicalNamesTable[!duplicated(columnNames), ]
+			
+			
+			# In the sample table, rename simply by adding "ID" to the names of the columns referring to the independent tables (not starting with "Sample"):
+			hierarchicalNamesTable[columnNames %in% independentTables, newColumnNames := paste0(columnNames, "ID")]
+			
+			# Rename by reference:
+			lapply(
+				AcousticDataOne[hierarchicalTables], 
+				data.table::setnames, 
+				old = hierarchicalNamesTable$columnNames, 
+				new = hierarchicalNamesTable$newColumnNames, 
+				skip_absent = TRUE
+			)
+			
+			# Merge the Log, Sample and Data to make the merged Data table:
+			hierarchicalTablesSansCruise <- setdiff(hierarchicalTables, "Cruise")
+			LogSampleData <- RstoxData::mergeDataTables(AcousticDataOne[hierarchicalTablesSansCruise], output.only.last = TRUE, all = TRUE)
+			LogSampleData <- unique(LogSampleData)
+			
+			# Create the output:
+			ICESAcousticCSV <- c(
+				AcousticDataOne[c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise")],
+				list(Data = LogSampleData)
+			)
+			
+			# Move ID columns last:
+			ICESAcousticCSV <- lapply(ICESAcousticCSV, moveIDsLast)
+
+			# Convert all tables to string with header and reccord, and rbind:
+			ICESAcousticCSV <- convertToHeaderRecord(ICESAcousticCSV)
+			ICESAcousticCSV <- expandWidth(ICESAcousticCSV)
+			
+			# Rbind to a matrix:
+			ICESAcousticCSV <- do.call(rbind, ICESAcousticCSV)
 			
 		}
 		else{
 			stop('StoX: only ices acoustic format is allowed')
 		}
 	
-	return(tmp)
+	return(ICESAcousticCSV)
+}
+
+# Function to convert a list of ICESAcoustic data to a list of tables with Header and Reccord, fitting the ICES CSV formats:
+convertToHeaderRecord <- function(ICESData) {
+	# Run through the table names and convert to Header, Record, and stringify:
+	lapply(names(ICESData), createHeaderRecordTable, ICESData = ICESData)
+}
+
+createHeaderRecordTable <- function(ICESDataTableName, ICESData) {
+	
+	thisTable <- ICESData[[ICESDataTableName]]
+	# # Move IDs last:
+	# endsWithID <- endsWith(names(thisTable), "ID")
+	# data.table::setorderv(thisTable, c(names(thisTable)[!endsWithID], names(thisTable)[!endsWithID]))
+	
+	header <- c(
+		ICESDataTableName, 
+		"Header", 
+		#paste0(ICESDataTableName, names(thisTable))
+		names(thisTable)
+	)
+		
+		
+	
+	record <- cbind(
+		ICESDataTableName, 
+		"Record", 
+		# Convert all columns to string:
+		as.matrix(thisTable)
+	)
+	
+	unname(rbind(header, record))
 }
 
 
+moveIDsLast <- function(x) {
+	# Move IDs last:
+	endsWithID <- endsWith(names(x), "ID")
+	data.table::setcolorder(x, c(names(x)[!endsWithID], names(x)[endsWithID]))
+}
+
+
+expandWidth <- function(x) {
+	# Get the number of columns and rows:
+	ncols <- sapply(x, ncol)
+	nrows <- sapply(x, nrow)
+	# Create matrices of NAs with dimension so that added to the original data we end up with identical number of rows:
+	dims <- cbind(nrows, max(ncols) - ncols)
+	dimsList <- split(dims, seq_along(x))
+	NAArrays <- mapply(array, dim = dimsList, SIMPLIFY = FALSE)
+	mapply(cbind, x, NAArrays, SIMPLIFY = FALSE)
+}
 
 #' Write ICES biotic CSV format file
 #'
@@ -430,201 +403,84 @@ prepareICESAcoustic <- function(
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
-WriteICESBiotic <- function(
+ICESBioticCSV <- function(
 	BioticData, 
-	CruiseSurvey = "NONE", 
-	CruiseOrganisation = integer(), 
-	AllowRemoveSpecies = TRUE, 
-	Combine = FALSE
+	SurveyName = "NONE", 
+	Country = character(), 
+	Organisation = integer(), 
+	AllowRemoveSpecies = TRUE
 ) {
 
-	out <- lapply(
+	# Convert to ICESBiotic:
+	BioticData <- NMDBioticToICESBiotic(
 		BioticData, 
-		prepareICESBiotic, 
-		CruiseSurvey = CruiseSurvey, 
-		CruiseOrganisation = CruiseOrganisation, 
-		AllowRemoveSpecies = AllowRemoveSpecies, 
-		Combine = Combine
+		SurveyName = SurveyName, 
+		Country = Country, 
+		Organisation = Organisation, 
+		AllowRemoveSpecies = AllowRemoveSpecies
+	) 
+		
+		
+		
+	ICESBioticCSVData <- lapply(
+		BioticData, 
+		ICESBioticToICESBioticCSVOne
 	)
 	
-	return(out)
+	return(ICESBioticCSVData)
 } 
 
 
 
-prepareICESBiotic <- function(
-	BioticDataOne, 
-	CruiseSurvey = "NONE", 
-	CruiseOrganisation = integer(), 
-	AllowRemoveSpecies = TRUE, 
-	Combine = FALSE
-) {
+
+
+ICESBioticToICESBioticCSVOne <- function(BioticDataOne) {
 	
-	if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
-		warning("StoX: writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
-		return(NA)
-	}
+	ICESBioticCSVData <- data.table::copy(BioticDataOne)
 	
-	cruiseRaw <- BioticDataOne$mission
+	# Create a table of the original and new column names, but remove keys:
+	hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
+	hierarchicalTablesColumnNames <- lapply(ICESBioticCSVData[hierarchicalTables], names)
+	hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
+	hierarchicalNamesTable <- data.table::data.table(
+		columnNames = unlist(hierarchicalTablesColumnNames), 
+		tableName = rep(hierarchicalTables, lengths(hierarchicalTablesColumnNames)), 
+		newColumnNames = unlist(hierarchicalTablesNewColumnNames)
+	)
+	# Remove the keys:
+	ICESBioticKeys <- getRstoxDataDefinitions("ICESBioticKeys")
+	ICESBioticKeys <- unique(unlist(ICESBioticKeys[!names(ICESBioticKeys) %in% "Biology"]))
+	hierarchicalNamesTable <- hierarchicalNamesTable[!(duplicated(columnNames) & columnNames %in% ICESBioticKeys), ]
+	# Split the hierarchicalNamesTable by table to allow for the duplicately named columns of Catch and Biology of the ICESBiotic data format:
+	hierarchicalNamesList <- split(hierarchicalNamesTable, by = "tableName")
+	# Add again the keys:
+	keys <- hierarchicalNamesTable[columnNames %in% ICESBioticKeys, ]
+	hierarchicalNamesList <- lapply(hierarchicalNamesList, rbind, keys)
+	hierarchicalNamesList <- lapply(hierarchicalNamesList, unique)
 	
-	Cruise <- cruiseRaw[, .(
-		Cruise = "Cruise",
-		Header = "Record",
-		CruiseSurvey = CruiseSurvey,
-		CruiseCountry = "NO",
-		CruiseOrganisation = CruiseOrganisation,
-		CruisePlatform = getICESShipCode(platformname),
-		CruiseStartDate = gsub("Z", "", missionstartdate),
-		CruiseEndDate = gsub("Z", "", missionstopdate),
-		CruiseLocalID = cruise
-	)]
+	# Rename by reference:
+	mapply(
+		data.table::setnames, 
+		ICESBioticCSVData[hierarchicalTables], 
+		old = lapply(hierarchicalNamesList, "[[", "columnNames"), 
+		new = lapply(hierarchicalNamesList, "[[", "newColumnNames"), 
+		skip_absent = TRUE
+	)
 	
-	CruiseLocalID <- Cruise$CruiseLocalID
+	# Move ID columns last:
+	ICESBioticCSVData <- lapply(ICESBioticCSVData, moveIDsLast)
 	
-	haulRaw <- merge(cruiseRaw, BioticDataOne$fishstation)
+	# Convert all tables to string with header and record, and rbind:
+	ICESBioticCSVData <- convertToHeaderRecord(ICESBioticCSVData)
+	ICESBioticCSVData <- expandWidth(ICESBioticCSVData)
+	# Convert all matrices to data.table:
+	ICESBioticCSVData <- do.call(rbind, ICESBioticCSVData)
 	
-	Haul <- haulRaw[, .(
-		Haul = "Haul",
-		Header = "Record",
-		CruiseLocalID = cruise,
-		HaulGear = gear,
-		HaulNumber = serialnumber,
-		HaulStationName = station,
-		HaulStartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
-		HaulDuration = getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime),
-		HaulValidity = getHaulVal(gearcondition, samplequality),
-		HaulStartLatitude = latitudestart,
-		HaulStartLongitude = longitudestart,
-		HaulStopLatitude = latitudeend,
-		HaulStopLongitude = longitudeend,
-		HaulStatisticalRectangle = getICESrect(latitudestart, longitudestart),
-		HaulMinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
-		HaulMaxTrawlDepth = fishingdepthmax,
-		HaulBottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
-		HaulDistance = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
-		HaulNetopening = verticaltrawlopening,
-		HaulCodendMesh = NA,
-		HaulSweepLength = getGOVSweepByEquipment(gear),
-		HaulGearExceptions = NA,
-		HaulDoorType = trawldoortype,
-		HaulWarpLength = wirelength,
-		HaulWarpDiameter = wirediameter,
-		HaulWarpDensity = wiredensity,
-		HaulDoorSurface = trawldoorarea,
-		HaulDoorWeight = trawldoorweight,
-		HaulDoorSpread = trawldoorspread,
-		HaulWingSpread = wingspread,
-		HaulBuoyancy = NA,
-		HaulKiteArea = NA,
-		HaulGroundRopeWeight = NA,
-		HaulRigging = NA,
-		HaulTickler = NA,
-		HaulHydrographicStationID = NA,
-		HaulTowDirection = direction,
-		HaulSpeedGround = NA,
-		HaulSpeedWater = gearflow,
-		HaulWindDirection = winddirection,
-		HaulWindSpeed = windspeed,
-		HaulSwellDirection = NA,
-		HaulSwellHeight = NA,
-		HaulLogDistance = NA,
-		HaulStratum = NA
-	)]
 	
-	catchRaw <- merge(BioticDataOne$catchsample, haulRaw, by = intersect(names(BioticDataOne$catchsample), names(haulRaw)))
-	
-	# We must filter records with aphia == NA
-	catchRaw <- catchRaw[!is.na(aphia)]
-	
-	Catch <- catchRaw[, .(
-		Catch = "Catch",
-		Header = "Record",
-		CruiseLocalID = cruise,
-		HaulGear = gear,
-		HaulNumber = serialnumber,
-		CatchDataType = "R",
-		CatchSpeciesCode = aphia,
-		CatchSpeciesValidity = ifelse(is.na(catchproducttype), 0, catchproducttype),
-		CatchSpeciesCategory = catchpartnumber,
-		CatchSpeciesCategoryNumber = catchcount,
-		CatchWeightUnit = "kg",
-		CatchSpeciesCategoryWeight = catchweight,
-		CatchSpeciesSex = NA,
-		CatchSubsampledNumber = lengthsamplecount,
-		CatchSubsamplingFactor = catchcount / lengthsamplecount,
-		CatchSubsampleWeight = lengthsampleweight,
-		CatchLengthCode = NA,
-		CatchLengthClass = NA,
-		CatchLengthType = "1",
-		CatchNumberAtLength = lengthsamplecount,
-		CatchWeightAtLength = NA
-	)]
-	
-	# Logic for missing important records
-	Catch[is.na(CatchSpeciesCategoryNumber) & is.na(CatchSpeciesCategoryWeight) & !is.na(CatchSubsampledNumber), CatchSpeciesCategoryNumber := CatchSubsampledNumber]
-	Catch[is.na(CatchSpeciesCategoryNumber) & is.na(CatchSpeciesCategoryWeight) & !is.na(CatchSubsampleWeight), CatchSpeciesCategoryWeight := CatchSubsampleWeight]
-	
-	# NA means that nothing is subsampled
-	Catch[!is.na(CatchSpeciesCategoryWeight) & is.na(CatchSubsampleWeight), CatchSubsampleWeight := 0]
-	
-	# Set Haul without any catch as invalid hauls
-	'%ni%' <- Negate('%in%')
-	Haul[HaulNumber %ni% unique(Catch$HaulNumber), HaulValidity := "I"]
-	
-	# Combine required tables for the Biology level
-	indRaw <- BioticDataOne$individual
-	indRaw[is.na(preferredagereading), preferredagereading := 1]
-	
-	baseAge <- intersect(names(indRaw), names(BioticDataOne$agedetermination))
-	indRaw <- merge(indRaw, BioticDataOne$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
-	indRaw <- merge(catchRaw, indRaw, by = intersect(names(catchRaw), names(indRaw)))
-	
-	Biology <- indRaw[, .(
-		Biology = "Biology",
-		Header = "Record",
-		CruiseLocalID = cruise,
-		HaulGear = gear,
-		HaulNumber = serialnumber,
-		CatchSpeciesCode = aphia,
-		CatchSpeciesCategory = catchpartnumber,
-		BiologyStockCode = NA,
-		BiologyFishID = specimenid,
-		BiologyLengthCode = "mm",
-		BiologyLengthClass = length * 1000,
-		BiologyWeightUnit = 'gr',
-		BiologyIndividualWeight = individualweight * 1000,
-		BiologyIndividualSex = ifelse(is.na(sex), NA, ifelse(sex == "1", "F", "M")),
-		BiologyIndividualMaturity = getDATRASMaturity(getQuarter(stationstartdate), aphia, specialstage, maturationstage),
-		BiologyMaturityScale = "M6",
-		BiologyIndividualAge = age,
-		BiologyAgePlusGroup = NA,
-		BiologyAgeSource = "Otolith",
-		BiologyGeneticSamplingFlag = NA,
-		BiologyStomachSamplingFlag = NA,
-		BiologyParasiteSamplingFlag = NA,
-		BiologyIndividualVertebraeCount = NA
-	)]
-	
-	if(AllowRemoveSpecies) {
-		message("All species that is not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml are automatically removed. Set AllowRemoveSpecies = FALSE to prevent this.")
-		# Check for valid aphias, mark other as invalid
-		xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
-		validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
-		Catch <- Catch[CatchSpeciesCode %in% validCodes, ]
-		Biology <- Biology[CatchSpeciesCode %in% validCodes, ]
-	} else {
-		message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
-		compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$CatchSpeciesCode))
-	}
-	
-	bioticOutput <- list(Cruise = Cruise, Haul = Haul, Catch = Catch, Biology = Biology)
-	
-	if(Combine) {
-		bioticOutput <- data.table::rbindlist(bioticOutput, fill = TRUE)
-	}
-	
-	return(bioticOutput)
+	return(ICESBioticCSVData)
 }
+
+
 
 
 
@@ -642,24 +498,24 @@ prepareICESBiotic <- function(
 #' @importFrom stats aggregate
 #' @importFrom data.table copy
 #' @export
-WriteICESDatras <- function(
+ICESDatras <- function(
 	BioticData, 
 	AddStationType = NA_character_, 
 	Combine = FALSE
 ) {
 
-  out <- lapply(
+	ICESDatrasData <- lapply(
   	BioticData, 
-  	prepareICESDatras, 
+  	ICESDatrasOne, 
   	AddStationType = AddStationType, 
   	Combine = Combine
   )
 
-  return(out)
+  return(ICESDatrasData)
 }
 
 
-prepareICESDatras <- function(
+ICESDatrasOne <- function(
 	BioticDataOne, 
 	AddStationType, 
 	Combine = FALSE

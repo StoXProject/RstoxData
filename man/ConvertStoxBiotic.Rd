@@ -7,7 +7,7 @@
 ConvertStoxBiotic(
   StoxBioticData,
   ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"),
-  GruopingVariables = c("SpeciesCategory"),
+  GruopingVariables = character(),
   Conversion = data.table::data.table()
 )
 }

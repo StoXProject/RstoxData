@@ -260,7 +260,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 		out <- lapply(x, FUN, ...)
 	}
 	# Run in parallel on Windows and other platforms:
-	else {
+	else if(NumberOfCores > 1){
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
@@ -307,7 +307,7 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 		out <- mapply(FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 	}
 	# Run in parallel on Windows and other platforms:
-	else {
+	else if(NumberOfCores > 1){
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
