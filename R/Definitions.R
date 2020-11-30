@@ -62,10 +62,16 @@ initiateRstoxData <- function(){
 	StoxBioticTranslationRequiredColumns <- c("VariableName", "Value", "NewValue")
 	
 	# Define the ICESBiotic keys (check with the package author whether this is already defined when reading the data):
+	ICESAcousticKeys <- list(
+		Cruise =   "LocalID", 
+		Log =    c("LocalID", "Distance"), 
+		Sample = c("LocalID", "Distance", "ChannelDepthUpper"), 
+		Data =   c("LocalID", "Distance", "ChannelDepthUpper", "SaCategory")
+	)
 	ICESBioticKeys <- list(
-		Cruise = "LocalID", 
-		Haul = c("LocalID", "Gear", "Number"), 
-		Catch = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory"), 
+		Cruise =    "LocalID", 
+		Haul =    c("LocalID", "Gear", "Number"), 
+		Catch =   c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory"), 
 		Biology = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "StockCode", "FishID")
 	)
 	

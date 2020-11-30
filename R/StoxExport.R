@@ -272,7 +272,6 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml',unique(AcousticDataOne$Data$Type))
 			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml',unique(AcousticDataOne$Data$Unit))
 			
-			
 			#### Rename columns to start with the table name:
 			# Rename the independent tables:
 			independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
@@ -285,27 +284,34 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 				new = independentTablesNewColumnNames
 			)
 			
-			# For the hierarchical tables create a table fo the original and new column names, but remove keys:
+			### # For the hierarchical tables create a table fo the original and new column names, but remove keys:
+			### hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
+			### hierarchicalTablesColumnNames <- lapply(AcousticDataOne[hierarchicalTables], names)
+			### hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
+			### hierarchicalNamesTable <- data.table::data.table(
+			### 	columnNames = unlist(hierarchicalTablesColumnNames), 
+			### 	newColumnNames = unlist(hierarchicalTablesNewColumnNames)
+			### )
+			### hierarchicalNamesTable <- hierarchicalNamesTable[!duplicated(columnNames), ]
+			### 
+			### 
+			### # In the sample table, rename simply by adding "ID" to the names of the columns referring to the independent tables (not starting with "Sample"):
+			### hierarchicalNamesTable[columnNames %in% independentTables, newColumnNames := paste0(columnNames, "ID")]
+			### 
+			### # Rename by reference:
+			### lapply(
+			### 	AcousticDataOne[hierarchicalTables], 
+			### 	data.table::setnames, 
+			### 	old = hierarchicalNamesTable$columnNames, 
+			### 	new = hierarchicalNamesTable$newColumnNames, 
+			### 	skip_absent = TRUE
+			### )
+			
 			hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
-			hierarchicalTablesColumnNames <- lapply(AcousticDataOne[hierarchicalTables], names)
-			hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
-			hierarchicalNamesTable <- data.table::data.table(
-				columnNames = unlist(hierarchicalTablesColumnNames), 
-				newColumnNames = unlist(hierarchicalTablesNewColumnNames)
-			)
-			hierarchicalNamesTable <- hierarchicalNamesTable[!duplicated(columnNames), ]
-			
-			
-			# In the sample table, rename simply by adding "ID" to the names of the columns referring to the independent tables (not starting with "Sample"):
-			hierarchicalNamesTable[columnNames %in% independentTables, newColumnNames := paste0(columnNames, "ID")]
-			
-			# Rename by reference:
-			lapply(
-				AcousticDataOne[hierarchicalTables], 
-				data.table::setnames, 
-				old = hierarchicalNamesTable$columnNames, 
-				new = hierarchicalNamesTable$newColumnNames, 
-				skip_absent = TRUE
+			renameToTableNameFirst(
+				AcousticDataOne, 
+				tableNames = hierarchicalTables, 
+				formatType = "Acoustic"
 			)
 			
 			# Merge the Log, Sample and Data to make the merged Data table:
@@ -438,35 +444,48 @@ ICESBioticToICESBioticCSVOne <- function(BioticDataOne) {
 	
 	ICESBioticCSVData <- data.table::copy(BioticDataOne)
 	
-	# Create a table of the original and new column names, but remove keys:
+	
+	
+	
+	### # Create a table of the original and new column names, but remove keys:
+	### hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
+	### hierarchicalTablesColumnNames <- lapply(ICESBioticCSVData[hierarchicalTables], names)
+	### hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
+	### hierarchicalNamesTable <- data.table::data.table(
+	### 	columnNames = unlist(hierarchicalTablesColumnNames), 
+	### 	tableName = rep(hierarchicalTables, lengths(hierarchicalTablesColumnNames)), 
+	### 	newColumnNames = unlist(hierarchicalTablesNewColumnNames)
+	### )
+	### # Remove the keys:
+	### ICESBioticKeys <- getRstoxDataDefinitions("ICESBioticKeys")
+	### ICESBioticKeys <- unique(unlist(ICESBioticKeys[!names(ICESBioticKeys) %in% "Biology"]))
+	### hierarchicalNamesTable <- hierarchicalNamesTable[!(duplicated(columnNames) & columnNames %in% ICESBioticKeys), ]
+	### # Split the hierarchicalNamesTable by table to allow for the duplicately named columns of Catch and Biology of the ICESBiotic data format:
+	### hierarchicalNamesList <- split(hierarchicalNamesTable, by = "tableName")
+	### # Add again the keys:
+	### keys <- hierarchicalNamesTable[columnNames %in% ICESBioticKeys, ]
+	### hierarchicalNamesList <- lapply(hierarchicalNamesList, rbind, keys)
+	### hierarchicalNamesList <- lapply(hierarchicalNamesList, unique)
+	### 
+	### # Rename by reference:
+	### mapply(
+	### 	data.table::setnames, 
+	### 	ICESBioticCSVData[hierarchicalTables], 
+	### 	old = lapply(hierarchicalNamesList, "[[", "columnNames"), 
+	### 	new = lapply(hierarchicalNamesList, "[[", "newColumnNames"), 
+	### 	skip_absent = TRUE
+	### )
+	
+	
 	hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
-	hierarchicalTablesColumnNames <- lapply(ICESBioticCSVData[hierarchicalTables], names)
-	hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
-	hierarchicalNamesTable <- data.table::data.table(
-		columnNames = unlist(hierarchicalTablesColumnNames), 
-		tableName = rep(hierarchicalTables, lengths(hierarchicalTablesColumnNames)), 
-		newColumnNames = unlist(hierarchicalTablesNewColumnNames)
+	renameToTableNameFirst(
+		ICESBioticCSVData, 
+		tableNames = hierarchicalTables, 
+		formatType = "Biotic"
 	)
-	# Remove the keys:
-	ICESBioticKeys <- getRstoxDataDefinitions("ICESBioticKeys")
-	ICESBioticKeys <- unique(unlist(ICESBioticKeys[!names(ICESBioticKeys) %in% "Biology"]))
-	hierarchicalNamesTable <- hierarchicalNamesTable[!(duplicated(columnNames) & columnNames %in% ICESBioticKeys), ]
-	# Split the hierarchicalNamesTable by table to allow for the duplicately named columns of Catch and Biology of the ICESBiotic data format:
-	hierarchicalNamesList <- split(hierarchicalNamesTable, by = "tableName")
-	# Add again the keys:
-	keys <- hierarchicalNamesTable[columnNames %in% ICESBioticKeys, ]
-	hierarchicalNamesList <- lapply(hierarchicalNamesList, rbind, keys)
-	hierarchicalNamesList <- lapply(hierarchicalNamesList, unique)
-	
-	# Rename by reference:
-	mapply(
-		data.table::setnames, 
-		ICESBioticCSVData[hierarchicalTables], 
-		old = lapply(hierarchicalNamesList, "[[", "columnNames"), 
-		new = lapply(hierarchicalNamesList, "[[", "newColumnNames"), 
-		skip_absent = TRUE
-	)
-	
+
+
+
 	# Move ID columns last:
 	ICESBioticCSVData <- lapply(ICESBioticCSVData, moveIDsLast)
 	
@@ -481,7 +500,45 @@ ICESBioticToICESBioticCSVOne <- function(BioticDataOne) {
 }
 
 
-
+# Function to add the table name to the column names, but not to the keys.
+renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "Acoustic")) {
+	
+	formatType <- match.arg(formatType)
+	
+	# Create a table of the original and new column names, but remove keys:
+	columnNames <- lapply(data[tableNames], names)
+	newColumnNames <- mapply(paste0, tableNames, columnNames)
+	conversionTable <- data.table::data.table(
+		columnNames = unlist(columnNames), 
+		tableName = rep(tableNames, lengths(columnNames)), 
+		newColumnNames = unlist(newColumnNames)
+	)
+	
+	# Remove the keys:
+	ICESKeys <- getRstoxDataDefinitions(paste0("ICES", formatType, "Keys"))
+	# Do not remove the key of the last table:
+	ICESKeys <- unique(unlist(ICESKeys[!names(ICESKeys) %in% tail(tableNames, 1)]))
+	
+	
+	conversionTable <- conversionTable[!(duplicated(columnNames) & columnNames %in% ICESKeys), ]
+	
+	# Split the conversionTable by tableName to allow for the duplicately named columns between tables:
+	conversionTableList <- split(conversionTable, by = "tableName")
+	
+	# Add again the keys:
+	keys <- conversionTable[columnNames %in% ICESKeys, ]
+	conversionTableList <- lapply(conversionTableList, rbind, keys)
+	conversionTableList <- lapply(conversionTableList, unique)
+	
+	# Rename by reference:
+	mapply(
+		data.table::setnames, 
+		data[tableNames], 
+		old = lapply(conversionTableList, "[[", "columnNames"), 
+		new = lapply(conversionTableList, "[[", "newColumnNames"), 
+		skip_absent = TRUE
+	)
+}
 
 
 #' Write ICES DATRAS (NS-IBTS) format file

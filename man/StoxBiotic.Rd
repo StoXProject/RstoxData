@@ -4,12 +4,10 @@
 \alias{StoxBiotic}
 \title{Convert BioticData to StoxBioticData}
 \usage{
-StoxBiotic(BioticData, NumberOfCores = 1L)
+StoxBiotic(BioticData)
 }
 \arguments{
 \item{BioticData}{\code{\link{BioticData}}.}
-
-\item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.

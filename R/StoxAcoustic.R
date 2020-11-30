@@ -1,22 +1,18 @@
 #' Convert AcousticData to StoxAcousticData
 #'
 #' @inheritParams ModelData
-#' @inheritParams general_arguments
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
 #' @export
 #' 
-StoxAcoustic <- function(
-	AcousticData, 
-	NumberOfCores = 1L
-){
+StoxAcoustic <- function(AcousticData){
     
 	# Convert to StoxAcosuticData possibly on several cores:
     StoxAcousticData <- lapplyOnCores(
     	AcousticData, 
     	FUN = StoxAcousticOne, 
-    	NumberOfCores = NumberOfCores
+    	NumberOfCores = 1L
     )
     
     # Rbind for each StoxAcoustic table:

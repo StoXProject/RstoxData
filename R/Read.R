@@ -4,8 +4,7 @@
 #' 
 #' This function reads multiple biotic file to a list with a list of tables for each file.
 #' 
-#' @param FileNames     The paths of the biotic files.
-#' @inheritParams general_arguments
+#' @param FileNames The paths of the biotic files.
 #' 
 #' @details
 #' This function is awesome and does excellent stuff.
@@ -21,13 +20,13 @@
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadBiotic <- function(FileNames, NumberOfCores = 1L) {
+ReadBiotic <- function(FileNames) {
 	
 	# Read BioticData possibly on several cores:
 	BioticData <- lapplyOnCores(
 		FileNames, 
 		FUN = RstoxData::readXmlFile, 
-		NumberOfCores = NumberOfCores
+		NumberOfCores = 1L
 	)
 	
 	# Add names as the file names:
@@ -44,8 +43,7 @@ ReadBiotic <- function(FileNames, NumberOfCores = 1L) {
 #' 
 #' This function reads multiple acoustic file to a list with a list of tables for each file.
 #' 
-#' @param FileNames     The paths of the acoustic files.
-#' @inheritParams general_arguments
+#' @param FileNames The paths of the acoustic files.
 #' 
 #' @details
 #' This function is awesome and does excellent stuff.
@@ -61,13 +59,13 @@ ReadBiotic <- function(FileNames, NumberOfCores = 1L) {
 #' @importFrom parallel makeCluster parLapply stopCluster mclapply
 #' @export
 #' 
-ReadAcoustic <- function(FileNames, NumberOfCores = 1L) {
+ReadAcoustic <- function(FileNames) {
 	
 	# Read AcousticData possibly on several cores:
 	AcousticData <- lapplyOnCores(
 		FileNames, 
 		FUN = RstoxData::readXmlFile, 
-		NumberOfCores = NumberOfCores
+		NumberOfCores = 1L
 	)
 	
 	# Add names as the file names:

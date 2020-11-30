@@ -4,12 +4,10 @@
 \alias{StoxAcoustic}
 \title{Convert AcousticData to StoxAcousticData}
 \usage{
-StoxAcoustic(AcousticData, NumberOfCores = 1L)
+StoxAcoustic(AcousticData)
 }
 \arguments{
 \item{AcousticData}{\code{\link{AcousticData}}.}
-
-\item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 }
 \value{
 An object of StoX data type \code{\link{StoxAcousticData}}.

@@ -7,16 +7,13 @@
 #'
 #' @export
 #' 
-StoxBiotic <- function(
-	BioticData, 
-	NumberOfCores = 1L
-) {
+StoxBiotic <- function(BioticData) {
     
 	# Convert from BioticData to the general sampling hierarchy:
-	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = NumberOfCores)
+	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
     
     # Extract the StoxBiotic data and rbind across files:
-    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = NumberOfCores)
+    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = 1L)
     
     # Remove rows of duplicated keys:
     #StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
@@ -396,7 +393,6 @@ MergeStoxBiotic <- function(
 #' Add variables to StoxBioticData from BioticData
 #'
 #' @inheritParams ModelData
-#' @inheritParams general_arguments
 #' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
@@ -406,14 +402,13 @@ MergeStoxBiotic <- function(
 AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
-	VariableNames = character(), 
-	NumberOfCores = 1L
+	VariableNames = character()
 ) {
 	AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 
 		VariableNames = VariableNames, 
-		NumberOfCores = NumberOfCores, 
+		NumberOfCores = 1L, 
 		StoxDataFormat = "Biotic"
 	)
 }
