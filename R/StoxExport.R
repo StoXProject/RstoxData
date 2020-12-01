@@ -442,49 +442,16 @@ ICESBioticCSV <- function(
 
 ICESBioticToICESBioticCSVOne <- function(BioticDataOne) {
 	
-	ICESBioticCSVData <- data.table::copy(BioticDataOne)
-	
-	
-	
-	
-	### # Create a table of the original and new column names, but remove keys:
-	### hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
-	### hierarchicalTablesColumnNames <- lapply(ICESBioticCSVData[hierarchicalTables], names)
-	### hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
-	### hierarchicalNamesTable <- data.table::data.table(
-	### 	columnNames = unlist(hierarchicalTablesColumnNames), 
-	### 	tableName = rep(hierarchicalTables, lengths(hierarchicalTablesColumnNames)), 
-	### 	newColumnNames = unlist(hierarchicalTablesNewColumnNames)
-	### )
-	### # Remove the keys:
-	### ICESBioticKeys <- getRstoxDataDefinitions("ICESBioticKeys")
-	### ICESBioticKeys <- unique(unlist(ICESBioticKeys[!names(ICESBioticKeys) %in% "Biology"]))
-	### hierarchicalNamesTable <- hierarchicalNamesTable[!(duplicated(columnNames) & columnNames %in% ICESBioticKeys), ]
-	### # Split the hierarchicalNamesTable by table to allow for the duplicately named columns of Catch and Biology of the ICESBiotic data format:
-	### hierarchicalNamesList <- split(hierarchicalNamesTable, by = "tableName")
-	### # Add again the keys:
-	### keys <- hierarchicalNamesTable[columnNames %in% ICESBioticKeys, ]
-	### hierarchicalNamesList <- lapply(hierarchicalNamesList, rbind, keys)
-	### hierarchicalNamesList <- lapply(hierarchicalNamesList, unique)
-	### 
-	### # Rename by reference:
-	### mapply(
-	### 	data.table::setnames, 
-	### 	ICESBioticCSVData[hierarchicalTables], 
-	### 	old = lapply(hierarchicalNamesList, "[[", "columnNames"), 
-	### 	new = lapply(hierarchicalNamesList, "[[", "newColumnNames"), 
-	### 	skip_absent = TRUE
-	### )
-	
-	
+	# Copy the data to prepare for using data.tables by referenec functions (set* and :=)
 	hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
+	ICESBioticCSVData <- data.table::copy(BioticDataOne[hierarchicalTables])
+	
+	# Create a table of the original and new column names, but remove keys:
 	renameToTableNameFirst(
 		ICESBioticCSVData, 
 		tableNames = hierarchicalTables, 
 		formatType = "Biotic"
 	)
-
-
 
 	# Move ID columns last:
 	ICESBioticCSVData <- lapply(ICESBioticCSVData, moveIDsLast)

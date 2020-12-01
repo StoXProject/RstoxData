@@ -131,13 +131,13 @@ NMDBioticToICESBioticOne <- function(
 ) {
 	
 	if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
-		if(BioticDataOne$metadata$useXsd %in% "icesBiotic.xsd") {
+		if(BioticDataOne$metadata$useXsd %in% "icesBiotic") {
 			warning("StoX: BioticData from the ICES file ", BioticDataOne$metadata$file, " returned unchanged.")
 			return(BioticDataOne)
 		}
 		else {
 			warning("StoX: Only NMD Biotic version 3 and 3.1 data can be converted to ICESBiotic (was ", BioticDataOne$metadata$useXsd, " for the file ", BioticDataOne$metadata$file, ". NA returned.")
-			return(NA)
+			return(NULL)
 		}
 		
 	}
