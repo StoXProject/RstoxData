@@ -19,7 +19,8 @@ This function reads multiple biotic file to a list with a list of tables for eac
 This function is awesome and does excellent stuff.
 }
 \examples{
-x <- 1
+exampleFile <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
+bioticData <- ReadBiotic(exampleFile)
 
 }
 \seealso{

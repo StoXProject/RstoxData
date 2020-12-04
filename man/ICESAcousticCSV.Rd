@@ -8,8 +8,6 @@ ICESAcousticCSV(AcousticData)
 }
 \arguments{
 \item{AcousticData}{A \code{AcousticData} object from an ICES acoustic XML format file.}
-
-\item{Combine}{Logical: If TRUE stack the output tables for each acosutic file.}
 }
 \value{
 List of data.table objects in the ICES acoustic CSV format.

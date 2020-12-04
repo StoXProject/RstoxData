@@ -191,7 +191,6 @@ exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "
 #' \code{AcousticData} object that is created from reading an ICES acoustic XML file.
 #'
 #' @param AcousticData A \code{AcousticData} object from an ICES acoustic XML format file.
-#' @param Combine Logical: If TRUE stack the output tables for each acosutic file.
 #'
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
@@ -400,11 +399,11 @@ expandWidth <- function(x) {
 #' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
-#' @param CruiseSurvey A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).
-#' @param CruiseOrganisation An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).
+#' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).
+#' @param Country The ISO_3166 code of the country running the cruise. See \url{http://vocab.ices.dk/?ref=337}.
+#' @param Organisation An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).
 #' @param AllowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 #'        https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.
-#' @param Combine Logical: If TRUE stack the output tables for each acosutic file.
 #'        
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'

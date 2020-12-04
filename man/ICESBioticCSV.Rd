@@ -15,14 +15,14 @@ ICESBioticCSV(
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
 
+\item{SurveyName}{A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).}
+
+\item{Country}{The ISO_3166 code of the country running the cruise. See \url{http://vocab.ices.dk/?ref=337}.}
+
+\item{Organisation}{An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).}
+
 \item{AllowRemoveSpecies}{ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.}
-
-\item{CruiseSurvey}{A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).}
-
-\item{CruiseOrganisation}{An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).}
-
-\item{Combine}{Logical: If TRUE stack the output tables for each acosutic file.}
 }
 \value{
 List of data.table objects in the ICES acoustic CSV format.

@@ -50,9 +50,6 @@ StoxAcousticOne <- function(data_list) {
 		#################################################################
 		
 		
-		
-		
-		
 		#################################################################
 		#                       RENAME general level                    #
 		#################################################################
@@ -225,9 +222,8 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Add DateTime as POSIXct
 		#data_list$Log[, DateTime:= paste0(gsub(' ','T',start_time),'.000Z')]
-		StoxDateTimeFormat <- getRstoxDataDefinitions("StoxDateTimeFormat")
 		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
-		data_list$Log[, DateTime:= as.POSIXct(start_time, format = StoxDateTimeFormat, tz = StoxTimeZone)]
+		data_list$Log[, DateTime:= as.POSIXct(start_time, tz = StoxTimeZone)]
 		
 		
 		
@@ -236,8 +232,8 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log$LogOrigin2 <- "end"
 		
 		data_list$Log$LogDuration <- as.numeric(
-			as.POSIXct(data_list$Log$stop_time, format=StoxDateTimeFormat) - 
-				as.POSIXct(data_list$Log$start_time, format=StoxDateTimeFormat), 
+			as.POSIXct(data_list$Log$stop_time, tz = StoxTimeZone) - 
+				as.POSIXct(data_list$Log$start_time, tz = StoxTimeZone), 
 			units ="secs"
 		)
 		
@@ -451,6 +447,11 @@ StoxAcousticOne <- function(data_list) {
 		####Bugfiks since StopLat and lon do not exist yet
 		data_list$Log$Longitude2 <- NA
 		data_list$Log$Latitude2 <- NA
+		
+		# Convert to POSIX.ct:
+		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
+		data_list$Log[, DateTime := as.POSIXct(DateTime, tz = StoxTimeZone)]
+		
 		
 		# Remove duplicates in Log and Beam
 		data_list$Log <- unique(data_list$Log)
