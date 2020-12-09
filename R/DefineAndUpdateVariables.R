@@ -295,37 +295,47 @@ readVariableConversion <- function(processData, FileName, UseProcessData = FALSE
 }
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, Translation) {
+translateVariables <- function(data, Translation, translate.keys = FALSE) {
 	
 	dataCopy <- data.table::copy(data)
 	
 	# Currently not defined
-	requiredColumns <- getRstoxDataDefinitions("StoxBioticTranslationRequiredColumns")
+	requiredColumns <- getRstoxDataDefinitions("TranslationRequiredColumns")
 	if(! all(requiredColumns %in% names(Translation))) {
 		stop("The Translation must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}
 	
-	# Split into a list, thus treating only one row at the time. This is probably sloppy coding:
+	# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
 	translationList <- split(Translation, seq_len(nrow(Translation)))
 	# Run the conversion for each row of the Translation:
-	lapply(translationList, translateVariable, data = dataCopy)
+	lapply(
+		translationList, 
+		translateVariable, 
+		data = dataCopy, 
+		translate.keys = translate.keys
+		)
 	
 	return(dataCopy[])
 }
 
 # Function to convert variables given one row of a conversion table:
-translateVariable <- function(translationList, data) {
-	lapplyToStoxData(data, translateOneTable, translationList = translationList)
+translateVariable <- function(translationList, data, translate.keys = FALSE) {
+	lapplyToStoxData(
+		data, 
+		translateOneTable, 
+		translationList = translationList, 
+		translate.keys = translate.keys
+	)
 }
 
 # Function to apply to all tables of the input data, converting the variables:
-translateOneTable <- function(x, translationList) {
+translateOneTable <- function(x, translationList, translate.keys = FALSE) {
 	# Check that the table contains the variable to convert:
 	if(translationList$VariableName %in% names(x)) {
 		# Do nothing if the variable is a key:
 		isKeys <- endsWith(translationList$VariableName, "Key")
-		if(isKeys) {
-			warning("StoX: The variable", translationList$VariableName, " is a key and cannot be modified ")
+		if(!translate.keys && isKeys) {
+			warning("StoX: The variable ", translationList$VariableName, " is a key and cannot be modified ")
 		}
 		else {
 			# Convert the class to the class of the existing value in the table:

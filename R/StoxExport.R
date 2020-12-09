@@ -1,187 +1,3 @@
-# Function to compare with ices vocabulary of allowed values
-compareICES <- function(url, field) {
-  pg <- tryCatch(
-        {
-         read_xml(url)
-        },
-        error = function(e){
-                warning(paste("StoX: Url", url, "is not exist or no internet connection available."))
-                return(NA)
-        }
-  )
-  recs <- xml_find_all(pg, "//Key")
-  vals <- trimws(xml_text(recs))
-  for(x in field){
-    if(!x %in% vals){
-      warning(paste0("StoX: ", x, " not defined in ", url))
-    }
-  }
-}     
-
-# Get quarter representation from a date
-getQuarter <- function(stationstartdate) {
-    x <- format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
-    return(floor((as.numeric(x) - 1) / 3 + 1))
-}
-
-# Get maturity indicator for a species
-getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
-
-          temp <-  as.data.table(cbind(q=quarter, ap=aphia, sp=specialstage, ms=maturationstage, res=NA))
-
-          temp[, `:=`(sp = as.numeric(sp), ms = as.numeric(ms), res = as.numeric(res) )]
-
-          temp[, isHerringOrSpratOrMackerel := ifelse(ap %in% c("126417", "126425", "127023"), TRUE, FALSE)]
-
-          temp[!is.na(sp) & isHerringOrSpratOrMackerel == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
-          temp[!is.na(sp) & isHerringOrSpratOrMackerel == FALSE, res := 60 + sp]
-
-          temp[is.na(sp) & !is.na(ms), res := ifelse(ms == 5 & q == "3", NA, 60 + ms)]
-
-          return(temp$res)
-}
-
-# Convert gear number to sweep length
-getGOVSweepByEquipment <- function(gear) {
-    cnvTbl <- c("3120" = NA,
-                "3190" = 60,
-                "3191" = 60,
-                "3192" = 60,
-                "3193" = 110,
-                "3194" = 110,
-                "3195" = 110,
-                "3196" = 60,
-                "3197" = 110,
-                "3198" = 60,
-                "3199" = 60)
-
-    x <- cnvTbl[as.character(gear)]
-    x[is.null(x)] <- NA
-    return(x)
-}
-
-# Get Haul validity
-getHaulVal <- function(gearcondition, samplequality) {
-    temp <-  as.data.table(cbind(g=gearcondition, s=samplequality))
-    temp[, res:="I"]
-    temp[(is.na(g) | g %in% c("1","2")) &
-        (is.na(s) | s %in% c("0", "1")), res:="V"]
-
-    return(temp$res)
-}
-
-# Generate ICES rectangle from a coordinate
-# Stolen from: https://github.com/cran/mapplots/blob/master/R/ices.rect.R
-getICESrect <- function(lat, lng){
-    x <- floor(lng+60)+1000
-    y <- floor(lat*2)-71+100
-    num1<- substr(y,2,3)
-    lett <- LETTERS[as.numeric(substr(x,2,3))]
-    num2 <- substr(x,4,4)
-    paste(num1,lett,num2,sep='')
-}
-
-# Get distance in meters between two coordinates
-getDistanceMeter <- function(lat1, lon1, lat2, lon2) {
-    x <-  acos( sin(lat1*pi/180)*sin(lat2*pi/180) + cos(lat1*pi/180)*cos(lat2*pi/180)*cos(lon2*pi/180-lon1*pi/180) ) * 6371000
-    return(x)
-}
-
-# Calculate time diff
-getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, stationstoptime) {
-
-    t0 <- ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, stationstarttime)))
-    t1 <- ifelse(is.na(stationstopdate) | is.na(stationstoptime), NA, gsub("Z", " ", paste0(stationstopdate, stationstoptime)))
-    
-    start <- as.POSIXct(t0)
-    end <- as.POSIXct(t1)
-
-    return(round(difftime(end, start, units = "mins")))
-}
-
-# Get ICES ship data
-#' @importFrom xml2 xml_ns_strip xml_find_all xml_text
-getICESShipCode <- function(platformname) {
-
-    construct <- function(shipName) {
-        # We have to remove "."," " and use uppercase
-        shipName <- toupper(gsub("[[:space:][:punct:]]", "", shipName))
-
-        # Replace the nordic character with AA
-        shipName <- gsub("\u00C5", "AA", shipName)
-
-        data <- tryCatch(
-            {
-                read_xml("https://vocab.ices.dk/services/pox/GetCodeList/SHIPC")
-            },
-                error = function(e){return(NA)}
-        )
-
-        # Can't download from ICES
-        if (is.na(data))
-            return(NA)
-
-        xml_ns_strip(data)
-        nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/Key"))
-
-        # Ship not found
-        if (length(nodes) < 1) {
-          return(NA)
-        }
-
-        # Get the latest matching ships
-        shipCode <- xml_text(tail(nodes,1))
-
-        return(shipCode)
-    }
-
-    nm <- unique(platformname)
-    y <- unlist(lapply(nm, construct))
-    names(y) <- nm
-
-    x <- y[as.character(platformname)]
-    x[is.null(x)] <- NA
-
-    return(x)
-}
-
-
-#' @importFrom utils write.table
-exportCSV <- function(filename, data, combine = FALSE, overwrite = FALSE, na = "") {
-
-  ovw <- function(fn, ow) {
-    if (file.exists(fn)) {
-      if (ow) {
-        file.remove(fn)
-      } else {
-        file.rename(fn, paste0(fn, ".old"))
-      }
-    }
-  }
-
-  message("Resulting CSV file is saved as:")
-
-  if (combine) {
-    ovw(filename, overwrite)
-    suppressWarnings(lapply(data, write.table, file = filename, append = TRUE, na = na, row.names = FALSE, quote = FALSE, sep = ","))
-    message(filename)
-  } else {
-    subname <- names(data)
-
-    if (length(subname) < length(data)) {
-      subname <- seq_len(length(data))
-    }
-    for (i in seq_len(length(data))) {
-      subfilename <- paste0(tools::file_path_sans_ext(filename), "_", subname[i], ".", tools::file_ext(filename))
-      ovw(subfilename, overwrite)
-      suppressWarnings(write.table(data[[i]], file = subfilename, append = FALSE, na = na, row.names = FALSE, quote = FALSE, sep = ","))
-      message(subfilename)
-    }
-  }
-  return(TRUE)
-}
-
-
 
 
 
@@ -210,41 +26,33 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 	
 		if(AcousticDataOne$metadata$useXsd=='icesAcoustic'){
 			
-			#Fix notation of metadata
-			translate <- function(xx) {
-				res <- AcousticDataOne$vocabulary$value[match(xx, AcousticDataOne$vocabulary$id)]
-				# Fix NAs
-				res[which(is.na(res))] <- xx[which(is.na(res))]
-				return(res)
-			}
-			
 			# Remove echo type, as this is not included in the CSV:
 			AcousticDataOne$Data$EchoType<-NULL
 			
+			
+			independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
+			hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
+			tablesToKeep <- c(independentTables, hierarchicalTables)
+			
+			
+			# Add the Survey to the Cruise table, with a hack to get the last line (until it has been fixed so that only the code and not the value is present):
+			AcousticDataOne$Cruise$Survey <- utils::tail(AcousticDataOne$Survey$Code, 1)
+			
 			# Translate according to the vocabulary:
-			AcousticDataOne$Instrument$TransducerLocation <- translate(AcousticDataOne$Instrument$TransducerLocation)
-			AcousticDataOne$Instrument$TransducerBeamType <- translate(AcousticDataOne$Instrument$TransducerBeamType)
-			AcousticDataOne$Calibration$AcquisitionMethod <- translate(AcousticDataOne$Calibration$AcquisitionMethod)
-			AcousticDataOne$Calibration$ProcessingMethod <- translate(AcousticDataOne$Calibration$ProcessingMethod)
-			AcousticDataOne$DataAcquisition$SoftwareName <- translate(AcousticDataOne$DataAcquisition$SoftwareName)
-			AcousticDataOne$DataAcquisition$StoredDataFormat <- translate(AcousticDataOne$DataAcquisition$StoredDataFormat)
-			AcousticDataOne$DataProcessing$SoftwareName <- translate(AcousticDataOne$DataProcessing$SoftwareName)
-			AcousticDataOne$DataProcessing$TriwaveCorrection <- translate(AcousticDataOne$DataProcessing$TriwaveCorrection)
-			AcousticDataOne$DataProcessing$OnAxisGainUnit <- translate(AcousticDataOne$DataProcessing$OnAxisGainUnit)
-			AcousticDataOne$Cruise$Country <- translate(AcousticDataOne$Cruise$Country)
-			AcousticDataOne$Cruise$Platform <- translate(AcousticDataOne$Cruise$Platform)
-			AcousticDataOne$Cruise$Organisation <- translate(AcousticDataOne$Cruise$Organisation)
-			# Take the last survey code
-			AcousticDataOne$Survey$Code <- translate(tail(AcousticDataOne$Survey$Code, 1))
-			AcousticDataOne$Log$Origin <- translate(AcousticDataOne$Log$Origin)
-			AcousticDataOne$Log$Validity <- translate(AcousticDataOne$Log$Validity)
-			AcousticDataOne$Sample$PingAxisIntervalType <- translate(AcousticDataOne$Sample$PingAxisIntervalType)
-			AcousticDataOne$Sample$PingAxisIntervalUnit <- translate(AcousticDataOne$Sample$PingAxisIntervalUnit)
-			AcousticDataOne$Sample$PingAxisIntervalOrigin <- translate(AcousticDataOne$Sample$PingAxisIntervalOrigin)
-			AcousticDataOne$Data$SaCategory <- translate(AcousticDataOne$Data$SaCategory)
-			AcousticDataOne$Data$SaCategory <- translate(AcousticDataOne$Data$SaCategory)
-			AcousticDataOne$Data$Type <- translate(AcousticDataOne$Data$Type)
-			AcousticDataOne$Data$Unit <- translate(AcousticDataOne$Data$Unit)
+			if(length(AcousticDataOne$vocabulary)) {
+				vocabulary <- findVariablesMathcinigVocabulary(
+					vocabulary = AcousticDataOne$vocabulary, 
+					data = AcousticDataOne[tablesToKeep]
+				)
+				# Uniqueify since some columns (keys) are present in several tables:
+				vocabulary <- unique(vocabulary)
+				
+				AcousticDataOne[tablesToKeep] <- translateVariables(
+					data = AcousticDataOne[tablesToKeep], 
+					Translation = vocabulary, 
+					translate.keys = TRUE
+				)
+			}
 			
 			
 			#Check metadata towards ices definitions
@@ -273,7 +81,6 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 			
 			#### Rename columns to start with the table name:
 			# Rename the independent tables:
-			independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
 			independentTablesColumnNames <- lapply(AcousticDataOne[independentTables], names)
 			independentTablesNewColumnNames <- mapply(paste0, independentTables, independentTablesColumnNames)
 			mapply(
@@ -306,7 +113,6 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 			### 	skip_absent = TRUE
 			### )
 			
-			hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
 			renameToTableNameFirst(
 				AcousticDataOne, 
 				tableNames = hierarchicalTables, 

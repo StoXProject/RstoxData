@@ -126,6 +126,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Function for merging the appropriate Catch row with the corresponding Biology record
 	    # Also check for missing biology
+	    # This function generates individuals from the "NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType":
 	    specialMerge <- function(x) {
 			xLenC <- unlist(x[1, "LengthCode"])
 
@@ -171,7 +172,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Get row count
 	    nrowC <- nrow(data$Biology)
-
+	    
 	    # Loop merge
 	    tmpBiology <- list()
 	    for(y in seq_len(nrow(data$Catch))) {
@@ -180,9 +181,21 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Combine results
 	    data$Biology <- rbindlist(tmpBiology, use.names=TRUE)
+	    
+	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
+	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
+	    	stop("StoX: Error in merging.")
+	    }
+	    
+	    # Keep only the original columns and the "StationName", which is not a key in the ICESBiotic:
+	    columnsToKeep <- c(
+	    	names(data$Biology), 
+	    	"StationName"
+	    )
+	    data$Biology <- data$Biology[, .SD, .SDcols = columnsToKeep]
 
 		# Fix Individual ID
-		data$Biology[, FishID:=seq_len(.N)]
+		data$Biology[, FishID := seq_len(.N)]
 
 		# Fix the SampleCount
 		colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
@@ -190,16 +203,11 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 		# Purge duplicate samples
 		data$Catch <- data$Catch[!duplicated(data$Catch[, ..colAgg])]
-
-	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
-	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
-			stop("StoX: Error in merging.")
-	    }
 	  } 
     else {
 	    warning("Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
 	    return(NULL)
-	  }
+    }
     
     # 2. Making keys
     for(curr in names(data)) {
@@ -217,18 +225,24 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     
     firstPhaseTables <- list()
     
+    # Add the tables which should simply be renamed, and not split into several tables:
     for(map in tableMap) {
         firstPhaseTables[[map[[2]]]] <- data[[map[[1]]]]
     }
     
     # 4. "COMPLEX" mapping
     complexMap <- stoxBioticObject$complexMaps[[datatype]]
+    # Get the different origin tables, and loop through these:
     levels <- unlist(unique(complexMap[, "level"]))
     for(origin in levels) {
-    	for (dest in unlist(unique(complexMap[level == origin, "target"]))) {
+    	# Get the possible destination tables, and loop through these:
+    	destinations <- unlist(unique(complexMap[level == origin, "target"]))
+    	for (dest in destinations) {
+    		# List the columns to copy to the destination table:
             colList <- unlist(complexMap[target==dest & level==origin, "variable"])
             if(!is.null(firstPhaseTables[[dest]])) stop("Error")
-            	firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
+            # Copy the columns:
+            firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
         }
     }
     
@@ -243,9 +257,29 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         setindexv(firstPhaseTables[[dest]], tmpKeys)
     }
     
+    # Apply translations defined in the table 'vocabulary':
+    if(length(data$vocabulary)) {
+    	vocabulary <- findVariablesMathcinigVocabulary(
+    		vocabulary = data$vocabulary, 
+    		data = firstPhaseTables
+    	)
+    	# Uniqueify since some columns (keys) are present in several tables:
+    	vocabulary <- unique(vocabulary)
+    	
+    	firstPhaseTables <- translateVariables(
+    		data = firstPhaseTables, 
+    		Translation = vocabulary, 
+    		translate.keys = TRUE
+    	)
+    }
+    
+    
     return(firstPhaseTables)
     
 }
+
+
+
 
 # Function to get the StoxBiotic on one file:
 StoxBiotic_firstPhase <- function(BioticData) {
@@ -289,7 +323,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     # Data placeholder
     secondPhaseTables <- list()
     
-    # Borrow variables for use in the conversion defined by complexMap:
+    # Borrow variables for use in the conversion defined by convertTable:
     borrowVariables <- stoxBioticObject$borrowVariables[[datatype]]
     if(length(borrowVariables)) {
     	for(ind in seq_along(borrowVariables)) {
@@ -303,8 +337,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     	}
     }
     
-    
-    
+    # Apply the conversions, such as pasting keys, converting to POSIX, etc.:
     for (i in unique(convertTable[, level])) {
         # Process conversion table
         for(j in 1:nrow(convertTable[level==i,])) {

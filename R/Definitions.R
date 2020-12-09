@@ -59,7 +59,7 @@ initiateRstoxData <- function(){
 	)
 	
 	# Define the columns required for VariableConversionTable:
-	StoxBioticTranslationRequiredColumns <- c("VariableName", "Value", "NewValue")
+	TranslationRequiredColumns <- c("VariableName", "Value", "NewValue")
 	
 	# Define the ICESBiotic keys (check with the package author whether this is already defined when reading the data):
 	ICESAcousticKeys <- list(

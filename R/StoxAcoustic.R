@@ -119,7 +119,7 @@ StoxAcousticOne <- function(data_list) {
 			data_list$Log <- subset(data_list$Log, !duplicated(LogKey))
 			newNrow <- nrow(data_list$Log)
 			
-			warning("StoX: The data with CruiseKey ", data_list$Log$CruiseKey[1], " have non-unique LogKey (defined as time in StoxAcoustic). Check whether the input data have time where seconds has been set to 00. This mau cause non-unique LogKey for high spatial resolution (e.g., 0.1 nautical miles). The rows with duplicated LogKey will be removed! (number of rows reduced from ", originalNrow, " to ", newNrow, ")")
+			warning("StoX: The data with CruiseKey ", data_list$Log$CruiseKey[1], " have non-unique LogKey (defined as time in StoxAcoustic). Check whether the input data have time where seconds has been set to 00. This may cause non-unique LogKey for high spatial resolution (e.g., 0.1 nautical miles). The rows with duplicated LogKey will be removed! (number of rows reduced from ", originalNrow, " to ", newNrow, ")")
 			data_list$Log <- subset(data_list$Log, !duplicated(LogKey))
 		}
 		
@@ -270,7 +270,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		data_list$ChannelReference$ChannelReferenceType <- data_list$ChannelReference$type
 		data_list$ChannelReference$ChannelReferenceDepth <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 0, NA) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
-		data_list$ChannelReference$ChannelReferenceOrientation <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
+		data_list$ChannelReference$ChannelReferenceTilt <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
 		
 		
 		
@@ -398,8 +398,29 @@ StoxAcousticOne <- function(data_list) {
 		#Apply channel, and apply key to all
 		tmp$ChannelReferenceType <- 'P'
 		tmp$ChannelReferenceKey <- tmp$ChannelReferenceType
+		# Note: This is different from transducer depth, which is available in the Instrument table:
 		tmp$ChannelReferenceDepth <- ifelse(tmp$ChannelReferenceType == "P", 0, NA) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
-		tmp$ChannelReferenceOrientation <- ifelse(tmp$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vvertically upwards for bottom channels ("B"):      
+		
+		#tmp$ChannelReferenceTilt <- ifelse(tmp$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
+		
+		# Added on 2020-12-09:
+		# Parse the tilt from the elevation angle in Instrument$TransducerOrientation:
+		getBeamTiltAngle <- function(x) {
+			elevationAngle <- as.numeric(
+				gsub(
+					'^.*elevation\\s*|\\s*°.*$', 
+					'', 
+					x
+				)
+			)
+			tiltAngle <- 180 - elevationAngle
+			return(tiltAngle)
+		}
+		
+		ChannelReferenceTiltTable <- data_list$Instrument[, .(ChannelReferenceTilt = getBeamTiltAngle(TransducerOrientation)), by = "ID"]
+		
+		tmp <- merge(tmp, ChannelReferenceTiltTable, by.x = "BeamKey", by.y = "ID")
+		
 		
 		data_list$ChannelReference <- tmp
 		# Get only unique lines:
@@ -492,10 +513,10 @@ StoxAcousticOne <- function(data_list) {
 	#add effective log distance
 	data_list$Log$EffectiveLogDistance <- data_list$Log$LogDistance
 	
+	
 	#################################################################
 	#                REMOVE undefined stoxacoustic variables        #
 	#################################################################
-	data_list<-data_list[c('Cruise','Log','Beam','AcousticCategory','ChannelReference','NASC')]  
 	
 	data_list$Cruise<-data_list$Cruise[, c('CruiseKey', 'Cruise', 'Platform')]
 	# 2020-02-03: Removed BottomDepth, which is mandatory:
@@ -503,7 +524,7 @@ StoxAcousticOne <- function(data_list) {
 	#data_list$Log <- data_list$Log[, c('CruiseKey', 'LogKey', 'Log', 'EDSU', 'DateTime', 'Longitude', 'Latitude', 'LogOrigin', 'Longitude2', 'Latitude2', 'LogOrigin2', 'LogDistance', 'LogDuration', 'EffectiveLogDistance')]
 	data_list$Beam <- data_list$Beam[,c('CruiseKey', 'LogKey', 'BeamKey', 'Beam', 'Frequency')]
 	data_list$AcousticCategory <- data_list$AcousticCategory[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'AcousticCategory')]
-	data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReferenceType', 'ChannelReferenceDepth', 'ChannelReferenceOrientation')]
+	data_list$ChannelReference <- data_list$ChannelReference[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'ChannelReferenceType', 'ChannelReferenceDepth', 'ChannelReferenceTilt')]
 	
 	data_list$NASC <- data_list$NASC[,c('CruiseKey', 'LogKey', 'BeamKey', 'AcousticCategoryKey', 'ChannelReferenceKey', 'NASCKey', 'Channel', 'MaxChannelRange', 'MinChannelRange', 'NASC')]
 	
@@ -512,7 +533,26 @@ StoxAcousticOne <- function(data_list) {
 	data_list$Log <- unique(data_list$Log)
 	
 	
-	return(data_list)
+	tablesToReturn <- c('Cruise','Log','Beam','AcousticCategory','ChannelReference','NASC')
+	
+	# Apply translations defined in the table 'vocabulary':
+	if(length(data_list$vocabulary)) {
+		vocabulary <- findVariablesMathcinigVocabulary(
+			vocabulary = data_list$vocabulary, 
+			data = data_list[tablesToReturn]
+		)
+		# Uniqueify since some columns (keys) are present in several tables:
+		vocabulary <- unique(vocabulary)
+		
+		data_list[tablesToReturn] <- translateVariables(
+			data = data_list[tablesToReturn], 
+			Translation = vocabulary, 
+			translate.keys = TRUE
+		)
+	}
+	
+	
+	return(data_list[tablesToReturn])
 }
 
 
