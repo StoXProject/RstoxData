@@ -134,10 +134,10 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 			ICESAcousticCSV <- lapply(ICESAcousticCSV, moveIDsLast)
 
 			# Convert all tables to string with header and reccord, and rbind:
-			ICESAcousticCSV <- convertToHeaderRecord(ICESAcousticCSV)
+			ICESAcousticCSV <- convertToHeaderRecordMatrix(ICESAcousticCSV)
 			ICESAcousticCSV <- expandWidth(ICESAcousticCSV)
 			
-			# Rbind to a matrix:
+			# Stack all matrices:
 			ICESAcousticCSV <- do.call(rbind, ICESAcousticCSV)
 			
 		}
@@ -149,12 +149,12 @@ ICESAcousticCSVOne <- function(AcousticDataOne){
 }
 
 # Function to convert a list of ICESAcoustic data to a list of tables with Header and Reccord, fitting the ICES CSV formats:
-convertToHeaderRecord <- function(ICESData) {
+convertToHeaderRecordMatrix <- function(ICESData) {
 	# Run through the table names and convert to Header, Record, and stringify:
-	lapply(names(ICESData), createHeaderRecordTable, ICESData = ICESData)
+	lapply(names(ICESData), createHeaderRecordMatrix, ICESData = ICESData)
 }
 
-createHeaderRecordTable <- function(ICESDataTableName, ICESData) {
+createHeaderRecordMatrix <- function(ICESDataTableName, ICESData) {
 	
 	thisTable <- ICESData[[ICESDataTableName]]
 	# # Move IDs last:
@@ -173,6 +173,31 @@ createHeaderRecordTable <- function(ICESDataTableName, ICESData) {
 	record <- cbind(
 		ICESDataTableName, 
 		"Record", 
+		# Convert all columns to string:
+		as.matrix(thisTable)
+	)
+	
+	unname(rbind(header, record))
+}
+
+
+# Function to convert a list of ICESAcoustic data to a list of tables with Header and Reccord, fitting the ICES CSV formats:
+convertToRecordTypeMatrix <- function(ICESData) {
+	# Run through the table names and convert to Header, Record, and stringify:
+	lapply(names(ICESData), createRecordTypeMatrix, ICESData = ICESData)
+}
+
+createRecordTypeMatrix <- function(ICESDataTableName, ICESData) {
+	
+	thisTable <- ICESData[[ICESDataTableName]]
+	
+	header <- c(
+		"RecordType", 
+		names(thisTable)
+	)
+	
+	record <- cbind(
+		ICESDataTableName, 
 		# Convert all columns to string:
 		as.matrix(thisTable)
 	)
@@ -261,10 +286,10 @@ ICESBioticToICESBioticCSVOne <- function(BioticDataOne) {
 	# Move ID columns last:
 	ICESBioticCSVData <- lapply(ICESBioticCSVData, moveIDsLast)
 	
-	# Convert all tables to string with header and record, and rbind:
-	ICESBioticCSVData <- convertToHeaderRecord(ICESBioticCSVData)
+	# Convert all tables to string matrix with header and record, and rbind:
+	ICESBioticCSVData <- convertToHeaderRecordMatrix(ICESBioticCSVData)
 	ICESBioticCSVData <- expandWidth(ICESBioticCSVData)
-	# Convert all matrices to data.table:
+	# Stack all matrices:
 	ICESBioticCSVData <- do.call(rbind, ICESBioticCSVData)
 	
 	
@@ -319,6 +344,7 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 #' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).
 #' @param AddStationType additional StationType to be included. By default only fish stations with StationType == NA are included.
 #' @param Combine Logical: If TRUE stack the output tables for each acosutic file.
 #'
@@ -329,15 +355,15 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 #' @export
 ICESDatras <- function(
 	BioticData, 
-	AddStationType = NA_character_, 
-	Combine = FALSE
+	SurveyName = "NONE", 
+	AddStationType = NA_character_
 ) {
 
 	ICESDatrasData <- lapply(
   	BioticData, 
   	ICESDatrasOne, 
-  	AddStationType = AddStationType, 
-  	Combine = Combine
+  	SurveyName = SurveyName,
+  	AddStationType = AddStationType
   )
 
   return(ICESDatrasData)
@@ -345,14 +371,14 @@ ICESDatras <- function(
 
 
 ICESDatrasOne <- function(
-	BioticDataOne, 
-	AddStationType, 
-	Combine = FALSE
+	BioticDataOne,
+	SurveyName,
+	AddStationType
 ) {
 	# Check input is a NMD Biotic v3 data
 	if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
 		warning("StoX: writeICESBiotic: Only NMD Biotic version 3 and 3.1 data accepted as input!")
-		return(NA)
+		return(matrix(1, 0, 0))
 	}
 	
 	# Construct user-defined additional stations (default to NA stationtypes)
@@ -433,8 +459,8 @@ ICESDatrasOne <- function(
 		
 		nDaysA = as.numeric(difftime(uniqueDates, datetime0, units = "days")) # Number of days since 01/01
 		
-		nTimes = 24*3600;                       # Number of seconds in the day
-		tArray = seq(0, 1, length = nTimes);
+		nTimes = 24*3600                       # Number of seconds in the day
+		tArray = seq(0, 1, length = nTimes)
 		
 		ssTab <- list()
 		
@@ -447,31 +473,44 @@ ICESDatrasOne <- function(
 			
 			# Compute
 			# Letters correspond to colums in the NOAA Excel
-			E = tArray;
-			F = nDays+2415018.5+E-UTCoff/24;
-			G = (F-2451545)/36525;
-			I = (280.46646+G * (36000.76983+G*0.0003032)) %% 360;
-			J = 357.52911+G * (35999.05029-0.0001537*G);
-			K = 0.016708634-G * (0.000042037+0.0000001267*G);
-			L = sin(deg2rad(J)) * (1.914602-G * (0.004817+0.000014*G))+sin(deg2rad(2*J)) * (0.019993-0.000101*G)+sin(deg2rad(3*J))*0.000289;
-			M = I+L;
-			P = M-0.00569-0.00478*sin(deg2rad(125.04-1934.136*G));
-			Q = 23+(26+((21.448-G * (46.815+G * (0.00059-G*0.001813))))/60)/60;
-			R = Q+0.00256*cos(deg2rad(125.04-1934.136*G));
-			T = rad2deg(asin(sin(deg2rad(R)) * sin(deg2rad(P))));
-			U = tan(deg2rad(R/2)) * tan(deg2rad(R/2));
-			V = 4*rad2deg(U * sin(2*deg2rad(I))-2*K * sin(deg2rad(J))+4*K * U * sin(deg2rad(J)) *  cos(2*deg2rad(I))-0.5 * U * U * sin(4*deg2rad(I))-1.25 * K * K * sin(2 * deg2rad(J)));
-			AB = (E*1440+V+4*lng-60*UTCoff) %% 1440
+			E = tArray
+			F = nDays + 2415018.5 + E - UTCoff / 24
+			G = (F - 2451545) / 36525
+			I = (280.46646 + G * (36000.76983 + G * 0.0003032)) %% 360
+			J = 357.52911 + G * (35999.05029 - 0.0001537 * G)
+			K = 0.016708634 - G * (0.000042037 + 0.0000001267 * G)
+			L = sin(deg2rad(J)) * (1.914602 - G * (0.004817 + 0.000014 * G))+sin(deg2rad(2 * J)) * (0.019993 - 0.000101*G) + sin(deg2rad(3 * J)) * 0.000289
+			M = I + L
+			P = M - 0.00569 - 0.00478 * sin(deg2rad(125.04 - 1934.136 * G))
+			Q = 23 + (26 + ((21.448 - G * (46.815 + G * (0.00059 - G * 0.001813)))) / 60) / 60
+			R = Q + 0.00256 * cos(deg2rad(125.04 - 1934.136 * G))
+			T = rad2deg(asin(sin(deg2rad(R)) * sin(deg2rad(P))))
+			U = tan(deg2rad(R/2)) * tan(deg2rad(R/2))
+			V = 4 * rad2deg(U * sin(2 * deg2rad(I))-2 * K * sin(deg2rad(J)) + 4 * K * U * sin(deg2rad(J)) *  cos(2*deg2rad(I)) - 0.5 * U * U * sin(4 * deg2rad(I)) - 1.25 * K * K * sin(2 * deg2rad(J)))
+			AB = (E * 1440 + V + 4 *lng - 60 * UTCoff) %% 1440
 			
-			AC = ifelse (AB/4 < 0, AB/4+180, AB/4-180)
 			
-			AD = rad2deg(acos(sin(deg2rad(lat))*sin(deg2rad(T))+cos(deg2rad(lat))*cos(deg2rad(T)) * cos(deg2rad(AC))));
-			W = rad2deg(acos(cos(deg2rad(90.833)) / (cos(deg2rad(lat))*cos(deg2rad(T)))-tan(deg2rad(lat))*tan(deg2rad(T))));
-			X = (720-4*lng-V+UTCoff*60)*60;
+			AC = ifelse (AB/4 < 0, AB/4 + 180, AB/4 - 180)
 			
-			sunrise = which.min(abs(X-round(W*4*60) - nTimes*tArray));
+			AD = rad2deg(acos(sin(deg2rad(lat)) * sin(deg2rad(T)) + cos(deg2rad(lat)) * cos(deg2rad(T)) * cos(deg2rad(AC))))
+			
+			# Test whether we are in midnightsun: 
+			WArg <- cos(deg2rad(90.833)) / (cos(deg2rad(lat)) * cos(deg2rad(T))) - tan(deg2rad(lat)) * tan(deg2rad(T))
+			# Truncate WArg to [-1, 1], where below is midnightsun and above 1 is myrketid:
+			if(any(WArg < -1)) {
+				WArg[WArg < -1] <- -1
+			}
+			if(any(WArg > 1)) {
+				WArg[WArg > 1] <- 1
+			}
+			
+			W = rad2deg(acos(WArg))
+			X = (720 - 4 * lng - V + UTCoff * 60) * 60
+				
+			sunrise = which.min(abs(X - round(W * 4 * 60) - nTimes * tArray))
+			sunset = which.min(abs(X+round(W*4*60) - nTimes*tArray))
+			
 			sunrisetime = localdate + sunrise
-			sunset = which.min(abs(X+round(W*4*60) - nTimes*tArray));
 			sunsettime = localdate + sunset
 			
 			ssTab[[uniqueDates[idx]]] <- list(sunrise = sunrisetime, sunset = sunsettime)
@@ -497,7 +536,7 @@ ICESDatrasOne <- function(
 	
 	# Make HH records and filter only valid stationtype
 	finalHH[, `:=`(
-		"RecordType" = "HH",
+		"SurveyName" = SurveyName,
 		"Quarter" = getQuarter(stationstartdate),
 		"Country" = getTSCountryByIOC(nation),
 		"Ship" = getICESShipCode(platformname),
@@ -566,15 +605,16 @@ ICESDatrasOne <- function(
 		"MaxTrawlDepth" = NA
 	)]
 	
-	HHraw <- data.table::copy(finalHH[is.na(stationtype) | stationtype %in% targetStationType, c("RecordType", "Quarter", "Country", "Ship", "Gear",
-																					 "SweepLngt", "GearExp", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
-																					 "TimeShot", "Stratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
-																					 "StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BycSpecRecCode", "DataType", "Netopening",
-																					 "Rigging", "Tickler", "Distance", "Warpingt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
-																					 "DoorSpread", "WingSpread", "Buoyancy", "KiteDim", "WgtGroundRope", "TowDir", "GroundSpeed",
-																					 "SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir", "WindSpeed",
-																					 "SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth",
-																					 "CodendMesh", "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelSampType", "MinTrawlDepth", "MaxTrawlDepth")]
+	HHraw <- data.table::copy(finalHH[is.na(stationtype) | stationtype %in% targetStationType, c(
+		"SurveyName", "Quarter", "Country", "Ship", "Gear",
+		"SweepLngt", "GearExp", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
+		"TimeShot", "Stratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
+		"StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BycSpecRecCode", "DataType", "Netopening",
+		"Rigging", "Tickler", "Distance", "Warpingt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
+		"DoorSpread", "WingSpread", "Buoyancy", "KiteDim", "WgtGroundRope", "TowDir", "GroundSpeed",
+		"SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir", "WindSpeed",
+		"SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth",
+		"CodendMesh", "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelSampType", "MinTrawlDepth", "MaxTrawlDepth")]
 	)
 	
 	## 2. HL ##
@@ -610,15 +650,17 @@ ICESDatrasOne <- function(
 	# http://vocab.ices.dk/?ref=1392
 	convLenMeasType <- function(LenMeasType) {
 		# Convert table
-		ct <- c("B" = 5,
-				"C" = 6,
-				"E" = 1,
-				"F" = 8,
-				"G" = 4,
-				"H" = 3,
-				"J" = 2,
-				"L" = 7,
-				"S" = 9)
+		ct <- c(
+			"B" = 5,
+			"C" = 6,
+			"E" = 1,
+			"F" = 8,
+			"G" = 4,
+			"H" = 3,
+			"J" = 2,
+			"L" = 7,
+			"S" = 9
+		)
 		return(ct[LenMeasType])
 	}
 	
@@ -676,43 +718,43 @@ ICESDatrasOne <- function(
 	mergedHL[!is.na(length), lsCountTot := 1]
 	
 	# Aggregate hlNoAtLngth and lsCountTot
-	finalHL <- mergedHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(groupHL,  "lngtClass",
-																	 "Quarter",
-																	 "Country",
-																	 "Ship",
-																	 "Gear",
-																	 "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement")]
+	finalHL <- mergedHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(
+		groupHL,  
+		"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
+		)
+	]
 	
 	finalHL <- finalHL[!duplicated(finalHL)]
 	finalHL[,`:=`(noMeas = sum(lsCountTot)), by = groupHL]
 	finalHL[,`:=`(totalNo = noMeas * sampleFac, subFactor = sampleFac)]
 	
-	HLraw <- data.table::copy(finalHL[is.na(stationtype) | stationtype %in% targetStationType, .("RecordType" = "HL",
-																					 "Quarter" = Quarter,
-																					 "Country" = Country,
-																					 "Ship" = Ship,
-																					 "Gear" = Gear,
-																					 "SweepLngt" = SweepLngt,
-																					 "GearExp" = GearExp,
-																					 "DoorType" = DoorType,
-																					 "StNo" = serialnumber,
-																					 "HaulNo" = HaulNo,
-																					 "Year" = startyear,
-																					 "SpecCodeType" = "W",
-																					 "SpecCode" = aphia,
-																					 "SpecVal" = SpecVal,
-																					 "Sex" = sex,
-																					 "TotalNo" = round(totalNo, 2),
-																					 "CatIdentifier" = catchpartnumber,
-																					 "NoMeas" = noMeas,
-																					 "SubFactor" = round(subFactor, 4),
-																					 "SubWgt" = round(subWeight),
-																					 "CatCatchWgt" = round(catCatchWgt),
-																					 "LngtCode" = lngtCode,
-																					 "LngtClass" = lngtClass,
-																					 "HLNoAtLngt" = round(lsCountTot, 2),
-																					 "DevStage" = NA,
-																					 "LenMeasType" = convLenMeasType(lengthmeasurement)
+	HLraw <- data.table::copy(finalHL[is.na(stationtype) | stationtype %in% targetStationType, .(
+		"SurveyName" = SurveyName,
+		"Quarter" = Quarter,
+		"Country" = Country,
+		"Ship" = Ship,
+		"Gear" = Gear,
+		"SweepLngt" = SweepLngt,
+		"GearExp" = GearExp,
+		"DoorType" = DoorType,
+		"StNo" = serialnumber,
+		"HaulNo" = HaulNo,
+		"Year" = startyear,
+		"SpecCodeType" = "W",
+		"SpecCode" = aphia,
+		"SpecVal" = SpecVal,
+		"Sex" = sex,
+		"TotalNo" = round(totalNo, 2),
+		"CatIdentifier" = catchpartnumber,
+		"NoMeas" = noMeas,
+		"SubFactor" = round(subFactor, 4),
+		"SubWgt" = round(subWeight),
+		"CatCatchWgt" = round(catCatchWgt),
+		"LngtCode" = lngtCode,
+		"LngtClass" = lngtClass,
+		"HLNoAtLngt" = round(lsCountTot, 2),
+		"DevStage" = NA,
+		"LenMeasType" = convLenMeasType(lengthmeasurement)
 	)]
 	)
 	
@@ -732,13 +774,9 @@ ICESDatrasOne <- function(
 	# Aggregate count
 	mergedCA[!is.na(individualweight), `:=`(nWithWeight =.N, totWeight = sum(individualweight)), by = c(groupCA,  "lngtClass", "maturity", "age")]
 	
-	finalCA <- mergedCA[, .(nInd =.N), by = c(groupCA,  "lngtClass", "maturity", "age",
-											  "Quarter",
-											  "Country",
-											  "Ship",
-											  "Gear",
-											  "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight",
-											  "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
+	finalCA <- mergedCA[, .(nInd =.N), by = c(
+		groupCA,  
+		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
 	finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
 	
 	# Convert aging structure source
@@ -755,38 +793,40 @@ ICESDatrasOne <- function(
 		return(ct[AgeSource])
 	}
 	
-	CAraw <- data.table::copy(finalCA[is.na(stationtype) | stationtype %in% targetStationType, .("RecordType" = "CA",
-																					 "Quarter" = Quarter,
-																					 "Country" = Country,
-																					 "Ship" = Ship,
-																					 "Gear" = Gear,
-																					 "SweepLngt" = SweepLngt,
-																					 "GearExp" = GearExp,
-																					 "DoorType" = DoorType,
-																					 "StNo" = serialnumber,
-																					 "HaulNo" = HaulNo,
-																					 "Year" = startyear,
-																					 "SpecCodeType" = "W",
-																					 "SpecCode" = aphia,
-																					 "AreaType" = "0",
-																					 "AreaCode" = StatRec,
-																					 "LngtCode" = lngtCode,
-																					 "LngtClass" = lngtClass,
-																					 "Sex" = sex,
-																					 "Maturity" = maturity,
-																					 "PlusGr" = as.character(NA),
-																					 "AgeRings" = ifelse(!is.na(age), age, NA),
-																					 "CANoAtLngt" = nInd,
-																					 "IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA),
-																					 "MaturityScale" = "M6",
-																					 "FishID" = specimenid,
-																					 "GenSamp" = ifelse(!is.na(tissuesample), "Y", "N"),
-																					 "StomSamp" = ifelse(!is.na(stomach), "Y", "N"),
-																					 "AgeSource" = convAgeSource(agingstructure),
-																					 "AgePrepMet" = NA,
-																					 "OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
-																					 "ParSamp" = ifelse(!is.na(parasite), "Y", "N")
-	)]
+	CAraw <- data.table::copy(finalCA[is.na(stationtype) | stationtype %in% targetStationType, 
+		.(
+			"SurveyName" = SurveyName,
+			"Quarter" = Quarter,
+			"Country" = Country,
+			"Ship" = Ship,
+			"Gear" = Gear,
+			"SweepLngt" = SweepLngt,
+			"GearExp" = GearExp,
+			"DoorType" = DoorType,
+			"StNo" = serialnumber,
+			"HaulNo" = HaulNo,
+			"Year" = startyear,
+			"SpecCodeType" = "W",
+			"SpecCode" = aphia,
+			"AreaType" = "0",
+			"AreaCode" = StatRec,
+			"LngtCode" = lngtCode,
+			"LngtClass" = lngtClass,
+			"Sex" = sex,
+			"Maturity" = maturity,
+			"PlusGr" = as.character(NA),
+			"AgeRings" = ifelse(!is.na(age), age, NA),
+			"CANoAtLngt" = nInd,
+			"IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA),
+			"MaturityScale" = "M6",
+			"FishID" = specimenid,
+			"GenSamp" = ifelse(!is.na(tissuesample), "Y", "N"),
+			"StomSamp" = ifelse(!is.na(stomach), "Y", "N"),
+			"AgeSource" = convAgeSource(agingstructure),
+			"AgePrepMet" = NA,
+			"OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
+			"ParSamp" = ifelse(!is.na(parasite), "Y", "N")
+		)]
 	)
 	
 	
@@ -958,12 +998,15 @@ ICESDatrasOne <- function(
 	hl <- hl[order(hl$StNo),]
 	
 	#
-	datrasOutput <- list(HH=hh, HL=hl, CA=ca)
+	ICESDatrasData <- list(HH = hh, HL = hl, CA = ca)
 	
-	if(Combine) {
-		datrasOutput <- data.table::rbindlist(datrasOutput, fill = TRUE)
-	}
+	# Convert all tables to string matrix with header and record, and rbind:
+	ICESDatrasData <- convertToRecordTypeMatrix(ICESDatrasData)
+	ICESDatrasData <- expandWidth(ICESDatrasData)
+	# Stack all matrices:
+	ICESDatrasData <- do.call(rbind, ICESDatrasData)
 	
-	return(datrasOutput)
+	
+	return(ICESDatrasData)
 }
 

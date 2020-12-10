@@ -4,10 +4,12 @@
 \alias{ICESDatras}
 \title{Write ICES DATRAS (NS-IBTS) format file}
 \usage{
-ICESDatras(BioticData, AddStationType = NA_character_, Combine = FALSE)
+ICESDatras(BioticData, SurveyName = "NONE", AddStationType = NA_character_)
 }
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
+
+\item{SurveyName}{A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).}
 
 \item{AddStationType}{additional StationType to be included. By default only fish stations with StationType == NA are included.}
 
