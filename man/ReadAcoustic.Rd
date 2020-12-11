@@ -4,12 +4,10 @@
 \alias{ReadAcoustic}
 \title{Read acoustic XML files}
 \usage{
-ReadAcoustic(FileNames, NumberOfCores = 1L)
+ReadAcoustic(FileNames)
 }
 \arguments{
 \item{FileNames}{The paths of the acoustic files.}
-
-\item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 }
 \value{
 An object of StoX data type AcousticData: A list of a list of data.tables of the different levels of the input acoustic files.
@@ -21,7 +19,9 @@ This function reads multiple acoustic file to a list with a list of tables for e
 This function is awesome and does excellent stuff.
 }
 \examples{
-x <- 1
+exampleFile <- system.file(
+    "testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
+bioticData <- ReadBiotic(exampleFile)
 
 }
 \seealso{

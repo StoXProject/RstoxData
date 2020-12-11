@@ -155,6 +155,7 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
+			GruopingVariables = "gruopingVariables", 
 			Conversion = "conversionTable"
 		)
 	),
@@ -169,17 +170,17 @@ stoxFunctionAttributes <- list(
 	), 
 	
 	
-	WriteICESAcoustic = list(
+	ICESAcousticCSV = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESAcousticData"
+		functionOutputDataType = "ICESAcousticCSVData"
 	), 
-	WriteICESBiotic = list(
+	ICESBioticCSV = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESBioticData"
+		functionOutputDataType = "ICESBioticCSVData"
 	), 
-	WriteICESDatras = list(
+	ICESDatras = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESDatrasData"
@@ -198,7 +199,7 @@ processPropertyFormats <- list(
 	filePaths = list(
 		class = "vector", 
 		title = "The path to one or more files", 
-		variableTypes <- "character"
+		variableTypes = "character"
 	), 
 	filterExpressionList = list(
 		class = "list", 
@@ -230,6 +231,16 @@ processPropertyFormats <- list(
 			"character",
 			"character"
 		)
+	), 
+	
+	
+	gruopingVariables = list(
+		class = "vector", 
+		title = "StoxBiotic variables to specify conversion parameters for.", 
+		variableTypes = "character", 
+		possibleValues = function(StoxBioticData) {
+			sort(unique(unlist(lapply(StoxBioticData, names))))
+		}
 	), 
 	
 	conversionTable = list(
@@ -310,6 +321,37 @@ processPropertyFormats <- list(
 			)
 			
 			return(variableTypes)
+		}, 
+		possibleValues = function(StoxBioticData, ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				numTypes <- 1
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				numTypes <- 1
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				numTypes <- 1
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				numTypes <- 2
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			#possibleValues <- function(StoxBioticData) {
+				StoxBioticDataFlatList <- unlist(lapply(unname(StoxBioticData), as.list), recursive = FALSE)
+				variableNames <- sort(names(StoxBioticDataFlatList))
+				possibleValues <- c(
+					lapply(GruopingVariables, function(variableMame) sort(unique(StoxBioticDataFlatList[[variableMame]]))), 
+					rep(list(variableNames), 2), 
+					rep(list(list()), numTypes + 1)
+				)
+			#}
+			
+			return(possibleValues)
 		}
 	), 
 	
@@ -319,7 +361,7 @@ processPropertyFormats <- list(
 		possibleValues = function(BioticData) {
 			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
 		}, 
-		variableTypes <- "character"
+		variableTypes = "character"
 	)
 )
 

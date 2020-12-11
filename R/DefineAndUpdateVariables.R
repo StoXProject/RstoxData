@@ -81,7 +81,7 @@ TranslateData <- function(
 ConvertData <- function(
 	StoxData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = c("SpeciesCategory"), 
+	GruopingVariables = character(), 
 	Conversion = data.table::data.table()
 ) {
 	
@@ -238,14 +238,16 @@ ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVa
 roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
 	# Round off either to the values of a column or to oa numeric:
 	if(!RoundOffTo %in% names(data)) {
-		RoundOffToNumeric <- as.numeric(RoundOffTo)
-		if(!is.na(RoundOffToNumeric)) {
-			# Round off to the RoundOffToNumeric by reference:
-			#RoundOffTo <- RoundOffToNumeric
-			data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
-		}
-		else {
-			stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
+		if(length(RoundOffTo) && nchar(RoundOffTo)) {
+			RoundOffToNumeric <- as.numeric(RoundOffTo)
+			if(!is.na(RoundOffToNumeric)) {
+				# Round off to the RoundOffToNumeric by reference:
+				#RoundOffTo <- RoundOffToNumeric
+				data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
+			}
+			else {
+				stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
+			}
 		}
 	}
 	else {
@@ -255,7 +257,12 @@ roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
 }
 
 roundOff <- function(x, RoundOffTo) {
-	round(x / RoundOffTo) * RoundOffTo
+	if(length(RoundOffTo)) {
+		round(x / RoundOffTo) * RoundOffTo
+	}
+	else {
+		x
+	}
 }
 
 
@@ -288,37 +295,47 @@ readVariableConversion <- function(processData, FileName, UseProcessData = FALSE
 }
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, Translation) {
+translateVariables <- function(data, Translation, translate.keys = FALSE) {
 	
 	dataCopy <- data.table::copy(data)
 	
 	# Currently not defined
-	requiredColumns <- getRstoxDataDefinitions("StoxBioticTranslationRequiredColumns")
+	requiredColumns <- getRstoxDataDefinitions("TranslationRequiredColumns")
 	if(! all(requiredColumns %in% names(Translation))) {
 		stop("The Translation must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}
 	
-	# Split into a list, thus treating only one row at the time. This is probably sloppy coding:
+	# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
 	translationList <- split(Translation, seq_len(nrow(Translation)))
 	# Run the conversion for each row of the Translation:
-	lapply(translationList, translateVariable, data = dataCopy)
+	lapply(
+		translationList, 
+		translateVariable, 
+		data = dataCopy, 
+		translate.keys = translate.keys
+		)
 	
 	return(dataCopy[])
 }
 
 # Function to convert variables given one row of a conversion table:
-translateVariable <- function(translationList, data) {
-	lapplyToStoxData(data, translateOneTable, translationList = translationList)
+translateVariable <- function(translationList, data, translate.keys = FALSE) {
+	lapplyToStoxData(
+		data, 
+		translateOneTable, 
+		translationList = translationList, 
+		translate.keys = translate.keys
+	)
 }
 
 # Function to apply to all tables of the input data, converting the variables:
-translateOneTable <- function(x, translationList) {
+translateOneTable <- function(x, translationList, translate.keys = FALSE) {
 	# Check that the table contains the variable to convert:
 	if(translationList$VariableName %in% names(x)) {
 		# Do nothing if the variable is a key:
 		isKeys <- endsWith(translationList$VariableName, "Key")
-		if(isKeys) {
-			warning("StoX: The variable", translationList$VariableName, " is a key and cannot be modified ")
+		if(!translate.keys && isKeys) {
+			warning("StoX: The variable ", translationList$VariableName, " is a key and cannot be modified ")
 		}
 		else {
 			# Convert the class to the class of the existing value in the table:
@@ -478,7 +495,7 @@ TranslateStoxBiotic <- function(
 ConvertStoxBiotic <- function(
 	StoxBioticData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = c("SpeciesCategory"), 
+	GruopingVariables = character(),  
 	Conversion = data.table::data.table()
 ) {
 	# Convert StoxBioticData:

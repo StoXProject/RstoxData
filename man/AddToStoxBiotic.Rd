@@ -4,12 +4,7 @@
 \alias{AddToStoxBiotic}
 \title{Add variables to StoxBioticData from BioticData}
 \usage{
-AddToStoxBiotic(
-  StoxBioticData,
-  BioticData,
-  VariableNames = character(),
-  NumberOfCores = 1L
-)
+AddToStoxBiotic(StoxBioticData, BioticData, VariableNames = character())
 }
 \arguments{
 \item{StoxBioticData}{\code{\link{StoxBioticData}}.}
@@ -17,8 +12,6 @@ AddToStoxBiotic(
 \item{BioticData}{\code{\link{BioticData}}.}
 
 \item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
-
-\item{NumberOfCores}{The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.

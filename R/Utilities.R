@@ -260,7 +260,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 		out <- lapply(x, FUN, ...)
 	}
 	# Run in parallel on Windows and other platforms:
-	else {
+	else if(NumberOfCores > 1){
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
@@ -307,7 +307,7 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 		out <- mapply(FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 	}
 	# Run in parallel on Windows and other platforms:
-	else {
+	else if(NumberOfCores > 1){
 		# On Windows run special args to speed up:
 		if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
@@ -440,7 +440,7 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 			fileToWriteDupDataTo <- tempfile()
 			data.table::fwrite(dupData, fileToWriteDupDataTo)
 			
-			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
+			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". This may be due to different files with the same keys, e.g. if different acoustic instruments are stored in different files. In such a case the order of the files is crucial, as only the information from the first file is kept. If not different files, then duplicated keys may be an error. To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
 			#rowsToKeep <- !duplicatedKeys
 			StoxData[[tableName]] <- StoxData[[tableName]][!duplicatedKeys, ]
 		}
@@ -532,4 +532,39 @@ checkDataSource <- function(BioticData) {
 	
 	return(detectedDataSources)
 }
+
+
+
+
+
+
+
+# Find the variables to translate, by looping through the rows of the vocabulary and locating the variables which has any values in the vocabulary$id: 
+findVariablesMathcinigVocabulary <- function(vocabulary, data) {
+	# Split into individual rows and find the variables that contain the values of each row, and add the variables as a column VariableName, as per the TranslationRequiredColumns:
+	vocabularyList <- split(vocabulary, seq_len(nrow(vocabulary)))
+	vocabularyList <- lapply(vocabularyList, findVariablesMathcinigVocabularyOne, data = data)
+	# Rbind and rename the columns "id" and "value" to "Value" and "NewValue":
+	vocabulary <- data.table::rbindlist(vocabularyList)
+	data.table::setnames(
+		vocabulary, 
+		c("id", "value"), 
+		c("Value", "NewValue")
+	)
+	
+	return(vocabulary)
+}
+
+findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
+	# Get the names of the columns which has values in vocabularyOne$id:
+	#VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(x %in% vocabularyOne$id))])))))
+	VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(unique(x) %in% vocabularyOne$id))])))))
+	# Add the VariableName to the vocabularyOne
+	vocabularyOne <- cbind(
+		VariableName = VariableName, 
+		vocabularyOne
+	)
+	return(vocabularyOne)
+}
+
 
