@@ -343,7 +343,8 @@ compareICES <- function(url, field) {
 		},
 		error = function(e){
 			warning(paste("StoX: Url", url, "is not exist or no internet connection available."))
-			return(NA)
+			emptyXML <- xml2::as_xml_document(list(list()))
+			return(emptyXML)
 		}
 	)
 	recs <- xml_find_all(pg, "//Key")
