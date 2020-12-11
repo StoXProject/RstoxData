@@ -52,7 +52,8 @@ ReadBiotic <- function(FileNames) {
 #' An object of StoX data type AcousticData: A list of a list of data.tables of the different levels of the input acoustic files.
 #' 
 #' @examples
-#' exampleFile <- system.file("testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
+#' exampleFile <- system.file(
+#'     "testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
 #' bioticData <- ReadBiotic(exampleFile)
 #' 
 #' @seealso \code{\link[RstoxData]{readXmlFile}}.

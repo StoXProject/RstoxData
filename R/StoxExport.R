@@ -346,7 +346,6 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
 #' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).
 #' @param AddStationType additional StationType to be included. By default only fish stations with StationType == NA are included.
-#' @param Combine Logical: If TRUE stack the output tables for each acosutic file.
 #'
 #' @return List of data.table objects in the ICES DATRAS CSV format.
 #'

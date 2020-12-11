@@ -12,8 +12,6 @@ ICESDatras(BioticData, SurveyName = "NONE", AddStationType = NA_character_)
 \item{SurveyName}{A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).}
 
 \item{AddStationType}{additional StationType to be included. By default only fish stations with StationType == NA are included.}
-
-\item{Combine}{Logical: If TRUE stack the output tables for each acosutic file.}
 }
 \value{
 List of data.table objects in the ICES DATRAS CSV format.

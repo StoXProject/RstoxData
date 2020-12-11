@@ -406,17 +406,43 @@ StoxAcousticOne <- function(data_list) {
 		# Added on 2020-12-09:
 		# Parse the tilt from the elevation angle in Instrument$TransducerOrientation:
 		getBeamTiltAngle <- function(x) {
-			elevationAngle <- as.numeric(
-				gsub(
-					'^.*elevation\\s*|\\s*°.*$', 
+			# Check code words:
+			if(grepl("downwards", tolower(x))) {
+				tiltAngle <- 180
+			}
+			else if(grepl("upward", tolower(x))) {
+				tiltAngle <- 0
+			}
+			else {
+				# Remove trailing string "elevation":
+				elevationAngle <- gsub(
+					'^.*elevation\\s*', 
 					'', 
 					x
 				)
-			)
-			tiltAngle <- 180 - elevationAngle
+				# Remoev non-numeric:
+				elevationAngle <- gsub(
+					"[^[:digit:]., ]", 
+					'', 
+					elevationAngle
+				)#  Remove all from first space and on:
+				elevationAngle <- strsplit(elevationAngle, " ", fixed = TRUE)[[1]][1]
+				elevationAngle <- as.numeric(elevationAngle)
+				
+				tiltAngle <- 180 - elevationAngle
+			}
+			
+			
 			return(tiltAngle)
 		}
 		
+		
+		
+		
+		
+			
+			
+			
 		ChannelReferenceTiltTable <- data_list$Instrument[, .(ChannelReferenceTilt = getBeamTiltAngle(TransducerOrientation)), by = "ID"]
 		
 		tmp <- merge(tmp, ChannelReferenceTiltTable, by.x = "BeamKey", by.y = "ID")
