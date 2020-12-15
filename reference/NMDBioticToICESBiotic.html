@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add variables to StoxBioticData from BioticData — AddToStoxBiotic • RstoxData</title>
+<title>Convert BioticData to ICESBiotic form. — NMDBioticToICESBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Add variables to StoxBioticData from BioticData — AddToStoxBiotic" />
-<meta property="og:description" content="Add variables to StoxBioticData from BioticData" />
+<meta property="og:title" content="Convert BioticData to ICESBiotic form. — NMDBioticToICESBiotic" />
+<meta property="og:description" content="This function converts BioticData read from files of format NMDBiotic v3 and v3.1 to ICESBiotic tables." />
 
 
 
@@ -105,37 +105,57 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add variables to StoxBioticData from BioticData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxBiotic.R'><code>R/StoxBiotic.R</code></a></small>
-    <div class="hidden name"><code>AddToStoxBiotic.Rd</code></div>
+    <h1>Convert BioticData to ICESBiotic form.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Read.R'><code>R/Read.R</code></a></small>
+    <div class="hidden name"><code>NMDBioticToICESBiotic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Add variables to StoxBioticData from BioticData</p>
+    <p>This function converts BioticData read from files of format NMDBiotic v3 and v3.1 to ICESBiotic tables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>AddToStoxBiotic</span><span class='op'>(</span><span class='va'>StoxBioticData</span>, <span class='va'>BioticData</span>, VariableNames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>NMDBioticToICESBiotic</span><span class='op'>(</span>
+  <span class='va'>BioticData</span>,
+  SurveyName <span class='op'>=</span> <span class='st'>"NONE"</span>,
+  Country <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  Organisation <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>,
+  AllowRemoveSpecies <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>StoxBioticData</th>
-      <td><p><code><a href='StoxBioticData.html'>StoxBioticData</a></code>.</p></td>
-    </tr>
-    <tr>
       <th>BioticData</th>
       <td><p><code><a href='BioticData.html'>BioticData</a></code>.</p></td>
     </tr>
     <tr>
-      <th>VariableNames</th>
-      <td><p>A character vector with names of the variables to add from the <code>BioticData</code>.</p></td>
+      <th>SurveyName</th>
+      <td><p>A string naming the survey. Must be one of the names listed on <a href='https://vocab.ices.dk/?ref=1453'>https://vocab.ices.dk/?ref=1453</a> or NONE (the default).</p></td>
+    </tr>
+    <tr>
+      <th>Country</th>
+      <td><p>The country code as listed on <a href='http://vocab.ices.dk/?ref=337'>http://vocab.ices.dk/?ref=337</a>.</p></td>
+    </tr>
+    <tr>
+      <th>Organisation</th>
+      <td><p>An integer code representing the organization running the cruise. See <a href='https://vocab.ices.dk/?ref=1398'>https://vocab.ices.dk/?ref=1398</a> for a list of possible codes (e.g., Institute of Marine Research: 612).</p></td>
+    </tr>
+    <tr>
+      <th>AllowRemoveSpecies</th>
+      <td><p>Logical: ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed on <a href='https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml'>https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml</a>. Setting this parameter to TRUE will remove the unlisted species records.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of StoX data type <code><a href='StoxBioticData.html'>StoxBioticData</a></code>.</p>
+    <p>An object of StoX data type <code><a href='BioticData.html'>BioticData</a></code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The ICESBiotic (name used by StoX) data format is defined on <a href='https://ices.dk/data/data-portals/Pages/acoustic.aspx'>https://ices.dk/data/data-portals/Pages/acoustic.aspx</a> (<a href='https://ices.dk/data/Documents/Acoustic/ICES_Acoustic_data_format_description.zip'>Direct download link</a>).</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='ReadBiotic.html'>ReadBiotic</a></code>.</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
