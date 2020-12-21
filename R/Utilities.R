@@ -302,7 +302,7 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 		NumberOfCores <- 1
 	}
 	
-	# Simple mapply if onle one core:
+	# Simple mapply if only one core:
 	if(NumberOfCores == 1) {
 		out <- mapply(FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 	}
