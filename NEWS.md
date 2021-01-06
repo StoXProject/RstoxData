@@ -1,3 +1,15 @@
+# RstoxData v1.0.20 (2021-01-06)
+
+* `getICESShipCode`: improve ship conversion by removing the deprecated entries and sorting.
+* `ICESDatras`: remove reference to SurveyName parameter.
+* Move `readr` to suggests.
+* Made `compareICES()` robust to missing internet connection.
+* `ICESDatras` returning matrix to be written as csv by `RstoxFramework::runProcess`.
+* Cleaned up translations using vocabulary for ICES data.
+* Fixed bug with DateTime in `StoxAcoustic()`.
+* Added `backwardCompatibility` and removed `NumberOfCores`.
+* Refactored the functions for writing ICESBiotic and ICESAcoustic files to include NMDBioticToICESBiotic() and to use similar methods.
+
 # RstoxData v1.0.17 (2020-11-23)
 
 * In `writeICESDatras()`: Change country code 'NOR' to 'NO'.
