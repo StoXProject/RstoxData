@@ -31,6 +31,12 @@ backwardCompatibility <- list(
 			functionName = "AddToStoxBiotic", 
 			modelName = "baseline", 
 			parameterName = "NumberOfCores"
+		), 
+		list(
+			changeVersion = "1.0.20", 
+			functionName = "ICESDatras", 
+			modelName = "baseline", 
+			parameterName = "SurveyName"
 		)
 	)
 )

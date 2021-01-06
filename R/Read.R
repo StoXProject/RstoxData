@@ -444,32 +444,35 @@ getICESShipCode <- function(platformname) {
 	construct <- function(shipName) {
 		# We have to remove "."," " and use uppercase
 		shipName <- toupper(gsub("[[:space:][:punct:]]", "", shipName))
-		
+
 		# Replace the nordic character with AA
 		shipName <- gsub("\u00C5", "AA", shipName)
-		
+
 		data <- tryCatch(
 			{
 				read_xml("https://vocab.ices.dk/services/pox/GetCodeList/SHIPC")
 			},
 			error = function(e){return(NA)}
 		)
-		
+
 		# Can't download from ICES
 		if (is.na(data))
 			return(NA)
-		
+
 		xml_ns_strip(data)
-		nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"", shipName, "\")]/Key"))
-		
+		nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"",
+					shipName, "\") and contains(Deprecated, \"false\")]/*[self::Key or self::Modified]"))
+
 		# Ship not found
 		if (length(nodes) < 1) {
 			return(NA)
 		}
-		
-		# Get the latest matching ships
-		shipCode <- xml_text(tail(nodes,1))
-		
+
+		# Get the latest matching ship code
+		xx <- xml_text(nodes)
+		yy <- as.data.frame(list(code = xx[seq(xx) %% 2 == 1], date = xx[seq(xx) %% 2 == 0]), stringsAsFactors = FALSE)
+		shipCode <- head(yy[order(as.Date(yy$date), decreasing = TRUE), "code"], 1)
+
 		return(shipCode)
 	}
 	
