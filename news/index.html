@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.20</span>
       </span>
     </div>
 
@@ -108,6 +108,25 @@
       <small>Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="rstoxdata-v1020-2021-01-06" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.20">
+<a href="#rstoxdata-v1020-2021-01-06" class="anchor"></a>RstoxData v1.0.20 (2021-01-06)<small> Unreleased </small>
+</h1>
+<ul>
+<li>
+<code>getICESShipCode</code>: improve ship conversion by removing the deprecated entries and sorting.</li>
+<li>
+<code>ICESDatras</code>: remove reference to SurveyName parameter.</li>
+<li>Move <code>readr</code> to suggests.</li>
+<li>Made <code>compareICES()</code> robust to missing internet connection.</li>
+<li>
+<code>ICESDatras</code> returning matrix to be written as csv by <code>RstoxFramework::runProcess</code>.</li>
+<li>Cleaned up translations using vocabulary for ICES data.</li>
+<li>Fixed bug with DateTime in <code><a href="../reference/StoxAcoustic.html">StoxAcoustic()</a></code>.</li>
+<li>Added <code>backwardCompatibility</code> and removed <code>NumberOfCores</code>.</li>
+<li>Refactored the functions for writing ICESBiotic and ICESAcoustic files to include NMDBioticToICESBiotic() and to use similar methods.</li>
+</ul>
+</div>
     <div id="rstoxdata-v1017-2020-11-23" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.17">
 <a href="#rstoxdata-v1017-2020-11-23" class="anchor"></a>RstoxData v1.0.17 (2020-11-23)<small> 2020-11-23 </small>
