@@ -440,7 +440,7 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 			fileToWriteDupDataTo <- tempfile()
 			data.table::fwrite(dupData, fileToWriteDupDataTo)
 			
-			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". This may be due to different files with the same keys, e.g. if different acoustic instruments are stored in different files. In such a case the order of the files is crucial, as only the information from the first file is kept. If not different files, then duplicated keys may be an error. To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
+			#warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". This may be due to different files with the same keys, e.g. if different acoustic instruments are stored in different files. In such a case the order of the files is crucial, as only the information from the first file is kept. If not different files, then duplicated keys may be an error. To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
 			#rowsToKeep <- !duplicatedKeys
 			StoxData[[tableName]] <- StoxData[[tableName]][!duplicatedKeys, ]
 		}

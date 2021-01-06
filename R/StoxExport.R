@@ -354,14 +354,14 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 #' @export
 ICESDatras <- function(
 	BioticData, 
-	SurveyName = "NONE", 
+	#SurveyName = "NONE", 
 	AddStationType = NA_character_
 ) {
 
 	ICESDatrasData <- lapply(
   	BioticData, 
   	ICESDatrasOne, 
-  	SurveyName = SurveyName,
+  	#SurveyName = SurveyName,
   	AddStationType = AddStationType
   )
 
@@ -371,7 +371,7 @@ ICESDatras <- function(
 
 ICESDatrasOne <- function(
 	BioticDataOne,
-	SurveyName,
+	#SurveyName,
 	AddStationType
 ) {
 	# Check input is a NMD Biotic v3 data
@@ -535,7 +535,7 @@ ICESDatrasOne <- function(
 	
 	# Make HH records and filter only valid stationtype
 	finalHH[, `:=`(
-		"SurveyName" = SurveyName,
+		#"SurveyName" = SurveyName,
 		"Quarter" = getQuarter(stationstartdate),
 		"Country" = getTSCountryByIOC(nation),
 		"Ship" = getICESShipCode(platformname),
@@ -605,7 +605,8 @@ ICESDatrasOne <- function(
 	)]
 	
 	HHraw <- data.table::copy(finalHH[is.na(stationtype) | stationtype %in% targetStationType, c(
-		"SurveyName", "Quarter", "Country", "Ship", "Gear",
+		#"SurveyName", "Quarter", "Country", "Ship", "Gear",
+		"Quarter", "Country", "Ship", "Gear",
 		"SweepLngt", "GearExp", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
 		"TimeShot", "Stratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
 		"StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BycSpecRecCode", "DataType", "Netopening",
@@ -728,7 +729,7 @@ ICESDatrasOne <- function(
 	finalHL[,`:=`(totalNo = noMeas * sampleFac, subFactor = sampleFac)]
 	
 	HLraw <- data.table::copy(finalHL[is.na(stationtype) | stationtype %in% targetStationType, .(
-		"SurveyName" = SurveyName,
+		#"SurveyName" = SurveyName,
 		"Quarter" = Quarter,
 		"Country" = Country,
 		"Ship" = Ship,
@@ -794,7 +795,7 @@ ICESDatrasOne <- function(
 	
 	CAraw <- data.table::copy(finalCA[is.na(stationtype) | stationtype %in% targetStationType, 
 		.(
-			"SurveyName" = SurveyName,
+			#"SurveyName" = SurveyName,
 			"Quarter" = Quarter,
 			"Country" = Country,
 			"Ship" = Ship,
