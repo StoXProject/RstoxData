@@ -361,7 +361,8 @@ ICESDatras <- function(
   	BioticData, 
   	ICESDatrasOne, 
   	#SurveyName = SurveyName,
-  	AddStationType = AddStationType
+  	AddStationType = AddStationType, 
+  	na = "-9"
   )
 
   return(ICESDatrasData)
@@ -371,7 +372,8 @@ ICESDatras <- function(
 ICESDatrasOne <- function(
 	BioticDataOne,
 	#SurveyName,
-	AddStationType
+	AddStationType,
+	na = "-9"
 ) {
 	# Check input is a NMD Biotic v3 data
 	if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
@@ -1002,8 +1004,14 @@ ICESDatrasOne <- function(
 	# Convert all tables to string matrix with header and record, and rbind:
 	ICESDatrasData <- convertToRecordTypeMatrix(ICESDatrasData)
 	ICESDatrasData <- expandWidth(ICESDatrasData)
+	
 	# Stack all matrices:
 	ICESDatrasData <- do.call(rbind, ICESDatrasData)
+	
+	# Replace NAs:
+	if(length(na)) {
+		ICESDatrasData[is.na(ICESDatrasData)] <- na
+	}
 	
 	
 	return(ICESDatrasData)
