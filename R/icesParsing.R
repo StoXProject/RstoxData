@@ -121,6 +121,7 @@ processSD <- function(vec, output){
 #'  \item{SI}{\code{\link[data.table]{data.table}} with SI records}
 #'  \item{SD}{\code{\link[data.table]{data.table}} with SD records}
 #' }
+#' @importFrom data.table as.data.table
 #' @export
 parseInterCatch <- function(file, encoding="UTF-8"){
   
