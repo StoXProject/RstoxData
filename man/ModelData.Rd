@@ -26,6 +26,12 @@ This RstoxData package produces the following StoX data types:
 \item{\code{\link{MergeStoxAcousticData}}}
 \item{\code{\link{LandingData}}}
 \item{\code{\link{StoxLandingData}}}
+\item{\code{\link{ICESAcousticData}}}
+\item{\code{\link{ICESBioticData}}}
+\item{\code{\link{ICESDatrasData}}}
+\item{\code{\link{ReportICESAcousticData}}}
+\item{\code{\link{ReportICESBioticData}}}
+\item{\code{\link{ReportICESDatrasData}}}
 }
 }
 \seealso{

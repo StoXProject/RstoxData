@@ -170,21 +170,41 @@ stoxFunctionAttributes <- list(
 	), 
 	
 	
-	ICESAcousticCSV = list(
+	ICESAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESAcousticCSVData"
+		functionOutputDataType = "ICESAcousticData"
 	), 
-	ICESBioticCSV = list(
+	ICESBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESBioticCSVData"
+		functionOutputDataType = "ICESBioticData"
 	), 
 	ICESDatras = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESDatrasData"
+	),
+	
+	ReportICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "report", 
+		functionOutputDataType = "ReportICESAcousticData"
+	), 
+	ReportICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "report", 
+		functionOutputDataType = "ReportICESBioticData"
+	), 
+	ReportICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "report", 
+		functionOutputDataType = "ReportICESDatrasData"
 	)
+	
+	
+	
+	
 )
 
 #' Define the process property formats:

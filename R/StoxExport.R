@@ -1,152 +1,171 @@
 
 
 
-#' Write ICES acoustic CSV format file
+#' Converts \code{AcousticData} to \code{ICESAcousticData}
 #'
-#' Given an \code{AcousticData} object, this function will write an ICES acoustic CSV file. Note that this function only supports
-#' \code{AcousticData} object that is created from reading an ICES acoustic XML file.
+#' Note that this function only supports \code{AcousticData} object that is created from reading an ICES acoustic XML file.
 #'
 #' @param AcousticData A \code{AcousticData} object from an ICES acoustic XML format file.
 #'
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
-ICESAcousticCSV <- function(AcousticData){
+ICESAcoustic <- function(AcousticData){
+	
+	ICESAcousticData <- lapply(
+		AcousticData, 
+		AcousticDataToICESAcousticOne
+	)
+	
+	return(ICESAcousticData)
+}
+
+
+
+AcousticDataToICESAcousticOne <- function(AcousticDataOne){
+	
+	if(AcousticDataOne$metadata$useXsd=='icesAcoustic'){
+		
+		ICESAcousticDataOne <- AcousticData_ICESToICESAcousticOne(AcousticDataOne)
+	}
+	else{
+		stop('StoX: only ices acoustic format is allowed')
+	}
+	
+	return(ICESAcousticDataOne)
+}
+
+
+AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
+	
+	# Make a copy as we are modifying by reference:
+	ICESAcousticDataOne <- data.table::copy(AcousticData_ICESOne)
+	
+	# Remove echo type, as this is not included in the CSV:
+	ICESAcousticDataOne$Data$EchoType<-NULL
+	
+	
+	independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
+	hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
+	tablesToKeep <- c(independentTables, hierarchicalTables)
+	
+	
+	# Add the Survey to the Cruise table, with a hack to get the last line (until it has been fixed so that only the code and not the value is present):
+	ICESAcousticDataOne$Cruise$Survey <- utils::tail(ICESAcousticDataOne$Survey$Code, 1)
+	
+	# Translate according to the vocabulary:
+	if(length(ICESAcousticDataOne$vocabulary)) {
+		vocabulary <- findVariablesMathcinigVocabulary(
+			vocabulary = ICESAcousticDataOne$vocabulary, 
+			data = ICESAcousticDataOne[tablesToKeep]
+		)
+		# Uniqueify since some columns (keys) are present in several tables:
+		vocabulary <- unique(vocabulary)
+		
+		ICESAcousticDataOne[tablesToKeep] <- translateVariables(
+			data = ICESAcousticDataOne[tablesToKeep], 
+			Translation = vocabulary, 
+			translate.keys = TRUE
+		)
+	}
+	
+	
+	#Check metadata towards ices definitions
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml',unique(ICESAcousticDataOne$Instrument$TransducerLocation))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml',unique(ICESAcousticDataOne$Instrument$TransducerBeamType))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml',unique(ICESAcousticDataOne$Calibration$AcquisitionMethod))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml',unique(ICESAcousticDataOne$Calibration$ProcessingMethod))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(ICESAcousticDataOne$DataAcquisition$SoftwareName))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml',unique(ICESAcousticDataOne$DataAcquisition$StoredDataFormat))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(ICESAcousticDataOne$DataAcquisition$SoftwareName))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml',unique(ICESAcousticDataOne$DataProcessing$SoftwareName))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml',unique(ICESAcousticDataOne$DataProcessing$TriwaveCorrection))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml',unique(ICESAcousticDataOne$DataProcessing$OnAxisGainUnit))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml',unique(ICESAcousticDataOne$Cruise$Country))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml',unique(ICESAcousticDataOne$Cruise$Platform))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml',unique(ICESAcousticDataOne$Cruise$Organisation))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(ICESAcousticDataOne$Survey$Code))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml',unique(ICESAcousticDataOne$Log$Origin))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml',unique(ICESAcousticDataOne$Log$Validity))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml',unique(ICESAcousticDataOne$Sample$PingAxisIntervalType))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml',unique(ICESAcousticDataOne$Sample$PingAxisIntervalUnit))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml',unique(ICESAcousticDataOne$Sample$PingAxisIntervalOrigin))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml',unique(ICESAcousticDataOne$Data$SaCategory))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml',unique(ICESAcousticDataOne$Data$Type))
+	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml',unique(ICESAcousticDataOne$Data$Unit))
+	
+	#### Rename columns to start with the table name:
+	# Rename the independent tables:
+	independentTablesColumnNames <- lapply(ICESAcousticDataOne[independentTables], names)
+	independentTablesNewColumnNames <- mapply(paste0, independentTables, independentTablesColumnNames)
+	mapply(
+		data.table::setnames, 
+		ICESAcousticDataOne[independentTables], 
+		old = independentTablesColumnNames, 
+		new = independentTablesNewColumnNames
+	)
+	
+	# Rename the hierarchical tables and take care of the keys:
+	renameToTableNameFirst(
+		ICESAcousticDataOne, 
+		tableNames = hierarchicalTables, 
+		formatType = "Acoustic"
+	)
+	
+	# Merge the Log, Sample and Data to make the merged Data table:
+	hierarchicalTablesSansCruise <- setdiff(hierarchicalTables, "Cruise")
+	LogSampleData <- RstoxData::mergeDataTables(ICESAcousticDataOne[hierarchicalTablesSansCruise], output.only.last = TRUE, all = TRUE)
+	LogSampleData <- unique(LogSampleData)
+	
+	# Create the output:
+	ICESAcousticDataOne <- c(
+		ICESAcousticDataOne[c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise")],
+		list(Data = LogSampleData)
+	)
+	
+	# Move ID columns last:
+	ICESAcousticDataOne <- lapply(ICESAcousticDataOne, moveIDsLast)
+	
+	return(ICESAcousticDataOne)
+}
+
+
+
+
+
+#' Reports \code{ICESAcousticData} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#'
+#' @param ICESAcousticData A \code{ICESAcousticData} object obtained from an ICES acoustic XML format file.
+#'
+#' @return List of string matrices in the ICES acoustic CSV format.
+#'
+#' @export
+#' 
+ReportICESAcoustic <- function(ICESAcousticData){
 	
 	ICESAcousticCSVData <- lapply(
-		AcousticData, 
-		ICESAcousticCSVOne
+		ICESAcousticData, 
+		ReportICESAcousticOne
 	)
 	
 	return(ICESAcousticCSVData)
 }
 
 
-ICESAcousticCSVOne <- function(AcousticDataOne){
+ReportICESAcousticOne <- function(ICESAcousticDataOne){
 	
-		if(AcousticDataOne$metadata$useXsd=='icesAcoustic'){
-			
-			# Remove echo type, as this is not included in the CSV:
-			AcousticDataOne$Data$EchoType<-NULL
-			
-			
-			independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
-			hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
-			tablesToKeep <- c(independentTables, hierarchicalTables)
-			
-			
-			# Add the Survey to the Cruise table, with a hack to get the last line (until it has been fixed so that only the code and not the value is present):
-			AcousticDataOne$Cruise$Survey <- utils::tail(AcousticDataOne$Survey$Code, 1)
-			
-			# Translate according to the vocabulary:
-			if(length(AcousticDataOne$vocabulary)) {
-				vocabulary <- findVariablesMathcinigVocabulary(
-					vocabulary = AcousticDataOne$vocabulary, 
-					data = AcousticDataOne[tablesToKeep]
-				)
-				# Uniqueify since some columns (keys) are present in several tables:
-				vocabulary <- unique(vocabulary)
-				
-				AcousticDataOne[tablesToKeep] <- translateVariables(
-					data = AcousticDataOne[tablesToKeep], 
-					Translation = vocabulary, 
-					translate.keys = TRUE
-				)
-			}
-			
-			
-			#Check metadata towards ices definitions
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml',unique(AcousticDataOne$Instrument$TransducerLocation))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml',unique(AcousticDataOne$Instrument$TransducerBeamType))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml',unique(AcousticDataOne$Calibration$AcquisitionMethod))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml',unique(AcousticDataOne$Calibration$ProcessingMethod))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(AcousticDataOne$DataAcquisition$SoftwareName))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml',unique(AcousticDataOne$DataAcquisition$StoredDataFormat))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(AcousticDataOne$DataAcquisition$SoftwareName))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml',unique(AcousticDataOne$DataProcessing$SoftwareName))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml',unique(AcousticDataOne$DataProcessing$TriwaveCorrection))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml',unique(AcousticDataOne$DataProcessing$OnAxisGainUnit))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml',unique(AcousticDataOne$Cruise$Country))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml',unique(AcousticDataOne$Cruise$Platform))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml',unique(AcousticDataOne$Cruise$Organisation))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(AcousticDataOne$Survey$Code))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml',unique(AcousticDataOne$Log$Origin))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml',unique(AcousticDataOne$Log$Validity))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml',unique(AcousticDataOne$Sample$PingAxisIntervalType))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml',unique(AcousticDataOne$Sample$PingAxisIntervalUnit))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml',unique(AcousticDataOne$Sample$PingAxisIntervalOrigin))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml',unique(AcousticDataOne$Data$SaCategory))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml',unique(AcousticDataOne$Data$Type))
-			compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml',unique(AcousticDataOne$Data$Unit))
-			
-			#### Rename columns to start with the table name:
-			# Rename the independent tables:
-			independentTablesColumnNames <- lapply(AcousticDataOne[independentTables], names)
-			independentTablesNewColumnNames <- mapply(paste0, independentTables, independentTablesColumnNames)
-			mapply(
-				data.table::setnames, 
-				AcousticDataOne[independentTables], 
-				old = independentTablesColumnNames, 
-				new = independentTablesNewColumnNames
-			)
-			
-			### # For the hierarchical tables create a table fo the original and new column names, but remove keys:
-			### hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
-			### hierarchicalTablesColumnNames <- lapply(AcousticDataOne[hierarchicalTables], names)
-			### hierarchicalTablesNewColumnNames <- mapply(paste0, hierarchicalTables, hierarchicalTablesColumnNames)
-			### hierarchicalNamesTable <- data.table::data.table(
-			### 	columnNames = unlist(hierarchicalTablesColumnNames), 
-			### 	newColumnNames = unlist(hierarchicalTablesNewColumnNames)
-			### )
-			### hierarchicalNamesTable <- hierarchicalNamesTable[!duplicated(columnNames), ]
-			### 
-			### 
-			### # In the sample table, rename simply by adding "ID" to the names of the columns referring to the independent tables (not starting with "Sample"):
-			### hierarchicalNamesTable[columnNames %in% independentTables, newColumnNames := paste0(columnNames, "ID")]
-			### 
-			### # Rename by reference:
-			### lapply(
-			### 	AcousticDataOne[hierarchicalTables], 
-			### 	data.table::setnames, 
-			### 	old = hierarchicalNamesTable$columnNames, 
-			### 	new = hierarchicalNamesTable$newColumnNames, 
-			### 	skip_absent = TRUE
-			### )
-			
-			renameToTableNameFirst(
-				AcousticDataOne, 
-				tableNames = hierarchicalTables, 
-				formatType = "Acoustic"
-			)
-			
-			# Merge the Log, Sample and Data to make the merged Data table:
-			hierarchicalTablesSansCruise <- setdiff(hierarchicalTables, "Cruise")
-			LogSampleData <- RstoxData::mergeDataTables(AcousticDataOne[hierarchicalTablesSansCruise], output.only.last = TRUE, all = TRUE)
-			LogSampleData <- unique(LogSampleData)
-			
-			# Create the output:
-			ICESAcousticCSV <- c(
-				AcousticDataOne[c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise")],
-				list(Data = LogSampleData)
-			)
-			
-			# Move ID columns last:
-			ICESAcousticCSV <- lapply(ICESAcousticCSV, moveIDsLast)
-
-			# Convert all tables to string with header and reccord, and rbind:
-			ICESAcousticCSV <- convertToHeaderRecordMatrix(ICESAcousticCSV)
-			ICESAcousticCSV <- expandWidth(ICESAcousticCSV)
-			
-			# Stack all matrices:
-			ICESAcousticCSV <- do.call(rbind, ICESAcousticCSV)
-			
-		}
-		else{
-			stop('StoX: only ices acoustic format is allowed')
-		}
+	# Convert all tables to string with header and reccord, and rbind:
+	ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne)
+	ICESAcousticCSVDataOne <- expandWidth(ICESAcousticCSVDataOne)
 	
-	return(ICESAcousticCSV)
+	# Stack all matrices:
+	ICESAcousticCSVDataOne <- do.call(rbind, ICESAcousticCSVDataOne)
+	
+	return(ICESAcousticCSVDataOne)
 }
+
+
+
 
 # Function to convert a list of ICESAcoustic data to a list of tables with Header and Reccord, fitting the ICES CSV formats:
 convertToHeaderRecordMatrix <- function(ICESData) {
@@ -224,6 +243,16 @@ expandWidth <- function(x) {
 	mapply(cbind, x, NAArrays, SIMPLIFY = FALSE)
 }
 
+
+
+
+
+
+
+
+
+
+
 #' Write ICES biotic CSV format file
 #'
 #' Given an \code{BioticData} object, this function will write an ICES biotic CSV file. Note that this function only supports
@@ -239,7 +268,7 @@ expandWidth <- function(x) {
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
-ICESBioticCSV <- function(
+ICESBiotic <- function(
 	BioticData, 
 	SurveyName = "NONE", 
 	Country = character(), 
@@ -248,53 +277,307 @@ ICESBioticCSV <- function(
 ) {
 
 	# Convert to ICESBiotic:
-	BioticData <- NMDBioticToICESBiotic(
+	ICESBioticData <- lapply(
 		BioticData, 
-		SurveyName = SurveyName, 
-		Country = Country, 
-		Organisation = Organisation, 
+		BioticDataToICESBioticOne, 
+		SurveyName = SurveyName,
+		Country = Country,
+		Organisation = Organisation,
 		AllowRemoveSpecies = AllowRemoveSpecies
-	) 
-		
-		
-		
-	ICESBioticCSVData <- lapply(
-		BioticData, 
-		ICESBioticToICESBioticCSVOne
 	)
 	
-	return(ICESBioticCSVData)
+	return(ICESBioticData)
 } 
 
 
 
 
 
-ICESBioticToICESBioticCSVOne <- function(BioticDataOne) {
+
+BioticDataToICESBioticOne <- function(
+	BioticDataOne, 
+	SurveyName = "NONE", 
+	Country = character(), 
+	Organisation = integer(), 
+	AllowRemoveSpecies = TRUE
+) {
 	
-	# Copy the data to prepare for using data.tables by referenec functions (set* and :=)
+	if(BioticDataOne$metadata$useXsd %in% "icesBiotic") {
+		ICESBioticDataOne <- BioticData_ICESToICESBioticOne(BioticDataOne)
+	}
+	else if(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1")) {
+		ICESBioticDataOne <- BioticData_NMDToICESBioticOne(
+			BioticDataOne, 
+			SurveyName = SurveyName,
+			Country = Country,
+			Organisation = Organisation,
+			AllowRemoveSpecies = AllowRemoveSpecies
+		)
+	}
+	else {
+		warning("StoX: Only NMD Biotic version 3 and 3.1 data can be converted to ICESBiotic (was ", BioticDataOne$metadata$useXsd, " for the file ", BioticDataOne$metadata$file, ". NA returned.")
+		return(NULL)
+	}
+	
+	
+	# Copy the data to prepare for using data.tables by reference functions (set* and :=)
 	hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
-	ICESBioticCSVData <- data.table::copy(BioticDataOne[hierarchicalTables])
+	ICESBioticDataOne <- ICESBioticDataOne[hierarchicalTables]
 	
 	# Create a table of the original and new column names, but remove keys:
 	renameToTableNameFirst(
-		ICESBioticCSVData, 
+		ICESBioticDataOne, 
 		tableNames = hierarchicalTables, 
 		formatType = "Biotic"
 	)
-
+	
 	# Move ID columns last:
-	ICESBioticCSVData <- lapply(ICESBioticCSVData, moveIDsLast)
+	ICESBioticDataOne <- lapply(ICESBioticDataOne, moveIDsLast)
 	
-	# Convert all tables to string matrix with header and record, and rbind:
-	ICESBioticCSVData <- convertToHeaderRecordMatrix(ICESBioticCSVData)
-	ICESBioticCSVData <- expandWidth(ICESBioticCSVData)
-	# Stack all matrices:
-	ICESBioticCSVData <- do.call(rbind, ICESBioticCSVData)
+	return(ICESBioticDataOne)
+}
+
+
+BioticData_ICESToICESBioticOne <- function(BioticData_ICESOne) {
 	
+	# Make a copy for safety:
+	BioticDataOne <- data.table::copy(BioticData_ICESOne)
+	
+	# Add the Survey to the Cruise table, with a hack to get the last line (until it has been fixed so that only the code and not the value is present):
+	BioticDataOne$Cruise$Survey <- utils::tail(BioticDataOne$Survey$Code, 1)
+	
+	
+	tablesToTranslate <- c("Cruise", "Haul", "Catch", "Biology")
+	
+	# Apply translations defined in the table 'vocabulary':
+	if(length(BioticDataOne$vocabulary)) {
+		vocabulary <- findVariablesMathcinigVocabulary(
+			vocabulary = BioticDataOne$vocabulary, 
+			data = BioticDataOne[tablesToTranslate]
+		)
+		# Uniqueify since some columns (keys) are present in several tables:
+		vocabulary <- unique(vocabulary)
+		
+		BioticDataOne[tablesToTranslate] <- translateVariables(
+			data = BioticDataOne[tablesToTranslate], 
+			Translation = vocabulary, 
+			translate.keys = TRUE
+		)
+	}
+	
+	
+	return(BioticDataOne)
+}
+
+BioticData_NMDToICESBioticOne <- function(
+	BioticData_NMDOne, 
+	SurveyName = "NONE", 
+	Country = character(), 
+	Organisation = integer(), 
+	AllowRemoveSpecies = TRUE
+) {
+	
+	cruiseRaw <- BioticData_NMDOne$mission
+	
+	Cruise <- cruiseRaw[, .(
+		Survey = ..SurveyName,
+		Country = ..Country,
+		Organisation = ..Organisation,
+		Platform = getICESShipCode(platformname),
+		StartDate = gsub("Z", "", missionstartdate),
+		EndDate = gsub("Z", "", missionstopdate),
+		LocalID = cruise
+	)]
+	
+	
+	haulRaw <- merge(cruiseRaw, BioticData_NMDOne$fishstation)
+	
+	Haul <- haulRaw[, .(
+		LocalID = cruise,
+		Gear = gear, # Is gear assumed formatted correctly in the input file???
+		Number = serialnumber,
+		StationName = station,
+		StartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
+		Duration = getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime),
+		Validity = getHaulVal(gearcondition, samplequality),
+		StartLatitude = latitudestart,
+		StartLongitude = longitudestart,
+		StopLatitude = latitudeend,
+		StopLongitude = longitudeend,
+		StatisticalRectangle = getICESrect(latitudestart, longitudestart),
+		MinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
+		MaxTrawlDepth = fishingdepthmax,
+		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
+		Distance = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
+		Netopening = verticaltrawlopening,
+		CodendMesh = NA,
+		SweepLength = getGOVSweepByEquipment(gear),
+		GearExceptions = NA, # Should this be set?
+		DoorType = trawldoortype,
+		WarpLength = wirelength,
+		WarpDiameter = wirediameter,
+		WarpDensity = wiredensity,
+		DoorSurface = trawldoorarea,
+		DoorWeight = trawldoorweight,
+		DoorSpread = trawldoorspread,
+		WingSpread = wingspread,
+		Buoyancy = NA,
+		KiteArea = NA,
+		GroundRopeWeight = NA,
+		Rigging = NA,
+		Tickler = NA,
+		HydrographicStationID = NA,
+		TowDirection = direction,
+		SpeedGround = NA,
+		SpeedWater = gearflow,
+		WindDirection = winddirection,
+		WindSpeed = windspeed,
+		SwellDirection = NA,
+		SwellHeight = NA,
+		LogDistance = NA,
+		Stratum = NA
+	)]
+	
+	catchRaw <- merge(BioticData_NMDOne$catchsample, haulRaw, by = intersect(names(BioticData_NMDOne$catchsample), names(haulRaw)))
+	
+	# We must filter records with aphia == NA
+	catchRaw <- catchRaw[!is.na(aphia)]
+	
+	Catch <- catchRaw[, .(
+		LocalID = cruise,
+		Gear = gear,
+		Number = serialnumber,
+		SpeciesCode = aphia,
+		SpeciesCategory = catchpartnumber,
+		DataType = "R", # Always raw for NMDBiotic
+		SpeciesValidity = ifelse(is.na(catchproducttype), 0, catchproducttype), # What is meant here. SpeciesValidity can only be 0 or 1, but catchproducttype has a range of values. Should it be ifelse(is.na(catchproducttype), 0, 1) ??
+		SpeciesCategoryNumber = catchcount,
+		WeightUnit = "kg",
+		SpeciesCategoryWeight = catchweight,
+		SpeciesSex = NA,
+		SubsampledNumber = lengthsamplecount,
+		SubsamplingFactor = catchcount / lengthsamplecount,
+		SubsampleWeight = lengthsampleweight,
+		LengthCode = NA, # Not relevant??
+		LengthClass = NA,
+		LengthType = "1", # Should not this be interpreted from the catchsample$lengthmeasurement ???
+		NumberAtLength = lengthsamplecount,
+		WeightAtLength = NA
+	)]
+	
+	# Logic for missing important records
+	Catch[is.na(SpeciesCategoryNumber) & is.na(SpeciesCategoryWeight) & !is.na(SubsampledNumber), SpeciesCategoryNumber := SubsampledNumber]
+	Catch[is.na(SpeciesCategoryNumber) & is.na(SpeciesCategoryWeight) & !is.na(SubsampleWeight),  SpeciesCategoryWeight := SubsampleWeight]
+	
+	# NA means that nothing is subsampled
+	Catch[!is.na(SpeciesCategoryWeight) & is.na(SubsampleWeight), SubsampleWeight := 0]
+	
+	# Set Haul without any catch as invalid hauls
+	'%ni%' <- Negate('%in%')
+	Haul[Number %ni% unique(Catch$Number), Validity := "I"]
+	
+	# Combine required tables for the Biology level
+	indRaw <- BioticData_NMDOne$individual
+	indRaw[is.na(preferredagereading), preferredagereading := 1]
+	
+	baseAge <- intersect(names(indRaw), names(BioticData_NMDOne$agedetermination))
+	indRaw <- merge(indRaw, BioticData_NMDOne$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
+	indRaw <- merge(catchRaw, indRaw, by = intersect(names(catchRaw), names(indRaw)))
+	
+	Biology <- indRaw[, .(
+		LocalID = cruise,
+		Gear = gear,
+		Number = serialnumber,
+		SpeciesCode = aphia,
+		SpeciesCategory = catchpartnumber,
+		StockCode = NA,
+		FishID = specimenid,
+		LengthCode = "mm",
+		LengthClass = length * 1000,
+		WeightUnit = 'gr',
+		IndividualWeight = individualweight * 1000,
+		IndividualSex = ifelse(is.na(sex), NA, ifelse(sex == "1", "F", "M")),
+		IndividualMaturity = getDATRASMaturity(getQuarter(stationstartdate), aphia, specialstage, maturationstage),
+		MaturityScale = "M6",
+		IndividualAge = age,
+		AgePlusGroup = NA,
+		AgeSource = "Otolith",
+		GeneticSamplingFlag = NA,
+		StomachSamplingFlag = NA,
+		ParasiteSamplingFlag = NA,
+		IndividualVertebraeCount = NA
+	)]
+	
+	if(AllowRemoveSpecies) {
+		# Check for valid aphias, mark other as invalid
+		xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+		validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
+		
+		notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
+		notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
+		
+		if(length(notPresentInCatch)) {
+			warning("StoX: The following species not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
+			
+		}
+		if(length(notPresentInBiology)) {
+			warning("StoX: The following species not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
+			
+		}
+		
+		Catch <- Catch[SpeciesCode %in% validCodes, ]
+		Biology <- Biology[SpeciesCode %in% validCodes, ]
+	} else {
+		message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
+		compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$SpeciesCode))
+	}
+	
+	ICESBioticCSV <- list(
+		Cruise = Cruise, 
+		Haul = Haul, 
+		Catch = Catch, 
+		Biology = Biology
+	)
+	
+	return(ICESBioticCSV)
+}
+
+
+
+
+#' Reports \code{ICESBioticData} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
+#'
+#' @param ICESBioticData A \code{ICESBioticData} object obtained from an ICES acoustic XML format file.
+#'
+#' @return List of string matrices in the ICES acoustic CSV format.
+#'
+#' @export
+ReportICESBiotic <- function(ICESBioticData){
+	
+	ICESBioticCSVData <- lapply(
+		ICESBioticData, 
+		ReportICESBioticOne
+	)
 	
 	return(ICESBioticCSVData)
 }
+
+
+ReportICESBioticOne <- function(ICESBioticDataOne){
+	
+	# Convert all tables to string with header and reccord, and rbind:
+	ICESBioticCSVDataOne <- convertToHeaderRecordMatrix(ICESBioticDataOne)
+	ICESBioticCSVDataOne <- expandWidth(ICESBioticCSVDataOne)
+	
+	# Stack all matrices:
+	ICESBioticCSVDataOne <- do.call(rbind, ICESBioticCSVDataOne)
+	
+	return(ICESBioticCSVDataOne)
+}
+
+
+
+
 
 
 # Function to add the table name to the column names, but not to the keys.
@@ -338,6 +621,15 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 }
 
 
+
+
+
+
+
+
+
+
+
 #' Write ICES DATRAS (NS-IBTS) format file
 #'
 #' Given an \code{BioticData} object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
@@ -358,13 +650,16 @@ ICESDatras <- function(
 ) {
 
 	ICESDatrasData <- lapply(
-  	BioticData, 
-  	ICESDatrasOne, 
-  	#SurveyName = SurveyName,
-  	AddStationType = AddStationType
-  )
+  		BioticData, 
+  		ICESDatrasOne, 
+  		#SurveyName = SurveyName,
+  		AddStationType = AddStationType
+  	)
 
-  return(ICESDatrasData)
+	# Remove empty data (from invavlid files, non NMDBiotic >= 3)
+	ICESDatrasData <- ICESDatrasData[lengths(ICESDatrasData) > 0]
+	
+	return(ICESDatrasData)
 }
 
 
@@ -373,6 +668,7 @@ ICESDatrasOne <- function(
 	#SurveyName,
 	AddStationType
 ) {
+	
 	# Check input is a NMD Biotic v3 data
 	if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
 		warning("StoX: Currently, only NMD Biotic version 3 and 3.1 data can be written by ICESDatras")
@@ -387,148 +683,9 @@ ICESDatrasOne <- function(
 	}
 	
 	## 1. HH ##
-	getTSCountryByIOC <- function(nation) {
-		cnvTbl <- c("58" = "NO")
-		
-		x <- cnvTbl[as.character(nation)]
-		x[is.null(x)] <- NA
-		return(x)
-	}
-	
 	'%ni%' <- Negate('%in%')
 	
-	getGearExp <- function(sweep, year, serialnumber, depth) {
-		
-		temp <-  as.data.table(cbind(sweep, year, serialnumber, depth))
-		temp[, res:= "S"]
-		
-		temp[year == 2011 & serialnumber > 24362 & depth >= 70 | year == 2012
-			 | year == 2011 & serialnumber >= 24135 & depth >= 70, res:="ST"]
-		
-		return (temp$res)
-	}
 	
-	getYear <- function(stationstartdate) {
-		format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%Y")
-	}
-	
-	getMonth <- function(stationstartdate) {
-		format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
-	}
-	
-	getDay <- function(stationstartdate) {
-		format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%d")
-	}
-	
-	getTimeShot <- function(stationstarttime) {
-		
-		timeshot <- function(y) {
-			if(length(y) == 3) {
-				return(paste0(y[1], y[2]))
-			} else {
-				return(NA)
-			}
-		}
-		
-		x <- strsplit(stationstarttime, ":")
-		
-		return(unlist(lapply(x, timeshot)))
-	}
-	
-	getQuarter <- function(stationstartdate) {
-		x <- format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
-		return(floor((as.numeric(x) - 1) / 3 + 1))
-	}
-	
-	# Adopted from: https://www.mathworks.com/matlabcentral/fileexchange/62180-sunriseset-lat-lng-utcoff-date-plot
-	getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longitudestart, UTCoff = 0) {
-		
-		deg2rad <- function(val) {
-			return(val * (pi / 180))
-		}
-		
-		rad2deg <- function(val) {
-			return(val * (180 / pi))
-		}
-		
-		datetime0 <- as.POSIXct("1990-12-30", tz = "GMT")
-		
-		uniqueDates <- unique(stationstartdate)
-		
-		nDaysA = as.numeric(difftime(uniqueDates, datetime0, units = "days")) # Number of days since 01/01
-		
-		nTimes = 24*3600                       # Number of seconds in the day
-		tArray = seq(0, 1, length = nTimes)
-		
-		ssTab <- list()
-		
-		for(idx in seq_len(length(nDaysA))) {
-			
-			nDays <- nDaysA[idx]
-			lat <- latitudestart[idx]
-			lng <- longitudestart[idx]
-			localdate <- as.POSIXct(uniqueDates[idx], tz = "GMT")
-			
-			# Compute
-			# Letters correspond to colums in the NOAA Excel
-			E = tArray
-			F = nDays + 2415018.5 + E - UTCoff / 24
-			G = (F - 2451545) / 36525
-			I = (280.46646 + G * (36000.76983 + G * 0.0003032)) %% 360
-			J = 357.52911 + G * (35999.05029 - 0.0001537 * G)
-			K = 0.016708634 - G * (0.000042037 + 0.0000001267 * G)
-			L = sin(deg2rad(J)) * (1.914602 - G * (0.004817 + 0.000014 * G))+sin(deg2rad(2 * J)) * (0.019993 - 0.000101*G) + sin(deg2rad(3 * J)) * 0.000289
-			M = I + L
-			P = M - 0.00569 - 0.00478 * sin(deg2rad(125.04 - 1934.136 * G))
-			Q = 23 + (26 + ((21.448 - G * (46.815 + G * (0.00059 - G * 0.001813)))) / 60) / 60
-			R = Q + 0.00256 * cos(deg2rad(125.04 - 1934.136 * G))
-			T = rad2deg(asin(sin(deg2rad(R)) * sin(deg2rad(P))))
-			U = tan(deg2rad(R/2)) * tan(deg2rad(R/2))
-			V = 4 * rad2deg(U * sin(2 * deg2rad(I))-2 * K * sin(deg2rad(J)) + 4 * K * U * sin(deg2rad(J)) *  cos(2*deg2rad(I)) - 0.5 * U * U * sin(4 * deg2rad(I)) - 1.25 * K * K * sin(2 * deg2rad(J)))
-			AB = (E * 1440 + V + 4 *lng - 60 * UTCoff) %% 1440
-			
-			
-			AC = ifelse (AB/4 < 0, AB/4 + 180, AB/4 - 180)
-			
-			AD = rad2deg(acos(sin(deg2rad(lat)) * sin(deg2rad(T)) + cos(deg2rad(lat)) * cos(deg2rad(T)) * cos(deg2rad(AC))))
-			
-			# Test whether we are in midnightsun: 
-			WArg <- cos(deg2rad(90.833)) / (cos(deg2rad(lat)) * cos(deg2rad(T))) - tan(deg2rad(lat)) * tan(deg2rad(T))
-			# Truncate WArg to [-1, 1], where below is midnightsun and above 1 is myrketid:
-			if(any(WArg < -1)) {
-				WArg[WArg < -1] <- -1
-			}
-			if(any(WArg > 1)) {
-				WArg[WArg > 1] <- 1
-			}
-			
-			W = rad2deg(acos(WArg))
-			X = (720 - 4 * lng - V + UTCoff * 60) * 60
-				
-			sunrise = which.min(abs(X - round(W * 4 * 60) - nTimes * tArray))
-			sunset = which.min(abs(X+round(W*4*60) - nTimes*tArray))
-			
-			sunrisetime = localdate + sunrise
-			sunsettime = localdate + sunset
-			
-			ssTab[[uniqueDates[idx]]] <- list(sunrise = sunrisetime, sunset = sunsettime)
-		}
-		
-		getDN <- function(x, ssTab) {
-			
-			y <- ssTab[[format(x, "%Y-%m-%dZ")]]
-			
-			if(x < y$sunrise || x >= y$sunset) {
-				return("N")
-			} else {
-				return("D")
-			}
-		}
-		
-		datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "GMT")
-		
-		return(unlist(lapply(datetime, getDN, ssTab)))
-	}
 	
 	finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation)
 	
@@ -644,24 +801,6 @@ ICESDatrasOne <- function(
 		return(temp$res)
 	}
 	
-	# Convert Length Measurement Type
-	# http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/lengthmeasurement?version=2.0
-	# http://vocab.ices.dk/?ref=1392
-	convLenMeasType <- function(LenMeasType) {
-		# Convert table
-		ct <- c(
-			"B" = 5,
-			"C" = 6,
-			"E" = 1,
-			"F" = 8,
-			"G" = 4,
-			"H" = 3,
-			"J" = 2,
-			"L" = 7,
-			"S" = 9
-		)
-		return(ct[LenMeasType])
-	}
 	
 	mergedHL[, SpecVal := getSpecVal(HaulVal, catchcount, lengthsamplecount, catchweight)]
 	
@@ -777,20 +916,6 @@ ICESDatrasOne <- function(
 		groupCA,  
 		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
 	finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
-	
-	# Convert aging structure source
-	# http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/agingstructure?version=2.0
-	# http://vocab.ices.dk/?ref=1507
-	convAgeSource <- function(AgeSource) {
-		# Convert table
-		ct <- c("1" = "scale",
-				"2" = "otolith",
-				"4" = "df-spine",
-				"6" = "spine",
-				"7" = "vertebra",
-				"8" = "caudal-thorn")
-		return(ct[AgeSource])
-	}
 	
 	CAraw <- data.table::copy(finalCA[is.na(stationtype) | stationtype %in% targetStationType, 
 		.(
@@ -990,6 +1115,7 @@ ICESDatrasOne <- function(
 		}
 	}
 	## WARN #4:
+	
 	# Use plus group for herring and mackerel individuals with age ring above 15
 	ca[ which((ca$SpecCode==127023 | ca$SpecCode==126417) & ca$AgeRings >= 15), c("PlusGr", "AgeRings")] <- list("+", 15)
 	
@@ -999,13 +1125,230 @@ ICESDatrasOne <- function(
 	#
 	ICESDatrasData <- list(HH = hh, HL = hl, CA = ca)
 	
-	# Convert all tables to string matrix with header and record, and rbind:
-	ICESDatrasData <- convertToRecordTypeMatrix(ICESDatrasData)
-	ICESDatrasData <- expandWidth(ICESDatrasData)
-	# Stack all matrices:
-	ICESDatrasData <- do.call(rbind, ICESDatrasData)
-	
-	
 	return(ICESDatrasData)
+}
+
+
+
+#' Reports \code{ICESDatrasData} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#'
+#' @param ICESDatrasData A \code{ICESDatrasData} object returned from \code{\link{ICESDatras}}.
+#'
+#' @return List of string matrices in the ICES Datras CSV format.
+#'
+#' @export
+ReportICESDatras <- function(ICESDatrasData){
+	
+	ICESDatrasCSVData <- lapply(
+		ICESDatrasData, 
+		ReportICESDatrasOne, 
+		na = "-9"
+	)
+	
+	return(ICESDatrasCSVData)
+}
+
+
+ReportICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
+	
+	# Convert all tables to string matrix with header and record, and rbind:
+	ICESDatrasCSVDataOne <- convertToRecordTypeMatrix(ICESDatrasDataOne)
+	
+	# Replace NAs:
+	if(length(na)) {
+		ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+	}
+	
+	ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne)
+	
+	# Stack all matrices:
+	ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
+	
+	
+	
+	return(ICESDatrasCSVDataOne)
+}
+
+
+
+
+
+
+
+
+
+
+getTSCountryByIOC <- function(nation) {
+	cnvTbl <- c("58" = "NO")
+	
+	x <- cnvTbl[as.character(nation)]
+	x[is.null(x)] <- NA
+	return(x)
+}
+
+getGearExp <- function(sweep, year, serialnumber, depth) {
+	
+	temp <-  as.data.table(cbind(sweep, year, serialnumber, depth))
+	temp[, res:= "S"]
+	
+	temp[year == 2011 & serialnumber > 24362 & depth >= 70 | year == 2012
+		 | year == 2011 & serialnumber >= 24135 & depth >= 70, res:="ST"]
+	
+	return (temp$res)
+}
+
+getYear <- function(stationstartdate) {
+	format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%Y")
+}
+
+getMonth <- function(stationstartdate) {
+	format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
+}
+
+getDay <- function(stationstartdate) {
+	format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%d")
+}
+
+getTimeShot <- function(stationstarttime) {
+	
+	timeshot <- function(y) {
+		if(length(y) == 3) {
+			return(paste0(y[1], y[2]))
+		} else {
+			return(NA)
+		}
+	}
+	
+	x <- strsplit(stationstarttime, ":")
+	
+	return(unlist(lapply(x, timeshot)))
+}
+
+getQuarter <- function(stationstartdate) {
+	x <- format(as.Date(stationstartdate, format="%Y-%m-%dZ"), "%m")
+	return(floor((as.numeric(x) - 1) / 3 + 1))
+}
+
+# Adopted from: https://www.mathworks.com/matlabcentral/fileexchange/62180-sunriseset-lat-lng-utcoff-date-plot
+getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longitudestart, UTCoff = 0) {
+	
+	deg2rad <- function(val) {
+		return(val * (pi / 180))
+	}
+	
+	rad2deg <- function(val) {
+		return(val * (180 / pi))
+	}
+	
+	datetime0 <- as.POSIXct("1990-12-30", tz = "GMT")
+	
+	uniqueDates <- unique(stationstartdate)
+	
+	nDaysA = as.numeric(difftime(uniqueDates, datetime0, units = "days")) # Number of days since 01/01
+	
+	nTimes = 24*3600                       # Number of seconds in the day
+	tArray = seq(0, 1, length = nTimes)
+	
+	ssTab <- list()
+	
+	for(idx in seq_len(length(nDaysA))) {
+		
+		nDays <- nDaysA[idx]
+		lat <- latitudestart[idx]
+		lng <- longitudestart[idx]
+		localdate <- as.POSIXct(uniqueDates[idx], tz = "GMT")
+		
+		# Compute
+		# Letters correspond to colums in the NOAA Excel
+		E = tArray
+		F = nDays + 2415018.5 + E - UTCoff / 24
+		G = (F - 2451545) / 36525
+		I = (280.46646 + G * (36000.76983 + G * 0.0003032)) %% 360
+		J = 357.52911 + G * (35999.05029 - 0.0001537 * G)
+		K = 0.016708634 - G * (0.000042037 + 0.0000001267 * G)
+		L = sin(deg2rad(J)) * (1.914602 - G * (0.004817 + 0.000014 * G))+sin(deg2rad(2 * J)) * (0.019993 - 0.000101*G) + sin(deg2rad(3 * J)) * 0.000289
+		M = I + L
+		P = M - 0.00569 - 0.00478 * sin(deg2rad(125.04 - 1934.136 * G))
+		Q = 23 + (26 + ((21.448 - G * (46.815 + G * (0.00059 - G * 0.001813)))) / 60) / 60
+		R = Q + 0.00256 * cos(deg2rad(125.04 - 1934.136 * G))
+		T = rad2deg(asin(sin(deg2rad(R)) * sin(deg2rad(P))))
+		U = tan(deg2rad(R/2)) * tan(deg2rad(R/2))
+		V = 4 * rad2deg(U * sin(2 * deg2rad(I))-2 * K * sin(deg2rad(J)) + 4 * K * U * sin(deg2rad(J)) *  cos(2*deg2rad(I)) - 0.5 * U * U * sin(4 * deg2rad(I)) - 1.25 * K * K * sin(2 * deg2rad(J)))
+		AB = (E * 1440 + V + 4 *lng - 60 * UTCoff) %% 1440
+		
+		
+		AC = ifelse (AB/4 < 0, AB/4 + 180, AB/4 - 180)
+		
+		AD = rad2deg(acos(sin(deg2rad(lat)) * sin(deg2rad(T)) + cos(deg2rad(lat)) * cos(deg2rad(T)) * cos(deg2rad(AC))))
+		
+		# Test whether we are in midnightsun: 
+		WArg <- cos(deg2rad(90.833)) / (cos(deg2rad(lat)) * cos(deg2rad(T))) - tan(deg2rad(lat)) * tan(deg2rad(T))
+		# Truncate WArg to [-1, 1], where below is midnightsun and above 1 is myrketid:
+		if(any(WArg < -1)) {
+			WArg[WArg < -1] <- -1
+		}
+		if(any(WArg > 1)) {
+			WArg[WArg > 1] <- 1
+		}
+		
+		W = rad2deg(acos(WArg))
+		X = (720 - 4 * lng - V + UTCoff * 60) * 60
+		
+		sunrise = which.min(abs(X - round(W * 4 * 60) - nTimes * tArray))
+		sunset = which.min(abs(X+round(W*4*60) - nTimes*tArray))
+		
+		sunrisetime = localdate + sunrise
+		sunsettime = localdate + sunset
+		
+		ssTab[[uniqueDates[idx]]] <- list(sunrise = sunrisetime, sunset = sunsettime)
+	}
+	
+	getDN <- function(x, ssTab) {
+		
+		y <- ssTab[[format(x, "%Y-%m-%dZ")]]
+		
+		if(x < y$sunrise || x >= y$sunset) {
+			return("N")
+		} else {
+			return("D")
+		}
+	}
+	
+	datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "GMT")
+	
+	return(unlist(lapply(datetime, getDN, ssTab)))
+}
+
+# Convert Length Measurement Type
+# http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/lengthmeasurement?version=2.0
+# http://vocab.ices.dk/?ref=1392
+convLenMeasType <- function(LenMeasType) {
+	# Convert table
+	ct <- c(
+		"B" = 5,
+		"C" = 6,
+		"E" = 1,
+		"F" = 8,
+		"G" = 4,
+		"H" = 3,
+		"J" = 2,
+		"L" = 7,
+		"S" = 9
+	)
+	return(ct[LenMeasType])
+}
+
+# Convert aging structure source
+# http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/agingstructure?version=2.0
+# http://vocab.ices.dk/?ref=1507
+convAgeSource <- function(AgeSource) {
+	# Convert table
+	ct <- c("1" = "scale",
+			"2" = "otolith",
+			"4" = "df-spine",
+			"6" = "spine",
+			"7" = "vertebra",
+			"8" = "caudal-thorn")
+	return(ct[AgeSource])
 }
 
