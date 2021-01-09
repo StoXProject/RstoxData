@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LandingData — LandingData • RstoxData</title>
+<title>StoX data type ICESAcousticData — ICESAcousticData • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="LandingData — LandingData" />
-<meta property="og:description" content="LandingData" />
+<meta property="og:title" content="StoX data type ICESAcousticData — ICESAcousticData" />
+<meta property="og:description" content="Acoustic data stored in the ICESAcoustic (CSV) format." />
 
 
 
@@ -107,31 +107,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>LandingData</h1>
+    <h1>StoX data type ICESAcousticData</h1>
     <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>LandingData.Rd</code></div>
+    <div class="hidden name"><code>ICESAcousticData.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>LandingData</p>
+    <p>Acoustic data stored in the ICESAcoustic (CSV) format.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="data"><a class="anchor" href="#data"></a>Data</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-
-<p>One entry 'Seddellinje' is one line of a sales-note or landing-note. 
-These are issued as fish is landed, and a complete set of these for a period
-can be considered a census of all first hand sale of fish sold from Norwegian vessels.</p>
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    
-
-<p>list() of <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> 
-representing the different complexTypes in namespace http://www.imr.no/formats/landinger/v2
-For ease of merging: all top level attributes are repeated for all tables. And all line-identifying variables are included as top-level attributes.</p>
+    <p>This StoX data type is produced by <code><a href='ICESAcoustic.html'>ICESAcoustic</a></code>, and contains one list per input biotic file read to produec the input to <code><a href='ICESAcoustic.html'>ICESAcoustic</a></code>, each holding the tables Instrument, Calibration, DataAcquisition, DataProcessing, Cruise and Data (here Data is a table merged from Log, Sample and Data of the ICESAocustic xml format). Each file read to produec the input to <code><a href='ICESAcoustic.html'>ICESAcoustic</a></code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>

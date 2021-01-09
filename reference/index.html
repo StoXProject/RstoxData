@@ -44,6 +44,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -71,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.21</span>
       </span>
     </div>
 
@@ -190,21 +192,39 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="ICESAcousticCSV.html">ICESAcousticCSV()</a></code> </p>
+          <p><code><a href="ICESAcoustic.html">ICESAcoustic()</a></code> </p>
         </td>
-        <td><p>Write ICES acoustic CSV format file</p></td>
+        <td><p>Converts <code>AcousticData</code> to <code>ICESAcousticData</code></p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="ICESBioticCSV.html">ICESBioticCSV()</a></code> </p>
+          <p><code><a href="ICESAcousticData.html">ICESAcousticData</a></code> </p>
+        </td>
+        <td><p>StoX data type ICESAcousticData</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ICESBiotic.html">ICESBiotic()</a></code> </p>
         </td>
         <td><p>Write ICES biotic CSV format file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ICESBioticData.html">ICESBioticData</a></code> </p>
+        </td>
+        <td><p>StoX data type ICESBioticData</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="ICESDatras.html">ICESDatras()</a></code> </p>
         </td>
         <td><p>Write ICES DATRAS (NS-IBTS) format file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ICESDatrasData.html">ICESDatrasData</a></code> </p>
+        </td>
+        <td><p>StoX data type ICESDatrasData</p></td>
       </tr><tr>
         
         <td>
@@ -244,12 +264,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="NMDBioticToICESBiotic.html">NMDBioticToICESBiotic()</a></code> </p>
-        </td>
-        <td><p>Convert BioticData to ICESBiotic form.</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="ProcessData.html">ProcessData</a></code> </p>
         </td>
         <td><p>Process data used in estimation models in StoX</p></td>
@@ -271,6 +285,42 @@
           <p><code><a href="RedefineStoxBiotic.html">RedefineStoxBiotic()</a></code> </p>
         </td>
         <td><p>Redefine StoxBioticData variables by data from BioticData</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ReportICESAcoustic.html">ReportICESAcoustic()</a></code> </p>
+        </td>
+        <td><p>Reports <code>ICESAcousticData</code> to a csv file for each input acoustic file used to create the <code>ICESAcousticData</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ReportICESAcousticData.html">ReportICESAcousticData</a></code> </p>
+        </td>
+        <td><p>Rbind <code>ICESAcousticData</code> to a string matrix.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ReportICESBiotic.html">ReportICESBiotic()</a></code> </p>
+        </td>
+        <td><p>Reports <code>ICESBioticData</code> to a csv file for each input acoustic file used to create the <code>ICESBioticData</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ReportICESBioticData.html">ReportICESBioticData</a></code> </p>
+        </td>
+        <td><p>Rbind <code>ICESBioticData</code> to a string matrix.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ReportICESDatras.html">ReportICESDatras()</a></code> </p>
+        </td>
+        <td><p>Reports <code>ICESDatrasData</code> to a csv file for each input acoustic file used to create the <code>ICESDatras</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ReportICESDatrasData.html">ReportICESDatrasData</a></code> </p>
+        </td>
+        <td><p>Rbind <code>ICESDatrasData</code> to a string matrix.</p></td>
       </tr><tr>
         
         <td>

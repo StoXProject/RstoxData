@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LandingData — LandingData • RstoxData</title>
+<title>Reports ICESBioticData to a csv file for each input acoustic file used to create the ICESBioticData — ReportICESBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="LandingData — LandingData" />
-<meta property="og:description" content="LandingData" />
+<meta property="og:title" content="Reports ICESBioticData to a csv file for each input acoustic file used to create the ICESBioticData — ReportICESBiotic" />
+<meta property="og:description" content="Reports ICESBioticData to a csv file for each input acoustic file used to create the ICESBioticData" />
 
 
 
@@ -107,34 +107,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>LandingData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>LandingData.Rd</code></div>
+    <h1>Reports <code>ICESBioticData</code> to a csv file for each input acoustic file used to create the <code><a href='ICESBioticData.html'>ICESBioticData</a></code></h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxExport.R'><code>R/StoxExport.R</code></a></small>
+    <div class="hidden name"><code>ReportICESBiotic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>LandingData</p>
+    <p>Reports <code>ICESBioticData</code> to a csv file for each input acoustic file used to create the <code><a href='ICESBioticData.html'>ICESBioticData</a></code></p>
     </div>
 
+    <pre class="usage"><span class='fu'>ReportICESBiotic</span><span class='op'>(</span><span class='va'>ICESBioticData</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>ICESBioticData</th>
+      <td><p>A <code>ICESBioticData</code> object obtained from an ICES acoustic XML format file.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="data"><a class="anchor" href="#data"></a>Data</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
-<p>One entry 'Seddellinje' is one line of a sales-note or landing-note. 
-These are issued as fish is landed, and a complete set of these for a period
-can be considered a census of all first hand sale of fish sold from Norwegian vessels.</p>
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    
-
-<p>list() of <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> 
-representing the different complexTypes in namespace http://www.imr.no/formats/landinger/v2
-For ease of merging: all top level attributes are repeated for all tables. And all line-identifying variables are included as top-level attributes.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
+    <p>List of string matrices in the ICES acoustic CSV format.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
