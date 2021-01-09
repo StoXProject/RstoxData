@@ -62,6 +62,12 @@ NULL
 #' \item{\code{\link{MergeStoxAcousticData}}}
 #' \item{\code{\link{LandingData}}}
 #' \item{\code{\link{StoxLandingData}}}
+#' \item{\code{\link{ICESAcousticData}}}
+#' \item{\code{\link{ICESBioticData}}}
+#' \item{\code{\link{ICESDatrasData}}}
+#' \item{\code{\link{ReportICESAcousticData}}}
+#' \item{\code{\link{ReportICESBioticData}}}
+#' \item{\code{\link{ReportICESDatrasData}}}
 #' }
 #' 
 #' @param BioticData \code{\link{BioticData}}.
@@ -234,6 +240,99 @@ NULL
 #' 
 #' @name StoxLandingData
 #'
+NULL
+
+
+##################################################
+##################################################
+#' StoX data type ICESAcousticData
+#' 
+#' Acoustic data stored in the ICESAcoustic (CSV) format.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{ICESAcoustic}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESAcoustic}}, each holding the tables Instrument, Calibration, DataAcquisition, DataProcessing, Cruise and Data (here Data is a table merged from Log, Sample and Data of the ICESAocustic xml format). Each file read to produec the input to \code{\link{ICESAcoustic}} 
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ICESAcousticData
+#' 
+NULL
+
+##################################################
+##################################################
+#' StoX data type ICESBioticData
+#' 
+#' Biotic data stored in the ICESBiotic (CSV) format.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{ICESBiotic}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESBiotic}}, each holding the tables Cruise, Haul, Catch and Biology, in that hierarchical order.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ICESBioticData
+#' 
+NULL
+
+##################################################
+##################################################
+#' StoX data type ICESDatrasData
+#' 
+#' Biotic data stored in the ICESDatras (CSV) format.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{ICESDatras}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESDatras}}, each holding the tables HH, HL and CA, in that hierarchical order.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ICESDatrasData
+#' 
+NULL
+
+
+
+##################################################
+##################################################
+#' Rbind \code{\link{ICESAcousticData}} to a string matrix. 
+#' 
+#' The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
+#' 
+#' @details
+#' The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are inclcuded as header rows.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ReportICESAcousticData
+#' 
+NULL
+
+##################################################
+##################################################
+#' Rbind \code{\link{ICESBioticData}} to a string matrix. 
+#' 
+#' The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
+#' 
+#' @details
+#' The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are inclcuded as header rows.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ReportICESBioticData
+#' 
+NULL
+
+##################################################
+##################################################
+#' Rbind \code{\link{ICESDatrasData}} to a string matrix. 
+#' 
+#' The output of this function is suited for submission to \url{https://www.ices.dk/data/data-portals/Pages/DATRAS.aspx}.
+#' 
+#' @details
+#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatrasData}}, where column names are inclcuded as header rows.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ReportICESDatrasData
+#' 
 NULL
 
 

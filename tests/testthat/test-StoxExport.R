@@ -21,12 +21,16 @@ expect_equal(dim(icesbiotic[[1]]), c(96, 45))
 context("test-StoxExport: ICES acoustic export #1")
 example <- system.file("testresources", "ICES_Acoustic_1.xml", package="RstoxData")
 data <- ReadAcoustic(example)
-icesacoustic1 <- RstoxData::ICESAcousticCSV(data)
-expect_equal(dim(icesacoustic1[[1]]), c(19, 25))
+ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
+ICESAcousticCSV2 <- RstoxData::ReportICESAcoustic(ICESAcoustic2)
+expect_equal(dim(ICESAcousticCSV2[[1]]), c(19, 25))
+
+
 
 context("test-StoxExport: ICES acoustic export #2")
 example <- system.file("testresources", "ICES_Acoustic_2.xml", package="RstoxData")
 data <- ReadAcoustic(example)
-icesacoustic2 <- RstoxData::ICESAcousticCSV(data)
-expect_equal(dim(icesacoustic2[[1]]), c(23, 25))
+ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
+ICESAcousticCSV2 <- RstoxData::ReportICESAcoustic(ICESAcoustic2)
+expect_equal(dim(ICESAcousticCSV2[[1]]), c(23, 25))
 
