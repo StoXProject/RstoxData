@@ -1130,11 +1130,11 @@ ICESDatrasOne <- function(
 
 
 
-#' Reports \code{ICESAcousticData} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#' Reports \code{ICESDatrasData} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 #'
-#' @param ICESAcousticData A \code{ICESAcousticData} object obtained from an ICES acoustic XML format file.
+#' @param ICESDatrasData A \code{ICESDatrasData} object returned from \code{\link{ICESDatras}}.
 #'
-#' @return List of string matrices in the ICES acoustic CSV format.
+#' @return List of string matrices in the ICES Datras CSV format.
 #'
 #' @export
 ReportICESDatras <- function(ICESDatrasData){
