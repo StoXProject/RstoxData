@@ -2,16 +2,16 @@
 % Please edit documentation in R/StoxExport.R
 \name{ReportICESBiotic}
 \alias{ReportICESBiotic}
-\title{Reports \code{ICESBioticData} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}}
+\title{Reports \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}}
 \usage{
 ReportICESBiotic(ICESBioticData)
 }
 \arguments{
-\item{ICESBioticData}{A \code{ICESBioticData} object obtained from an ICES acoustic XML format file.}
+\item{ICESBioticData}{A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.}
 }
 \value{
 List of string matrices in the ICES acoustic CSV format.
 }
 \description{
-Reports \code{ICESBioticData} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
+Reports \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
 }
