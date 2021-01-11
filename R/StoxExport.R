@@ -133,9 +133,9 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 
 
 
-#' Reports \code{ICESAcousticData} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#' Reports \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
 #'
-#' @param ICESAcousticData A \code{ICESAcousticData} object obtained from an ICES acoustic XML format file.
+#' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
 #'
 #' @return List of string matrices in the ICES acoustic CSV format.
 #'
@@ -232,14 +232,14 @@ moveIDsLast <- function(x) {
 }
 
 
-expandWidth <- function(x) {
+expandWidth <- function(x, na = NA) {
 	# Get the number of columns and rows:
 	ncols <- sapply(x, ncol)
 	nrows <- sapply(x, nrow)
 	# Create matrices of NAs with dimension so that added to the original data we end up with identical number of rows:
 	dims <- cbind(nrows, max(ncols) - ncols)
 	dimsList <- split(dims, seq_along(x))
-	NAArrays <- mapply(array, dim = dimsList, SIMPLIFY = FALSE)
+	NAArrays <- mapply(array, dim = dimsList, SIMPLIFY = FALSE, MoreArgs = list(data = na))
 	mapply(cbind, x, NAArrays, SIMPLIFY = FALSE)
 }
 
@@ -545,9 +545,9 @@ BioticData_NMDToICESBioticOne <- function(
 
 
 
-#' Reports \code{ICESBioticData} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
+#' Reports \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
 #'
-#' @param ICESBioticData A \code{ICESBioticData} object obtained from an ICES acoustic XML format file.
+#' @param ICESBioticData A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.
 #'
 #' @return List of string matrices in the ICES acoustic CSV format.
 #'
@@ -1130,9 +1130,9 @@ ICESDatrasOne <- function(
 
 
 
-#' Reports \code{ICESDatrasData} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#' Reports \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 #'
-#' @param ICESDatrasData A \code{ICESDatrasData} object returned from \code{\link{ICESDatras}}.
+#' @param ICESDatrasData A \code{\link{ICESDatrasData}} object returned from \code{\link{ICESDatras}}.
 #'
 #' @return List of string matrices in the ICES Datras CSV format.
 #'
@@ -1159,12 +1159,16 @@ ReportICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
 		ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, function(x) {x[is.na(x)] <- na; x})
 	}
 	
-	ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne)
+	#ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
 	
 	# Stack all matrices:
-	ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
+	#ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
 	
+	# Convert each line of each table to comma separated:
+	ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, apply, 1, paste, collapse = ",")
 	
+	# Join to one vector, to be written to one file:
+	ICESDatrasCSVDataOne <- unlist(ICESDatrasCSVDataOne)
 	
 	return(ICESDatrasCSVDataOne)
 }
