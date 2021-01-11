@@ -11,7 +11,7 @@
 #'  adherence to the standardization is not enforced by this function, unless option 'strict' is selected.
 #'  If column names does not match specification, but data is otherwise parse-able, a warning will be issued.
 #'  
-#'  If 'strict' is not selection, data types may be inferred from data.
+#'  If the parameter 'strict' is not TRUE, data types may be inferred from data.
 #'  The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to \code{\link[readr]{read_delim}})
 #' @param file path to file with LSS landings
 #' @param encoding encoding for 'file'
