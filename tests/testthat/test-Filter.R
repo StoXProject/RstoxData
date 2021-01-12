@@ -122,10 +122,10 @@ Landings <- ReadLanding(landingfile)
 
 filterExpressionL <- list()
 filterExpressionL$`landing.xml`$Fangstdata <- c(
-  'Hovedområde_kode %in% c("37", "08")'
+  'Hovedomr\u00E5de_kode %in% c("37", "08")'
 )
 filteredL <- FilterLanding(Landings, filterExpressionL)
-expect_equal(nrow(filteredL$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata$Hovedområde_kode %in% c("37", "08")))
+expect_equal(nrow(filteredL$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata[["Hovedomr\u00E5de_kode"]] %in% c("37", "08")))
 expect_equal(nrow(filteredL$landing.xml$Art), nrow(Landings$landing.xml$Art))
 expect_lt(nrow(filteredL$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
 
@@ -136,7 +136,7 @@ filterExpressionSL$landings <- c(
 
 
 filteredLprop <- FilterLanding(Landings, filterExpressionL, FilterUpwards = TRUE)
-expect_equal(nrow(filteredLprop$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata$Hovedområde_kode %in% c("37", "08")))
+expect_equal(nrow(filteredLprop$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata[["Hovedomr\u00E5de_kode"]] %in% c("37", "08")))
 expect_lt(nrow(filteredLprop$landing.xml$Art), nrow(Landings$landing.xml$Art))
 expect_lt(nrow(filteredLprop$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
 
