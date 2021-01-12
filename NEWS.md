@@ -9,6 +9,7 @@
 * Fixed bug with DateTime in `StoxAcoustic()`.
 * Added `backwardCompatibility` and removed `NumberOfCores`.
 * Refactored the functions for writing ICESBiotic and ICESAcoustic files to include NMDBioticToICESBiotic() and to use similar methods.
+* Add reporting functions for ICES exports (`ReportICES*()`).
 * Add Intercatch data parser (`parseInterCatch()`).
 
 # RstoxData v1.0.17 (2020-11-23)
