@@ -636,7 +636,6 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 #' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
-#' @param AddStationType additional StationType to be included. By default only fish stations with StationType == NA are included.
 #'
 #' @return List of data.table objects in the ICES DATRAS CSV format.
 #'
@@ -644,16 +643,12 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 #' @importFrom data.table copy
 #' @export
 ICESDatras <- function(
-	BioticData, 
-	#SurveyName = "NONE", 
-	AddStationType = NA_character_
+	BioticData
 ) {
 
 	ICESDatrasData <- lapply(
   		BioticData, 
-  		ICESDatrasOne, 
-  		#SurveyName = SurveyName,
-  		AddStationType = AddStationType
+  		ICESDatrasOne
   	)
 
 	# Remove empty data (from invavlid files, non NMDBiotic >= 3)
@@ -664,9 +659,7 @@ ICESDatras <- function(
 
 
 ICESDatrasOne <- function(
-	BioticDataOne,
-	#SurveyName,
-	AddStationType
+	BioticDataOne
 ) {
 	
 	# Check input is a NMD Biotic v3 data
@@ -674,24 +667,14 @@ ICESDatrasOne <- function(
 		warning("StoX: Currently, only NMD Biotic version 3 and 3.1 data can be written by ICESDatras")
 		return(matrix(1, 0, 0))
 	}
-	
-	# Construct user-defined additional stations (default to NA stationtypes)
-	if(length(AddStationType) > 0 && !all(is.na(AddStationType))) {
-		targetStationType <- AddStationType
-	} else {
-		targetStationType <- c()
-	}
-	
+
 	## 1. HH ##
 	'%ni%' <- Negate('%in%')
-	
-	
-	
+
 	finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation)
-	
-	# Make HH records and filter only valid stationtype
+
+	# Make HH records
 	finalHH[, `:=`(
-		#"SurveyName" = SurveyName,
 		"Quarter" = getQuarter(stationstartdate),
 		"Country" = getTSCountryByIOC(nation),
 		"Ship" = getICESShipCode(platformname),
@@ -760,8 +743,7 @@ ICESDatrasOne <- function(
 		"MaxTrawlDepth" = NA
 	)]
 	
-	HHraw <- data.table::copy(finalHH[is.na(stationtype) | stationtype %in% targetStationType, c(
-		#"SurveyName", "Quarter", "Country", "Ship", "Gear",
+	HHraw <- data.table::copy(finalHH[, c(
 		"Quarter", "Country", "Ship", "Gear",
 		"SweepLngt", "GearExp", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
 		"TimeShot", "Stratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
@@ -866,8 +848,7 @@ ICESDatrasOne <- function(
 	finalHL[,`:=`(noMeas = sum(lsCountTot)), by = groupHL]
 	finalHL[,`:=`(totalNo = noMeas * sampleFac, subFactor = sampleFac)]
 	
-	HLraw <- data.table::copy(finalHL[is.na(stationtype) | stationtype %in% targetStationType, .(
-		#"SurveyName" = SurveyName,
+	HLraw <- data.table::copy(finalHL[, .(
 		"Quarter" = Quarter,
 		"Country" = Country,
 		"Ship" = Ship,
@@ -917,9 +898,8 @@ ICESDatrasOne <- function(
 		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
 	finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
 	
-	CAraw <- data.table::copy(finalCA[is.na(stationtype) | stationtype %in% targetStationType, 
+	CAraw <- data.table::copy(finalCA[,
 		.(
-			#"SurveyName" = SurveyName,
 			"Quarter" = Quarter,
 			"Country" = Country,
 			"Ship" = Ship,

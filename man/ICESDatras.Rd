@@ -4,12 +4,10 @@
 \alias{ICESDatras}
 \title{Write ICES DATRAS (NS-IBTS) format file}
 \usage{
-ICESDatras(BioticData, AddStationType = NA_character_)
+ICESDatras(BioticData)
 }
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
-
-\item{AddStationType}{additional StationType to be included. By default only fish stations with StationType == NA are included.}
 }
 \value{
 List of data.table objects in the ICES DATRAS CSV format.
