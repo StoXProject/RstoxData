@@ -95,7 +95,7 @@ stoxFunctionAttributes <- list(
 	),
 	
 	# Filter LandingData:
-	FilterStoxLanding = list(
+	FilterLanding = list(
 	  functionType = "modelData", 
 	  functionCategory = "baseline", 
 	  functionOutputDataType = "LandingData", 

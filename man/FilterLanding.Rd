@@ -2,12 +2,12 @@
 % Please edit documentation in R/Filter.R
 \name{FilterLanding}
 \alias{FilterLanding}
-\title{Filter Landing data}
+\title{Filter LandingData}
 \usage{
-FilterLanding(Landing, FilterExpression, FilterUpwards = FALSE)
+FilterLanding(LandingData, FilterExpression, FilterUpwards = FALSE)
 }
 \arguments{
-\item{Landing}{Input \code{\link{Landing}} data.}
+\item{LandingData}{Input \code{\link{LandingData}} data.}
 
 \item{FilterExpression}{Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.}
 

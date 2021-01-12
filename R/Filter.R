@@ -309,11 +309,11 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
   )
 }
 
-#' Filter Landing data
+#' Filter LandingData
 #'
 #' Filters \code{\link{Landing}}.
 #' 
-#' @param Landing  Input \code{\link{Landing}} data.
+#' @param LandingData  Input \code{\link{LandingData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
@@ -321,9 +321,9 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
 #'
 #' @export
 #' 
-FilterLanding <- function(Landing, FilterExpression, FilterUpwards = FALSE) {
+FilterLanding <- function(LandingData, FilterExpression, FilterUpwards = FALSE) {
   filterData(
-    Landing, 
+    LandingData, 
     filterExpression = FilterExpression, 
     propagateDownwards = TRUE, 
     propagateUpwards = FilterUpwards
