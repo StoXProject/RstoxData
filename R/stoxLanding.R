@@ -10,20 +10,25 @@ is.LandingData <- function(LandingData){
   if (!is.list(LandingData)){
     return(FALSE)
   }
-  if (!("Seddellinje" %in% names(LandingData))){
-    return(FALSE)
-  }
-  if (!data.table::is.data.table(LandingData$Seddellinje)){
-    return(FALSE)
-  }
-  if (!all(c("Dokumentnummer", 
-             "Linjenummer", 
-             "Art_kode", 
-             "Registreringsmerke_seddel", 
-             "SisteFangstdato", 
-             "Redskap_kode")
-              %in% names(LandingData$Seddellinje))){
-    return(FALSE)
+  for (l in LandingData){
+    if (!is.list(l)){
+      return(FALSE)
+    }
+    if (!("Seddellinje" %in% names(l))){
+      return(FALSE)
+    }
+    if (!data.table::is.data.table(l$Seddellinje)){
+      return(FALSE)
+    }
+    if (!all(c("Dokumentnummer", 
+               "Linjenummer", 
+               "Art_kode", 
+               "Registreringsmerke_seddel", 
+               "SisteFangstdato", 
+               "Redskap_kode")
+             %in% names(l$Seddellinje))){
+      return(FALSE)
+    } 
   }
   
   return(TRUE)
@@ -33,6 +38,7 @@ is.LandingData <- function(LandingData){
 #' @noRd
 extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendColumnsNames=appendColumns){
   flatLandings <- LandingData$Seddellinje
+  
   for (part in names(LandingData)[!(names(LandingData) %in% c("Landingsdata", "Seddellinje", "metadata"))]){
     keys <- names(LandingData[[part]])[names(LandingData[[part]]) %in% names(flatLandings)]
     flatLandings <- merge(LandingData[[part]], flatLandings, by=keys)
@@ -114,9 +120,6 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 #'  Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
 #' @details 
 #'  All columns that are not the ones aggregated (weight), will be used as aggregation variables.
-#'  This includes any columns added with 'appendColumns' and may not make much sense for continuous variables.
-#'  
-#'  If 'LandingData' does not contain columns identified by 'appendColumns'. NA columns will be added.
 #' 
 #'  Correspondences indicate which field a value is derived from, not necessarily verbatim copied.
 #' 
@@ -139,18 +142,26 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 #'  }
 #'  
 #' @param LandingData Sales-notes data. See \code{\link[RstoxData]{LandingData}}
-#' @param appendColumns character() vector that identifies additional columns in \code{\link[RstoxData]{LandingData}} to append to \code{\link[RstoxData]{StoxLandingData}}.
-#' @param appendColumnsNames character() vector that defines the names of the columns in 'appendColumns' in the output.
 #' @return \code{\link[RstoxData]{StoxLandingData}}, aggregated landings data.
 #' @name StoxLanding
 #' @export
-StoxLanding <- function(LandingData, appendColumns=character(), appendColumnsNames=appendColumns){
+StoxLanding <- function(LandingData){
   
-  if (length(appendColumns) != length(appendColumnsNames)){
-    stop("elements in appendColumnNames must correspond to elements in appendColumns")
+  #concatenate LandingData
+  LdCat <- LandingData[[1]]
+  if (length(LandingData) > 1){
+    for (ld in LandingData[2:length(LandingData)]){
+      for (n in names(LdCat)){
+        LdCat[[n]] <- rbind(LdCat[[n]], ld[[n]])
+      }
+    }
   }
   
-  return(extractNMDlandingsV2(LandingData, appendColumns, appendColumnsNames))
+  if (any(duplicated(LdCat$Seddellinje[,c("Registreringsmerke_seddel", "Dokumentnummer", "Linjenummer", "Fangstår")]))){
+    stop("Duplicates detected in landings")
+  }
+  
+  return(extractNMDlandingsV2(LdCat, c(), c()))
   
 }
 

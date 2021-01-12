@@ -4,18 +4,10 @@
 \alias{StoxLanding}
 \title{Convert landing data}
 \usage{
-StoxLanding(
-  LandingData,
-  appendColumns = character(),
-  appendColumnsNames = appendColumns
-)
+StoxLanding(LandingData)
 }
 \arguments{
 \item{LandingData}{Sales-notes data. See \code{\link[RstoxData]{LandingData}}}
-
-\item{appendColumns}{character() vector that identifies additional columns in \code{\link[RstoxData]{LandingData}} to append to \code{\link[RstoxData]{StoxLandingData}}.}
-
-\item{appendColumnsNames}{character() vector that defines the names of the columns in 'appendColumns' in the output.}
 }
 \value{
 \code{\link[RstoxData]{StoxLandingData}}, aggregated landings data.
@@ -26,9 +18,6 @@ StoX function
 }
 \details{
 All columns that are not the ones aggregated (weight), will be used as aggregation variables.
- This includes any columns added with 'appendColumns' and may not make much sense for continuous variables.
- 
- If 'LandingData' does not contain columns identified by 'appendColumns'. NA columns will be added.
 
  Correspondences indicate which field a value is derived from, not necessarily verbatim copied.
 

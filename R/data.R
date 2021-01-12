@@ -203,7 +203,8 @@ NULL
 #' can be considered a census of all first hand sale of fish sold from Norwegian vessels.
 #' 
 #' @section Format:
-#' list() of \code{\link[data.table]{data.table}} 
+#' list with one member for each sales-note set. 
+#' Each member is a list of \code{\link[data.table]{data.table}} 
 #' representing the different complexTypes in namespace http://www.imr.no/formats/landinger/v2
 #' For ease of merging: all top level attributes are repeated for all tables. And all line-identifying variables are included as top-level attributes.
 #' 
