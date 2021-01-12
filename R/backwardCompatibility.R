@@ -37,6 +37,12 @@ backwardCompatibility <- list(
 			functionName = "ICESDatras", 
 			modelName = "baseline", 
 			parameterName = "SurveyName"
+		), 
+		list(
+			changeVersion = "1.0.23", 
+			functionName = "ICESDatras", 
+			modelName = "baseline", 
+			parameterName = "AddStationType"
 		)
 	)
 )
