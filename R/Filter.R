@@ -288,3 +288,44 @@ FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, FilterUpwards
         propagateUpwards = FilterUpwards
     )
 }
+
+#' Filter StoxLanding data
+#'
+#' Filters \code{\link{StoxLandingData}}.
+#' 
+#' @param StoxLandingData  Input \code{\link{StoxLandingData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
+  filterData(
+    StoxLandingData, 
+    filterExpression = FilterExpression, 
+    propagateDownwards = TRUE, 
+    propagateUpwards = FALSE
+  )
+}
+
+#' Filter Landing data
+#'
+#' Filters \code{\link{Landing}}.
+#' 
+#' @param Landing  Input \code{\link{Landing}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterLanding <- function(Landing, FilterExpression, FilterUpwards = FALSE) {
+  filterData(
+    Landing, 
+    filterExpression = FilterExpression, 
+    propagateDownwards = TRUE, 
+    propagateUpwards = FilterUpwards
+  )
+}

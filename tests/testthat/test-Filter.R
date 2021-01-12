@@ -115,5 +115,35 @@ expect_equal(nrow(outPrup$Individual), 0)
 
 
 
+# Landing
+
+landingfile <- system.file("testresources","landing.xml", package="RstoxData")
+Landings <- ReadLanding(landingfile)
+
+filterExpressionL <- list()
+filterExpressionL$`landing.xml`$Fangstdata <- c(
+  'Hovedområde_kode %in% c("37", "08")'
+)
+filteredL <- FilterLanding(Landings, filterExpressionL)
+expect_equal(nrow(filteredL$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata$Hovedområde_kode %in% c("37", "08")))
+expect_equal(nrow(filteredL$landing.xml$Art), nrow(Landings$landing.xml$Art))
+expect_lt(nrow(filteredL$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
+
+filterExpressionSL <- list()
+filterExpressionSL$landings <- c(
+  'Area %in% c("37", "08")'
+)
 
 
+filteredLprop <- FilterLanding(Landings, filterExpressionL, FilterUpwards = TRUE)
+expect_equal(nrow(filteredLprop$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata$Hovedområde_kode %in% c("37", "08")))
+expect_lt(nrow(filteredLprop$landing.xml$Art), nrow(Landings$landing.xml$Art))
+expect_lt(nrow(filteredLprop$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
+
+
+
+# StoxLanding
+
+StoxLanding <- StoxLanding(Landings)
+filteredSL <- FilterStoxLanding(StoxLanding, filterExpressionSL)
+expect_equal(nrow(filteredSL$landings), sum(StoxLanding$landings$Area %in% c("37","08")))

@@ -161,7 +161,10 @@ StoxLanding <- function(LandingData){
     stop("Duplicates detected in landings")
   }
   
-  return(extractNMDlandingsV2(LdCat, c(), c()))
+  output <- list()
+  output$landings <- extractNMDlandingsV2(LdCat, c(), c())
+  
+  return(output)
   
 }
 
@@ -173,6 +176,16 @@ StoxLanding <- function(LandingData){
 #' @name is.StoxLandingData
 #' @export
 is.StoxLandingData <- function(StoxLandingData){
+  
+  if (!is.list(StoxLandingData)){
+    return(FALSE)
+  }
+  if (!("landings") %in% names(StoxLandingData)){
+    return(FALSE)
+  }
+  if (length(StoxLandingData) != 1){
+    return(FALSE)
+  }
   
   expected_colums <- c("Species",
                        "Year",
@@ -190,11 +203,11 @@ is.StoxLandingData <- function(StoxLandingData){
                        "RoundWeightKilogram"
   )
   
-  if (!data.table::is.data.table(StoxLandingData)){
+  if (!data.table::is.data.table(StoxLandingData$landings)){
     return(FALSE)
   }
   
-  if (!all(expected_colums %in% names(StoxLandingData))){
+  if (!all(expected_colums %in% names(StoxLandingData$landings))){
     return(FALSE)
   }
   

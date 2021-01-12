@@ -86,6 +86,22 @@ stoxFunctionAttributes <- list(
 	    functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
+	# Filter StoxLandingData:
+	FilterStoxLanding = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "StoxLandingData", 
+	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
+	# Filter LandingData:
+	FilterStoxLanding = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "LandingData", 
+	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
 	# Convert AcousticData to StoxAcousticData:
 	MergeStoxAcoustic = list(
 	    functionType = "modelData", 
