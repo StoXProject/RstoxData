@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>StoX data type StoxAcousticData — StoxAcousticData • RstoxData</title>
+<title>Parses InterCatch — parseInterCatch • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="StoX data type StoxAcousticData — StoxAcousticData" />
-<meta property="og:description" content="Acoustic data stored in the StoxAcoustic format, which contains the variables needed for most estimation models used by StoX." />
+<meta property="og:title" content="Parses InterCatch — parseInterCatch" />
+<meta property="og:description" content="Parses the InterCatch exchange format v 1.0 for Commercial Catch and Sample Data." />
 
 
 
@@ -107,23 +107,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>StoX data type StoxAcousticData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>StoxAcousticData.Rd</code></div>
+    <h1>Parses InterCatch</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/icesParsing.R'><code>R/icesParsing.R</code></a></small>
+    <div class="hidden name"><code>parseInterCatch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Acoustic data stored in the StoxAcoustic format, which contains the variables needed for most estimation models used by StoX.</p>
+    <p>Parses the InterCatch exchange format v 1.0 for Commercial Catch and Sample Data.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>parseInterCatch</span><span class='op'>(</span><span class='va'>file</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>file</th>
+      <td><p>path to file containing intercatch formatted data</p></td>
+    </tr>
+    <tr>
+      <th>encoding</th>
+      <td><p>encoding of 'file'</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>named list with three members:</p><dl>
+ <dt>HI</dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> with HI records</p></dd>
+ <dt>SI</dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> with SI records</p></dd>
+ <dt>SD</dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> with SD records</p></dd>
+
+</dl>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This StoX data type is produced by <code><a href='StoxAcoustic.html'>StoxAcoustic</a></code>, and contains the tables Cruise, Log, Beam, AcousticCategory, ChannelReference and NASC in that hierarchical order.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
+    <p>The InterCatch exchange format is a jagged comma-separated format, 
+ where the number of fields on a line is determined by a record-type identifier in position 1.
+ Three record types are defined, "HI" (header information), "SI" (species information), and "SD" (species data).
+ The format it specified on https://ices.dk/data/Documents/Intercatch/IC-ExchangeFormat1-0.pdf.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
