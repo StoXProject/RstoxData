@@ -217,9 +217,15 @@ createRecordTypeMatrix <- function(ICESDataTableName, ICESData) {
 	
 	record <- cbind(
 		ICESDataTableName, 
-		# Convert all columns to string:
-		as.matrix(thisTable)
+		# Convert all columns to string, but use trim = FALSE to avoid left padding with spaces for integers:
+		#as.matrix(thisTable, trim = TRUE)
+		#as.matrix(format(thisTable, trim = TRUE))
+		trimws(as.matrix(thisTable))
 	)
+	
+	
+	
+	
 	
 	unname(rbind(header, record))
 }
@@ -517,11 +523,11 @@ BioticData_NMDToICESBioticOne <- function(
 		notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
 		
 		if(length(notPresentInCatch)) {
-			warning("StoX: The following species not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
+			warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
 			
 		}
 		if(length(notPresentInBiology)) {
-			warning("StoX: The following species not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
+			warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
 			
 		}
 		
@@ -691,33 +697,33 @@ ICESDatrasOne <- function(
 		"Stratum" = NA,
 		"HaulDur" = as.numeric(getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime)),
 		"DayNight" = getDayNight(stationstartdate, stationstarttime, latitudestart, longitudestart),
-		"ShootLat" = round(latitudestart, 4),
-		"ShootLong" = round(longitudestart, 4),
-		"HaulLat" = round(latitudeend, 4),
-		"HaulLong" = round(longitudeend, 4),
+		"ShootLat" = roundDrop0(latitudestart, digits = 4), 
+		"ShootLong" = roundDrop0(longitudestart, digits = 4), 
+		"HaulLat" = roundDrop0(latitudeend, digits = 4),
+		"HaulLong" = roundDrop0(longitudeend, digits = 4),
 		"StatRec" = getICESrect(latitudestart, longitudestart),
-		"Depth" = round(bottomdepthstart),
+		"Depth" = roundDrop0(bottomdepthstart),
 		"HaulVal" = getHaulVal(gearcondition, samplequality),
 		"HydroStNo" = NA,
 		"StdSpecRecCode" = 1,
 		"BycSpecRecCode" = 1,
 		"DataType" = "R",
-		"Netopening"= round(verticaltrawlopening, 1),
+		"Netopening"= roundDrop0(verticaltrawlopening, digits = 1),
 		"Rigging" = NA,
 		"Tickler" = NA,
-		"Distance" = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
-		"Warpingt" = round(wirelength),
+		"Distance" = roundDrop0(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
+		"Warpingt" = roundDrop0(wirelength),
 		"Warpdia" = NA,
 		"WarpDen" = NA,
 		"DoorSurface" = 4.5,
 		"DoorWgt" = 1075,
-		"DoorSpread" = ifelse(!is.na(trawldoorspread), round(trawldoorspread, 1), NA),
+		"DoorSpread" = ifelse(!is.na(trawldoorspread), roundDrop0(trawldoorspread, digits = 1), NA),
 		"WingSpread" = NA,
 		"Buoyancy" = NA,
 		"KiteDim" = 0.8,
 		"WgtGroundRope" = NA,
-		"TowDir" = ifelse(!is.na(direction), round(direction), NA),
-		"GroundSpeed" = round(gearflow, 1),
+		"TowDir" = ifelse(!is.na(direction), roundDrop0(direction), NA),
+		"GroundSpeed" = roundDrop0(gearflow, digits = 1),
 		"SpeedWater" = NA,
 		"SurCurDir" = NA,
 		"SurCurSpeed" = NA,
@@ -863,15 +869,15 @@ ICESDatrasOne <- function(
 		"SpecCode" = aphia,
 		"SpecVal" = SpecVal,
 		"Sex" = sex,
-		"TotalNo" = round(totalNo, 2),
+		"TotalNo" = roundDrop0(totalNo, digits = 2),
 		"CatIdentifier" = catchpartnumber,
 		"NoMeas" = noMeas,
-		"SubFactor" = round(subFactor, 4),
-		"SubWgt" = round(subWeight),
-		"CatCatchWgt" = round(catCatchWgt),
+		"SubFactor" = roundDrop0(subFactor, 4),
+		"SubWgt" = roundDrop0(subWeight),
+		"CatCatchWgt" = roundDrop0(catCatchWgt),
 		"LngtCode" = lngtCode,
 		"LngtClass" = lngtClass,
-		"HLNoAtLngt" = round(lsCountTot, 2),
+		"HLNoAtLngt" = roundDrop0(lsCountTot, 2),
 		"DevStage" = NA,
 		"LenMeasType" = convLenMeasType(lengthmeasurement)
 	)]
@@ -921,7 +927,7 @@ ICESDatrasOne <- function(
 			"PlusGr" = as.character(NA),
 			"AgeRings" = ifelse(!is.na(age), age, NA),
 			"CANoAtLngt" = nInd,
-			"IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA),
+			"IndWgt" = ifelse(!is.na(meanW), roundDrop0(meanW * 1000, 1), NA),
 			"MaturityScale" = "M6",
 			"FishID" = specimenid,
 			"GenSamp" = ifelse(!is.na(tissuesample), "Y", "N"),
@@ -955,9 +961,9 @@ ICESDatrasOne <- function(
 			tmpHL <- hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], ]
 			combinedCatCatchWgt <- tmpHL
 			# Fix CatCatchWgt
-			hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "CatCatchWgt"] <- round(mean(tmpHL$CatCatchWgt))
+			hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "CatCatchWgt"] <- roundDrop0(mean(tmpHL$CatCatchWgt))
 			# Fix CatCatchWgt
-			hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "SubWgt"] <- round(mean(tmpHL$SubWgt))
+			hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "SubWgt"] <- roundDrop0(mean(tmpHL$SubWgt))
 			# Fix totalNo
 			hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], "TotalNo"] <- sum(unique(tmpHL$TotalNo))
 			# Fix noMeas
@@ -1336,3 +1342,8 @@ convAgeSource <- function(AgeSource) {
 	return(ct[AgeSource])
 }
 
+roundDrop0 <- function(x, digits = 0) {
+	notNA <- !is.na(x)
+	x[notNA] <- formatC(x[notNA], digits = digits, format = "f", drop0trailing = TRUE)
+	return(x)
+}
