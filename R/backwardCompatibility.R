@@ -37,6 +37,27 @@ backwardCompatibility <- list(
 			functionName = "ICESDatras", 
 			modelName = "baseline", 
 			parameterName = "SurveyName"
+		), 
+		list(
+			changeVersion = "1.0.23", 
+			functionName = "ICESDatras", 
+			modelName = "baseline", 
+			parameterName = "AddStationType"
+		)
+	),  
+	
+	renameFunction = list(
+		list(
+			changeVersion = "1.0.23", 
+			functionName = "ICESAcousticCSV", 
+			modelName = "baseline", 
+			newFunctionName = "RstoxData::ICESAcoustic"
+		), 
+		list(
+			changeVersion = "1.0.23", 
+			functionName = "ICESBioticCSV", 
+			modelName = "baseline", 
+			newFunctionName = "RstoxData::ICESBiotic"
 		)
 	)
 )

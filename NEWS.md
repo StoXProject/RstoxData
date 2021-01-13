@@ -1,3 +1,10 @@
+# RstoxData v1.0.23 (2021-01-13)
+
+* `ICESDatras`: remove reference to SurveyName and addSurveyType parameters.
+* Add reporting functions for ICES exports (`ReportICES*()`).
+* Add Intercatch data parser (`parseInterCatch()`).
+* Add `roundDrop0()` to replace `round()` as a more robust rounding function.
+
 # RstoxData v1.0.20 (2021-01-06)
 
 * `getICESShipCode`: improve ship conversion by removing the deprecated entries and sorting.

@@ -11,15 +11,8 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-❯ checking CRAN incoming feasibility ... NOTE
-
-  Maintainer: 'Ibrahim Umar <ibrahim.umar@hi.no>'
-
-  Days since last update: 5
+0 errors | 0 warnings | 0 note
 
 ## New version submission
 
-* Remove `file.copy()` to location outside of `tempdir()` in tests.
 * New version with several bug fixes and improvements.
