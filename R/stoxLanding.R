@@ -163,7 +163,8 @@ StoxLanding <- function(LandingData){
   
   output <- list()
   output$landings <- extractNMDlandingsV2(LdCat, c(), c())
-  
+  output$landings2 <- output$landings
+  warning("Workaround: duplicating landings table for filter-function.")
   return(output)
   
 }
@@ -183,9 +184,9 @@ is.StoxLandingData <- function(StoxLandingData){
   if (!("landings") %in% names(StoxLandingData)){
     return(FALSE)
   }
-  if (length(StoxLandingData) != 1){
-    return(FALSE)
-  }
+  #if (length(StoxLandingData) != 1){
+  #  return(FALSE)
+  #}
   
   expected_colums <- c("Species",
                        "Year",
