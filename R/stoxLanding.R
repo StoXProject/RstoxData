@@ -67,7 +67,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
                       "CatchDate",
                       "Gear",
                       "Area",
-                      "SubArea",
+                      "Location",
                       "Coastal",
                       "N62Code",
                       "VesselLengthGroup",
@@ -130,7 +130,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 #'   \item{CatchDate}{SisteFangstdato}
 #'   \item{Gear}{Redskap_kode}
 #'   \item{Area}{Hovedområde_kode}
-#'   \item{SubArea}{Lokasjon_kode}
+#'   \item{Location}{Lokasjon_kode}
 #'   \item{Coastal}{KystHav_kode}
 #'   \item{N62Code}{NordSørFor62GraderNord}
 #'   \item{VesselLengthGroup}{Lengdegruppe_kode}
@@ -193,7 +193,7 @@ is.StoxLandingData <- function(StoxLandingData){
                        "CatchDate",
                        "Gear",
                        "Area",
-                       "SubArea",
+                       "Location",
                        "Coastal",
                        "N62Code",
                        "VesselLengthGroup",
