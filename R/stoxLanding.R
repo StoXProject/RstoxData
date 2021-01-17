@@ -157,14 +157,22 @@ StoxLanding <- function(LandingData){
     }
   }
   
-  if (any(duplicated(LdCat$Seddellinje[,c("Registreringsmerke_seddel", "Dokumentnummer", "Linjenummer", "Fangstår")]))){
+  if (any(duplicated(LdCat$Seddellinje[,c("Registreringsmerke_seddel", "Dokumentnummer", "Linjenummer", "Fangst\u00E5r")]))){
     stop("Duplicates detected in landings")
   }
   
   output <- list()
-  output$landings <- extractNMDlandingsV2(LdCat, c(), c())
-  output$landings2 <- output$landings
-  warning("Workaround: duplicating landings table for filter-function.")
+  
+  landings <- extractNMDlandingsV2(LdCat, c("Art_bokm\u00E5l", "ArtFAO_kode", "Redskap_bokm\u00E5l", "HovedgruppeAnvendelse_bokm\u00E5l"), c("SpeciesNameNOR", "SpeciesFAO", "GearNameNOR", "UsageDescrNOR"))
+  
+  output$landings <- landings
+  output$landings$SpeciesNameNOR <- NULL
+  output$landings$GearNameNOR <- NULL
+  output$landings$SpeciesFAO <- NULL
+  output$landings$UsageDescrNOR <- NULL
+  output$Description <- landings
+  output$Description$RoundWeightKilogram <- NULL
+
   return(output)
   
 }
