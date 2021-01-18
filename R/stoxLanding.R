@@ -101,8 +101,8 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
   for (aggC in outputColumns){
     aggLandings[[aggC]][aggLandings[[aggC]] == "<NA>"] <- NA
   }
-  aggLandings$RoundWeightKilogram <- aggLandings$Rundvekt
-  outputColumns <- c(outputColumns, "RoundWeightKilogram")
+  aggLandings$RoundWeight <- aggLandings$Rundvekt
+  outputColumns <- c(outputColumns, "RoundWeight")
   
   # format conversions
   cd <- as.POSIXct(aggLandings$CatchDate, format="%d.%m.%Y")
@@ -138,7 +138,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 #'   \item{LandingSite}{Mottaksstasjon}
 #'   \item{CountryLanding}{Landingsnasjon_kode}
 #'   \item{Usage}{HovedgruppeAnvendelse_kode}
-#'   \item{RoundWeightKilogram}{Rundvekt}
+#'   \item{RoundWeight}{Rundvekt}
 #'  }
 #'  
 #' @param LandingData Sales-notes data. See \code{\link[RstoxData]{LandingData}}
@@ -171,7 +171,7 @@ StoxLanding <- function(LandingData){
   output$landings$SpeciesFAO <- NULL
   output$landings$UsageDescrNOR <- NULL
   output$Description <- landings
-  output$Description$RoundWeightKilogram <- NULL
+  output$Description$RoundWeight <- NULL
 
   return(output)
   
@@ -209,7 +209,7 @@ is.StoxLandingData <- function(StoxLandingData){
                        "LandingSite",
                        "CountryLanding",
                        "Usage",
-                       "RoundWeightKilogram"
+                       "RoundWeight"
   )
   
   if (!data.table::is.data.table(StoxLandingData$landings)){

@@ -15,20 +15,20 @@ expected_colums <- c("Species",
                      "LandingSite",
                      "CountryLanding",
                      "Usage",
-                     "RoundWeightKilogram"
+                     "RoundWeight"
                      )
 expect_equivalent(expected_colums, names(flatSL))
-expect_true(is.numeric(flatSL$RoundWeightKilogram))
+expect_true(is.numeric(flatSL$RoundWeight))
 expect_true(is.numeric(flatSL$Year))
 expect_true(is.character(flatSL$CountryVessel))
 expect_true(length(flatSL$CatchDate) > 1 & "POSIXct" %in% class(flatSL$CatchDate))
 
 context("test-stoxLanding missing values in aggColumns")
-weightPre <- sum(flatSL$RoundWeightKilogram)
+weightPre <- sum(flatSL$RoundWeight)
 landingXML$landing.xml$Mottaker$Mottaksstasjon[2] <- NA
 flatSL <- StoxLanding(landingXML)$landings
 expect_equal(sum(is.na(flatSL$LandingSite)), 1)
-weightPost <- sum(flatSL$RoundWeightKilogram)
+weightPost <- sum(flatSL$RoundWeight)
 expect_equal(weightPre, weightPost)
 
 context("test-stoxLanding is.StoxLandingData")

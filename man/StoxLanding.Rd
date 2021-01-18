@@ -36,6 +36,6 @@ All columns that are not the ones aggregated (weight), will be used as aggregati
   \item{LandingSite}{Mottaksstasjon}
   \item{CountryLanding}{Landingsnasjon_kode}
   \item{Usage}{HovedgruppeAnvendelse_kode}
-  \item{RoundWeightKilogram}{Rundvekt}
+  \item{RoundWeight}{Rundvekt}
  }
 }
