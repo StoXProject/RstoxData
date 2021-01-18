@@ -494,10 +494,17 @@ AddToStoxData <- function(
 	toAdd <- lapply(toAdd, unique)
 	
 	# Merge with the present StoxBioticData:
-	StoxData <- mapply(merge, StoxData, toAdd)
+	StoxData <- mapply(mergeAndOverwriteDataTable, StoxData, toAdd, sort = FALSE)
 	
 	return(StoxData)
 }
+
+mergeAndOverwriteDataTable <- function(x, y, ...) {
+	# Overwrite any non-keys already present in the StoxData
+	toKeep <- !names(x) %in% names(y) | endsWith(names(x), "Key")
+	merge(x[, ..toKeep], y, ...)
+}
+
 
 # Function to extracct variables from a table:
 extractVariables <- function(x, var) {
