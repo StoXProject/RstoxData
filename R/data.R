@@ -90,7 +90,7 @@ NULL
 #' 
 #' @details
 #' \itemize{
-#' \item{\code{\link{StoxBioticTranslation}}}
+#' \item{\code{\link{Translation}}}
 #' }
 #' 
 #' @name ProcessData
@@ -338,14 +338,14 @@ NULL
 
 ##################################################
 ##################################################
-#' Translation definition (from file) for \code{\link{StoxBioticData}}.
+#' Translation definition (from file or from table).
 #' 
 #' @details
-#' This StoX data type is produced by \code{\link{DefineStoxBioticTranslation}}, and contains the columns VariableName, Value and NewValue.
+#' This StoX data type is produced by \code{\link{DefineTranslation}}, and contains the columns VariableName, Value and NewValue.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name StoxBioticTranslation
+#' @name Translation
 #' 
 NULL
 

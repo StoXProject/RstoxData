@@ -24,52 +24,23 @@ RedefineData <- function(
 	return(StoxData)
 }
 
-# The general function for defining StoxData translation:
-DefineDataTranslation <- function(
-	processData, UseProcessData = FALSE, 
-	DefinitionMethod = c("Table", "ResourceFile"), 
-	Translation = data.table::data.table(), 
-	FileName
-) {
-	
-	# Return immediately if UseProcessData = TRUE:
-	if(UseProcessData) {
-		return(processData)
-	}
-	
-	DefinitionMethod = match.arg(DefinitionMethod)
-	
-	if(DefinitionMethod == "ResourceFile") {
-		# Get the conversion table:
-		Translation <- readVariableConversion(
-			processData = processData, 
-			FileName = FileName, 
-			UseProcessData = UseProcessData
-		)
-	}
-	else if(DefinitionMethod != "Table"){
-		stop("Invalid DefinitionMethod")
-	}
-	
-	return(Translation)
-}
 
 # The general function for translating StoxData:
 TranslateData <- function(
 	StoxData, 
-	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
-	Translation = data.table::data.table(), 
-	TranslationProcessData
+	#TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	Translation# = data.table::data.table(), 
+	#TranslationProcessData
 ) {
 	
-	TranslationDefinition <- match.arg(TranslationDefinition)
+	#TranslationDefinition <- match.arg(TranslationDefinition)
 	
-	if(TranslationDefinition == "FunctionInput") {
-		Translation <- TranslationProcessData
-	}
-	else if(TranslationDefinition != "FunctionParameter"){
-		stop("TranslationDefinition must be one of \"FunctionParameter\" and \"FunctionInput\"")
-	}
+	#if(TranslationDefinition == "FunctionInput") {
+	#	Translation <- TranslationProcessData
+	#}
+	#else if(TranslationDefinition != "FunctionParameter"){
+	#	stop("TranslationDefinition must be one of \"FunctionParameter\" and \"FunctionInput\"")
+	#}
 	
 	# Apply the translation:
 	StoxData <- translateVariables(data = StoxData, Translation = Translation)
@@ -415,44 +386,59 @@ RedefineStoxBiotic <- function(
 
 
 ##################################################
-#' Define StoxBioticData variables translation
+#' Define translation
 #' 
-#' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} to translate values of one or more columns of \code{\link{StoxBioticData}} to new values given by a table or read from a CSV file.
+#' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
 #' 
 #' @inheritParams general_arguments
-#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Translation}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
-#' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
-#' @param FileName The csv file holding a table with the three variables listed for \code{Translation}.
+#' @param DefinitionMethod  Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
+#' @param TranslationTable A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
+#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}.
 #' 
 #' @return
-#' A \code{\link{StoxBioticTranslation}} object.
+#' A \code{\link{Translation}} object.
 #' 
 #' @export
 #' 
-DefineStoxBioticTranslation <- function(
+DefineTranslation <- function(
 	processData, UseProcessData = FALSE, 
-	DefinitionMethod = c("Table", "ResourceFile"), 
-	Translation = data.table::data.table(), 
+	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
+	TranslationTable = data.table::data.table(), 
 	FileName
 ) {
-	# Define translation for StoxBioticData:
-	DefineDataTranslation(
-		processData = processData, UseProcessData = UseProcessData, 
-		DefinitionMethod = DefinitionMethod, 
-		Translation = Translation, 
-		FileName = FileName
-	)
+	
+	# Return immediately if UseProcessData = TRUE:
+	if(UseProcessData) {
+		return(processData)
+	}
+	
+	DefinitionMethod = match.arg(DefinitionMethod)
+	
+	if(DefinitionMethod == "ResourceFile") {
+		# Get the conversion table:
+		Translation <- readVariableConversion(
+			processData = processData, 
+			FileName = FileName, 
+			UseProcessData = UseProcessData
+		)
+	}
+	else if(DefinitionMethod == "TranslationTable"){
+		Translation <- TranslationDefinition
+	}
+	else {
+		stop("Invalid DefinitionMethod")
+	}
+	
+	return(Translation)
 }
 
 ##################################################
 #' Translate StoxBioticData
 #' 
-#' This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the table \code{Translation} or by the input \code{StoxBioticTranslation}.
+#' This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the input \code{Translation}.
 #' 
 #' @param StoxBioticData An input of \link{ModelData} object
-#' @param TranslationDefinition  Character: A string naming the method to use for the translation, one of "FunctionParameter" for defining the \code{Translation}, and "FunctionInput" for using the table produced by the process given by the function input \code{StoxBioticTranslation}.
-#' @param Translation A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
-#' @param StoxBioticTranslation The process from which to get the \code{\link{StoxBioticTranslation}} definition.
+#' @param Translation The process from which to get the \code{\link{Translation}} definition.
 #' 
 #' @return
 #' A \code{\link{StoxBioticData}} object.
@@ -461,16 +447,19 @@ DefineStoxBioticTranslation <- function(
 #' 
 TranslateStoxBiotic <- function(
 	StoxBioticData, 
-	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
-	Translation = data.table::data.table(), 
-	StoxBioticTranslation
+	Translation
 ) {
 	# Translate StoxBioticData:
-	TranslateData(
-		StoxData = StoxBioticData, 
-		TranslationDefinition = TranslationDefinition, 
-		Translation = Translation, 
-		TranslationProcessData = StoxBioticTranslation
+	#TranslateData(
+	#	StoxData = StoxBioticData, 
+	#	TranslationDefinition = TranslationDefinition, 
+	#	Translation = Translation, 
+	#	TranslationProcessData = StoxBioticTranslation
+	#)
+	
+	translateVariables(
+		data = StoxBioticData, 
+		Translation = Translation
 	)
 }
 

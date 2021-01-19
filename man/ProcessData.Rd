@@ -8,7 +8,7 @@ The process data of the RstoxData package.
 }
 \details{
 \itemize{
-\item{\code{\link{StoxBioticTranslation}}}
+\item{\code{\link{Translation}}}
 }
 }
 \seealso{
