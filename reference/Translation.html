@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge two data tables by StoX keys — mergeByStoxKeys • RstoxData</title>
+<title>Translation definition (from file or from table). — Translation • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge two data tables by StoX keys — mergeByStoxKeys" />
-<meta property="og:description" content="Merge two data tables by StoX keys" />
+<meta property="og:title" content="Translation definition (from file or from table). — Translation" />
+<meta property="og:description" content="Translation definition (from file or from table)." />
 
 
 
@@ -107,49 +107,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge two data tables by StoX keys</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>mergeByStoxKeys.Rd</code></div>
+    <h1>Translation definition (from file or from table).</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>Translation.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge two data tables by StoX keys</p>
+    <p>Translation definition (from file or from table).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mergeByStoxKeys</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>StoxDataType</span>, toMergeFromY <span class='op'>=</span> <span class='cn'>NULL</span>, replace <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x, y</th>
-      <td><p>Data tables of class <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>StoxDataType</th>
-      <td><p>Input data type. Text string of <code>StoxBiotic</code>
-or <code>StoxAcoustic</code>.</p></td>
-    </tr>
-    <tr>
-      <th>toMergeFromY</th>
-      <td><p>Specify key columns from <code>y</code>. <code>NULL</code> means
-all similarly named columns from <code>x</code> and <code>y</code> will be
-merged. Default to <code>NULL</code>.</p></td>
-    </tr>
-    <tr>
-      <th>replace</th>
-      <td><p>Whether to replace the variables in the target.
-Default to <code>FALSE</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Extra parameters that will be passed into <code><a href='https://Rdatatable.gitlab.io/data.table/reference/merge.html'>merge</a></code>.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A merged data table.</p>
+    <p>This StoX data type is produced by <code><a href='DefineTranslation.html'>DefineTranslation</a></code>, and contains the columns VariableName, Value and NewValue.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
