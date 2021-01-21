@@ -1,3 +1,10 @@
+# RstoxData v1.0.24 (2021-01-21)
+
+* `getStoxKeys()`: Fix for `stoxBioticObject` object not found
+(https://github.com/StoXProject/RstoxData/issues/117).
+* Remove sorting when merging in `AddToStoxBiotic()`.
+* Rename `DefineStoxBioticTranslation` to `DefineTranslation`, and the coresponding
+data type to `Translation`. Also added backward compatibility for this.
 # RstoxData v1.0.23 (2021-01-13)
 
 * `ICESDatras`: remove reference to SurveyName and addSurveyType parameters.
