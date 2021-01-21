@@ -423,7 +423,7 @@ DefineTranslation <- function(
 		)
 	}
 	else if(DefinitionMethod == "TranslationTable"){
-		Translation <- TranslationDefinition
+		Translation <- TranslationTable
 	}
 	else {
 		stop("Invalid DefinitionMethod")
