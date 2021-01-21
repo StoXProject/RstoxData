@@ -108,12 +108,12 @@ stoxFunctionAttributes <- list(
 		)
 	),
 	
-	DefineStoxBioticTranslation = list(
+	DefineTranslation = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticTranslation", 
+		functionOutputDataType = "Translation", 
 		functionParameterFormat = list(
-			Translation = "translationTable", 
+			TranslationTable = "translationTable", 
 			FileName = "filePath"
 		), 
 		functionArgumentHierarchy = list(
@@ -121,8 +121,8 @@ stoxFunctionAttributes <- list(
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
-			Translation = list(
-				DefinitionMethod = "Table", 
+			TranslationTable = list(
+				DefinitionMethod = "TranslationTable", 
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
@@ -136,18 +136,7 @@ stoxFunctionAttributes <- list(
 	TranslateStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticData", 
-		functionParameterFormat = list(
-			Translation = "translationTable"
-		), 
-		functionArgumentHierarchy = list(
-			Translation = list(
-				TranslationDefinition = "FunctionParameter"
-			), 
-			StoxBioticTranslation = list(
-				TranslationDefinition = "FunctionInput"
-			)
-		)
+		functionOutputDataType = "StoxBioticData"
 	),
 	
 	ConvertStoxBiotic = list(

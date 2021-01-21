@@ -2,7 +2,7 @@
 
 export(AddToStoxBiotic)
 export(ConvertStoxBiotic)
-export(DefineStoxBioticTranslation)
+export(DefineTranslation)
 export(FilterAcoustic)
 export(FilterBiotic)
 export(FilterStoxAcoustic)

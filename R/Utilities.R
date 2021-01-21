@@ -173,9 +173,12 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, keys.out = c("all", "only.present", "all.but.present")) {
 	StoxDataType <- match.arg(StoxDataType)
 	if(StoxDataType == "StoxBiotic") {
-	    keys <- stoxBioticObject$convertTable[key == "Y", c("variable", "level")]
-	    keys <- split(keys, by = "level")
-	    keys <- lapply(keys, "[[", "variable")
+		if(!exists("stoxBioticObject")) {
+			data(stoxBioticObject, package="RstoxData", envir = environment())
+		}
+		keys <- stoxBioticObject$convertTable[key == "Y", c("variable", "level")]
+		keys <- split(keys, by = "level")
+		keys <- lapply(keys, "[[", "variable")
 	}
 	else if(StoxDataType == "StoxAcoustic") {
 		stop("Not yet implemented")
@@ -494,10 +497,17 @@ AddToStoxData <- function(
 	toAdd <- lapply(toAdd, unique)
 	
 	# Merge with the present StoxBioticData:
-	StoxData <- mapply(merge, StoxData, toAdd)
+	StoxData <- mapply(mergeAndOverwriteDataTable, StoxData, toAdd, sort = FALSE)
 	
 	return(StoxData)
 }
+
+mergeAndOverwriteDataTable <- function(x, y, ...) {
+	# Overwrite any non-keys already present in the StoxData
+	toKeep <- !names(x) %in% names(y) | endsWith(names(x), "Key")
+	merge(x[, ..toKeep], y, ...)
+}
+
 
 # Function to extracct variables from a table:
 extractVariables <- function(x, var) {
