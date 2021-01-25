@@ -37,6 +37,7 @@ is.LandingData <- function(LandingData){
 #' Extracts aggregated Landings from NMD - landings (namespace: http://www.imr.no/formats/landinger/v2)
 #' @noRd
 extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendColumnsNames=appendColumns){
+  
   flatLandings <- LandingData$Seddellinje
   
   for (part in names(LandingData)[!(names(LandingData) %in% c("Landingsdata", "Seddellinje", "metadata"))]){
@@ -55,7 +56,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
                      "Lokasjon_kode",
                      "KystHav_kode", 
                      "NordS\u00F8rFor62GraderNord", 
-                     "Lengdegruppe_kode", 
+                     "StørsteLengde", 
                      "Fart\u00F8ynasjonalitet_kode",
                      "Mottaksstasjon",
                      "Mottakernasjonalitet_kode",
@@ -70,7 +71,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
                       "Location",
                       "Coastal",
                       "N62Code",
-                      "VesselLengthGroup",
+                      "VesselLength",
                       "CountryVessel",
                       "LandingSite",
                       "CountryLanding",
@@ -89,17 +90,38 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
   for (i in 1:length(sourceColumns)){
     sourcename <- sourceColumns[i]
     outputname <- outputColumns[i]
-    flatLandings[[outputname]] <- flatLandings[[sourcename]]
-    flatLandings[[outputname]][is.na(flatLandings[[sourcename]])] <- "<NA>" #set NAs to text-string for aggregation
+    if (outputname == "VesselLength"){
+      flatLandings[[outputname]] <- flatLandings[[sourcename]]
+      flatLandings[[outputname]][!is.na(flatLandings[[sourcename]])] <- as.character(flatLandings[[sourcename]][!is.na(flatLandings[[sourcename]])])
+      if (any(is.na(flatLandings[[outputname]]))){
+        flatLandings[[outputname]][is.na(flatLandings[[outputname]])] <- "<NA>" #set NAs to text-string for aggregation  
+      }
+    }
+    
+    else if (is.character(flatLandings[[sourcename]]) | is.integer(flatLandings[[sourcename]])){
+      flatLandings[[outputname]] <- flatLandings[[sourcename]]  
+      flatLandings[[outputname]][is.na(flatLandings[[sourcename]])] <- "<NA>" #set NAs to text-string for aggregation
+    }
+    else{
+      stop(paste("Type of ", sourcename, "must be handled."))
+    }
     aggList[[outputname]] <- flatLandings[[outputname]]
   }
+  
   names(aggList) <- outputColumns
   aggLandings <- stats::aggregate(list(Rundvekt=flatLandings$Rundvekt), by=aggList, FUN=function(x){sum(x, na.rm=T)})
   aggLandings <- aggLandings[,c(outputColumns, "Rundvekt")]
   
   #reset NAs
   for (aggC in outputColumns){
-    aggLandings[[aggC]][aggLandings[[aggC]] == "<NA>"] <- NA
+    if (aggC == "VesselLength"){
+      aggLandings[[aggC]][aggLandings[[aggC]] != "<NA>"] <- as.numeric(aggLandings[[aggC]][aggLandings[[aggC]] != "<NA>"])
+      aggLandings[[aggC]][aggLandings[[aggC]] == "<NA>"] <- as.numeric(NA)
+    }
+    else{
+      aggLandings[[aggC]][aggLandings[[aggC]] == "<NA>"] <- NA  
+    }
+    
   }
   aggLandings$RoundWeight <- aggLandings$Rundvekt
   outputColumns <- c(outputColumns, "RoundWeight")
@@ -133,7 +155,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 #'   \item{Location}{Lokasjon_kode}
 #'   \item{Coastal}{KystHav_kode}
 #'   \item{N62Code}{NordSørFor62GraderNord}
-#'   \item{VesselLengthGroup}{Lengdegruppe_kode}
+#'   \item{VesselLength}{StørsteLengde}
 #'   \item{CountryVessel}{Fartøynasjonalitet_kode}
 #'   \item{LandingSite}{Mottaksstasjon}
 #'   \item{CountryLanding}{Landingsnasjon_kode}
@@ -162,16 +184,16 @@ StoxLanding <- function(LandingData){
   }
   
   output <- list()
-  
   landings <- extractNMDlandingsV2(LdCat, c("Art_bokm\u00E5l", "ArtFAO_kode", "Redskap_bokm\u00E5l", "HovedgruppeAnvendelse_bokm\u00E5l"), c("SpeciesNameNOR", "SpeciesFAO", "GearNameNOR", "UsageDescrNOR"))
-  
+  output$Descriptions <- list()
+  output$Descriptions$Species <- unique(landings[,c("Species", "SpeciesFAO", "SpeciesNameNOR"), with=F])
+  output$Descriptions$Gear <- unique(landings[,c("Gear", "GearNameNOR"), with=F])
+  output$Descriptions$Usage <- unique(landings[,c("Usage", "UsageDescrNOR"), with=F])
   output$landings <- landings
   output$landings$SpeciesNameNOR <- NULL
   output$landings$GearNameNOR <- NULL
   output$landings$SpeciesFAO <- NULL
   output$landings$UsageDescrNOR <- NULL
-  output$Description <- landings
-  output$Description$RoundWeight <- NULL
 
   return(output)
   
@@ -192,9 +214,9 @@ is.StoxLandingData <- function(StoxLandingData){
   if (!("landings") %in% names(StoxLandingData)){
     return(FALSE)
   }
-  #if (length(StoxLandingData) != 1){
-  #  return(FALSE)
-  #}
+  if (!("Descriptions") %in% names(StoxLandingData)){
+    return(FALSE)
+  }
   
   expected_colums <- c("Species",
                        "Year",
@@ -204,7 +226,7 @@ is.StoxLandingData <- function(StoxLandingData){
                        "Location",
                        "Coastal",
                        "N62Code",
-                       "VesselLengthGroup",
+                       "VesselLength",
                        "CountryVessel",
                        "LandingSite",
                        "CountryLanding",
@@ -218,6 +240,17 @@ is.StoxLandingData <- function(StoxLandingData){
   
   if (!all(expected_colums %in% names(StoxLandingData$landings))){
     return(FALSE)
+  }
+  
+  if (length(StoxLandingData$Description) > 0){
+    for (n in names(StoxLandingData$Description)){
+      if (!(n %in% names(StoxLandingData$landings))){
+        return(FALSE)
+      }
+      if (!(n %in% names(StoxLandingData$Descriptions[[n]]))){
+        return(FALSE)
+      }
+    }
   }
   
   return(TRUE)

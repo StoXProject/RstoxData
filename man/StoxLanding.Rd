@@ -31,7 +31,7 @@ All columns that are not the ones aggregated (weight), will be used as aggregati
   \item{Location}{Lokasjon_kode}
   \item{Coastal}{KystHav_kode}
   \item{N62Code}{NordSørFor62GraderNord}
-  \item{VesselLengthGroup}{Lengdegruppe_kode}
+  \item{VesselLength}{StørsteLengde}
   \item{CountryVessel}{Fartøynasjonalitet_kode}
   \item{LandingSite}{Mottaksstasjon}
   \item{CountryLanding}{Landingsnasjon_kode}

@@ -4,9 +4,17 @@
 \alias{StoxLandingData}
 \title{StoxLandingData}
 \description{
-Table (\code{\link[data.table]{data.table}}) with aggregated weight of landings from landing records.
+Contains a list of elements 'landings' and 'Descriptions', described below.
 }
-\section{Column definitions}{
+\details{
+'landings' is a \code{\link[data.table]{data.table}} with aggregated weight of landings from landing records.
+Columns are specified in the section Column definitions landings
+
+'Descriptions' is a list may contain description data tables for one or more of the columns in 'landings'
+For a column 'n' in 'landings', Descriptions$n maye exist and be a \code{\link[data.table]{data.table}} 
+with at least one columnm which must be named 'n'.
+}
+\section{Column definitions landings}{
 
  \describe{
   \item{Species}{character() code for species category (species identified by market or regulation standards. Several codes may code the same species or stock, and some catch may be recorded only at higher taxonomic classifications)}
@@ -17,12 +25,12 @@ Table (\code{\link[data.table]{data.table}}) with aggregated weight of landings 
   \item{SubArea}{character() Subdivision of area code for the position where the catch was caught (dominant area for trip)}
   \item{Coastal}{character() Code indicating whether catch was taken within coastal delimitation line (dominant side for trip)}
   \item{N62Code}{character() Code indicating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
-  \item{VesselLengthGroup}{character() Length group for vessel}
+  \item{VesselLength}{character() Length of vessel in m}
   \item{CountryVessel}{character() Country of the vessel that caught the catch}
   \item{LandingSite}{character() Code identifying landing site (buyer of catch)}
   \item{CountryLanding}{character() Country where catch was landed}
   \item{Usage}{character() Code for market usage of catch.}
-  \item{RoundWeightKilogram}{numeric() Weight of round catch in kg.}
+  \item{RoundWeight}{numeric() Weight of round catch in kg.}
  }
 }
 
