@@ -301,8 +301,6 @@ FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, FilterUpwards
 #' @export
 #' 
 FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
-  desc <- StoxLandingData$Descriptions
-  StoxLandingData$Descriptions <- NULL
   
   StoxLandingData <- filterData(
     StoxLandingData, 
@@ -310,13 +308,6 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
     propagateDownwards = TRUE, 
     propagateUpwards = FALSE
   )
-  
-  #remove descriptions for values that are filtered out
-  StoxLandingData$Descriptions <- desc
-  
-  for (n in names(StoxLandingData$Descriptions)){
-    StoxLandingData$Descriptions[[n]] <- StoxLandingData$Descriptions[[n]][StoxLandingData$Descriptions[[n]][[n]] %in% StoxLandingData$landings[[n]],]
-  }
   
   return(StoxLandingData)
 }

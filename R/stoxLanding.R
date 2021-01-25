@@ -184,17 +184,9 @@ StoxLanding <- function(LandingData){
   }
   
   output <- list()
-  landings <- extractNMDlandingsV2(LdCat, c("Art_bokm\u00E5l", "ArtFAO_kode", "Redskap_bokm\u00E5l", "HovedgruppeAnvendelse_bokm\u00E5l"), c("SpeciesNameNOR", "SpeciesFAO", "GearNameNOR", "UsageDescrNOR"))
-  output$Descriptions <- list()
-  output$Descriptions$Species <- unique(landings[,c("Species", "SpeciesFAO", "SpeciesNameNOR"), with=F])
-  output$Descriptions$Gear <- unique(landings[,c("Gear", "GearNameNOR"), with=F])
-  output$Descriptions$Usage <- unique(landings[,c("Usage", "UsageDescrNOR"), with=F])
+  landings <- extractNMDlandingsV2(LdCat)
   output$landings <- landings
-  output$landings$SpeciesNameNOR <- NULL
-  output$landings$GearNameNOR <- NULL
-  output$landings$SpeciesFAO <- NULL
-  output$landings$UsageDescrNOR <- NULL
-
+  
   return(output)
   
 }
@@ -214,10 +206,10 @@ is.StoxLandingData <- function(StoxLandingData){
   if (!("landings") %in% names(StoxLandingData)){
     return(FALSE)
   }
-  if (!("Descriptions") %in% names(StoxLandingData)){
+  if (length(StoxLandingData) != 1){
     return(FALSE)
   }
-  
+
   expected_colums <- c("Species",
                        "Year",
                        "CatchDate",
@@ -240,17 +232,6 @@ is.StoxLandingData <- function(StoxLandingData){
   
   if (!all(expected_colums %in% names(StoxLandingData$landings))){
     return(FALSE)
-  }
-  
-  if (length(StoxLandingData$Description) > 0){
-    for (n in names(StoxLandingData$Description)){
-      if (!(n %in% names(StoxLandingData$landings))){
-        return(FALSE)
-      }
-      if (!(n %in% names(StoxLandingData$Descriptions[[n]]))){
-        return(FALSE)
-      }
-    }
   }
   
   return(TRUE)

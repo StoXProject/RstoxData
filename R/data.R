@@ -217,14 +217,10 @@ NULL
 
 #' StoxLandingData
 #'
-#' Contains a list of elements 'landings' and 'Descriptions', described below.
+#' Contains a list with one element 'landings', described below.
 #'
 #' 'landings' is a \code{\link[data.table]{data.table}} with aggregated weight of landings from landing records.
 #' Columns are specified in the section Column definitions landings
-#' 
-#' 'Descriptions' is a list may contain description data tables for one or more of the columns in 'landings'
-#' For a column 'n' in 'landings', Descriptions$n maye exist and be a \code{\link[data.table]{data.table}} 
-#' with at least one columnm which must be named 'n'.
 #'
 #' @section Column definitions landings:
 #'  \describe{
