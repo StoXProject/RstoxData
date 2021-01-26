@@ -20,7 +20,7 @@ EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,TowedDista
 MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
 MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
 VerticalNetOpening,Haul,verticaltrawlopening,verticaltrawlopening,trawlopening,Netopening,
-HorizontalNetOpening,Haul,wingspread,wingspread,as.numeric(NA),WingSpread,
+HorizontalNetOpening,Haul,wingspread,wingspread,NA_real_,WingSpread,
 TrawlDoorSpread,Haul,trawldoorspread,trawldoorspread,doorspread,DoorSpread,
 CruiseKey,SpeciesCategory,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,SpeciesCategory,StationKey,StationKey,StationKey,StationKey,Y
@@ -33,9 +33,9 @@ HaulKey,Sample,HaulKey,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,SampleKey,Y
 Sample,Sample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')",
-CatchFractionWeight,Sample,"ifelse(catchproducttype == 1, catchweight, NA)","ifelse(catchproducttype == 1, catchweight, NA)","ifelse(producttype == 1, weight, NA)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
+CatchFractionWeight,Sample,"ifelse(catchproducttype == 1, catchweight, NA_real_)","ifelse(catchproducttype == 1, catchweight, NA_real_)","ifelse(producttype == 1, weight, NA_real_)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
 CatchFractionCount,Sample,catchcount,catchcount,count,SpeciesCategoryNumber,
-SampleWeight,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","ifelse(sampleproducttype == 1, lengthsampleweight, NA)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
+SampleWeight,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
 SampleCount,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Individual,StationKey,StationKey,StationKey,StationKey,Y
@@ -44,9 +44,9 @@ SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCateg
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y
 Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, IndividualKey, sep = '-')",
-IndividualRoundWeight,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(individualproducttype == 1, individualweight * 1000, NA)","ifelse(producttype.individual == 1, weight.individual * 1000, NA)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
-IndividualTotalLength,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","ifelse(lengthmeasurement == 'E', length * 100, NA)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
+IndividualRoundWeight,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(producttype.individual == 1, weight.individual * 1000, NA_real_)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
+IndividualTotalLength,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
 LengthResolution,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),
 WeightMeasurement,Individual,'IndividualWeight','IndividualWeight','IndividualWeight',"ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",
 IndividualAge,Individual,age,age,age,IndividualAge,
-IndividualSex,Individual,"ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA))",IndividualSex,
+IndividualSex,Individual,"ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))",IndividualSex,

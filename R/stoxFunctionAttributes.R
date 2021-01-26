@@ -142,10 +142,11 @@ stoxFunctionAttributes <- list(
 	ConvertStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticData", 
+		functionOutputDataType = "StoxBioticData",
 		functionParameterFormat = list(
-			GruopingVariables = "gruopingVariables", 
-			Conversion = "conversionTable"
+			#TargetVariable = "variable_StoxBioticData", 
+			GruopingVariables = "variables_StoxBioticData", 
+			Conversion = "conversionTable_StoxBioticData"
 		)
 	),
 	
@@ -157,6 +158,63 @@ stoxFunctionAttributes <- list(
 			VariableNames = "variableNames_AddToStoxBiotic"
 		)
 	), 
+	
+	
+	TranslateStoxAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxAcousticData"
+	),
+	
+	ConvertStoxAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxAcousticData",
+		functionParameterFormat = list(
+			#TargetVariable = "variable_StoxAcousticData", 
+			GruopingVariables = "variables_StoxAcousticData", 
+			Conversion = "conversionTable_StoxAcousticData"
+		)
+	),
+	
+	
+	
+	TranslateBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "BioticData"
+	),
+	
+	ConvertBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "BioticData",
+		functionParameterFormat = list(
+			#TargetVariable = "variable_BioticData", 
+			GruopingVariables = "variables_BioticData", 
+			Conversion = "conversionTable_BioticData"
+		)
+	),
+	
+	
+	TranslateAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "AcousticData"
+	),
+	
+	ConvertAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "AcousticData",
+		functionParameterFormat = list(
+			#TargetVariable = "variable_AcousticData", 
+			GruopingVariables = "variables_AcousticData", 
+			Conversion = "conversionTable_AcousticData"
+		)
+	),
+	
+	
 	
 	
 	ICESAcoustic = list(
@@ -195,6 +253,178 @@ stoxFunctionAttributes <- list(
 	
 	
 )
+
+
+getConversionTableFormat <- function(type = c("StoxBiotic", "StoxAcoustic", "Biotic", "Acoustic")) {
+	
+	type <- match.arg(type)
+	
+	conversionTable = list(
+		class = "table", 
+		title = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling")) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				title <- "Replace variables of StoX data by a constant \"Constant\""
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				title <- "Add the value \"Addition\" to variables of StoX data"
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				title <- "Multiply variables of StoX data by the value \"Scaling\""
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				title <- "Multiply variables of StoX data by the value \"Scaling\" and add the value \"Addition\""
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			return(title)
+		}, 
+		columnNames = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				parameters <- "Constant"
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				parameters <- "Addition"
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				parameters <- "Scaling"
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				parameters <- c("Addition", "Scaling")
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			columnNames <- c(
+				GruopingVariables, 
+				#c("TargetVariable", "SourceVariable"), 
+				"SourceVariable", 
+				parameters, 
+				"RoundOffTo"
+			)
+			
+			return(columnNames)
+		}, 
+		variableTypes = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
+			ConversionFunction <- match.arg(ConversionFunction)
+			
+			if(identical(ConversionFunction, "Constant")) {
+				types <- "double"
+			}
+			else if(identical(ConversionFunction, "Addition")) {
+				types <- "double"
+			}
+			else if(identical(ConversionFunction, "Scaling")) {
+				types <- "double"
+			}
+			else if(identical(ConversionFunction, "AdditionAndScaling")) {
+				types <- c("double", "double")
+			}
+			else {
+				stop("Wrong ConversionFunction.")
+			}
+			
+			variableTypes <- c(
+				rep("character", length(GruopingVariables)), 
+				#c("character", "character"), 
+				"character", 
+				types, 
+				"double"
+			)
+			
+			return(variableTypes)
+		}, 
+		possibleValues = switch(
+			type, 
+			StoxBiotic = function(
+				StoxBioticData, 
+				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+				GruopingVariables = NULL
+			) {
+				conversionTableFormatPossibleValuesFunction(
+					data = StoxBioticData, 
+					ConversionFunction = ConversionFunction, 
+					GruopingVariables = GruopingVariables
+				)
+			}, 
+			StoxAcoustic = function(
+				StoxAcousticData, 
+				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+				GruopingVariables = NULL
+			) {
+				conversionTableFormatPossibleValuesFunction(
+					data = StoxAcousticData, 
+					ConversionFunction = ConversionFunction, 
+					GruopingVariables = GruopingVariables
+				)
+			}, 
+			Biotic = function(
+				BioticData, 
+				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+				GruopingVariables = NULL
+			) {
+				conversionTableFormatPossibleValuesFunction(
+					data = BioticData, 
+					ConversionFunction = ConversionFunction, 
+					GruopingVariables = GruopingVariables
+				)
+			}, 
+			Acoustic = function(
+				AcousticData, 
+				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+				GruopingVariables = NULL
+			) {
+				conversionTableFormatPossibleValuesFunction(
+					data = AcousticData, 
+					ConversionFunction = ConversionFunction, 
+					GruopingVariables = GruopingVariables
+				)
+			}
+		)
+	)
+	
+	return(conversionTable)
+}
+
+
+
+conversionTableFormatPossibleValuesFunction = function(data, ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
+	ConversionFunction <- match.arg(ConversionFunction)
+	
+	if(identical(ConversionFunction, "Constant")) {
+		numTypes <- 1
+	}
+	else if(identical(ConversionFunction, "Addition")) {
+		numTypes <- 1
+	}
+	else if(identical(ConversionFunction, "Scaling")) {
+		numTypes <- 1
+	}
+	else if(identical(ConversionFunction, "AdditionAndScaling")) {
+		numTypes <- 2
+	}
+	else {
+		stop("Wrong ConversionFunction.")
+	}
+	
+	dataFlatList <- unlist(lapply(unname(data), as.list), recursive = FALSE)
+	variableNames <- sort(names(dataFlatList))
+	possibleValues <- c(
+		lapply(GruopingVariables, function(variableMame) sort(unique(dataFlatList[[variableMame]]))), 
+		#rep(list(variableNames), 2), 
+		list(variableNames), 
+		rep(list(list()), numTypes + 1)
+	)
+	
+	return(possibleValues)
+}
+
 
 #' Define the process property formats:
 #' 
@@ -243,126 +473,79 @@ processPropertyFormats <- list(
 	), 
 	
 	
-	gruopingVariables = list(
-		class = "vector", 
-		title = "StoxBiotic variables to specify conversion parameters for.", 
+	variable_StoxBioticData = list(
+		class = "single", 
+		title = "Select a StoxBioticData variable.", 
 		variableTypes = "character", 
 		possibleValues = function(StoxBioticData) {
 			sort(unique(unlist(lapply(StoxBioticData, names))))
 		}
 	), 
-	
-	conversionTable = list(
-		class = "table", 
-		title = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling")) {
-			ConversionFunction <- match.arg(ConversionFunction)
-			
-			if(identical(ConversionFunction, "Constant")) {
-				title <- "Replace variables of StoX data by a constant \"Constant\""
-			}
-			else if(identical(ConversionFunction, "Addition")) {
-				title <- "Add the value \"Addition\" to variables of StoX data"
-			}
-			else if(identical(ConversionFunction, "Scaling")) {
-				title <- "Multiply variables of StoX data by the value \"Scaling\""
-			}
-			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-				title <- "Multiply variables of StoX data by the value \"Scaling\" and add the value \"Addition\""
-			}
-			else {
-				stop("Wrong ConversionFunction.")
-			}
-			
-			return(title)
-		}, 
-		columnNames = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
-			ConversionFunction <- match.arg(ConversionFunction)
-			
-			if(identical(ConversionFunction, "Constant")) {
-				parameters <- c("Constant")
-			}
-			else if(identical(ConversionFunction, "Addition")) {
-				parameters <- "Addition"
-			}
-			else if(identical(ConversionFunction, "Scaling")) {
-				parameters <- c("Scaling")
-			}
-			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-				parameters <- c("Addition", "Scaling")
-			}
-			else {
-				stop("Wrong ConversionFunction.")
-			}
-			
-			columnNames <- c(
-				GruopingVariables, 
-				c("TargetVariable", "SourceVariable"), 
-				parameters, 
-				"RoundOffTo"
-			)
-			
-			return(columnNames)
-		}, 
-		variableTypes = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
-			ConversionFunction <- match.arg(ConversionFunction)
-			
-			if(identical(ConversionFunction, "Constant")) {
-				types <- "double"
-			}
-			else if(identical(ConversionFunction, "Addition")) {
-				types <- "double"
-			}
-			else if(identical(ConversionFunction, "Scaling")) {
-				types <- "double"
-			}
-			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-				types <- c("double", "double")
-			}
-			else {
-				stop("Wrong ConversionFunction.")
-			}
-			
-			variableTypes <- c(
-				rep("character", length(GruopingVariables)), 
-				c("character", "character"), 
-				types, 
-				"character"
-			)
-			
-			return(variableTypes)
-		}, 
-		possibleValues = function(StoxBioticData, ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
-			ConversionFunction <- match.arg(ConversionFunction)
-			
-			if(identical(ConversionFunction, "Constant")) {
-				numTypes <- 1
-			}
-			else if(identical(ConversionFunction, "Addition")) {
-				numTypes <- 1
-			}
-			else if(identical(ConversionFunction, "Scaling")) {
-				numTypes <- 1
-			}
-			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-				numTypes <- 2
-			}
-			else {
-				stop("Wrong ConversionFunction.")
-			}
-			
-			#possibleValues <- function(StoxBioticData) {
-				StoxBioticDataFlatList <- unlist(lapply(unname(StoxBioticData), as.list), recursive = FALSE)
-				variableNames <- sort(names(StoxBioticDataFlatList))
-				possibleValues <- c(
-					lapply(GruopingVariables, function(variableMame) sort(unique(StoxBioticDataFlatList[[variableMame]]))), 
-					rep(list(variableNames), 2), 
-					rep(list(list()), numTypes + 1)
-				)
-			#}
-			
-			return(possibleValues)
+	variable_StoxAcousticData = list(
+		class = "single", 
+		title = "Select a StoxAcousticData variable.", 
+		variableTypes = "character", 
+		possibleValues = function(StoxAcousticData) {
+			sort(unique(unlist(lapply(StoxAcousticData, names))))
 		}
 	), 
+	variable_BioticData = list(
+		class = "single", 
+		title = "Select a BioticData variable.", 
+		variableTypes = "character", 
+		possibleValues = function(BioticData) {
+			sort(unique(unlist(lapply(BioticData, names))))
+		}
+	), 
+	variable_AcousticData = list(
+		class = "single", 
+		title = "Select an AcousticData variable.", 
+		variableTypes = "character", 
+		possibleValues = function(AcousticData) {
+			sort(unique(unlist(lapply(AcousticData, names))))
+		}
+	), 
+	
+	variables_StoxBioticData = list(
+		class = "vector", 
+		title = "Select StoxBioticData variables.", 
+		variableTypes = "character", 
+		possibleValues = function(StoxBioticData) {
+			sort(unique(unlist(lapply(StoxBioticData, names))))
+		}
+	), 
+	variables_StoxAcousticData = list(
+		class = "vector", 
+		title = "Select StoxAcousticData variables.", 
+		variableTypes = "character", 
+		possibleValues = function(StoxAcousticData) {
+			sort(unique(unlist(lapply(StoxAcousticData, names))))
+		}
+	), 
+	variables_BioticData = list(
+		class = "vector", 
+		title = "Select BioticData variables.", 
+		variableTypes = "character", 
+		possibleValues = function(BioticData) {
+			sort(unique(unlist(lapply(BioticData, names))))
+		}
+	), 
+	variables_AcousticData = list(
+		class = "vector", 
+		title = "Select AcousticData variables.", 
+		variableTypes = "character", 
+		possibleValues = function(AcousticData) {
+			sort(unique(unlist(lapply(AcousticData, names))))
+		}
+	), 
+	
+	conversionTable_StoxBioticData = getConversionTableFormat("StoxBiotic"),
+	
+	conversionTable_StoxAcousticData = getConversionTableFormat("StoxAcoustic"),
+	
+	conversionTable_BioticData = getConversionTableFormat("Biotic"),
+	
+	conversionTable_AcousticData = getConversionTableFormat("Acoustic"), 
 	
 	variableNames_AddToStoxBiotic = list(
 		class = "vector", 
