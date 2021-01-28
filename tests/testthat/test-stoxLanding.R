@@ -1,7 +1,7 @@
 
 context("test-stoxLanding")
 landingXML <- ReadLanding(c(system.file("testresources", "landing.xml", package="RstoxData"),system.file("testresources", "landing2.xml", package="RstoxData")))
-flatSL <- StoxLanding(landingXML)$landings
+flatSL <- StoxLanding(landingXML)$Landing
 expected_colums <- c("Species",
                      "Year",
                      "CatchDate",
@@ -26,7 +26,7 @@ expect_true(length(flatSL$CatchDate) > 1 & "POSIXct" %in% class(flatSL$CatchDate
 context("test-stoxLanding missing values in aggColumns")
 weightPre <- sum(flatSL$RoundWeight)
 landingXML$landing.xml$Mottaker$Mottaksstasjon[2] <- NA
-flatSL <- StoxLanding(landingXML)$landings
+flatSL <- StoxLanding(landingXML)$Landing
 expect_equal(sum(is.na(flatSL$LandingSite)), 1)
 weightPost <- sum(flatSL$RoundWeight)
 expect_equal(weightPre, weightPost)

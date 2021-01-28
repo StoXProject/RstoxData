@@ -13,8 +13,7 @@ StoxLanding(LandingData)
 \code{\link[RstoxData]{StoxLandingData}}, aggregated landings data.
 }
 \description{
-StoX function
- Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
+Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
 }
 \details{
 All columns that are not the ones aggregated (weight), will be used as aggregation variables.

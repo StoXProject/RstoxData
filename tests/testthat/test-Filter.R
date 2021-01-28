@@ -130,7 +130,7 @@ expect_equal(nrow(filteredL$landing.xml$Art), nrow(Landings$landing.xml$Art))
 expect_lt(nrow(filteredL$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
 
 filterExpressionSL <- list()
-filterExpressionSL$landings <- c(
+filterExpressionSL$Landing <- c(
   'Area %in% c("37", "08")'
 )
 
@@ -144,4 +144,4 @@ expect_lt(nrow(filteredLprop$landing.xml$Fangstdata), nrow(Landings$landing.xml$
 # StoxLanding
 StoxLanding <- StoxLanding(Landings)
 filteredSL <- FilterStoxLanding(StoxLanding, filterExpressionSL)
-expect_equal(nrow(filteredSL$landings), sum(StoxLanding$landings$Area %in% c("37","08")))
+expect_equal(nrow(filteredSL$Landing), sum(StoxLanding$Landing$Area %in% c("37","08")))

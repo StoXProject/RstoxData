@@ -138,7 +138,6 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 
 #' Convert landing data
 #' @description
-#'  StoX function
 #'  Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
 #' @details 
 #'  All columns that are not the ones aggregated (weight), will be used as aggregation variables.
@@ -185,8 +184,7 @@ StoxLanding <- function(LandingData){
   
   output <- list()
   landings <- extractNMDlandingsV2(LdCat)
-  output$landings <- landings
-  output$notlandings <- data.table::data.table()
+  output$Landing <- landings
   
   return(output)
   
@@ -204,12 +202,12 @@ is.StoxLandingData <- function(StoxLandingData){
   if (!is.list(StoxLandingData)){
     return(FALSE)
   }
-  if (!("landings") %in% names(StoxLandingData)){
+  if (!("Landing") %in% names(StoxLandingData)){
     return(FALSE)
   }
-  #if (length(StoxLandingData) != 1){
-  #  return(FALSE)
-  #}
+  if (length(StoxLandingData) != 1){
+    return(FALSE)
+  }
 
   expected_colums <- c("Species",
                        "Year",
@@ -227,11 +225,11 @@ is.StoxLandingData <- function(StoxLandingData){
                        "RoundWeight"
   )
   
-  if (!data.table::is.data.table(StoxLandingData$landings)){
+  if (!data.table::is.data.table(StoxLandingData$Landing)){
     return(FALSE)
   }
   
-  if (!all(expected_colums %in% names(StoxLandingData$landings))){
+  if (!all(expected_colums %in% names(StoxLandingData$Landing))){
     return(FALSE)
   }
   

@@ -4,13 +4,13 @@
 \alias{StoxLandingData}
 \title{StoxLandingData}
 \description{
-Contains a list with one element 'landings', described below.
+Contains a list with one element 'Landing', described below.
 }
 \details{
-'landings' is a \code{\link[data.table]{data.table}} with aggregated weight of landings from landing records.
-Columns are specified in the section Column definitions landings
+'Landing' is a \code{\link[data.table]{data.table}} with aggregated weight of landings from landing records.
+Columns are specified in the section Column definitions Landing
 }
-\section{Column definitions landings}{
+\section{Column definitions Landing}{
 
  \describe{
   \item{Species}{character() code for species category (species identified by market or regulation standards. Several codes may code the same species or stock, and some catch may be recorded only at higher taxonomic classifications)}
