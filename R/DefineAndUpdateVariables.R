@@ -947,10 +947,52 @@ ConvertAcousticFree <- function(
 
 
 
+##################################################
+#' Translate StoxLandingData
+#' 
+#' This function translates one or more columns of \code{\link{StoxLandingData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param StoxLandingData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{StoxLandingData}} object.
+#' 
+#' @export
+#' 
+TranslateStoxLanding <- function(
+	StoxLandingData, 
+	Translation
+) {
+	translateVariables(
+		data = StoxLandingData, 
+		Translation = Translation
+	)
+}
 
 
-
-
+##################################################
+#' Translate LandingData
+#' 
+#' This function translates one or more columns of \code{\link{LandingData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param LandingData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{LandingData}} object.
+#' 
+#' @export
+#' 
+TranslateLanding <- function(
+	LandingData, 
+	Translation
+) {
+	translateVariables(
+		data = LandingData, 
+		Translation = Translation
+	)
+}
 
 
 
