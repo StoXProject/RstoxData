@@ -21,6 +21,15 @@ stoxFunctionAttributes <- list(
 		functionArgumentHierarchy = list()
 	), 
 	
+	# Read input biotic data:
+	ReadLanding = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "LandingData", 
+	  functionParameterFormat = list(FileNames = "filePaths"), 
+	  functionArgumentHierarchy = list()
+	), 
+	
 	# Convert AcousticData to StoxAcousticData:
 	StoxAcoustic = list(
 		functionType = "modelData", 
@@ -42,9 +51,6 @@ stoxFunctionAttributes <- list(
 	 functionType = "modelData",
 	 functionCategory = "baseline",
 	 functionOutputDataType = "StoxLandingData",
-	 #functionParameterType = list(StoxLanding = "character",
-	 #                             appendColumns = "character",
-	 #                             appendColumnsNames = "character"),
 	 functionArgumentHierarchy = list()
 	), 
 	
@@ -78,6 +84,22 @@ stoxFunctionAttributes <- list(
 	    functionCategory = "baseline", 
 	    functionOutputDataType = "StoxAcousticData", 
 	    functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
+	# Filter StoxLandingData:
+	FilterStoxLanding = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "StoxLandingData", 
+	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
+	# Filter LandingData:
+	FilterLanding = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "LandingData", 
+	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
 	# Convert AcousticData to StoxAcousticData:

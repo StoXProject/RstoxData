@@ -78,7 +78,43 @@ ReadAcoustic <- function(FileNames) {
 
 
 
-
+##################################################
+##################################################
+#' Read landing XML files
+#' 
+#' This function reads multiple landing files (sales-notes) to a list with a list of tables for each file.
+#' 
+#' @details
+#' This sales notes are expected to be XML-formatted with elements defined by the namespace: http://www.imr.no/formats/landinger/v2
+#' 
+#' @param FileNames The paths of the landing files.
+#' 
+#' @return
+#' An object of StoX data type \code{\link[RstoxData]{LandingData}}).
+#' 
+#' @examples
+#' exampleFile <- system.file(
+#'     "testresources","landing.xml", package="RstoxData")
+#' landingData <- ReadLanding(exampleFile)
+#' 
+#' @seealso \code{\link[RstoxData]{readXmlFile}}.
+#' 
+#' @export
+#' 
+ReadLanding <- function(FileNames) {
+  
+  # Read LandingData possibly on several cores:
+  LandingData <- lapplyOnCores(
+    FileNames, 
+    FUN = RstoxData::readXmlFile, 
+    NumberOfCores = 1L
+  )
+  
+  # Add names as the file names:
+  names(LandingData) <- basename(FileNames)
+  
+  return(LandingData)
+}
 
 
 
