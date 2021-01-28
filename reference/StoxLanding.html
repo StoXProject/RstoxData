@@ -40,8 +40,7 @@
 
 
 <meta property="og:title" content="Convert landing data — StoxLanding" />
-<meta property="og:description" content="StoX function
- Convert landing data to the aggregated format StoxLandingData" />
+<meta property="og:description" content="Convert landing data to the aggregated format StoxLandingData" />
 
 
 
@@ -75,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.25</span>
       </span>
     </div>
 
@@ -114,15 +113,10 @@
     </div>
 
     <div class="ref-description">
-    <p>StoX function
- Convert landing data to the aggregated format <code><a href='StoxLandingData.html'>StoxLandingData</a></code></p>
+    <p>Convert landing data to the aggregated format <code><a href='StoxLandingData.html'>StoxLandingData</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>StoxLanding</span><span class='op'>(</span>
-  <span class='va'>LandingData</span>,
-  appendColumns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
-  appendColumnsNames <span class='op'>=</span> <span class='va'>appendColumns</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>StoxLanding</span><span class='op'>(</span><span class='va'>LandingData</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -131,14 +125,6 @@
       <th>LandingData</th>
       <td><p>Sales-notes data. See <code><a href='LandingData.html'>LandingData</a></code></p></td>
     </tr>
-    <tr>
-      <th>appendColumns</th>
-      <td><p>character() vector that identifies additional columns in <code><a href='LandingData.html'>LandingData</a></code> to append to <code><a href='StoxLandingData.html'>StoxLandingData</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>appendColumnsNames</th>
-      <td><p>character() vector that defines the names of the columns in 'appendColumns' in the output.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -146,9 +132,7 @@
     <p><code><a href='StoxLandingData.html'>StoxLandingData</a></code>, aggregated landings data.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>All columns that are not the ones aggregated (weight), will be used as aggregation variables.
- This includes any columns added with 'appendColumns' and may not make much sense for continuous variables.</p> 
-<p>If 'LandingData' does not contain columns identified by 'appendColumns'. NA columns will be added.</p>
+    <p>All columns that are not the ones aggregated (weight), will be used as aggregation variables.</p>
 <p>Correspondences indicate which field a value is derived from, not necessarily verbatim copied.</p>
 <p>Correspondence to LandingData (http://www.imr.no/formats/landinger/v2):</p><dl>
   <dt>Species</dt><dd><p>Art_kode</p></dd>
@@ -156,15 +140,15 @@
   <dt>CatchDate</dt><dd><p>SisteFangstdato</p></dd>
   <dt>Gear</dt><dd><p>Redskap_kode</p></dd>
   <dt>Area</dt><dd><p>Hovedområde_kode</p></dd>
-  <dt>SubArea</dt><dd><p>Lokasjon_kode</p></dd>
+  <dt>Location</dt><dd><p>Lokasjon_kode</p></dd>
   <dt>Coastal</dt><dd><p>KystHav_kode</p></dd>
   <dt>N62Code</dt><dd><p>NordSørFor62GraderNord</p></dd>
-  <dt>VesselLengthGroup</dt><dd><p>Lengdegruppe_kode</p></dd>
+  <dt>VesselLength</dt><dd><p>StørsteLengde</p></dd>
   <dt>CountryVessel</dt><dd><p>Fartøynasjonalitet_kode</p></dd>
   <dt>LandingSite</dt><dd><p>Mottaksstasjon</p></dd>
   <dt>CountryLanding</dt><dd><p>Landingsnasjon_kode</p></dd>
   <dt>Usage</dt><dd><p>HovedgruppeAnvendelse_kode</p></dd>
-  <dt>RoundWeightKilogram</dt><dd><p>Rundvekt</p></dd>
+  <dt>RoundWeight</dt><dd><p>Rundvekt</p></dd>
  
 </dl>
 

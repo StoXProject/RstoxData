@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="StoxLandingData — StoxLandingData" />
-<meta property="og:description" content="Table (data.table) with aggregated weight of landings from landing records." />
+<meta property="og:description" content="Contains a list with one element 'Landing', described below." />
 
 
 
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.25</span>
       </span>
     </div>
 
@@ -113,12 +113,16 @@
     </div>
 
     <div class="ref-description">
-    <p>Table (<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code>) with aggregated weight of landings from landing records.</p>
+    <p>Contains a list with one element 'Landing', described below.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="column-definitions"><a class="anchor" href="#column-definitions"></a>Column definitions</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>'Landing' is a <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code> with aggregated weight of landings from landing records.
+Columns are specified in the section Column definitions Landing</p>
+    <h2 class="hasAnchor" id="column-definitions-landing"><a class="anchor" href="#column-definitions-landing"></a>Column definitions Landing</h2>
 
     
 
@@ -131,12 +135,12 @@
   <dt>SubArea</dt><dd><p>character() Subdivision of area code for the position where the catch was caught (dominant area for trip)</p></dd>
   <dt>Coastal</dt><dd><p>character() Code indicating whether catch was taken within coastal delimitation line (dominant side for trip)</p></dd>
   <dt>N62Code</dt><dd><p>character() Code indicating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)</p></dd>
-  <dt>VesselLengthGroup</dt><dd><p>character() Length group for vessel</p></dd>
+  <dt>VesselLength</dt><dd><p>character() Length of vessel in m</p></dd>
   <dt>CountryVessel</dt><dd><p>character() Country of the vessel that caught the catch</p></dd>
   <dt>LandingSite</dt><dd><p>character() Code identifying landing site (buyer of catch)</p></dd>
   <dt>CountryLanding</dt><dd><p>character() Country where catch was landed</p></dd>
   <dt>Usage</dt><dd><p>character() Code for market usage of catch.</p></dd>
-  <dt>RoundWeightKilogram</dt><dd><p>numeric() Weight of round catch in kg.</p></dd>
+  <dt>RoundWeight</dt><dd><p>numeric() Weight of round catch in kg.</p></dd>
  
 </dl>
 

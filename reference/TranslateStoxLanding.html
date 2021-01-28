@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge StoxBioticData — MergeStoxBiotic • RstoxData</title>
+<title>Translate StoxLandingData — TranslateStoxLanding • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge StoxBioticData — MergeStoxBiotic" />
-<meta property="og:description" content="Merge StoxBioticData" />
+<meta property="og:title" content="Translate StoxLandingData — TranslateStoxLanding" />
+<meta property="og:description" content="This function translates one or more columns of StoxLandingData to new values given by the input Translation." />
 
 
 
@@ -107,33 +107,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge StoxBioticData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxBiotic.R'><code>R/StoxBiotic.R</code></a></small>
-    <div class="hidden name"><code>MergeStoxBiotic.Rd</code></div>
+    <h1>Translate StoxLandingData</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/DefineAndUpdateVariables.R'><code>R/DefineAndUpdateVariables.R</code></a></small>
+    <div class="hidden name"><code>TranslateStoxLanding.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge StoxBioticData</p>
+    <p>This function translates one or more columns of <code><a href='StoxLandingData.html'>StoxLandingData</a></code> to new values given by the input <code>Translation</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>MergeStoxBiotic</span><span class='op'>(</span><span class='va'>StoxBioticData</span>, TargetTable <span class='op'>=</span> <span class='st'>"Individual"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>TranslateStoxLanding</span><span class='op'>(</span><span class='va'>StoxLandingData</span>, <span class='va'>Translation</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>StoxBioticData</th>
-      <td><p>A list of StoX biotic data (StoX data type <code><a href='StoxBioticData.html'>StoxBioticData</a></code>).</p></td>
+      <th>StoxLandingData</th>
+      <td><p>An input of <a href='ModelData.html'>ModelData</a> object</p></td>
     </tr>
     <tr>
-      <th>TargetTable</th>
-      <td><p>The name of the table up until which to merge (the default "Individual" implies merging all tables)</p></td>
+      <th>Translation</th>
+      <td><p>The process from which to get the <code><a href='Translation.html'>Translation</a></code> definition.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of StoX data type <code><a href='MergeStoxBioticData.html'>MergeStoxBioticData</a></code>.</p>
+    <p>A <code><a href='StoxLandingData.html'>StoxLandingData</a></code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
