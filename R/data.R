@@ -203,7 +203,8 @@ NULL
 #' can be considered a census of all first hand sale of fish sold from Norwegian vessels.
 #' 
 #' @section Format:
-#' list() of \code{\link[data.table]{data.table}} 
+#' list with one member for each sales-note set. 
+#' Each member is a list of \code{\link[data.table]{data.table}} 
 #' representing the different complexTypes in namespace http://www.imr.no/formats/landinger/v2
 #' For ease of merging: all top level attributes are repeated for all tables. And all line-identifying variables are included as top-level attributes.
 #' 
@@ -216,9 +217,12 @@ NULL
 
 #' StoxLandingData
 #'
-#' Table (\code{\link[data.table]{data.table}}) with aggregated weight of landings from landing records.
+#' Contains a list with one element 'Landing', described below.
 #'
-#' @section Column definitions:
+#' 'Landing' is a \code{\link[data.table]{data.table}} with aggregated weight of landings from landing records.
+#' Columns are specified in the section Column definitions Landing
+#'
+#' @section Column definitions Landing:
 #'  \describe{
 #'   \item{Species}{character() code for species category (species identified by market or regulation standards. Several codes may code the same species or stock, and some catch may be recorded only at higher taxonomic classifications)}
 #'   \item{Year}{integer() Year of catch}
@@ -228,12 +232,12 @@ NULL
 #'   \item{SubArea}{character() Subdivision of area code for the position where the catch was caught (dominant area for trip)}
 #'   \item{Coastal}{character() Code indicating whether catch was taken within coastal delimitation line (dominant side for trip)}
 #'   \item{N62Code}{character() Code indicating whether catch was taken north or south of 62 deg. Lat. (dominant side for trip)}
-#'   \item{VesselLengthGroup}{character() Length group for vessel}
+#'   \item{VesselLength}{character() Length of vessel in m}
 #'   \item{CountryVessel}{character() Country of the vessel that caught the catch}
 #'   \item{LandingSite}{character() Code identifying landing site (buyer of catch)}
 #'   \item{CountryLanding}{character() Country where catch was landed}
 #'   \item{Usage}{character() Code for market usage of catch.}
-#'   \item{RoundWeightKilogram}{numeric() Weight of round catch in kg.}
+#'   \item{RoundWeight}{numeric() Weight of round catch in kg.}
 #'  }
 #'
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}

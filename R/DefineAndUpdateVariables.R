@@ -49,7 +49,7 @@ TranslateData <- function(
 }
 
 # The general function for converting StoxData:
-ConvertData <- function(
+ConvertDataOld <- function(
 	StoxData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
 	GruopingVariables = character(), 
@@ -93,7 +93,90 @@ ConvertData <- function(
 	
 	
 	
+	
+	return(StoxDataCopy)
+}
 
+
+
+# The general function for converting StoxData:
+ConvertData <- function(
+	StoxData, 
+	TargetVariable, 
+	GruopingVariables = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	Conversion = data.table::data.table()
+) {
+	
+	# Get the ConversionFunction input:
+	ConversionFunction <- match.arg(ConversionFunction)
+	
+	# Check the Conversion for unique grouping variables:
+	if(!all(GruopingVariables %in% names(Conversion))) {
+		stop("All grouping variables must be present in the Conversion")
+	}
+	
+	# Make a copy to allow for applying functions by reference:
+	StoxDataCopy <- data.table::copy(StoxData)
+	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
+	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
+	
+	# Apply the conversion function for each row of the Conversion:
+	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
+	for(Conversion in ConversionList) {
+		parameterNames <- setdiff(names(Conversion), c("SourceVariable", "RoundOffTo"))
+		applyConversionFunction(
+			data = StoxDataCopyMerged, 
+			ConversionFunction = ConversionFunction, 
+			#TargetVariable = Conversion$TargetVariable, 
+			TargetVariable = TargetVariable, 
+			SourceVariable = Conversion$SourceVariable, 
+			RoundOffTo = Conversion$RoundOffTo, 
+			parameters = lapply(split(Conversion[, ..parameterNames], seq_len(nrow(Conversion))), as.list)
+			#parameters = as.list(Conversion[, ..parameterNames])
+		)
+	}
+	
+	# Extract the StoxData from the merged:
+	StoxDataCopy <- getStoxDataFromMerged(
+		StoxDataMerged = StoxDataCopyMerged, 
+		StoxData = StoxDataCopy
+	)
+	
+	return(StoxDataCopy)
+}
+
+
+
+# The general function for converting StoxData:
+ConvertDataFree <- function(
+	StoxData, 
+	TargetVariable = character(), 
+	Conversion = character()
+) {
+	
+	if(!nchar(TargetVariable) || !nchar(Conversion)) {
+		warning("Unspecified TargetVariable or empty conversion expression. Data returned unchanged.")
+		return(StoxData)
+	}
+	
+	# Make a copy to allow for applying functions by reference:
+	StoxDataCopy <- data.table::copy(StoxData)
+	
+	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
+	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
+	
+	# Apply the conversion function for each row of the Conversion:
+	StoxDataCopyMerged[, c(TargetVariable) := eval(parse(text  = Conversion))]
+	
+	
+	
+	# Extract the StoxData from the merged:
+	StoxDataCopy <- getStoxDataFromMerged(
+		StoxDataMerged = StoxDataCopyMerged, 
+		StoxData = StoxDataCopy
+	)
+	
 	return(StoxDataCopy)
 }
 
@@ -103,9 +186,8 @@ getStoxDataFromMerged <- function(StoxDataMerged, StoxData) {
 	lapply(toExtract, function(x) unique(StoxDataMerged[, ..x]))
 }
 
-
 # Function to convert one or more variables of StoxData:
-applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo) {
+applyConversionFunctionTemp <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo) {
 	
 	# Get the conversion function:
 	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
@@ -114,8 +196,63 @@ applyConversionFunction <- function(data, ConversionFunction, TargetVariable, So
 		TargetVariable = TargetVariable, 
 		SourceVariable = SourceVariable, 
 		RoundOffTo = RoundOffTo
+	)
+	)
+	
+	return(data)
+}
+
+applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
+	
+	# Get the conversion function:
+	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
+	
+	# Add the current parameters:
+	for(parameter in parameters) {
+	#data[, eval(parameterName) := parameters[[parameterName]]]
+		data[, eval(names(parameter)) := parameter]
+	
+		do.call(ConversionFunctionName, 
+			list(
+				data, 
+				TargetVariable = TargetVariable, 
+				SourceVariable = SourceVariable, 
+				RoundOffTo = RoundOffTo
+			)
+		)
+		
+		# Remove the parameters again:
+		data[, eval(names(parameter)) := NULL]
+	}
+	
+	return(data)
+}
+
+
+# Function to convert one or more variables of StoxData:
+applyConversionFunctionFree <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
+	
+	# Get the conversion function:
+	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
+	
+	
+	# Add the current parameters:
+	#for(parameterName in names(parameters)) {
+		#data[, eval(parameterName) := parameters[[parameterName]]]
+		data[, eval(names(parameters)) := parameters]
+	#}
+	
+	
+	do.call(ConversionFunctionName, list(
+		data, 
+		TargetVariable = TargetVariable, 
+		SourceVariable = SourceVariable, 
+		RoundOffTo = RoundOffTo
 		)
 	)
+	
+	# Remove the parameters again:
+	data[, eval(names(parameters)) := NULL]
 	
 	return(data)
 }
@@ -327,7 +464,7 @@ convertClassToExisting <- function(translationList, x) {
 	newClass <- class(translationList$Value)[1]
 	if(!identical(existingClass, newClass)) {
 		class(translationList$Value) <- existingClass
-		class(translationList$NewValue) <- existingClass
+		#class(translationList$NewValue) <- existingClass
 	}
 	return(translationList)
 }
@@ -470,6 +607,7 @@ TranslateStoxBiotic <- function(
 #' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
 #' 
 #' @param StoxBioticData An input of \link{ModelData} object
+#' @param TargetVariable The variable to modify.
 #' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
 #' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
 #' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
@@ -482,6 +620,27 @@ TranslateStoxBiotic <- function(
 #' @export
 #' 
 ConvertStoxBiotic <- function(
+	StoxBioticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	
+	# Convert StoxBioticData:
+	ConvertData(
+		StoxData = StoxBioticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+ConvertStoxBioticOld <- function(
 	StoxBioticData, 
 	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
 	GruopingVariables = character(),  
@@ -498,7 +657,343 @@ ConvertStoxBiotic <- function(
 
 
 
+ConvertStoxBioticFree <- function(
+	StoxBioticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert StoxBioticData:
+	ConvertData(
+		StoxData = StoxBioticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
 
+
+
+
+
+##################################################
+#' Translate StoxAcousticData
+#' 
+#' This function translates one or more columns of \code{\link{StoxAcousticData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param StoxAcousticData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{StoxAcousticData}} object.
+#' 
+#' @export
+#' 
+TranslateStoxAcoustic <- function(
+	StoxAcousticData, 
+	Translation
+) {
+	translateVariables(
+		data = StoxAcousticData, 
+		Translation = Translation
+	)
+}
+
+
+##################################################
+#' Convert StoxAcousticData
+#' 
+#' This function converts one or more columns of \code{\link{StoxAcousticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @inheritParams ConvertStoxBiotic
+#' @param StoxAcousticData An input of \link{ModelData} object
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{StoxAcousticData}} object.
+#' 
+#' @export
+#' 
+ConvertStoxAcoustic <- function(
+	StoxAcousticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert StoxAcousticData:
+	ConvertData(
+		StoxData = StoxAcousticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertStoxAcousticOld <- function(
+	StoxAcousticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert StoxAcousticData:
+	ConvertData(
+		StoxData = StoxAcousticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+
+ConvertStoxAcousticFree <- function(
+	StoxAcousticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert StoxAcousticData:
+	ConvertData(
+		StoxData = StoxAcousticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+##################################################
+#' Translate BioticData
+#' 
+#' This function translates one or more columns of \code{\link{BioticData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param BioticData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{BioticData}} object.
+#' 
+#' @export
+#' 
+TranslateBiotic <- function(
+	BioticData, 
+	Translation
+) {
+	translateVariables(
+		data = BioticData, 
+		Translation = Translation
+	)
+}
+
+
+##################################################
+#' Convert BioticData
+#' 
+#' This function converts one or more columns of \code{\link{BioticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @inheritParams ConvertStoxBiotic
+#' @param BioticData An input of \link{ModelData} object
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{BioticData}} object.
+#' 
+#' @export
+#' 
+ConvertBiotic <- function(
+	BioticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert BioticData:
+	ConvertData(
+		StoxData = BioticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertBioticOld <- function(
+	BioticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert BioticData:
+	ConvertData(
+		StoxData = BioticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertBioticFree <- function(
+	BioticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert BioticData:
+	ConvertData(
+		StoxData = BioticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+##################################################
+#' Translate AcousticData
+#' 
+#' This function translates one or more columns of \code{\link{AcousticData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param AcousticData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{AcousticData}} object.
+#' 
+#' @export
+#' 
+TranslateAcoustic <- function(
+	AcousticData, 
+	Translation
+) {
+	translateVariables(
+		data = AcousticData, 
+		Translation = Translation
+	)
+}
+
+
+##################################################
+#' Convert AcousticData
+#' 
+#' This function converts one or more columns of \code{\link{AcousticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @inheritParams ConvertStoxBiotic
+#' @param AcousticData An input of \link{ModelData} object
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{AcousticData}} object.
+#' 
+#' @export
+#' 
+ConvertAcoustic <- function(
+	AcousticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(), 
+	Conversion = data.table::data.table()
+) {
+	# Convert AcousticData:
+	ConvertData(
+		StoxData = AcousticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+ConvertAcousticOld <- function(
+	AcousticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert AcousticData:
+	ConvertData(
+		StoxData = AcousticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+ConvertAcousticFree <- function(
+	AcousticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert AcousticData:
+	ConvertData(
+		StoxData = AcousticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+
+##################################################
+#' Translate StoxLandingData
+#' 
+#' This function translates one or more columns of \code{\link{StoxLandingData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param StoxLandingData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{StoxLandingData}} object.
+#' 
+#' @export
+#' 
+TranslateStoxLanding <- function(
+	StoxLandingData, 
+	Translation
+) {
+	translateVariables(
+		data = StoxLandingData, 
+		Translation = Translation
+	)
+}
+
+
+##################################################
+#' Translate LandingData
+#' 
+#' This function translates one or more columns of \code{\link{LandingData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param LandingData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{LandingData}} object.
+#' 
+#' @export
+#' 
+TranslateLanding <- function(
+	LandingData, 
+	Translation
+) {
+	translateVariables(
+		data = LandingData, 
+		Translation = Translation
+	)
+}
 
 
 
