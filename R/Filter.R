@@ -314,7 +314,7 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
 
 #' Filter LandingData
 #'
-#' Filters \code{\link{Landing}}.
+#' Filters \code{\link{LandingData}}.
 #' 
 #' @param LandingData  Input \code{\link{LandingData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.

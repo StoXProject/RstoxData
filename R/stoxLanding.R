@@ -56,7 +56,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
                      "Lokasjon_kode",
                      "KystHav_kode", 
                      "NordS\u00F8rFor62GraderNord", 
-                     "StørsteLengde", 
+                     "St\u00F8rsteLengde", 
                      "Fart\u00F8ynasjonalitet_kode",
                      "Mottaksstasjon",
                      "Mottakernasjonalitet_kode",

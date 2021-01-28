@@ -17,5 +17,5 @@ FilterLanding(LandingData, FilterExpression, FilterUpwards = FALSE)
 An object of filtered data in the same format as the input data.
 }
 \description{
-Filters \code{\link{Landing}}.
+Filters \code{\link{LandingData}}.
 }

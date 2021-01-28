@@ -607,6 +607,7 @@ TranslateStoxBiotic <- function(
 #' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
 #' 
 #' @param StoxBioticData An input of \link{ModelData} object
+#' @param TargetVariable The variable to modify.
 #' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
 #' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
 #' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
@@ -931,7 +932,7 @@ ConvertAcousticOld <- function(
 
 
 ConvertAcousticFree <- function(
-	BioticData, 
+	AcousticData, 
 	TargetVariable = character(),  
 	Conversion = character()
 ) {
