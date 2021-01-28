@@ -1,3 +1,17 @@
+# RstoxData v1.0.24 (2021-01-21)
+
+* `getStoxKeys()`: Fix for `stoxBioticObject` object not found
+(https://github.com/StoXProject/RstoxData/issues/117).
+* Remove sorting when merging in `AddToStoxBiotic()`.
+* Rename `DefineStoxBioticTranslation` to `DefineTranslation`, and the coresponding
+data type to `Translation`. Also added backward compatibility for this.
+# RstoxData v1.0.23 (2021-01-13)
+
+* `ICESDatras`: remove reference to SurveyName and addSurveyType parameters.
+* Add reporting functions for ICES exports (`ReportICES*()`).
+* Add Intercatch data parser (`parseInterCatch()`).
+* Add `roundDrop0()` to replace `round()` as a more robust rounding function.
+
 # RstoxData v1.0.20 (2021-01-06)
 
 * `getICESShipCode`: improve ship conversion by removing the deprecated entries and sorting.
