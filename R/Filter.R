@@ -16,6 +16,13 @@
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
     
 	`%notin%` <- Negate(`%in%`)
+	
+	`%notequal%` <- function(x, table) is.na(x) | x %notin% table
+	
+	
+
+	
+	
 
 	processFilter <- function(filters) {
 		# Assume each individual filters relation are the AND (&) operator 
