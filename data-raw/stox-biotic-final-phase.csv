@@ -1,52 +1,52 @@
-variable,level,nmdbioticv3.1,nmdbioticv3,nmdbioticv1.4,icesBiotic,key
-CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-Cruise,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,
-Platform,Cruise,platform,platform,platform,Platform,
-CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-StationKey,Station,StationKey,StationKey,StationKey,StationKey,Y
-Station,Station,"paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')",
-CatchPlatform,Station,catchplatform,catchplatform,platform,Platform,
-DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(StartTime, tz='GMT')",
-Latitude,Station,latitudestart,latitudestart,latitudestart,StartLatitude,
-Longitude,Station,longitudestart,longitudestart,longitudestart,StartLongitude,
-BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
-CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-StationKey,Haul,StationKey,StationKey,StationKey,StationKey,Y
-HaulKey,Haul,HaulKey,HaulKey,HaulKey,HaulKey,Y
-Haul,Haul,"paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')",
-Gear,Haul,gear,gear,gear,Gear,
-TowedDistance,Haul,distance,distance,distance,Distance,
-EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,TowedDistance,
-MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
-MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
-VerticalNetOpening,Haul,verticaltrawlopening,verticaltrawlopening,trawlopening,Netopening,
-HorizontalNetOpening,Haul,wingspread,wingspread,NA_real_,WingSpread,
-TrawlDoorSpread,Haul,trawldoorspread,trawldoorspread,doorspread,DoorSpread,
-CruiseKey,SpeciesCategory,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-StationKey,SpeciesCategory,StationKey,StationKey,StationKey,StationKey,Y
-HaulKey,SpeciesCategory,HaulKey,HaulKey,HaulKey,HaulKey,Y
-SpeciesCategoryKey,SpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
-SpeciesCategory,SpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,
-CruiseKey,Sample,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-StationKey,Sample,StationKey,StationKey,StationKey,StationKey,Y
-HaulKey,Sample,HaulKey,HaulKey,HaulKey,HaulKey,Y
-SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
-SampleKey,Sample,SampleKey,SampleKey,SampleKey,SampleKey,Y
-Sample,Sample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')",
-CatchFractionWeight,Sample,"ifelse(catchproducttype == 1, catchweight, NA_real_)","ifelse(catchproducttype == 1, catchweight, NA_real_)","ifelse(producttype == 1, weight, NA_real_)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
-CatchFractionCount,Sample,catchcount,catchcount,count,SpeciesCategoryNumber,
-SampleWeight,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
-SampleCount,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,
-CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
-StationKey,Individual,StationKey,StationKey,StationKey,StationKey,Y
-HaulKey,Individual,HaulKey,HaulKey,HaulKey,HaulKey,Y
-SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
-SampleKey,Individual,SampleKey,SampleKey,SampleKey,SampleKey,Y
-IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y
-Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, IndividualKey, sep = '-')",
-IndividualRoundWeight,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(producttype.individual == 1, weight.individual * 1000, NA_real_)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
-IndividualTotalLength,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
-LengthResolution,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),
-WeightMeasurement,Individual,'IndividualWeight','IndividualWeight','IndividualWeight',"ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",
-IndividualAge,Individual,age,age,age,IndividualAge,
-IndividualSex,Individual,"ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))",IndividualSex,
+variable,level,nmdbioticv3.1,nmdbioticv3,nmdbioticv1.4,nmdbioticv1.1,icesBiotic,key
+CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+Cruise,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,
+Platform,Cruise,platform,platform,platform,platform,Platform,
+CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Station,StationKey,StationKey,StationKey,StationKey,StationKey,Y
+Station,Station,"paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')",
+CatchPlatform,Station,catchplatform,catchplatform,platform,platform,Platform,
+DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(StartTime, tz='GMT')",
+Latitude,Station,latitudestart,latitudestart,latitudestart,latitudestart,StartLatitude,
+Longitude,Station,longitudestart,longitudestart,longitudestart,longitudestart,StartLongitude,
+BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
+CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Haul,StationKey,StationKey,StationKey,StationKey,StationKey,Y
+HaulKey,Haul,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
+Haul,Haul,"paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')",
+Gear,Haul,gear,gear,gear,gear,Gear,
+TowedDistance,Haul,distance,distance,distance,distance,Distance,
+EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,TowedDistance,TowedDistance,
+MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
+MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
+VerticalNetOpening,Haul,verticaltrawlopening,verticaltrawlopening,trawlopening,trawlopening,Netopening,
+HorizontalNetOpening,Haul,wingspread,wingspread,NA_real_,NA_real_,WingSpread,
+TrawlDoorSpread,Haul,trawldoorspread,trawldoorspread,doorspread,doorspread,DoorSpread,
+CruiseKey,SpeciesCategory,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,SpeciesCategory,StationKey,StationKey,StationKey,StationKey,StationKey,Y
+HaulKey,SpeciesCategory,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
+SpeciesCategoryKey,SpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
+SpeciesCategory,SpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,
+CruiseKey,Sample,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Sample,StationKey,StationKey,StationKey,StationKey,StationKey,Y
+HaulKey,Sample,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
+SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
+SampleKey,Sample,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y
+Sample,Sample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')",
+CatchFractionWeight,Sample,"ifelse(catchproducttype == 1, catchweight, NA_real_)","ifelse(catchproducttype == 1, catchweight, NA_real_)","ifelse(producttype == 1, weight, NA_real_)","ifelse(producttype == 1, weight, NA_real_)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",
+CatchFractionCount,Sample,catchcount,catchcount,count,count,SpeciesCategoryNumber,
+SampleWeight,Sample,"ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype == 1, lengthsampleweight, NA_real_)","SubsampleWeight * convertWt(WeightUnit, 'kg')",
+SampleCount,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,
+CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
+StationKey,Individual,StationKey,StationKey,StationKey,StationKey,StationKey,Y
+HaulKey,Individual,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
+SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
+SampleKey,Individual,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y
+IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y
+Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, IndividualKey, sep = '-')",
+IndividualRoundWeight,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(producttype == 1, weight * 1000, NA_real_)","ifelse(producttype == 1, weight * 1000, NA_real_)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
+IndividualTotalLength,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
+LengthResolution,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),
+WeightMeasurement,Individual,'IndividualWeight','IndividualWeight','IndividualWeight','IndividualWeight',"ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",
+IndividualAge,Individual,age,age,age,age,IndividualAge,
+IndividualSex,Individual,"ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))","ifelse(sex == 1, 'F', ifelse(sex == 2, 'M', NA_character_))",IndividualSex,

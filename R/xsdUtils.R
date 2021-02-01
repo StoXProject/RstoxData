@@ -156,7 +156,6 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 	}
 
 	# Meta data before go to C++
-
 	r_e <- new.env()
 	r_e$tableHeaders <- list()
 	r_e$tablePrefix <- list()

@@ -122,7 +122,6 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 						"xsd:string"="character", "xsd:int"="integer", "xs:long"="integer", "xs:integer"="integer",
 						"xs:decimal"="double", "xs:date"="character", "xs:time"="character", "xs:double"="double")
 
-
 		# Get result matrix
 		y <- result[[x]]
 
@@ -137,7 +136,14 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 		tableHeader <- tableHeaders[[x]]
 
 		# NOTE: Landings' Fartoy header has duplicate header name try to rename the second
-		tableHeader <- make.unique(tableHeader)
+		
+		# Instead of adding integers, add the level:
+		#tableHeader <- make.unique(tableHeader)
+		if(anyDuplicated(tableHeader)) {
+			dup <- duplicated(tableHeader)
+			tableHeader[dup] <- paste(tableHeader[dup], x, sep = ".")
+		}
+		
 		Encoding(tableHeader) <- "UTF-8"
 		setnames(z, tableHeader)
 

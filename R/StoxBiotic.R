@@ -93,7 +93,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         toMerge <- c("mission", "fishstation", "catchsample", "individual", "prey")
         data <- mergeDataTables(data, toMerge)
     } 
-    else if(datatype == "nmdbioticv1.4") {
+    else if(datatype %in% c("nmdbioticv1.1", "nmdbioticv1.4")) {
 
 	    ## Merge individual and age
 	    indageHeaders <- intersect(names(data$agedetermination), names(data$individual))
@@ -222,7 +222,6 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     # 3. One to one mapping and keys
-    
     firstPhaseTables <- list()
     
     # Add the tables which should simply be renamed, and not split into several tables:
@@ -285,8 +284,8 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 StoxBiotic_firstPhase <- function(BioticData) {
     # Get data type: 
 	datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
-    
-    if(!exists("stoxBioticObject")) {
+	
+	if(!exists("stoxBioticObject")) {
         data(stoxBioticObject, package="RstoxData", envir = environment())
     }
     
@@ -336,7 +335,6 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     		)
     	}
     }
-    
     
     # Apply the conversions, such as pasting keys, converting to POSIX, etc.:
     for (i in unique(convertTable[, level])) {
