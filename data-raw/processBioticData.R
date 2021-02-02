@@ -1,6 +1,8 @@
 library(data.table)
 library(usethis)
 
+# setwd(file.path(getwd(), "RstoxData", "data-raw"))
+
 # Read Data file and translation table
 stoxBioticObject <- list()
 stoxBioticObject$tableMapList <- list()
@@ -125,6 +127,24 @@ stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 	#	target = "Individual"
 	#)
 )
+
+
+##### NMDBioticv1.1 #####
+stoxBioticObject$indageHeadersList[["nmdbioticv1.1"]] <- stoxBioticObject$indageHeadersList[["nmdbioticv1.4"]]
+
+## Format: {source variable, target keyname}
+stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- stoxBioticObject$tableKeyList[["nmdbioticv1.4"]]
+stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- stoxBioticObject$tableMapList[["nmdbioticv1.4"]]
+stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- fread("stox-translate-nmdbioticv1.1.csv", stringsAsFactors=FALSE)
+## Length conversion
+stoxBioticObject$convertLenRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertLenRes[["nmdbioticv1.4"]]
+stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
+stoxBioticObject$convertWt[["nmdbioticv1.1"]] <- stoxBioticObject$convertWt[["nmdbioticv1.4"]]
+stoxBioticObject$borrowVariables[["nmdbioticv1.1"]] <- stoxBioticObject$borrowVariables[["nmdbioticv1.4"]]
+
+
+
+
 
 
 ##### icesBiotic #####

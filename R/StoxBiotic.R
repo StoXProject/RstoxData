@@ -93,7 +93,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         toMerge <- c("mission", "fishstation", "catchsample", "individual", "prey")
         data <- mergeDataTables(data, toMerge)
     } 
-    else if(datatype == "nmdbioticv1.4") {
+    else if(datatype %in% c("nmdbioticv1.1", "nmdbioticv1.4")) {
 
 	    ## Merge individual and age
 	    indageHeaders <- intersect(names(data$agedetermination), names(data$individual))
@@ -184,7 +184,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    
 	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
 	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
-	    	stop("StoX: Error in merging.")
+	    	stop("Error in merging.")
 	    }
 	    
 	    # Keep only the original columns and the "StationName", which is not a key in the ICESBiotic:
@@ -222,7 +222,6 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     # 3. One to one mapping and keys
-    
     firstPhaseTables <- list()
     
     # Add the tables which should simply be renamed, and not split into several tables:
@@ -284,9 +283,9 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 # Function to get the StoxBiotic on one file:
 StoxBiotic_firstPhase <- function(BioticData) {
     # Get data type: 
-    datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
-    
-    if(!exists("stoxBioticObject")) {
+	datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
+	
+	if(!exists("stoxBioticObject")) {
         data(stoxBioticObject, package="RstoxData", envir = environment())
     }
     
@@ -316,7 +315,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     
     columns <- c("variable", "level", datatype)
     if(!datatype %in% names(stoxBioticObject$convertTable)) {
-    	stop("StoX: The input format ", datatype, " is not yet supprted in RstoxData (")
+    	stop("The input format ", datatype, " is not yet supprted in RstoxData (")
     }
     convertTable <- stoxBioticObject$convertTable[, ..columns]
     
@@ -342,7 +341,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
         # Process conversion table
         for(j in 1:nrow(convertTable[level==i,])) {
             k <- convertTable[level==i,][j,]
-            data[[i]][, (unlist(k[,"variable"])):=eval(parse(text=k[, get(..("datatype"))]))]
+            data[[i]][, (unlist(k[,"variable"])) := eval(parse(text=k[, get(..("datatype"))]))]
         }
         # Get key for transfer
         sourceColumns <- unlist(indices(data[[i]], vectors = TRUE))
