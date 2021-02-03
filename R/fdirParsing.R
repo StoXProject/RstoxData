@@ -168,21 +168,22 @@ readLssFile <- function(file, encoding="Latin-1", guessMax = 100000, strict=T){
   typ <- unlist(spec_land)
   
   if (strict){
-    headers <- names(data.table::fread(file, sep="|", header = T, colClasses = typ, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), nrows = 1, encoding = encoding))
+    headers <- names(data.table::fread(file, sep="|", colClasses = c("character"), header = T, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), nrows = 1, encoding = encoding, showProgress=F))
     
     if (length(headers) != length(spec_land)){
       stop("Number of columns in file does not match specification.")
     }
     if (!all(headers == sel)){
-      differences <- sum(headers != names(sel))
+      differences <- sum(headers != sel)
       warning(paste("StoX: Header names does not match specification,", differences, "column names differ."))
     }
       
     db <- data.table::fread(file, sep="|", header = T, colClasses = typ, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), encoding = encoding)
+    names(db) <- sel
     db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`, format='%d.%m.%Y')
   }
   else{
-    db <- data.table::fread(file, sep="|", header = T, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), encoding = encoding, select = sel, keepLeadingZeros=T)
+    db <- data.table::fread(file, sep="|", header = T, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), encoding = encoding, keepLeadingZeros=T)
     if ("Siste fangstdato" %in% names(db)){
       db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`, format='%d.%m.%Y')
     }

@@ -4,12 +4,12 @@
 \alias{readErsFile}
 \title{Parses logbooks (ERS)}
 \usage{
-readErsFile(file, encoding = "latin1")
+readErsFile(file, encoding = "Latin-1")
 }
 \arguments{
 \item{file}{path to file}
 
-\item{encoding}{encoding for 'file'}
+\item{encoding}{encoding for 'file', must be accepted by \code{\link[data.table]{fread}}}
 }
 \value{
 data.table() with logbooks
