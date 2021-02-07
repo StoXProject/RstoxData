@@ -578,3 +578,70 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 }
 
 
+
+orderRowsByKeys <- function(data) {
+	lapply(data, orderRowsByKeysOne)
+}
+
+orderRowsByKeysOne <- function(dataOne) {
+	
+	# Locate keys:
+	areKeys <- endsWith(names(dataOne), "Key")
+	
+	if(any(areKeys)) {
+		keys <- names(dataOne)[areKeys]
+		orderKeys <- paste0(keys, "OrderedAfterSplitting")
+		
+		# Create keys which are converted to ranks, splitting first and then treatnig individual elemens as numbers if possible:
+		dataOne[, (orderKeys) := lapply(.SD, createOrderKey), .SDcols = keys]
+		
+		# Order the rows:
+		data.table::setorderv(dataOne, orderKeys)
+		
+		# Remove the orderKeys:
+		dataOne[, (orderKeys) := NULL]
+	}
+}
+
+
+# Function to decide whether the vector x can be converted to pasted numeric:
+createOrderKey <- function(x, split = "/") {
+	
+	# Split the keys:
+	splitted <- strsplit(x, split)
+	
+	# Check that all have the same number of elements, that is the same number of splits:
+	if(!all(lengths(splitted) == length(splitted[[1]]))) {
+		return(x)
+	}
+	
+	# Create a data.table off the splitted elements and get the order of these:
+	splittedDT <- data.table::rbindlist(lapply(splitted, as.list))
+	suppressWarnings(splittedDT[, names(splittedDT) := lapply(.SD, as.numeric)])
+	
+	# Only accept if all elements can be converted to numeric:
+	if(any(is.na(splittedDT))) {
+		return(x)
+	}
+	
+	# Convert to integer ranks:
+	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, sort(unique(y))))]
+
+	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
+	numberOfDigits <- splittedDT[, lapply(.SD, max)]
+	numberOfDigits <- nchar(numberOfDigits)
+	exponent <- rev(c(0, cumsum(rev(numberOfDigits))[ -length(numberOfDigits)]))
+	names(exponent) <- names(splittedDT)
+	for(name in names(splittedDT)) {
+		splittedDT[, (name) := get(name) * 10^(exponent[[name]])]
+	}
+	
+	orderKey <- rowSums(splittedDT)
+	
+	
+	#orderOfSplitted <- do.call(order, splittedDT)
+	## Match with a sequence to create integers used as order key:
+	#orderKey <- match(seq_along(x), orderOfSplitted)
+	#
+	return(orderKey)
+}

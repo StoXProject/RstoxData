@@ -22,8 +22,11 @@ StoxBiotic <- function(BioticData) {
     	stoxDataFormat = "Biotic"
     )
     
+    # Order rows:
+    orderRowsByKeys(StoxBioticData)
+    
     # Ensure that the numeric values are rounded to the defined number of digits:
-    RstoxData::setRstoxPrecisionLevel(StoxBioticData)
+    setRstoxPrecisionLevel(StoxBioticData)
     
     return(StoxBioticData)
 }

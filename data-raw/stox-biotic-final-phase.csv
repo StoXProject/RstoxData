@@ -6,7 +6,7 @@ CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Station,StationKey,StationKey,StationKey,StationKey,StationKey,Y
 Station,Station,"paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')",
 CatchPlatform,Station,catchplatform,catchplatform,platform,platform,Platform,
-DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(startdate.fishstation, starttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(StartTime, tz='GMT')",
+DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT')","as.POSIXct(StartTime, tz='GMT')",
 Latitude,Station,latitudestart,latitudestart,latitudestart,latitudestart,StartLatitude,
 Longitude,Station,longitudestart,longitudestart,longitudestart,longitudestart,StartLongitude,
 BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
@@ -15,8 +15,10 @@ StationKey,Haul,StationKey,StationKey,StationKey,StationKey,StationKey,Y
 HaulKey,Haul,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
 Haul,Haul,"paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')",
 Gear,Haul,gear,gear,gear,gear,Gear,
-TowedDistance,Haul,distance,distance,distance,distance,Distance,
-EffectiveTowedDistance,Haul,TowedDistance,TowedDistance,TowedDistance,TowedDistance,TowedDistance,
+TowDistance,Haul,distance,distance,distance,distance,Distance,
+EffectiveTowDistance,Haul,TowDistance,TowDistance,TowDistance,TowDistance,TowDistance,
+TowDuration,Haul,"as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","Duration",
+EffectiveTowDuration,Haul,TowDuration,TowDuration,TowDuration,TowDuration,TowDuration,
 MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
 MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
 VerticalNetOpening,Haul,verticaltrawlopening,verticaltrawlopening,trawlopening,trawlopening,Netopening,

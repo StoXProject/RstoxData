@@ -24,8 +24,11 @@ StoxAcoustic <- function(AcousticData){
     	stoxDataFormat = "Acoustic"
     )
     
-	# Ensure that the numeric values are rounded to the defined number of digits:
- 	RstoxData::setRstoxPrecisionLevel(StoxAcousticData)
+    # Order rows:
+    orderRowsByKeys(StoxAcousticData)
+    
+    # Ensure that the numeric values are rounded to the defined number of digits:
+ 	setRstoxPrecisionLevel(StoxAcousticData)
 
  	return(StoxAcousticData)
 }
@@ -171,7 +174,7 @@ StoxAcousticOne <- function(data_list) {
 		##############################################################
 		#              Add NASCKey to all list                       #
 		##############################################################
-		data_list$NASC$NASCKey           <- data_list$NASC$ch
+		data_list$NASC$NASCKey           <- as.character(data_list$NASC$ch)
 		
 		
 		

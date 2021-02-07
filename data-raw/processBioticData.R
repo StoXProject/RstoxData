@@ -43,6 +43,11 @@ stoxBioticObject$borrowVariables[["nmdbioticv3.1"]] <- list(
 		variable = "lengthmeasurement", 
 		source = "Sample", 
 		target = "Individual"
+	), 
+	list(
+		variable = c("stationstopdate", "stationstoptime", "stationstartdate", "stationstarttime"), 
+		source = "Station", 
+		target = "Haul"
 	)#, 
 	#list(
 	#	variable = "age", 
@@ -82,6 +87,11 @@ stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- list(
 		variable = "lengthmeasurement", 
 		source = "Sample", 
 		target = "Individual"
+	), 
+	list(
+		variable = c("stationstopdate", "stationstoptime", "stationstartdate", "stationstarttime"), 
+		source = "Station", 
+		target = "Haul"
 	)#, 
 	#list(
 	#	variable = "age", 
@@ -120,6 +130,11 @@ stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 		variable = "lengthmeasurement", 
 		source = "Sample", 
 		target = "Individual"
+	), 
+	list(
+		variable = c("stopdate.fishstation", "stoptime", "startdate.fishstation", "starttime"), 
+		source = "Station", 
+		target = "Haul"
 	)#, 
 	#list(
 	#	variable = "age", 
