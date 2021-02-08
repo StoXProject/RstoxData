@@ -475,5 +475,7 @@ checkDataSource <- function(BioticData) {
 
 
 
-
+# This can be used later if TowDuration is needed:
+# TowDuration,Haul,"as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","Duration",
+# EffectiveTowDuration,Haul,TowDuration,TowDuration,TowDuration,TowDuration,TowDuration,
 
