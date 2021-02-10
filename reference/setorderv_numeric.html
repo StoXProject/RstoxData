@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function specification for inclusion in StoX projects — stoxFunctionAttributes • RstoxData</title>
+<title>Order a data.table (by reference) by interpreting characters as numeric if possible — setorderv_numeric • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Function specification for inclusion in StoX projects — stoxFunctionAttributes" />
-<meta property="og:description" content="Function specification for inclusion in StoX projects" />
+<meta property="og:title" content="Order a data.table (by reference) by interpreting characters as numeric if possible — setorderv_numeric" />
+<meta property="og:description" content="Order a data.table (by reference) by interpreting characters as numeric if possible" />
 
 
 
@@ -107,21 +107,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Function specification for inclusion in StoX projects</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/stoxFunctionAttributes.R'><code>R/stoxFunctionAttributes.R</code></a></small>
-    <div class="hidden name"><code>stoxFunctionAttributes.Rd</code></div>
+    <h1>Order a data.table (by reference) by interpreting characters as numeric if possible</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
+    <div class="hidden name"><code>setorderv_numeric.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function specification for inclusion in StoX projects</p>
+    <p>Order a data.table (by reference) by interpreting characters as numeric if possible</p>
     </div>
 
-    <pre class="usage"><span class='va'>stoxFunctionAttributes</span></pre>
+    <pre class="usage"><span class='fu'>setorderv_numeric</span><span class='op'>(</span><span class='va'>dataOne</span>, by <span class='op'>=</span> <span class='cn'>NULL</span>, key <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>dataOne</th>
+      <td><p>A data.table.</p></td>
+    </tr>
+    <tr>
+      <th>by</th>
+      <td><p>Order by the given columns.</p></td>
+    </tr>
+    <tr>
+      <th>key</th>
+      <td><p>If given and <code>by</code> is empty, orderr by the columns with names ending with <code>key</code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Passed on to <code><a href='https://Rdatatable.gitlab.io/data.table/reference/setorder.html'>setorderv</a></code></p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>An object of class <code>list</code> of length 29.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
