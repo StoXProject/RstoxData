@@ -585,7 +585,10 @@ orderRowsByKeys <- function(data) {
 
 #' Order a data.table (by reference) by interpreting characters as numeric if possible
 #'
-#' @param data A data.table.
+#' @param dataOne A data.table.
+#' @param by Order by the given columns.
+#' @param key If given and \code{by} is empty, orderr by the columns with names ending with \code{key}.
+#' @param ... Passed on to \code{\link[data.table]{setorderv}}
 #'
 #' @export
 #' 
