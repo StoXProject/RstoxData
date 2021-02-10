@@ -580,23 +580,38 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 
 
 orderRowsByKeys <- function(data) {
-	lapply(data, orderRowsByKeysOne)
+	lapply(data, setorderv_numeric, key = "Key")
 }
 
-orderRowsByKeysOne <- function(dataOne) {
+#' Order a data.table (by reference) by interpreting characters as numeric if possible
+#'
+#' @param dataOne A data.table.
+#' @param by Order by the given columns.
+#' @param key If given and \code{by} is empty, orderr by the columns with names ending with \code{key}.
+#' @param ... Passed on to \code{\link[data.table]{setorderv}}
+#'
+#' @export
+#' 
+setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
 	
 	# Locate keys:
-	areKeys <- endsWith(names(dataOne), "Key")
+	if(!length(by)) {
+		if(length(key)) {
+			by <- names(dataOne)[endsWith(names(dataOne), key)]
+		}
+		else {
+			by <- names(dataOne)
+		}
+	}
 	
-	if(any(areKeys)) {
-		keys <- names(dataOne)[areKeys]
-		orderKeys <- paste0(keys, "OrderedAfterSplitting")
+	if(length(by)) {
+		orderKeys <- paste0(by, "OrderedAfterSplitting")
 		
 		# Create keys which are converted to ranks, splitting first and then treatnig individual elemens as numbers if possible:
-		dataOne[, (orderKeys) := lapply(.SD, createOrderKey), .SDcols = keys]
+		dataOne[, (orderKeys) := lapply(.SD, createOrderKey), .SDcols = by]
 		
 		# Order the rows:
-		data.table::setorderv(dataOne, orderKeys)
+		data.table::setorderv(dataOne, orderKeys, ...)
 		
 		# Remove the orderKeys:
 		dataOne[, (orderKeys) := NULL]
@@ -608,6 +623,9 @@ orderRowsByKeysOne <- function(dataOne) {
 createOrderKey <- function(x, split = "/") {
 	
 	# Split the keys:
+	if(!is.character(x)) {
+		return(x)
+	}
 	splitted <- strsplit(x, split)
 	
 	# Check that all have the same number of elements, that is the same number of splits:
@@ -620,7 +638,10 @@ createOrderKey <- function(x, split = "/") {
 	suppressWarnings(splittedDT[, names(splittedDT) := lapply(.SD, as.numeric)])
 	
 	# Only accept if all elements can be converted to numeric:
-	if(any(is.na(splittedDT))) {
+	#if(any(is.na(splittedDT))) {
+	
+	# Acccpet if any oof the values are not NA:
+	if(all(is.na(splittedDT))) {
 		return(x)
 	}
 	
