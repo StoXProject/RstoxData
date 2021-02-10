@@ -1,3 +1,23 @@
+# RstoxData v1.1.0 (2021-02-10)
+
+* Final version for the release of StoX 3.0.0.
+
+# RstoxData v1.0.28 (2021-02-08)
+
+* Renamed TowedDistance to TowDistance and EffectiveTowedDistance to EffectiveTowDistance. 
+* Interpret keys as numeric (possibly separated by slash) if possiible when ordering StoxAcoustic and StoxBiotic. 
+ 
+# RstoxData v1.0.26 (2021-02-02)
+
+* Added support for NMDBiotoic1.4 and NMDBiotoic1.1 in StoxBiotic(). 
+
+# RstoxData v1.0.25 (2021-01-28)
+
+* Added DefineTranslation and TranslateAcoustic, TranslateBiotic, TranslateLanding and TranslateStoxLanding.
+* Removed all Convert-functions. These may be added later.
+* Added/fixed FilterLanding and FilterStoxLanding.
+* Added all agedetermination variables in BioticData2GeneralSamplingHierarchy(), making these available for AddToStoxBiotic.
+
 # RstoxData v1.0.24 (2021-01-21)
 
 * `getStoxKeys()`: Fix for `stoxBioticObject` object not found
@@ -5,6 +25,7 @@
 * Remove sorting when merging in `AddToStoxBiotic()`.
 * Rename `DefineStoxBioticTranslation` to `DefineTranslation`, and the coresponding
 data type to `Translation`. Also added backward compatibility for this.
+
 # RstoxData v1.0.23 (2021-01-13)
 
 * `ICESDatras`: remove reference to SurveyName and addSurveyType parameters.
