@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.28</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.29</span>
       </span>
     </div>
 
@@ -110,18 +110,63 @@
       <small>Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="rstoxdata-v110-2021-02-10" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.0">
+<a href="#rstoxdata-v110-2021-02-10" class="anchor"></a>RstoxData v1.1.0 (2021-02-10)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Final version for the release of StoX 3.0.0.</li>
+</ul>
+</div>
+    <div id="rstoxdata-v1028-2021-02-08" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.28">
+<a href="#rstoxdata-v1028-2021-02-08" class="anchor"></a>RstoxData v1.0.28 (2021-02-08)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Renamed TowedDistance to TowDistance and EffectiveTowedDistance to EffectiveTowDistance.</li>
+<li>Interpret keys as numeric (possibly separated by slash) if possiible when ordering StoxAcoustic and StoxBiotic.</li>
+</ul>
+</div>
+    <div id="rstoxdata-v1026-2021-02-02" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.26">
+<a href="#rstoxdata-v1026-2021-02-02" class="anchor"></a>RstoxData v1.0.26 (2021-02-02)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added support for NMDBiotoic1.4 and NMDBiotoic1.1 in StoxBiotic().</li>
+</ul>
+</div>
+    <div id="rstoxdata-v1025-2021-01-28" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.25">
+<a href="#rstoxdata-v1025-2021-01-28" class="anchor"></a>RstoxData v1.0.25 (2021-01-28)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added DefineTranslation and TranslateAcoustic, TranslateBiotic, TranslateLanding and TranslateStoxLanding.</li>
+<li>Removed all Convert-functions. These may be added later.</li>
+<li>Added/fixed FilterLanding and FilterStoxLanding.</li>
+<li>Added all agedetermination variables in BioticData2GeneralSamplingHierarchy(), making these available for AddToStoxBiotic.</li>
+</ul>
+</div>
     <div id="rstoxdata-v1024-2021-01-21" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.24">
 <a href="#rstoxdata-v1024-2021-01-21" class="anchor"></a>RstoxData v1.0.24 (2021-01-21)<small> 2021-01-24 </small>
 </h1>
 <ul>
-<li><p><code><a href="../reference/getStoxKeys.html">getStoxKeys()</a></code>: Fix for <code>stoxBioticObject</code> object not found (https://github.com/StoXProject/RstoxData/issues/117).</p></li>
-<li><p>Remove sorting when merging in <code><a href="../reference/AddToStoxBiotic.html">AddToStoxBiotic()</a></code>.</p></li>
-<li><p>Rename <code>DefineStoxBioticTranslation</code> to <code>DefineTranslation</code>, and the coresponding data type to <code>Translation</code>. Also added backward compatibility for this. # RstoxData v1.0.23 (2021-01-13)</p></li>
-<li><p><code>ICESDatras</code>: remove reference to SurveyName and addSurveyType parameters.</p></li>
-<li><p>Add reporting functions for ICES exports (<code>ReportICES*()</code>).</p></li>
-<li><p>Add Intercatch data parser (<code><a href="../reference/parseInterCatch.html">parseInterCatch()</a></code>).</p></li>
-<li><p>Add <code>roundDrop0()</code> to replace <code><a href="https://rdrr.io/r/base/Round.html">round()</a></code> as a more robust rounding function.</p></li>
+<li>
+<code><a href="../reference/getStoxKeys.html">getStoxKeys()</a></code>: Fix for <code>stoxBioticObject</code> object not found (https://github.com/StoXProject/RstoxData/issues/117).</li>
+<li>Remove sorting when merging in <code><a href="../reference/AddToStoxBiotic.html">AddToStoxBiotic()</a></code>.</li>
+<li>Rename <code>DefineStoxBioticTranslation</code> to <code>DefineTranslation</code>, and the coresponding data type to <code>Translation</code>. Also added backward compatibility for this.</li>
+</ul>
+</div>
+    <div id="rstoxdata-v1023-2021-01-13" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.23">
+<a href="#rstoxdata-v1023-2021-01-13" class="anchor"></a>RstoxData v1.0.23 (2021-01-13)<small> 2021-01-13 </small>
+</h1>
+<ul>
+<li>
+<code>ICESDatras</code>: remove reference to SurveyName and addSurveyType parameters.</li>
+<li>Add reporting functions for ICES exports (<code>ReportICES*()</code>).</li>
+<li>Add Intercatch data parser (<code><a href="../reference/parseInterCatch.html">parseInterCatch()</a></code>).</li>
+<li>Add <code>roundDrop0()</code> to replace <code><a href="https://rdrr.io/r/base/Round.html">round()</a></code> as a more robust rounding function.</li>
 </ul>
 </div>
     <div id="rstoxdata-v1020-2021-01-06" class="section level1">
