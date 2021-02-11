@@ -211,7 +211,7 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
 #'
 #' @param BioticData  Input \code{\link{BioticData}} data.
 #' @param FilterExpression Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \code{\%in\%} or the special operator \code{\%notin\%}, which is defined in RstoxData.
-#' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE. Use this option with caution, particularly for swept-area survey estimates, where setting \code{FilterUpwards} to TRUE could affect the estimated mean density.
 #'
 #' @return An object of filtered data in the same format as the input data.
 #'
