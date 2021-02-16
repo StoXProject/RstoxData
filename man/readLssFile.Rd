@@ -4,14 +4,14 @@
 \alias{readLssFile}
 \title{Parses landings (sales notes)}
 \usage{
-readLssFile(file, encoding = "latin1", guessMax = 1e+05, strict = T)
+readLssFile(file, encoding = "Latin-1", guessMax = 1e+05, strict = T)
 }
 \arguments{
 \item{file}{path to file with LSS landings}
 
-\item{encoding}{encoding for 'file'}
+\item{encoding}{encoding for 'file', must be accepted by \code{\link[data.table]{fread}}}
 
-\item{guessMax}{passed to \code{\link[readr]{read_delim}}, unless 'strict' is true}
+\item{guessMax}{deprecated parameter, has no effect.}
 
 \item{strict}{enforce strict adherence to data format.}
 }
@@ -32,5 +32,4 @@ The LSS format is a pipe-separated format encoding landings (sales-notes).
  If column names does not match specification, but data is otherwise parse-able, a warning will be issued.
  
  If the parameter 'strict' is not TRUE, data types may be inferred from data.
- The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to \code{\link[readr]{read_delim}})
 }
