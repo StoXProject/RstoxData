@@ -390,14 +390,14 @@ getUniqueTargetAndSource <- function(data) {
 }
 
 # Function for reading a conversion table:
-readVariableConversion <- function(processData, FileName, UseProcessData = FALSE) {
+readVariableTranslation <- function(processData, FileName, UseProcessData = FALSE) {
 	
 	# Return immediately if UseProcessData = TRUE:
 	if(UseProcessData) {
 		return(processData)
 	}
 	
-	conversion <- data.table::fread(FileName)
+	conversion <- data.table::fread(FileName, encoding = "UTF-8")
 	
 	return(conversion)
 }
@@ -553,7 +553,7 @@ DefineTranslation <- function(
 	
 	if(DefinitionMethod == "ResourceFile") {
 		# Get the conversion table:
-		Translation <- readVariableConversion(
+		Translation <- readVariableTranslation(
 			processData = processData, 
 			FileName = FileName, 
 			UseProcessData = UseProcessData

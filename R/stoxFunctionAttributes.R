@@ -488,7 +488,13 @@ processPropertyFormats <- list(
 		variableTypes = c(
 			"character",
 			"character"
-		)
+		), 
+		possibleValues = function(StoxBioticData, BioticData) {
+			list(
+				sort(unique(unlist(lapply(StoxBioticData, names)))), 
+				sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
+			)
+		}
 	), 
 	translationTable = list(
 		class = "table", 
