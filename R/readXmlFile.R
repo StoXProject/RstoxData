@@ -205,6 +205,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 	names(result) <- xx
 
 	tableHeaders <- xsdObjects[[xsd]][["tableHeaders"]]
+	
 	tableTypes <- xsdObjects[[xsd]][["tableTypes"]]
 
 	# Finishing touch
