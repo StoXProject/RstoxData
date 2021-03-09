@@ -173,8 +173,8 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 
 	# Check file exists
 	if(!file.exists(xmlFilePath)) {
-		message(paste("File", xmlFilePath, "does not exist."))
-		return(NULL)
+		stop(paste("File", xmlFilePath, "does not exist."))
+		#return(NULL)
 	}
 
 	# Try to do autodetect
