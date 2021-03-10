@@ -1,3 +1,15 @@
+# RstoxData v1.1.2 (2021-03-10)
+
+* Added possible values for `redefinitionTable`.
+* Renamed `readVariableConversion()` to `readVariableTranslation()`.
+* Refactored `translateVariables()`.
+* Throw error when file is missing in `readXmlFile()`.
+
+# RstoxData v1.1.1 (2021-02-23)
+
+* Refactor some of the reading functions to get rid of `readr` dependency.
+* New feature: ECA integration. This is merged some time ago.
+
 # RstoxData v1.1.0 (2021-02-10)
 
 * Final version for the release of StoX 3.0.0.
