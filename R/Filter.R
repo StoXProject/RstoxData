@@ -10,7 +10,7 @@
 #' @return An object of filtered data in the same format as the input data.
 #'
 #' @importFrom utils head
-#' @importFrom data.table fsetdiff is.data.table %like% %flike% %ilike% %inrange% %chin% %between%
+#' @importFrom data.table fsetdiff fintersect is.data.table %like% %flike% %ilike% %inrange% %chin% %between%
 #' @export
 #' 
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
@@ -89,10 +89,16 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 						# Find similar columns (assume those are keys)
 						key <- intersect(names(y[[parent - 1]]), names(y[[parent + goDown]]))
 						if(length(key) > 0) {
+							### # Find the not deleted keys after filtering
+							### deleted <- fsetdiff(unique(y[[parent + goDown]][, ..key]), unique(ret[[names(y)[parent + goDown]]][, ..key]))
+							### # Propagate to parent
+							### ret[[names(y)[parent-1]]] <- y[[parent-1]][!deleted, on = names(deleted)]
+							
 							# Find the not deleted keys after filtering
-							deleted <- fsetdiff(unique(y[[parent + goDown]][, ..key]), unique(ret[[names(y)[parent + goDown]]][, ..key]))
+							toKeep <- fintersect(unique(y[[parent + goDown]][, ..key]), unique(ret[[names(y)[parent + goDown]]][, ..key]))
 							# Propagate to parent
-							ret[[names(y)[parent-1]]] <- y[[parent-1]][!deleted, on = names(deleted)]
+							ret[[names(y)[parent-1]]] <- y[[parent-1]][toKeep, on = names(toKeep)]
+							
 						}
 					}
 				}
