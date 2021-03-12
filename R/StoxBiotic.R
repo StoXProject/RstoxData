@@ -69,7 +69,7 @@ rbindlist_StoxFormat <- function(x) {
 		tableNames, 
 		function(name) data.table::rbindlist(lapply(x, "[[", name))
 	)
-	setnames(x, tableNames)
+	names(x) <- tableNames
 	return(x)
 }
 
