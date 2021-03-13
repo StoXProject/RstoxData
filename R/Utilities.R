@@ -570,6 +570,10 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 	#VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(x %in% vocabularyOne$id))])))))
 	VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(unique(x) %in% vocabularyOne$id))])))))
 	# Add the VariableName to the vocabularyOne
+	if(!length(VariableName)) {
+		# Add NA if no variable was recognized (this avoids warnings when cbind with character(0)
+		VariableName <- NA
+	}
 	vocabularyOne <- cbind(
 		VariableName = VariableName, 
 		vocabularyOne

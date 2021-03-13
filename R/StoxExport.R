@@ -70,6 +70,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 	}
 	
 	
+	
 	#Check metadata towards ices definitions
 	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml',unique(ICESAcousticDataOne$Instrument$TransducerLocation))
 	compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml',unique(ICESAcousticDataOne$Instrument$TransducerBeamType))
@@ -277,8 +278,8 @@ expandWidth <- function(x, na = NA) {
 ICESBiotic <- function(
 	BioticData, 
 	SurveyName = "NONE", 
-	Country = character(), 
-	Organisation = integer(), 
+	Country = NA_character_, 
+	Organisation = NA_integer_, 
 	AllowRemoveSpecies = TRUE
 ) {
 
@@ -303,8 +304,8 @@ ICESBiotic <- function(
 BioticDataToICESBioticOne <- function(
 	BioticDataOne, 
 	SurveyName = "NONE", 
-	Country = character(), 
-	Organisation = integer(), 
+	Country = NA_character_, 
+	Organisation = NA_integer_, 
 	AllowRemoveSpecies = TRUE
 ) {
 	
@@ -378,8 +379,8 @@ BioticData_ICESToICESBioticOne <- function(BioticData_ICESOne) {
 BioticData_NMDToICESBioticOne <- function(
 	BioticData_NMDOne, 
 	SurveyName = "NONE", 
-	Country = character(), 
-	Organisation = integer(), 
+	Country = NA_character_, 
+	Organisation = NA_integer_, 
 	AllowRemoveSpecies = TRUE
 ) {
 	

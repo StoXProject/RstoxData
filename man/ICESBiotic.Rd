@@ -7,8 +7,8 @@
 ICESBiotic(
   BioticData,
   SurveyName = "NONE",
-  Country = character(),
-  Organisation = integer(),
+  Country = NA_character_,
+  Organisation = NA_integer_,
   AllowRemoveSpecies = TRUE
 )
 }
