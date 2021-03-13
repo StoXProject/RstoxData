@@ -463,11 +463,14 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 	else {
 		# Convert the class to the class of the existing value in the table:
 		translationListOne <- convertClassToExisting(translationListOne, table)
+		
 		# Replace by the new value:
-		table[, c(translationListOne$VariableName) := replace(
-			x = get(translationListOne$VariableName), 
-			list = get(translationListOne$VariableName) %in% translationListOne$Value, 
-			values = translationListOne$NewValue)]
+		if(translationListOne$VariableName %in% names(table)) {
+			table[, c(translationListOne$VariableName) := replace(
+				x = get(translationListOne$VariableName), 
+				list = get(translationListOne$VariableName) %in% translationListOne$Value, 
+				values = translationListOne$NewValue)]
+		}
 	}
 }
 
