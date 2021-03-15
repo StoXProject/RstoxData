@@ -276,6 +276,17 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 	tmpText <- readChar(xmlFile, 500)
 	bits <- read_html(tmpText)
 
+	# Detect namespace prefix
+	pfx <- unlist(regmatches(tmpText, regexec("xmlns:(\\w+)=", tmpText)))[2]
+	if(is.na(pfx) || pfx %in% c("xsd", "xsi")) {
+		pfx <- NA
+		prefix1 <- ""
+		prefix2 <- ""
+	} else {
+		prefix1 <- paste0(":", pfx)
+		prefix2 <- paste0(pfx, ":")
+	}
+
 	# Getting encoding
 	tmpG1 <- regexpr('encoding="\\K[^"]*', tmpText, perl=T)
 	if(tmpG1 > -1) {
@@ -290,39 +301,39 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 	if(verbose)
 		message("Try to use XML namespace")
 
-	tmpG1 <- regexpr('xmlns="\\K[^"]*', tmpText, perl=T)
+	tmpG1 <- regexpr(paste0('xmlns', prefix1, '="\\K[^"]*'), tmpText, perl = TRUE)
 	if(tmpG1 > -1) {
 		tmpG2 <- tmpG1 + attr(tmpG1, "match.length") - 1
 		xmlXsd <- substr(tmpText, tmpG1, tmpG2)
 		xmlXsd <- paste0(tail(unlist(strsplit(xmlXsd, "/")), 2), collapse = "")
-        } else {
+	} else {
 		xmlXsd <- NULL
 	}
 
 	if(paste0(xmlXsd, ".xsd") %in% names(xsdObjects))
-		return(list(xsd = xmlXsd, encoding = xmlEnc))
+		return(list(xsd = xmlXsd, encoding = xmlEnc, nsPrefix = pfx))
 
 	if(verbose)
 		message("Do manual detection")
 
 	# Do manual detection
 	# Later We need to distinguish Biotic v3&v3.1, Biotic v1.4&earlier
-	if( length(xml_find_all(bits, "//mission[@startyear]")) )
+	if( length(xml_find_all(bits, paste0("//", prefix2, "mission[@startyear]"))) )
 		xmlXsd <- "nmdbioticv3"
-	else if( length(xml_find_all(bits, "//mission[@year]")) )
+	else if( length(xml_find_all(bits, paste0("//", prefix2, "mission[@year]"))) )
 		xmlXsd <- "nmdbioticv1.4"
-	else if( length(xml_find_all(bits, "//biotic")) )
-                xmlXsd <- "icesBiotic"
-	else if( length(xml_find_all(bits, "//echosounder_dataset")) )
+	else if( length(xml_find_all(bits, paste0("//", prefix2, "biotic"))) )
+		xmlXsd <- "icesBiotic"
+	else if( length(xml_find_all(bits, paste0("//", prefix2, "echosounder_dataset"))) )
 		xmlXsd <- "nmdechosounderv1"
-	else if( length(xml_find_all(bits, "//acoustic")) )
+	else if( length(xml_find_all(bits, paste0("//", prefix2, "acoustic"))) )
 		xmlXsd <- "icesAcoustic"
-	else if( length(xml_find_all(bits, "//seddellinje")) )
+	else if( length(xml_find_all(bits, paste0("//", prefix2, "Seddellinje"))) )
 		xmlXsd <- "landingerv2"
 	else
 		xmlXsd <- NULL
 
-	return(list(xsd = xmlXsd, encoding = xmlEnc))
+	return(list(xsd = xmlXsd, encoding = xmlEnc, nsPrefix = pfx))
 }
 
 #' @importFrom data.table rbindlist setnames
