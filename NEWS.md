@@ -1,5 +1,6 @@
-# RstoxData v1.1.2 (2021-03-11)
+# RstoxData v1.1.2 (2021-03-17)
 
+* __NEW__: Reading XML files with namespace prefix is now supported.
 * Fixed bug in `filterData`, where `propagateUpwards` = TRUE did not remove rows of the higher tables if these rows were not present in the filtered table.
 * Corrected type of variables of `StoxAcoustic` for NMDEchosounder input xml files.
 * Added possible values for `redefinitionTable`.
