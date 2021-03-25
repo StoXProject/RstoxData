@@ -1,4 +1,10 @@
-# RstoxData v1.1.2 (2021-03-17)
+# RstoxData v1.1.2 (2021-03-25)
+
+* Fixed bug in DateTime for ICESAcoustic files, and bug in translateOneTable() causing incomplete translation in StoxAcoustic from ICESAcoustic files.
+
+* Added ChannelDepthUpper-ChannelDepthLower as Channel in StoxAcousic. 
+
+* Fixed bug in createOrderKey() where columns that are non-convertable to nunmeric were replaced by NA instead of being left unchanged
 
 * __NEW__: Reading XML files with namespace prefix is now supported.
 * Fixed bug in `filterData`, where `propagateUpwards` = TRUE did not remove rows of the higher tables if these rows were not present in the filtered table.
