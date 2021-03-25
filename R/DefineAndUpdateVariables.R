@@ -427,7 +427,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE) {
 # Function to translate one table:
 translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 	# Check that the table contains the variable to convert:
-	if(Translation$VariableName[1] %in% names(table)) {
+	if(any(Translation$VariableName %in% names(table))) {
 		
 		# Check for values of the data that are not covered by the translation:
 		notPresentInTranslation <- sort(
@@ -451,6 +451,8 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 			translate.keys = translate.keys
 		)
 	}
+	
+	a = 1
 }
 
 # Function to apply to all tables of the input data, converting the variables:

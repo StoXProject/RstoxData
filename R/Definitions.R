@@ -16,9 +16,7 @@ initiateRstoxData <- function(){
 	digits <- 12
 	signifDigits <- 6
 	
-	# Define the time format used by Stox formats:
-	#StoxDateTimeFormat <- "%Y-%m-%d %H:%M:%OS"
-	StoxDateTimeFormat <- "%Y-%m-%dT%H:%M:%OS3Z"
+	# Define the time zone used by Stox formats:
 	StoxTimeZone <- "UTC"
 	
 	# Get the path to the extdata folder:
