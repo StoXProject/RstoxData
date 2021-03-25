@@ -687,7 +687,7 @@ ICESDatrasOne <- function(
 		"Ship" = getICESShipCode(platformname),
 		"Gear" = "GOV",
 		"SweepLngt" = getGOVSweepByEquipment(gear),
-		"GearExp" = getGearExp(getGOVSweepByEquipment(gear), startyear, serialnumber, bottomdepthstart),
+		"GearEx" = getGearEx(getGOVSweepByEquipment(gear), startyear, serialnumber, bottomdepthstart),
 		"DoorType" = "P",
 		"StNo" = serialnumber,
 		"HaulNo" = station,
@@ -695,7 +695,7 @@ ICESDatrasOne <- function(
 		"Month" = getMonth(stationstartdate),
 		"Day" = getDay(stationstartdate),
 		"TimeShot" = getTimeShot(stationstarttime),
-		"Stratum" = NA,
+		"DepthStratum" = NA,
 		"HaulDur" = as.numeric(getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime)),
 		"DayNight" = getDayNight(stationstartdate, stationstarttime, latitudestart, longitudestart),
 		"ShootLat" = roundDrop0(latitudestart, digits = 4), 
@@ -713,7 +713,7 @@ ICESDatrasOne <- function(
 		"Rigging" = NA,
 		"Tickler" = NA,
 		"Distance" = roundDrop0(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
-		"Warpingt" = roundDrop0(wirelength),
+		"Warplngt" = roundDrop0(wirelength),
 		"Warpdia" = NA,
 		"WarpDen" = NA,
 		"DoorSurface" = 4.5,
@@ -752,10 +752,10 @@ ICESDatrasOne <- function(
 	
 	HHraw <- data.table::copy(finalHH[, c(
 		"Quarter", "Country", "Ship", "Gear",
-		"SweepLngt", "GearExp", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
-		"TimeShot", "Stratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
+		"SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
+		"TimeShot", "DepthStratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
 		"StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BycSpecRecCode", "DataType", "Netopening",
-		"Rigging", "Tickler", "Distance", "Warpingt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
+		"Rigging", "Tickler", "Distance", "Warplngt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
 		"DoorSpread", "WingSpread", "Buoyancy", "KiteDim", "WgtGroundRope", "TowDir", "GroundSpeed",
 		"SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir", "WindSpeed",
 		"SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth",
@@ -847,7 +847,7 @@ ICESDatrasOne <- function(
 	# Aggregate hlNoAtLngth and lsCountTot
 	finalHL <- mergedHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(
 		groupHL,  
-		"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
+		"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
 		)
 	]
 	
@@ -861,7 +861,7 @@ ICESDatrasOne <- function(
 		"Ship" = Ship,
 		"Gear" = Gear,
 		"SweepLngt" = SweepLngt,
-		"GearExp" = GearExp,
+		"GearEx" = GearEx,
 		"DoorType" = DoorType,
 		"StNo" = serialnumber,
 		"HaulNo" = HaulNo,
@@ -902,7 +902,7 @@ ICESDatrasOne <- function(
 	
 	finalCA <- mergedCA[, .(nInd =.N), by = c(
 		groupCA,  
-		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearExp", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
+		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
 	finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
 	
 	CAraw <- data.table::copy(finalCA[,
@@ -912,7 +912,7 @@ ICESDatrasOne <- function(
 			"Ship" = Ship,
 			"Gear" = Gear,
 			"SweepLngt" = SweepLngt,
-			"GearExp" = GearExp,
+			"GearEx" = GearEx,
 			"DoorType" = DoorType,
 			"StNo" = serialnumber,
 			"HaulNo" = HaulNo,
@@ -1177,7 +1177,7 @@ getTSCountryByIOC <- function(nation) {
 	return(x)
 }
 
-getGearExp <- function(sweep, year, serialnumber, depth) {
+getGearEx <- function(sweep, year, serialnumber, depth) {
 	
 	temp <-  as.data.table(cbind(sweep, year, serialnumber, depth))
 	temp[, res:= "S"]

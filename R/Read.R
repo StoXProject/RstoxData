@@ -158,10 +158,10 @@ getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
 	
 	temp[, `:=`(sp = as.numeric(sp), ms = as.numeric(ms), res = as.numeric(res) )]
 	
-	temp[, isHerringOrSpratOrMackerel := ifelse(ap %in% c("126417", "126425", "127023"), TRUE, FALSE)]
+	temp[, isPelagic := ifelse(ap %in% c("126417", "126421", "126425", "126426", "127023"), TRUE, FALSE)]
 	
-	temp[!is.na(sp) & isHerringOrSpratOrMackerel == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
-	temp[!is.na(sp) & isHerringOrSpratOrMackerel == FALSE, res := 60 + sp]
+	temp[!is.na(sp) & isPelagic == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
+	temp[!is.na(sp) & isPelagic == FALSE, res := 60 + sp]
 	
 	temp[is.na(sp) & !is.na(ms), res := ifelse(ms == 5 & q == "3", NA, 60 + ms)]
 	

@@ -8,7 +8,7 @@
 #' @export
 #' 
 StoxBiotic <- function(BioticData) {
-    
+	
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
     

@@ -465,7 +465,9 @@ StoxAcousticOne <- function(data_list) {
 		
 		#Apply channel, and apply key to all
 		tmp$NASCKey <- paste(tmp$ChannelDepthUpper, tmp$ChannelDepthLower, sep = '/')
-		tmp$Channel <- NA
+		# Use the upper and lower channel depth as channel ID (changed on 2021-03-24):
+		#tmp$Channel <- NA
+		tmp[, Channel := paste(ChannelDepthUpper, ChannelDepthLower, sep = "_")]
 		data_list$NASC <- tmp
 		
 		
@@ -507,7 +509,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Convert to POSIX.ct:
 		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
-		data_list$Log[, DateTime := as.POSIXct(DateTime, tz = StoxTimeZone)]
+		data_list$Log[, DateTime := as.POSIXct(DateTime, tz = StoxTimeZone, format = "%Y-%m-%dT%H:%M:%OS")]
 		
 		
 		# Remove duplicates in Log and Beam
