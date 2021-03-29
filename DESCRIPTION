@@ -39,7 +39,7 @@ Imports:
     xml2 (>= 1.2.2),
     xslt (>= 1.4)
 Suggests: 
-    testthat
+    testthat (>= 2.1.0)
 LinkingTo: 
     Rcpp
 RoxygenNote: 7.1.1
