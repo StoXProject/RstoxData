@@ -508,8 +508,11 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log$Latitude2 <- NA_real_
 		
 		# Convert to POSIX.ct:
-		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
-		data_list$Log[, DateTime := as.POSIXct(DateTime, tz = StoxTimeZone, format = "%Y-%m-%dT%H:%M:%OS")]
+		data_list$Log[, DateTime := as.POSIXct_ICESAcoustic(DateTime)]
+		
+		
+		
+		
 		
 		
 		# Remove duplicates in Log and Beam
@@ -592,6 +595,33 @@ StoxAcousticOne <- function(data_list) {
 	
 	return(data_list[tablesToReturn])
 }
+
+as.POSIXct_ICESAcoustic <- function(x) {
+	
+	StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
+	
+	# Try the two allowed time formats of the ICESAcoustic:
+	allowedTimeFormatsICESAcousticSansSeconds <- c(
+		"%Y-%m-%dT%H:%M", 
+		"%Y-%m-%d %H:%M"
+	)
+	allowedTimeFormatsICESAcoustic <- c(
+		allowedTimeFormatsICESAcousticSansSeconds, 
+		paste0(allowedTimeFormatsICESAcousticSansSeconds, ":%OS")
+	)
+	
+	areNotNAs <- !is.na(x)
+	
+	DateTime <- NULL
+	for(format in allowedTimeFormatsICESAcoustic) {
+		if(!length(DateTime) || !all(!is.na(DateTime[areNotNAs]))) {
+			DateTime <- as.POSIXct(x, tz = StoxTimeZone, format = format)
+		}
+	}
+	
+	return(DateTime)
+}
+
 
 
 #' Merge StoxAcousticData

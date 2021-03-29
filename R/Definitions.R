@@ -51,6 +51,18 @@ initiateRstoxData <- function(){
 		"NASCKey"
 	)
 	
+	#dataTypeDefinition <- list(
+	#	# StoxAcousticDat: 
+	#	StoxAcousticData = list(
+	#		Cruise = c("CruiseKey", "Cruise", "Platform")
+	#		Log = c("CruiseKey", "LogKey", "Log", "EDSU", "DateTime", "Longitude", "Latitude", "LogOrigin", "Longitude2", "Latitude2", "LogOrigin2", "LogDistance", "LogDuration", "EffectiveLogDistance","BottomDepth")
+	#		Beam = c("CruiseKey","LogKey", "BeamKey", "Beam", "Frequency")
+	#		AcousticCategory = c("CruiseKey", "LogKey", "BeamKey", "AcousticCategoryKey","AcousticCategory")
+	#		ChannelReference = c("CruiseKey", "LogKey", "BeamKey", "AcousticCategoryKey", "ChannelReferenceKey", "ChannelReferenceType", "ChannelReferenceDepth","ChannelReferenceTilt")
+	#		NASC = c("CruiseKey", "LogKey", "BeamKey", "AcousticCategoryKey","ChannelReferenceKey""NASCKey", "Channel", "MaxChannelRange", "MinChannelRange", "NASC")
+	#	)
+	#)
+	
 	targetAndSourceVariables <- list(
 		target = "TargetVariable", 
 		source = "SourceVariable"

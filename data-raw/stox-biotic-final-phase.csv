@@ -15,7 +15,7 @@ StationKey,Haul,StationKey,StationKey,StationKey,StationKey,StationKey,Y
 HaulKey,Haul,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
 Haul,Haul,"paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, sep = '-')",
 Gear,Haul,gear,gear,gear,gear,Gear,
-TowDistance,Haul,distance,distance,distance,distance,Distance,
+TowDistance,Haul,distance,distance,distance,distance,"Distance / 1852",
 EffectiveTowDistance,Haul,TowDistance,TowDistance,TowDistance,TowDistance,TowDistance,
 MinHaulDepth,Haul,fishingdepthmin,fishingdepthmin,fishingdepthmin,fishingdepthmin,MinTrawlDepth,
 MaxHaulDepth,Haul,fishingdepthmax,fishingdepthmax,fishingdepthmax,fishingdepthmax,MaxTrawlDepth,
@@ -43,7 +43,7 @@ HaulKey,Individual,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y
 SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y
-Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, IndividualKey, sep = '-')",
+Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')",
 IndividualRoundWeight,Individual,"ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(individualproducttype == 1, individualweight * 1000, NA_real_)","ifelse(producttype == 1, weight * 1000, NA_real_)","ifelse(producttype == 1, weight * 1000, NA_real_)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",
 IndividualTotalLength,Individual,"ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","ifelse(lengthmeasurement == 'E', length * 100, NA_real_)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",
 LengthResolution,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),

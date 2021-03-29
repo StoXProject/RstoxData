@@ -2,8 +2,10 @@
 #'
 #' @inheritParams ModelData
 #' @inheritParams general_arguments
-#'
+#' 
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
+#' 
+#' @seealso The definition of the \code{\link[=StoxBioticFormat]{StoxBiotic format}} and \code{\link{generalSamplingHierarhcy}}.
 #'
 #' @export
 #' 
@@ -111,10 +113,29 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	  } 
     else if(datatype == "icesBiotic") {
 
-	    # Merge Cruise and Survey name
-	    data[["Cruise"]][, Survey:=tail(data[["Survey"]],1)]
-
-	    ## Cascading merge tables
+    	# Merge Cruise and Survey name
+	    data[["Cruise"]][, Survey := tail(data[["Survey"]], 1)]
+    	
+    	# Apply translations defined in the table 'vocabulary':
+    	if(length(data$vocabulary)) {
+    		tablesToTranslate <- setdiff(names(data), "vocabulary")
+    		tablesToTranslate <- tablesToTranslate[sapply(data[tablesToTranslate], nrow) > 0]
+    		
+    		vocabulary <- findVariablesMathcinigVocabulary(
+    			vocabulary = data$vocabulary, 
+    			data = data[tablesToTranslate]
+    		)
+    		# Uniqueify since some columns (keys) are present in several tables:
+    		vocabulary <- unique(vocabulary)
+    		
+    		data[tablesToTranslate] <- translateVariables(
+    			data = data[tablesToTranslate], 
+    			Translation = vocabulary, 
+    			translate.keys = TRUE
+    		)
+    	}
+    	
+    	## Cascading merge tables
 	    toMerge <- c("Cruise", "Haul", "Catch")
 
 	    # Use custom suffixes as it contains duplicate header name between tables
@@ -131,7 +152,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    # Also check for missing biology
 	    # This function generates individuals from the "NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType":
 	    specialMerge <- function(x) {
-			xLenC <- unlist(x[1, "LengthCode"])
+	    	xLenC <- unlist(x[1, "LengthCode"])
 
 			# Two scenarios, catch samples are by length or not
 			if(!is.na(xLenC)) {
@@ -141,7 +162,8 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 				byVarX <- byVars
 				byVarY <- byVars
 			}
-
+	    	
+	    	
 			xtmp <- merge(x, data$Biology, by.x = byVarX, by.y = byVarY)
 			xtmp[, WeightMeasurement:= TRUE]
 
@@ -181,7 +203,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    for(y in seq_len(nrow(data$Catch))) {
 			tmpBiology[[y]] <- specialMerge(data$Catch[y,])
 	    }
-
+	    
 	    # Combine results
 	    data$Biology <- rbindlist(tmpBiology, use.names=TRUE)
 	    
@@ -197,8 +219,18 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    )
 	    data$Biology <- data$Biology[, .SD, .SDcols = columnsToKeep]
 
-		# Fix Individual ID
-		data$Biology[, FishID := seq_len(.N)]
+	    # Fix Individual ID for those coming from Catch:
+	    FishIDBy <- head(sapply(tableKey, "[[", 1), -1)
+	    
+	    # Does not work, as FishID is integer
+	    #data$Biology[is.na(FishID), FishID := paste0("FromCatch_", seq_len(.N)), by = FishIDBy]
+	    
+	    # This resulted iin iduplicated fishIDs1!!!!!!!!!!!!!!!!
+	    data$Biology[, maxFishID := max(0, FishID, na.rm = TRUE), by = FishIDBy]
+	    data$Biology[is.na(FishID), FishID := seq_len(.N) + maxFishID, by = FishIDBy]
+	    data$Biology[, numOriginalIndividuals := NULL]
+	    
+	    
 
 		# Fix the SampleCount
 		colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
@@ -259,22 +291,6 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         setindexv(firstPhaseTables[[dest]], tmpKeys)
     }
     
-    # Apply translations defined in the table 'vocabulary':
-    if(length(data$vocabulary)) {
-    	vocabulary <- findVariablesMathcinigVocabulary(
-    		vocabulary = data$vocabulary, 
-    		data = firstPhaseTables
-    	)
-    	# Uniqueify since some columns (keys) are present in several tables:
-    	vocabulary <- unique(vocabulary)
-    	
-    	firstPhaseTables <- translateVariables(
-    		data = firstPhaseTables, 
-    		Translation = vocabulary, 
-    		translate.keys = TRUE
-    	)
-    }
-    
     
     return(firstPhaseTables)
     
@@ -303,9 +319,8 @@ StoxBiotic_firstPhase <- function(BioticData) {
 # Function to convert from the general sampling hierarchy to the StoxBiotic format for each file:
 #' @importFrom data.table indices
 secondPhase <- function(data, datatype, stoxBioticObject) {
-    
-    # Getting conversion function for datatype
-    convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
+	# Getting conversion function for datatype
+	convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
     convertLen <- stoxBioticObject$convertLen[[datatype]]
     convertWt <- stoxBioticObject$convertWt[[datatype]]
     

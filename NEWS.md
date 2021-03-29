@@ -1,5 +1,19 @@
 # RstoxData v1.1.2 (2021-03-25)
 
+* Fixed time format of StoxAcoustic(). 
+
+* Moved translation of ICESBiotic before merging levels as merging chnges name of some variables. 
+
+* Changed to keep original FishID and add sequetial integers for individuals regenerated from Catch continuing from the maximum FishID. 
+
+* Added documentation of the StoxBiotic format. 
+
+* Fixed bug in LengthResolution for ICESBiotic where only the first value was used. 
+
+* Fixed bug when converting length for ICESBiotic, where values were multiplied by 100 instead of 10 from mm to cm. 
+
+* Changed TowDistance to nautical miles.
+
 * Fixed bug in DateTime for ICESAcoustic files, and bug in translateOneTable() causing incomplete translation in StoxAcoustic from ICESAcoustic files.
 
 * Added ChannelDepthUpper-ChannelDepthLower as Channel in StoxAcousic. 
