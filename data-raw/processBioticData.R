@@ -197,25 +197,33 @@ stoxBioticObject$convertLen[["icesBiotic"]] <- function(inputUnit, outputUnit) {
     	1 / weightFactor, 
     	1 / weightFactor
     )
+	
+	# Keep NAs:
+	conversionFactor <- rep(NA_real_, length(inputUnit))
+	inputUnit_isNA <- is.na(inputUnit)
+	# Get the convesion factor:
+	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
     
-    unitFactor <- conversionTable[cbind(inputUnit, outputUnit)]
-    
-    return(unitFactor)
+    return(conversionFactor)
 }
 
 ## Weight conversion
 stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 
-    # Define units
+	# Define units
     weightFactor <- c(gr = 1000, kg = 1)
 	conversionTable <- outer(
 		1 / weightFactor, 
 		weightFactor
 	)
 	
-	unitFactor <- conversionTable[inputUnit, outputUnit]
+	# Keep NAs:
+	conversionFactor <- rep(NA_real_, length(inputUnit))
+	inputUnit_isNA <- is.na(inputUnit)
+	# Get the convesion factor:
+	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
 	
-	return(unitFactor)
+	return(conversionFactor)
 }
 
 # Universal second phase conversion

@@ -225,10 +225,9 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    # Does not work, as FishID is integer
 	    #data$Biology[is.na(FishID), FishID := paste0("FromCatch_", seq_len(.N)), by = FishIDBy]
 	    
-	    # This resulted iin iduplicated fishIDs1!!!!!!!!!!!!!!!!
 	    data$Biology[, maxFishID := max(0, FishID, na.rm = TRUE), by = FishIDBy]
 	    data$Biology[is.na(FishID), FishID := seq_len(.N) + maxFishID, by = FishIDBy]
-	    data$Biology[, numOriginalIndividuals := NULL]
+	    data$Biology[, maxFishID := NULL]
 	    
 	    
 
