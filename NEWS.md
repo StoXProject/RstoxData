@@ -1,11 +1,11 @@
-# RstoxData v1.1.2 (2021-03-25)
+# RstoxData v1.1.2 (2021-03-30)
 
-* Fixed time format of StoxAcoustic(). 
-* Moved translation of ICESBiotic before merging levels as merging chnges name of some variables. 
-* Changed to keep original FishID and add sequetial integers for individuals regenerated from Catch continuing from the maximum FishID. 
-* Added documentation of the StoxBiotic format. 
-* Fixed bug in LengthResolution for ICESBiotic where only the first value was used. 
-* Fixed bug when converting length for ICESBiotic, where values were multiplied by 100 instead of 10 from mm to cm. 
+* Fixed time format of StoxAcoustic().
+* Moved translation of ICESBiotic before merging levels as merging changes name of some variables.
+* Changed to keep original FishID and add sequetial integers for individuals regenerated from Catch continuing from the maximum FishID.
+* Added documentation of the StoxBiotic format.
+* Fixed bug in LengthResolution for ICESBiotic where only the first value was used.
+* Fixed bug when converting length for ICESBiotic, where values were multiplied by 100 instead of 10 from mm to cm.
 * Changed TowDistance to nautical miles.
 * __NEW__: Reading XML files with namespace prefix is now supported.
 * __NEW__: Writing XML files (alpha) is now supported.
