@@ -178,49 +178,52 @@ stoxBioticObject$tableMapList[["icesBiotic"]] <- list(list("Cruise", "Cruise"), 
 stoxBioticObject$complexMaps[["icesBiotic"]] <- fread("stox-translate-icesBiotic.csv", stringsAsFactors=FALSE)
 
 ## Length Res conversion
-stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(x) {
-	z <- c(1, 0.5, 0.1)
-	names(z) <- c("cm", "halfcm", "mm")
-    xx <- tail(unlist(strsplit(x, "[_]")), 1)
-	return(z[xx])
+stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(resName) {
+	resNumeric_cm <- c(1, 0.5, 0.1)
+	names(resNumeric_cm) <- c("cm", "halfcm", "mm")
+	# Assume that the length resolution  is already translated to actual values:
+    #xx <- tail(unlist(strsplit(x, "[_]")), 1)
+    return(resNumeric_cm[resName])
 }
 
 ## Length conversion
-stoxBioticObject$convertLen[["icesBiotic"]] <- function(x, y) {
+stoxBioticObject$convertLen[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 
-    # Get units
-    xx <- unlist(lapply(strsplit(x, "[_]"), tail, 1))
-
-    if(y == "cm") {
-        z <- c(1, 0.01, 0.01)
-    } else if (y == "mm") {
-        z <- c(100, 1, 1)
-    } else {
-    	message("Invalid length conversion!")
-        return(NA)
-    }
-
-    names(z) <- c("cm", "halfcm", "mm")
-    return(z[xx])
+	# Define units
+	# mm and halfcm are reported in mm as per http://vocab.ices.dk/?ref=1486:
+	weightFactor <- c(mm = 10, halfcm = 10, cm = 1)
+	outputFactor <- c(mm = 10, cm = 1)
+	conversionTable <- outer(
+    	1 / weightFactor, 
+    	1 / weightFactor
+    )
+	
+	# Keep NAs:
+	conversionFactor <- rep(NA_real_, length(inputUnit))
+	inputUnit_isNA <- is.na(inputUnit)
+	# Get the convesion factor:
+	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
+    
+    return(conversionFactor)
 }
 
 ## Weight conversion
-stoxBioticObject$convertWt[["icesBiotic"]] <- function(x, y) {
+stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 
-    # Get units
-    xx <- unlist(lapply(strsplit(x, "[_]"), tail, 1))
-
-    if(y == "kg") {
-        z <- c(1, 0.001)
-    } else if (y == "gr") {
-        z <- c(1000, 1)
-    } else {
-        message("Invalid length conversion!")
-        return(NA)
-    }
-
-    names(z) <- c("kg", "gr")
-    return(z[xx])
+	# Define units
+    weightFactor <- c(gr = 1000, kg = 1)
+	conversionTable <- outer(
+		1 / weightFactor, 
+		weightFactor
+	)
+	
+	# Keep NAs:
+	conversionFactor <- rep(NA_real_, length(inputUnit))
+	inputUnit_isNA <- is.na(inputUnit)
+	# Get the convesion factor:
+	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
+	
+	return(conversionFactor)
 }
 
 # Universal second phase conversion

@@ -407,52 +407,71 @@ translateVariables <- function(data, Translation, translate.keys = FALSE) {
 	
 	dataCopy <- data.table::copy(data)
 	
-	# Currently not defined
+	# Check whether the reuired columns are present in the translation table:
 	requiredColumns <- getRstoxDataDefinitions("TranslationRequiredColumns")
 	if(! all(requiredColumns %in% names(Translation))) {
 		stop("The Translation must contain the columns ", paste(requiredColumns, collapse = ", "))
 	}
 	
-	# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
-	translationList <- split(Translation, seq_len(nrow(Translation)))
-	# Run the conversion for each row of the Translation:
-	lapply(
-		translationList, 
-		translateVariable, 
-		data = dataCopy, 
+	# Run the conversion for each table of the data:
+	lapplyToStoxData(
+		dataCopy, 
+		translateOneTable, 
+		Translation = Translation, 
 		translate.keys = translate.keys
-		)
+	)
 	
 	return(dataCopy[])
 }
 
-# Function to convert variables given one row of a conversion table:
-translateVariable <- function(translationList, data, translate.keys = FALSE) {
-	lapplyToStoxData(
-		data, 
-		translateOneTable, 
-		translationList = translationList, 
-		translate.keys = translate.keys
-	)
+# Function to translate one table:
+translateOneTable <- function(table, Translation, translate.keys = FALSE) {
+	# Check that the table contains the variable to convert:
+	if(any(Translation$VariableName %in% names(table))) {
+		
+		# Check for values of the data that are not covered by the translation:
+		notPresentInTranslation <- sort(
+			setdiff(
+				table[[Translation$VariableName[1]]], 
+				Translation$Value
+			)
+		)
+		if(length(notPresentInTranslation)) {
+			warning("StoX: The following values are present in the data but not in the translation, and were not translated: ", paste(notPresentInTranslation, collapse = ", "), ".")
+		}
+		
+		# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
+		translationList <- split(Translation, seq_len(nrow(Translation)))
+		
+		# Apply the translation, one line at the time:
+		lapply(
+			translationList, 
+			translateOneTranslationOneTable, 
+			table = table, 
+			translate.keys = translate.keys
+		)
+	}
+	
+	a = 1
 }
 
 # Function to apply to all tables of the input data, converting the variables:
-translateOneTable <- function(x, translationList, translate.keys = FALSE) {
-	# Check that the table contains the variable to convert:
-	if(translationList$VariableName %in% names(x)) {
-		# Do nothing if the variable is a key:
-		isKeys <- endsWith(translationList$VariableName, "Key")
-		if(!translate.keys && isKeys) {
-			warning("StoX: The variable ", translationList$VariableName, " is a key and cannot be modified ")
-		}
-		else {
-			# Convert the class to the class of the existing value in the table:
-			translationList <- convertClassToExisting(translationList, x)
-			# Replace by the new value:
-			x[, c(translationList$VariableName) := replace(
-				x = get(translationList$VariableName), 
-				list = get(translationList$VariableName) %in% translationList$Value, 
-				values = translationList$NewValue)]
+translateOneTranslationOneTable <- function(translationListOne, table, translate.keys = FALSE) {
+	# Do nothing if the variable is a key:
+	isKeys <- endsWith(translationListOne$VariableName, "Key")
+	if(!translate.keys && isKeys) {
+		warning("StoX: The variable ", translationListOne$VariableName, " is a key and cannot be modified ")
+	}
+	else {
+		# Convert the class to the class of the existing value in the table:
+		translationListOne <- convertClassToExisting(translationListOne, table)
+		
+		# Replace by the new value:
+		if(translationListOne$VariableName %in% names(table)) {
+			table[, c(translationListOne$VariableName) := replace(
+				x = get(translationListOne$VariableName), 
+				list = get(translationListOne$VariableName) %in% translationListOne$Value, 
+				values = translationListOne$NewValue)]
 		}
 	}
 }

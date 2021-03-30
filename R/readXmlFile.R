@@ -23,6 +23,8 @@
 #'
 #' @importFrom data.table as.data.table transpose data.table := .SD
 #' @importFrom utils data
+#' @importFrom xml2 read_xml
+#' @importFrom xslt xml_xslt
 #'
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FALSE) {
@@ -173,14 +175,26 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 
 	# Check file exists
 	if(!file.exists(xmlFilePath)) {
-		message(paste("File", xmlFilePath, "does not exist."))
-		return(NULL)
+		stop(paste("File", xmlFilePath, "does not exist."))
+		#return(NULL)
 	}
 
 	# Try to do autodetect
 	found <- autodetectXml(xmlFilePath, xsdObjects, verbose)
 	if(is.null(useXsd))
 		useXsd <- found[["xsd"]]
+
+	# See if we have a namespace prefix set
+	if(!is.na(found[["nsPrefix"]])) {
+		warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
+		stripXslt <- system.file("extdata/stripns.xsl", package = "RstoxData")
+		stripped <- xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
+		tempXml <- tempfile(fileext=".xml")
+		fileConn <- file(tempXml)
+		writeLines(as.character(stripped), fileConn)
+		close(fileConn)
+		xmlFilePath <- tempXml
+	}
 
 	# Apply preprocess for ICES XSDs
 	if(useXsd == "icesAcoustic") {

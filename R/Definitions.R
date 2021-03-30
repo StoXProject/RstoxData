@@ -16,9 +16,7 @@ initiateRstoxData <- function(){
 	digits <- 12
 	signifDigits <- 6
 	
-	# Define the time format used by Stox formats:
-	#StoxDateTimeFormat <- "%Y-%m-%d %H:%M:%OS"
-	StoxDateTimeFormat <- "%Y-%m-%dT%H:%M:%OS3Z"
+	# Define the time zone used by Stox formats:
 	StoxTimeZone <- "UTC"
 	
 	# Get the path to the extdata folder:
@@ -52,6 +50,18 @@ initiateRstoxData <- function(){
 		"ChannelReferenceKey", 
 		"NASCKey"
 	)
+	
+	#dataTypeDefinition <- list(
+	#	# StoxAcousticDat: 
+	#	StoxAcousticData = list(
+	#		Cruise = c("CruiseKey", "Cruise", "Platform")
+	#		Log = c("CruiseKey", "LogKey", "Log", "EDSU", "DateTime", "Longitude", "Latitude", "LogOrigin", "Longitude2", "Latitude2", "LogOrigin2", "LogDistance", "LogDuration", "EffectiveLogDistance","BottomDepth")
+	#		Beam = c("CruiseKey","LogKey", "BeamKey", "Beam", "Frequency")
+	#		AcousticCategory = c("CruiseKey", "LogKey", "BeamKey", "AcousticCategoryKey","AcousticCategory")
+	#		ChannelReference = c("CruiseKey", "LogKey", "BeamKey", "AcousticCategoryKey", "ChannelReferenceKey", "ChannelReferenceType", "ChannelReferenceDepth","ChannelReferenceTilt")
+	#		NASC = c("CruiseKey", "LogKey", "BeamKey", "AcousticCategoryKey","ChannelReferenceKey""NASCKey", "Channel", "MaxChannelRange", "MinChannelRange", "NASC")
+	#	)
+	#)
 	
 	targetAndSourceVariables <- list(
 		target = "TargetVariable", 

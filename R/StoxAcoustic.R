@@ -188,6 +188,8 @@ StoxAcousticOne <- function(data_list) {
 		#                       RENAME cruise level                     #
 		#################################################################
 		names(data_list$Cruise)[names(data_list$Cruise)=='platform'] <- 'Platform'
+		# Platform should be character, whereas this is integer (!) in NMDEchosounder:
+		data_list$Cruise$Platform <- as.character(data_list$Cruise$Platform)
 		
 		
 		
@@ -241,7 +243,7 @@ StoxAcousticOne <- function(data_list) {
 		)
 		
 		# Add NA as BottomDepth, since bottom depth in NMDEchosounder1 is defined as a start and stop value per frequency, and not one single value per Log, as in ICESAcoustic and as intended in StoxAcoustic. We choose to set these as NA and rather wait for any requests on the BottomDepth, which will call for a decision on how to interpret the bottom depth information in NMDEchosounder1 (confronting LSSS etc.):
-		data_list$Log$BottomDepth <- NA
+		data_list$Log$BottomDepth <- NA_real_
 		
 		
 		
@@ -250,6 +252,9 @@ StoxAcousticOne <- function(data_list) {
 		#                       RENAME Frequency level                  #
 		#################################################################
 		names(data_list$Beam)[names(data_list$Beam)=='freq'] <- 'Frequency'
+		# Frequency should be double, whereas this is integer (!) in NMDEchosounder:
+		data_list$Cruise$Frequency <- as.double(data_list$Cruise$Frequency)
+		
 		data_list$Beam$Beam <- data_list$Beam$BeamKey
 		
 		
@@ -272,7 +277,7 @@ StoxAcousticOne <- function(data_list) {
 		data_list$ChannelReference$ChannelReference <- data_list$ChannelReference$ChannelReferenceKey
 		
 		data_list$ChannelReference$ChannelReferenceType <- data_list$ChannelReference$type
-		data_list$ChannelReference$ChannelReferenceDepth <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 0, NA) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
+		data_list$ChannelReference$ChannelReferenceDepth <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 0, NA_real_) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
 		data_list$ChannelReference$ChannelReferenceTilt <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
 		
 		
@@ -281,7 +286,8 @@ StoxAcousticOne <- function(data_list) {
 		#                RENAME NASC level                              #
 		#################################################################
 		names(data_list$NASC)[names(data_list$NASC)=='sa'] <- 'NASC'
-		data_list$NASC$Channel <- data_list$NASC$ch
+		# This should not be a number but an ID, thus character:
+		data_list$NASC$Channel <- as.character(data_list$NASC$ch)
 		
 		
 		
@@ -402,7 +408,7 @@ StoxAcousticOne <- function(data_list) {
 		tmp$ChannelReferenceType <- 'P'
 		tmp$ChannelReferenceKey <- tmp$ChannelReferenceType
 		# Note: This is different from transducer depth, which is available in the Instrument table:
-		tmp$ChannelReferenceDepth <- ifelse(tmp$ChannelReferenceType == "P", 0, NA) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
+		tmp$ChannelReferenceDepth <- ifelse(tmp$ChannelReferenceType == "P", 0, NA_real_) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
 		
 		#tmp$ChannelReferenceTilt <- ifelse(tmp$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
 		
@@ -459,7 +465,9 @@ StoxAcousticOne <- function(data_list) {
 		
 		#Apply channel, and apply key to all
 		tmp$NASCKey <- paste(tmp$ChannelDepthUpper, tmp$ChannelDepthLower, sep = '/')
-		tmp$Channel <- NA
+		# Use the upper and lower channel depth as channel ID (changed on 2021-03-24):
+		#tmp$Channel <- NA
+		tmp[, Channel := paste(ChannelDepthUpper, ChannelDepthLower, sep = "_")]
 		data_list$NASC <- tmp
 		
 		
@@ -472,6 +480,7 @@ StoxAcousticOne <- function(data_list) {
 		#                       RENAME variables                        #
 		#################################################################
 		names(data_list$Cruise)[names(data_list$Cruise)=='platform'] <- 'Platform'
+		
 		names(data_list$Log)[names(data_list$Log)=='Longitude'] <- 'Longitude'
 		names(data_list$Log)[names(data_list$Log)=='Latitude'] <- 'Latitude'
 		names(data_list$Log)[names(data_list$Log)=='LongitudeStop'] <- 'Longitude2'
@@ -491,16 +500,19 @@ StoxAcousticOne <- function(data_list) {
 		
 		# The LogOrigin2 should be NA until it gets incorporated in the ICESAcoustic format:
 		#data_list$Log$LogOrigin2 <- "end"
-		data_list$Log$LogOrigin2 <- NA
-		data_list$Log$LogDuration <- NA
+		data_list$Log$LogOrigin2 <- NA_character_
+		data_list$Log$LogDuration <- NA_real_
 		
 		####Bugfiks since StopLat and lon do not exist yet
-		data_list$Log$Longitude2 <- NA
-		data_list$Log$Latitude2 <- NA
+		data_list$Log$Longitude2 <- NA_real_
+		data_list$Log$Latitude2 <- NA_real_
 		
 		# Convert to POSIX.ct:
-		StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
-		data_list$Log[, DateTime := as.POSIXct(DateTime, tz = StoxTimeZone)]
+		data_list$Log[, DateTime := as.POSIXct_ICESAcoustic(DateTime)]
+		
+		
+		
+		
 		
 		
 		# Remove duplicates in Log and Beam
@@ -583,6 +595,33 @@ StoxAcousticOne <- function(data_list) {
 	
 	return(data_list[tablesToReturn])
 }
+
+as.POSIXct_ICESAcoustic <- function(x) {
+	
+	StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
+	
+	# Try the two allowed time formats of the ICESAcoustic:
+	allowedTimeFormatsICESAcousticSansSeconds <- c(
+		"%Y-%m-%dT%H:%M", 
+		"%Y-%m-%d %H:%M"
+	)
+	allowedTimeFormatsICESAcoustic <- c(
+		allowedTimeFormatsICESAcousticSansSeconds, 
+		paste0(allowedTimeFormatsICESAcousticSansSeconds, ":%OS")
+	)
+	
+	areNotNAs <- !is.na(x)
+	
+	DateTime <- NULL
+	for(format in allowedTimeFormatsICESAcoustic) {
+		if(!length(DateTime) || !all(!is.na(DateTime[areNotNAs]))) {
+			DateTime <- as.POSIXct(x, tz = StoxTimeZone, format = format)
+		}
+	}
+	
+	return(DateTime)
+}
+
 
 
 #' Merge StoxAcousticData

@@ -19,7 +19,6 @@
 #' @description Pre-processed objects for raw XML data to StoXBiotic format
 "stoxBioticObject"
 
-
 ##################################################
 ##################################################
 #' General parameters of RstoxData.
@@ -34,6 +33,126 @@
 #' 
 NULL
 
+
+##################################################
+##################################################
+#' General sampling hierarchy of StoX
+#' 
+#' The general sampling hierarchy of StoX defines a common hierarchy of sampling levels for the StoxBiotic and StoxAcoustic data formats. 
+#' 
+#' @details The general sampling hierarchy of StoX is defined by 6 levels (tables) as shown alongside the levels of the StoxcBiotic and StoxAcoustic format in the following table:
+#' 
+#' \tabular{lll}{
+#' General level \tab StoxBiotic level \tab StoxAcoustic level\cr
+#' Cruise \tab Cruise \tab Cruise\cr
+#' Station \tab Station \tab Log\cr
+#' Equipment \tab Haul \tab Beam\cr
+#' Species \tab SpeciesCategory \tab AcousticCategory\cr
+#' Sample \tab Sample \tab ChannelReference\cr
+#' Individual \tab Individual \tab NASC
+#' }
+#' 
+#' The levels can be interpreted as follows: 
+#' 
+#' (1) The Cruise level is the entire trip or mission conducted by a platform, such as a research vessel. 
+#' 
+#' (2) The Station level is a geographical position at a specific point in time where sampling is conducted. 
+#' 
+#' (3) The Equipment level specifies the equipment used to sample, possibly several equipments at the same station, such as two different trawls or  different acoustic instruments or acoustic frequencies. 
+#' 
+#' (4) The Species level is the biological species or acoustic category (normally reflecting one or more biological species) sampled by the equipment. 
+#' 
+#' (5) The Sample level is the specific sample of the Species, such as herring or cod for StoxBiotic. For StoxAcoustic the Sample level denotes different coordinate systems in which the acoustic data are defined, with possible values "P" for pelagic channels defined by origin at the surface and z axis pointing vertically downwards, and "B" for bottom referenced channels with origin on the seabed and z axis pointing vertically upwards. 
+#' 
+#' (6) The Individual level contains for the StoxBiotic format the individuals selected for specific measurements of individual properties such as length, weight and gender, whereas for StoxAcoustic the indiivdual samples along an acouostic beam.
+#' 
+#' @name generalSamplingHierarhcy
+#' 
+NULL
+
+
+##################################################
+##################################################
+#' StoxBiotic data format.
+#' 
+#' The StoxBiotic data format is defined by StoX as a common format to which data from different biotic sampling formats are converted, guaranteeing consistent interpretation and documentation of all its variables. 
+#' 
+#' @details The StoxBiotic format is defined according to the \code{\link[=generalSamplingHierarhcy]{general sampling hierarchy of StoX}} which is used as a basis for both the StoxcBiotic and StoxAcoustic format. The variables of the StoxBiotic format are given by the tables below:
+#' 
+#' \bold{Cruise level}:
+#' \tabular{lllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
+#' CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab 2021105 \cr
+#' Cruise \tab Unique Cruise identifier \tab None \tab Character type \tab 2021105 \cr
+#' Platform  \tab Data collection platform identifier \tab None \tab Character \tab 1019 \cr
+#' }
+#' 
+#' 
+#' \bold{Station level}:
+#' \tabular{lllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
+#' StationKey \tab Key of the Station level \tab None \tab 1 \cr
+#' Station \tab Unique Station identifier \tab None \tab 2021105-1 \cr   
+#' CatchPlatform \tab Platform performing the actual sampling (can be different from the data collection platform) \tab None \tab Character \tab 1019 \cr
+#' DateTime \tab UTC time at start of the station \tab ISO 8601 format with milliseconds \tab Character \tab 2020-09-09T01:02:03.456Z \cr
+#' Longitude \tab Longitude at start of the station \tab Decimal degrees \tab Numeric \tab 62.5 \cr
+#' Latitude \tab Latitude at start of the station \tab Decimal degrees \tab Numeric \tab 5.1 \cr
+#' BottomDepth \tab Bottom depth at start of the station \tab m \tab Numeric \tab 123 \cr
+#' }
+#' 
+#' 
+#' \bold{Haul level}:
+#' \tabular{lllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
+#' HaulKey \tab Key of the Haul level \tab None \tab Character \tab 2 \cr
+#' Haul \tab Unique Haul identifier \tab None \tab Character \tab 2021105-1-2 \cr
+#' Gear \tab Identifier of the gear \tab None \tab Character \tab 3270 \cr
+#' TowDistance \tab Distance between start and end of the haul \tab Nautical miles \tab Numeric \tab 1.5 \cr
+#' EffectiveTowDistance \tab Effective tow distance \tab Nautical miles \tab Numeric \tab 1.5 \cr
+#' MinHaulDepth \tab Minimum depth of the haul (trawl headline) \tab m \tab Numeric \tab 65 \cr
+#' MaxHaulDepth \tab Maximum depth of the haul (trawl headline) \tab m \tab Numeric \tab 35 \cr
+#' VerticalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 23 \cr
+#' HorizontalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 105 \cr
+#' TrawlDoorSpread \tab Distance between the trawl doors \tab m \tab Numeric \tab 125 \cr
+#' }
+#' 
+#' 
+#' \bold{SpeciesCategory level}:
+#' \tabular{lllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
+#' SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab 126417 \cr
+#' SpeciesCategory \tab The species category \tab None \tab Character \tab Herring \cr
+#' }
+#' 
+#' 
+#' \bold{Sample level}:
+#' \tabular{lllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
+#' SampleKey \tab Key of the Sample level \tab None \tab Character \tab  \cr          
+#' Sample \tab Unique Sample identifier \tab None \tab Character \tab  \cr             
+#' CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab Kg \tab Numeric \tab 49.9 \cr
+#' CatchFractionCount \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab None \tab Numeric \tab 295 \cr 
+#' SampleWeight \tab Total weight of the sample for individual measurements \tab Kg \tab Numeric \tab 4.6 \cr       
+#' SampleCount \tab Size of the sample for individual measurements \tab None \tab Numeric \tab 100 \cr
+#' }
+#' 
+#' 
+#' \bold{Individual level}:
+#' \tabular{lllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
+#' IndividualKey \tab Key of the Individual level \tab None \tab Character \tab  \cr        
+#' Individual \tab Unique Individual identifier \tab None \tab Character \tab  \cr           
+#' IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \cr
+#' IndividualTotalLength \tab Total length (from snoute to end of fin) \tab cm \tab Numeric \tab 14.5 \cr
+#' LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \cr     
+#' WeightMeasurement \tab \tab None \tab Character \tab  \cr    
+#' IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \cr        
+#' IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab F \cr
+#' }
+#' 
+#' @name StoxBioticFormat
+#' 
+NULL
 
 ##################################################
 ##################################################

@@ -570,6 +570,10 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 	#VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(x %in% vocabularyOne$id))])))))
 	VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(unique(x) %in% vocabularyOne$id))])))))
 	# Add the VariableName to the vocabularyOne
+	if(!length(VariableName)) {
+		# Add NA if no variable was recognized (this avoids warnings when cbind with character(0)
+		VariableName <- NA
+	}
 	vocabularyOne <- cbind(
 		VariableName = VariableName, 
 		vocabularyOne
@@ -633,9 +637,9 @@ createOrderKey <- function(x, split = "/") {
 		return(x)
 	}
 	
-	# Create a data.table off the splitted elements and get the order of these:
+	# Create a data.table of the splitted elements and get the order of these:
 	splittedDT <- data.table::rbindlist(lapply(splitted, as.list))
-	suppressWarnings(splittedDT[, names(splittedDT) := lapply(.SD, as.numeric)])
+	suppressWarnings(splittedDT[, names(splittedDT) := lapply(.SD, as.numeric_IfPossible)])
 	
 	# Only accept if all elements can be converted to numeric:
 	#if(any(is.na(splittedDT))) {
@@ -665,4 +669,14 @@ createOrderKey <- function(x, split = "/") {
 	#orderKey <- match(seq_along(x), orderOfSplitted)
 	#
 	return(orderKey)
+}
+
+as.numeric_IfPossible <- function(x) {
+	num <- as.numeric(x)
+	if(all(is.na(num))) {
+		return(x)
+	}
+	else {
+		return(num)
+	}
 }

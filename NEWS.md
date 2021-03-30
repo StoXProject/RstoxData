@@ -1,3 +1,29 @@
+# RstoxData v1.1.2 (2021-03-30)
+
+* Fixed time format of StoxAcoustic().
+* Moved translation of ICESBiotic before merging levels as merging changes name of some variables.
+* Changed to keep original FishID and add sequetial integers for individuals regenerated from Catch continuing from the maximum FishID.
+* Added documentation of the StoxBiotic format.
+* Fixed bug in LengthResolution for ICESBiotic where only the first value was used.
+* Fixed bug when converting length for ICESBiotic, where values were multiplied by 100 instead of 10 from mm to cm.
+* Changed TowDistance to nautical miles.
+* __NEW__: Reading XML files with namespace prefix is now supported.
+* __NEW__: Writing XML files (alpha) is now supported.
+* Fixed bug in DateTime for ICESAcoustic files, and bug in translateOneTable() causing incomplete translation in StoxAcoustic from ICESAcoustic files.
+* Added ChannelDepthUpper-ChannelDepthLower as Channel in StoxAcousic. 
+* Fixed bug in createOrderKey() where columns that are non-convertable to nunmeric were replaced by NA instead of being left unchanged
+* Fixed bug in `filterData`, where `propagateUpwards` = TRUE did not remove rows of the higher tables if these rows were not present in the filtered table.
+* Corrected type of variables of `StoxAcoustic` for NMDEchosounder input xml files.
+* Added possible values for `redefinitionTable`.
+* Renamed `readVariableConversion()` to `readVariableTranslation()`.
+* Refactored `translateVariables()`.
+* Throw error when file is missing in `readXmlFile()`.
+
+# RstoxData v1.1.1 (2021-02-23)
+
+* Refactor some of the reading functions to get rid of `readr` dependency.
+* New feature: ECA integration. This is merged some time ago.
+
 # RstoxData v1.1.0 (2021-02-10)
 
 * Final version for the release of StoX 3.0.0.

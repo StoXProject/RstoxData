@@ -15,3 +15,6 @@ An object of StoX data type \code{\link{StoxBioticData}}.
 \description{
 Convert BioticData to StoxBioticData
 }
+\seealso{
+The definition of the \code{\link[=StoxBioticFormat]{StoxBiotic format}} and \code{\link{generalSamplingHierarhcy}}.
+}

@@ -14,7 +14,7 @@ utils::globalVariables(c(
 	 "..columns", "..digits", "..keep", "..key", "..parameterNames", "..signifDigits",
 	 "..sourceColumns", "..targetAndSourceVariables", "..toKeep", "..varToExtract", "..x",
 	 "AcousticCategory", "Addition", "BeamKey", "Constant", "Country", "Cruise", "CruiseKey",
-	 "DateTime", "DoorType", "EDSU", "EchoType", "FishID", "Gear", "GearExp", "HaulNo", "HaulVal",
+	 "DateTime", "DoorType", "EDSU", "EchoType", "FishID", "Gear", "GearEx", "HaulNo", "HaulVal",
 	 "LengthClass", "LengthCode", "LocalID", "LogKey", "N", "Number", "NumberAtLength", "Quarter",
 	 "ReplaceBy", "SaCategory", "Scaling", "Ship", "SpecVal", "SpeciesCategoryNumber",
 	 "SpeciesCategoryWeight", "SpeciesCode", "StatRec", "SubsampleWeight", "SubsampledNumber",
