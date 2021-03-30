@@ -45,8 +45,6 @@
 
 
 
-
-
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -74,13 +72,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -116,7 +120,7 @@
     <p>Parses sales notes data from the Norwegian Directorate of Fisheries (FDIR) on the LSS format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>readLssFile</span><span class='op'>(</span><span class='va'>file</span>, encoding <span class='op'>=</span> <span class='st'>"latin1"</span>, guessMax <span class='op'>=</span> <span class='fl'>1e+05</span>, strict <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>readLssFile</span><span class='op'>(</span><span class='va'>file</span>, encoding <span class='op'>=</span> <span class='st'>"Latin-1"</span>, guessMax <span class='op'>=</span> <span class='fl'>1e+05</span>, strict <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -127,11 +131,11 @@
     </tr>
     <tr>
       <th>encoding</th>
-      <td><p>encoding for 'file'</p></td>
+      <td><p>encoding for 'file', must be accepted by <code><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>fread</a></code></p></td>
     </tr>
     <tr>
       <th>guessMax</th>
-      <td><p>passed to <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_delim</a></code>, unless 'strict' is true</p></td>
+      <td><p>deprecated parameter, has no effect.</p></td>
     </tr>
     <tr>
       <th>strict</th>
@@ -151,8 +155,7 @@
  Lately data deliveries has become standardized, but in order to support variants
  adherence to the standardization is not enforced by this function, unless option 'strict' is selected.
  If column names does not match specification, but data is otherwise parse-able, a warning will be issued.</p> 
-<p>If the parameter 'strict' is not TRUE, data types may be inferred from data.
- The parameter 'guessMax' limits how many lines are inspected for data type inference (passed to <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_delim</a></code>)</p>
+<p>If the parameter 'strict' is not TRUE, data types may be inferred from data.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -169,7 +172,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

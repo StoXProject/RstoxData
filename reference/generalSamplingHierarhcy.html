@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge two data tables by the intersect of the names — mergeByIntersect • RstoxData</title>
+<title>General sampling hierarchy of StoX — generalSamplingHierarhcy • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge two data tables by the intersect of the names — mergeByIntersect" />
-<meta property="og:description" content="Merge two data tables by the intersect of the names" />
+<meta property="og:title" content="General sampling hierarchy of StoX — generalSamplingHierarhcy" />
+<meta property="og:description" content="The general sampling hierarchy of StoX defines a common hierarchy of sampling levels for the StoxBiotic and StoxAcoustic data formats." />
 
 
 
@@ -111,37 +111,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge two data tables by the intersect of the names</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>mergeByIntersect.Rd</code></div>
+    <h1>General sampling hierarchy of StoX</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>generalSamplingHierarhcy.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge two data tables by the intersect of the names</p>
+    <p>The general sampling hierarchy of StoX defines a common hierarchy of sampling levels for the StoxBiotic and StoxAcoustic data formats.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mergeByIntersect</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>...</span>, msg <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x, y</th>
-      <td><p>Data tables of class <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Various overrides.</p></td>
-    </tr>
-    <tr>
-      <th>msg</th>
-      <td><p>Verbose message switch, default to <code>FALSE</code>.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A merged data table.</p>
+    <p>The general sampling hierarchy of StoX is defined by 6 levels (tables) as shown alongside the levels of the StoxcBiotic and StoxAcoustic format in the following table:</p>
+<table class='table'>
+<tr><td>General level</td><td>StoxBiotic level</td><td>StoxAcoustic level</td></tr>
+<tr><td>Cruise</td><td>Cruise</td><td>Cruise</td></tr>
+<tr><td>Station</td><td>Station</td><td>Log</td></tr>
+<tr><td>Equipment</td><td>Haul</td><td>Beam</td></tr>
+<tr><td>Species</td><td>SpeciesCategory</td><td>AcousticCategory</td></tr>
+<tr><td>Sample</td><td>Sample</td><td>ChannelReference</td></tr>
+<tr><td>Individual</td><td>Individual</td><td>NASC</td></tr>
+</table>
+
+
+<p>The levels can be interpreted as follows:</p>
+<p>(1) The Cruise level is the entire trip or mission conducted by a platform, such as a research vessel.</p>
+<p>(2) The Station level is a geographical position at a specific point in time where sampling is conducted.</p>
+<p>(3) The Equipment level specifies the equipment used to sample, possibly several equipments at the same station, such as two different trawls or  different acoustic instruments or acoustic frequencies.</p>
+<p>(4) The Species level is the biological species or acoustic category (normally reflecting one or more biological species) sampled by the equipment.</p>
+<p>(5) The Sample level is the specific sample of the Species, such as herring or cod for StoxBiotic. For StoxAcoustic the Sample level denotes different coordinate systems in which the acoustic data are defined, with possible values "P" for pelagic channels defined by origin at the surface and z axis pointing vertically downwards, and "B" for bottom referenced channels with origin on the seabed and z axis pointing vertically upwards.</p>
+<p>(6) The Individual level contains for the StoxBiotic format the individuals selected for specific measurements of individual properties such as length, weight and gender, whereas for StoxAcoustic the indiivdual samples along an acouostic beam.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

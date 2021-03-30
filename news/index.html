@@ -44,8 +44,6 @@
 
 
 
-
-
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -73,13 +71,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -110,6 +114,42 @@
       <small>Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="rstoxdata-v112-2021-03-30" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.2">
+<a href="#rstoxdata-v112-2021-03-30" class="anchor"></a>RstoxData v1.1.2 (2021-03-30)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fixed time format of StoxAcoustic().</li>
+<li>Moved translation of ICESBiotic before merging levels as merging changes name of some variables.</li>
+<li>Changed to keep original FishID and add sequetial integers for individuals regenerated from Catch continuing from the maximum FishID.</li>
+<li>Added documentation of the StoxBiotic format.</li>
+<li>Fixed bug in LengthResolution for ICESBiotic where only the first value was used.</li>
+<li>Fixed bug when converting length for ICESBiotic, where values were multiplied by 100 instead of 10 from mm to cm.</li>
+<li>Changed TowDistance to nautical miles.</li>
+<li>
+<strong>NEW</strong>: Reading XML files with namespace prefix is now supported.</li>
+<li>
+<strong>NEW</strong>: Writing XML files (alpha) is now supported.</li>
+<li>Fixed bug in DateTime for ICESAcoustic files, and bug in translateOneTable() causing incomplete translation in StoxAcoustic from ICESAcoustic files.</li>
+<li>Added ChannelDepthUpper-ChannelDepthLower as Channel in StoxAcousic.</li>
+<li>Fixed bug in createOrderKey() where columns that are non-convertable to nunmeric were replaced by NA instead of being left unchanged</li>
+<li>Fixed bug in <code>filterData</code>, where <code>propagateUpwards</code> = TRUE did not remove rows of the higher tables if these rows were not present in the filtered table.</li>
+<li>Corrected type of variables of <code>StoxAcoustic</code> for NMDEchosounder input xml files.</li>
+<li>Added possible values for <code>redefinitionTable</code>.</li>
+<li>Renamed <code>readVariableConversion()</code> to <code>readVariableTranslation()</code>.</li>
+<li>Refactored <code>translateVariables()</code>.</li>
+<li>Throw error when file is missing in <code><a href="../reference/readXmlFile.html">readXmlFile()</a></code>.</li>
+</ul>
+</div>
+    <div id="rstoxdata-v111-2021-02-23" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.1">
+<a href="#rstoxdata-v111-2021-02-23" class="anchor"></a>RstoxData v1.1.1 (2021-02-23)<small> 2021-03-05 </small>
+</h1>
+<ul>
+<li>Refactor some of the reading functions to get rid of <code>readr</code> dependency.</li>
+<li>New feature: ECA integration. This is merged some time ago.</li>
+</ul>
+</div>
     <div id="rstoxdata-v110-2021-02-10" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.0">
 <a href="#rstoxdata-v110-2021-02-10" class="anchor"></a>RstoxData v1.1.0 (2021-02-10)<small> Unreleased </small>
@@ -152,7 +192,7 @@
 </h1>
 <ul>
 <li>
-<code><a href="../reference/getStoxKeys.html">getStoxKeys()</a></code>: Fix for <code>stoxBioticObject</code> object not found (https://github.com/StoXProject/RstoxData/issues/117).</li>
+<code><a href="../reference/getStoxKeys.html">getStoxKeys()</a></code>: Fix for <code>stoxBioticObject</code> object not found (<a href="https://github.com/StoXProject/RstoxData/issues/117" class="uri">https://github.com/StoXProject/RstoxData/issues/117</a>).</li>
 <li>Remove sorting when merging in <code><a href="../reference/AddToStoxBiotic.html">AddToStoxBiotic()</a></code>.</li>
 <li>Rename <code>DefineStoxBioticTranslation</code> to <code>DefineTranslation</code>, and the coresponding data type to <code>Translation</code>. Also added backward compatibility for this.</li>
 </ul>
@@ -247,7 +287,13 @@
 <h1 class="page-header" data-toc-text="1.0.12">
 <a href="#rstoxdata-v1012-2020-09-30" class="anchor"></a>RstoxData v1.0.12 (2020-09-30)<small> Unreleased </small>
 </h1>
-<p>Changes: * StoxExport: Adopt the latest unified DATRAS format. * StoxExport: Fix function for getting ICES ship code. * stoxBioticObject: Fix DateTime column from ICES Biotic has a different class compared to the one from NMD Biotic. * Documentation fix.</p>
+<p>Changes:</p>
+<ul>
+<li>StoxExport: Adopt the latest unified DATRAS format.</li>
+<li>StoxExport: Fix function for getting ICES ship code.</li>
+<li>stoxBioticObject: Fix DateTime column from ICES Biotic has a different class compared to the one from NMD Biotic.</li>
+<li>Documentation fix.</li>
+</ul>
 </div>
     <div id="rstoxdata-v1011-2020-09-18" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.11">
@@ -379,6 +425,12 @@
 </h1>
 <p>Appveyor: test logic.</p>
 </div>
+    <div id="stoxdata-v0810-2020-06-02" class="section level1">
+<h1 class="page-header" data-toc-text="0.8.10">
+<a href="#stoxdata-v0810-2020-06-02" class="anchor"></a>stoxData v0.8.10 (2020-06-02)<small> Unreleased </small>
+</h1>
+<p>New minor release.</p>
+</div>
     <div id="rstoxdata-v089-2020-05-28" class="section level1">
 <h1 class="page-header" data-toc-text="0.8.9">
 <a href="#rstoxdata-v089-2020-05-28" class="anchor"></a>RstoxData v0.8.9 (2020-05-28)<small> Unreleased </small>
@@ -407,15 +459,33 @@
 <h1 class="page-header" data-toc-text="0.8.6">
 <a href="#rstoxdata-v086-2020-05-04" class="anchor"></a>RstoxData v0.8.6 (2020-05-04)<small> Unreleased </small>
 </h1>
-<p>New features: * Add multiple data export feature: 1. ICES acoustic XML format to ICES acoustic CSV format 2. NMD biotic v3 XML format to ICES biotic CSV format 3. NMD biotic V3 XML format to NS-IBTS ICES Datras (CSV) format</p>
-<p>Bug fixes: * Fixes ICES Acoustic/Biotic vocabulary generation when parsing ICES’s XML files</p>
+<p>New features:</p>
+<ul>
+<li>Add multiple data export feature:
+<ol>
+<li>ICES acoustic XML format to ICES acoustic CSV format</li>
+<li>NMD biotic v3 XML format to ICES biotic CSV format</li>
+<li>NMD biotic V3 XML format to NS-IBTS ICES Datras (CSV) format</li>
+</ol>
+</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Fixes ICES Acoustic/Biotic vocabulary generation when parsing ICES’s XML files</li>
+</ul>
 </div>
     <div id="rstoxdata-v085-2020-05-01" class="section level1">
 <h1 class="page-header" data-toc-text="0.8.5">
 <a href="#rstoxdata-v085-2020-05-01" class="anchor"></a>RstoxData v0.8.5 (2020-05-01)<small> Unreleased </small>
 </h1>
-<p>New features: * Add filtering with upward propagation</p>
-<p>Bugfixes: * Propagate down now able to skip empty tables (e.g., NMD v3 prey)</p>
+<p>New features:</p>
+<ul>
+<li>Add filtering with upward propagation</li>
+</ul>
+<p>Bugfixes:</p>
+<ul>
+<li>Propagate down now able to skip empty tables (e.g., NMD v3 prey)</li>
+</ul>
 </div>
     <div id="rstoxdata-v084-2020-04-28" class="section level1">
 <h1 class="page-header" data-toc-text="0.8.4">
@@ -470,7 +540,15 @@
 <a href="#rstoxdata-v067-2020-03-19" class="anchor"></a>RstoxData v0.6.7 (2020-03-19)<small> Unreleased </small>
 </h1>
 <p>New minor release. Notable new features are the support for NMD Biotic v1.4 and ICES Biotic data input.</p>
-<p>Changelog: * Updated README * Increment version * Add test for StoxBiotic * Add ICES Biotic to StoXBiotic format conversion * readXmlFile: Fix typo * Add support for converting NMD Biotic v1.4 format to StoxBiotic</p>
+<p>Changelog:</p>
+<ul>
+<li>Updated README</li>
+<li>Increment version</li>
+<li>Add test for StoxBiotic</li>
+<li>Add ICES Biotic to StoXBiotic format conversion</li>
+<li>readXmlFile: Fix typo</li>
+<li>Add support for converting NMD Biotic v1.4 format to StoxBiotic</li>
+</ul>
 </div>
     <div id="rstoxdata-v066-2020-02-11" class="section level1">
 <h1 class="page-header" data-toc-text="0.6.6">
@@ -483,14 +561,57 @@
 <a href="#rstoxdata-v065-2019-12-19" class="anchor"></a>RstoxData v0.6.5 (2019-12-19)<small> Unreleased </small>
 </h1>
 <p>New minor release.</p>
-<p>Changelog: * Update README(.md) * Increment version * Refresh xsdObjects data * Fix documentation * Add verbose output switch for reading XMLs * Add tests for StoxBiotic and StoxAcoustic functions * Fix merging proses in StoxAcoustic() after correction of the column types * Correct the data types in result tables * Fix StoxBiotic function</p>
+<p>Changelog:</p>
+<ul>
+<li>Update README(.md)</li>
+<li>Increment version</li>
+<li>Refresh xsdObjects data</li>
+<li>Fix documentation</li>
+<li>Add verbose output switch for reading XMLs</li>
+<li>Add tests for StoxBiotic and StoxAcoustic functions</li>
+<li>Fix merging proses in StoxAcoustic() after correction of the column types</li>
+<li>Correct the data types in result tables</li>
+<li>Fix StoxBiotic function</li>
+</ul>
 </div>
     <div id="rstoxdata-v064-2019-12-18" class="section level1">
 <h1 class="page-header" data-toc-text="0.6.4">
 <a href="#rstoxdata-v064-2019-12-18" class="anchor"></a>RstoxData v0.6.4 (2019-12-18)<small> Unreleased </small>
 </h1>
 <p>Updated XML reader, RstoxBiotic and RstoxAcoustic functions.</p>
-<p>Changes: * Update DESCRIPTION * Appveyor needs the whole R version digit * Increment minor version * Update CIs to use only R 3.5 * Merge branch ‘biotic_acoustic’ of github.com:StoXProject/RstoxData into biotic_acoustic * Filter draft * XML stream read speed improvements * Result tables is now ordered * Suppress warning on utils data * metadata from readXmlFile is now a data.table * Update ICES XSDs raw and compiled data objects * Update stoxBioticObject data * Fix processBioticData length resolution converter * icesBiotic is now supported * Fix NMDBiotic v.1x xsdObjects * Added documentation for DataTypes * Merge branch ‘biotic_acoustic’ of github.com:StoXProject/RstoxData into biotic_acoustic * Added documentation for BioticData * StoxBiotic: Remove duplicate rows from SpeciesCategory table * Update data for conversion * Latitude and Latitude2 * Latest StoxBiotic updates * Merge branch ‘biotic_acoustic’ of github.com:StoXProject/RstoxData into biotic_acoustic * Minor fix * Fix (another) encoding problem * Fix documents * Update StoxBiotic conversion data and scripts * Clean up data.table warnings and inefficiencies * Removed PDFs * Add StoxAcoustic and StoxBiotic</p>
+<p>Changes:</p>
+<ul>
+<li>Update DESCRIPTION</li>
+<li>Appveyor needs the whole R version digit</li>
+<li>Increment minor version</li>
+<li>Update CIs to use only R 3.5</li>
+<li>Merge branch ‘biotic_acoustic’ of github.com:StoXProject/RstoxData into biotic_acoustic</li>
+<li>Filter draft</li>
+<li>XML stream read speed improvements</li>
+<li>Result tables is now ordered</li>
+<li>Suppress warning on utils data</li>
+<li>metadata from readXmlFile is now a data.table</li>
+<li>Update ICES XSDs raw and compiled data objects</li>
+<li>Update stoxBioticObject data</li>
+<li>Fix processBioticData length resolution converter</li>
+<li>icesBiotic is now supported</li>
+<li>Fix NMDBiotic v.1x xsdObjects</li>
+<li>Added documentation for DataTypes</li>
+<li>Merge branch ‘biotic_acoustic’ of github.com:StoXProject/RstoxData into biotic_acoustic</li>
+<li>Added documentation for BioticData</li>
+<li>StoxBiotic: Remove duplicate rows from SpeciesCategory table</li>
+<li>Update data for conversion</li>
+<li>Latitude and Latitude2</li>
+<li>Latest StoxBiotic updates</li>
+<li>Merge branch ‘biotic_acoustic’ of github.com:StoXProject/RstoxData into biotic_acoustic</li>
+<li>Minor fix</li>
+<li>Fix (another) encoding problem</li>
+<li>Fix documents</li>
+<li>Update StoxBiotic conversion data and scripts</li>
+<li>Clean up data.table warnings and inefficiencies</li>
+<li>Removed PDFs</li>
+<li>Add StoxAcoustic and StoxBiotic</li>
+</ul>
 </div>
     <div id="rstoxdata-v063-2019-12-06" class="section level1">
 <h1 class="page-header" data-toc-text="0.6.3">
@@ -514,7 +635,41 @@
 <h1 class="page-header" data-toc-text="0.6.0">
 <a href="#rstoxdata-v060-2019-06-12" class="anchor"></a>RstoxData v0.6.0 (2019-06-12)<small> Unreleased </small>
 </h1>
-<p>Changes: * Rebrand to RstoxData. * Add support for all biotic formats.</p>
+<p>Changes:</p>
+<ul>
+<li>Rebrand to RstoxData.</li>
+<li>Add support for all biotic formats.</li>
+</ul>
+</div>
+    <div id="rnmdapi-v051-2019-05-27" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.1">
+<a href="#rnmdapi-v051-2019-05-27" class="anchor"></a>RNMDAPI v0.5.1 (2019-05-27)<small> Unreleased </small>
+</h1>
+<p>Changes:</p>
+<ul>
+<li>BUG FIX: Correctly handle decimal type in the resulting tables.</li>
+</ul>
+</div>
+    <div id="rnmdapi-v050-2019-04-09" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.0">
+<a href="#rnmdapi-v050-2019-04-09" class="anchor"></a>RNMDAPI v0.5.0 (2019-04-09)<small> Unreleased </small>
+</h1>
+<p>Changes:</p>
+<ul>
+<li>Supports reading ZIP compressed XML files in the push XML parser. This function is built on top of MINIZ compression library.</li>
+</ul>
+</div>
+    <div id="rnmdapi-v040-2019-04-06" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.0">
+<a href="#rnmdapi-v040-2019-04-06" class="anchor"></a>RNMDAPI v0.4.0 (2019-04-06)<small> Unreleased </small>
+</h1>
+<p>Changes:</p>
+<ul>
+<li>Faster and more memory efficient in reading XML files.</li>
+<li>New XML engine, all XML processing are now done inside the C++ code.</li>
+<li>A new streaming pull parser is implemented to avoid reading the whole big XML files into memory.</li>
+<li>Now supports landings v2 XML format.</li>
+</ul>
 </div>
   </div>
 
@@ -533,7 +688,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
