@@ -14,7 +14,7 @@ example <- system.file("testresources", "biotic_v3_example.xml", package="RstoxD
 data <- ReadBiotic(example)
 
 data[[1]]$fishstation[, stationstartdate := stationstopdate]
-ICESBiotic <- RstoxData::ICESBiotic(data)
+ICESBiotic <- RstoxData::ICESBiotic(data, SurveyName = "NONE", Country = "No", Organisation = 612)
 ICESBiotic <- RstoxData::ReportICESBiotic(ICESBiotic)
 expect_equal(dim(ICESBiotic[[1]]), c(96, 45))
 
