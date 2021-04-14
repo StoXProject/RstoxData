@@ -73,7 +73,7 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
       </span>
     </div>
 
@@ -124,9 +124,9 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
 
     <pre class="usage"><span class='fu'>ICESBiotic</span><span class='op'>(</span>
   <span class='va'>BioticData</span>,
-  SurveyName <span class='op'>=</span> <span class='st'>"NONE"</span>,
-  Country <span class='op'>=</span> <span class='cn'>NA_character_</span>,
-  Organisation <span class='op'>=</span> <span class='cn'>NA_integer_</span>,
+  SurveyName <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  Country <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  Organisation <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>integer</a></span><span class='op'>(</span><span class='op'>)</span>,
   AllowRemoveSpecies <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
@@ -152,7 +152,7 @@ BioticData object that is created from reading an NMD biotic version 3 XML file.
     <tr>
       <th>AllowRemoveSpecies</th>
       <td><p>ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
-https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.</p></td>
+https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml. Setting this parameter to TRUE will remove the unlisted species records.</p></td>
     </tr>
     </table>
 
