@@ -6,9 +6,9 @@
 \usage{
 ICESBiotic(
   BioticData,
-  SurveyName = "NONE",
-  Country = NA_character_,
-  Organisation = NA_integer_,
+  SurveyName = character(),
+  Country = character(),
+  Organisation = integer(),
   AllowRemoveSpecies = TRUE
 )
 }
@@ -22,7 +22,7 @@ ICESBiotic(
 \item{Organisation}{An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).}
 
 \item{AllowRemoveSpecies}{ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
-https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.}
+https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml. Setting this parameter to TRUE will remove the unlisted species records.}
 }
 \value{
 List of data.table objects in the ICES acoustic CSV format.

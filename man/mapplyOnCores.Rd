@@ -4,13 +4,7 @@
 \alias{mapplyOnCores}
 \title{Run a function on all elements of x on one or more cores}
 \usage{
-mapplyOnCores(
-  FUN,
-  NumberOfCores = integer(),
-  ...,
-  MoreArgs = NULL,
-  SIMPLIFY = FALSE
-)
+mapplyOnCores(FUN, NumberOfCores = 1L, ..., MoreArgs = NULL, SIMPLIFY = FALSE)
 }
 \arguments{
 \item{FUN}{The function to apply.}
