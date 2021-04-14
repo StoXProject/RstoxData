@@ -277,6 +277,9 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 			out <- parallel::mclapply(x, FUN, mc.cores = NumberOfCores, ...)
 		}
 	}
+	else {
+		out <- NULL
+	}
 	
 	return(out)
 }
@@ -291,7 +294,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 #'
 #' @export
 #' 
-mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, SIMPLIFY = FALSE) {
+mapplyOnCores <- function(FUN, NumberOfCores = 1L, ..., MoreArgs = NULL, SIMPLIFY = FALSE) {
 	# Get the number of cores to use:
 	if(length(NumberOfCores) == 0) {
 		NumberOfCores <- getCores()
@@ -320,6 +323,9 @@ mapplyOnCores <- function(FUN, NumberOfCores = integer(), ..., MoreArgs = NULL, 
 		else {
 			out <- parallel::mcmapply(FUN, mc.cores = NumberOfCores, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 		}
+	}
+	else {
+		out <- NULL
 	}
 	
 	return(out)
@@ -444,6 +450,8 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 			data.table::fwrite(dupData, fileToWriteDupDataTo)
 			
 			#warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". This may be due to different files with the same keys, e.g. if different acoustic instruments are stored in different files. In such a case the order of the files is crucial, as only the information from the first file is kept. If not different files, then duplicated keys may be an error. To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
+			#warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\"), which contains the column \"duplicated\"")
+			
 			#rowsToKeep <- !duplicatedKeys
 			StoxData[[tableName]] <- StoxData[[tableName]][!duplicatedKeys, ]
 		}

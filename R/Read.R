@@ -211,6 +211,8 @@ getICESrect <- function(lat, lng){
 # Get distance in meters between two coordinates
 getDistanceMeter <- function(lat1, lon1, lat2, lon2) {
 	x <-  acos( sin(lat1*pi/180)*sin(lat2*pi/180) + cos(lat1*pi/180)*cos(lat2*pi/180)*cos(lon2*pi/180-lon1*pi/180) ) * 6371000
+	# Distance is integer in ICESBiotic:
+	x <- round(x)
 	return(x)
 }
 
@@ -223,7 +225,10 @@ getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, sta
 	start <- as.POSIXct(t0)
 	end <- as.POSIXct(t1)
 	
-	return(round(difftime(end, start, units = "mins")))
+	# Diff in minutes:
+	diffMins <- as.numeric(round(difftime(end, start, units = "mins")))
+	
+	return(diffMins)
 }
 
 # Get ICES ship data

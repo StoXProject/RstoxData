@@ -270,16 +270,16 @@ expandWidth <- function(x, na = NA) {
 #' @param Country The ISO_3166 code of the country running the cruise. See \url{http://vocab.ices.dk/?ref=337}.
 #' @param Organisation An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).
 #' @param AllowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
-#'        https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml . Setting this parameter to TRUE will remove the unlisted species records.
+#' https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml. Setting this parameter to TRUE will remove the unlisted species records.
 #'        
 #' @return List of data.table objects in the ICES acoustic CSV format.
 #'
 #' @export
 ICESBiotic <- function(
 	BioticData, 
-	SurveyName = "NONE", 
-	Country = NA_character_, 
-	Organisation = NA_integer_, 
+	SurveyName = character(), 
+	Country = character(), 
+	Organisation = integer(), 
 	AllowRemoveSpecies = TRUE
 ) {
 
@@ -303,9 +303,9 @@ ICESBiotic <- function(
 
 BioticDataToICESBioticOne <- function(
 	BioticDataOne, 
-	SurveyName = "NONE", 
-	Country = NA_character_, 
-	Organisation = NA_integer_, 
+	SurveyName = character(), 
+	Country = character(), 
+	Organisation = integer(),  
 	AllowRemoveSpecies = TRUE
 ) {
 	
@@ -378,13 +378,18 @@ BioticData_ICESToICESBioticOne <- function(BioticData_ICESOne) {
 
 BioticData_NMDToICESBioticOne <- function(
 	BioticData_NMDOne, 
-	SurveyName = "NONE", 
-	Country = NA_character_, 
-	Organisation = NA_integer_, 
+	SurveyName = character(), 
+	Country = character(), 
+	Organisation = integer(), 
 	AllowRemoveSpecies = TRUE
 ) {
 	
 	cruiseRaw <- BioticData_NMDOne$mission
+	
+	# Check that Survey, Country and Organisation are given:
+	if(!all(length(SurveyName), length(Country), length(Organisation))) {
+		stop("All of SurveyName, Country and Organisation must be given.")
+	}
 	
 	Cruise <- cruiseRaw[, .(
 		Survey = ..SurveyName,
@@ -415,17 +420,21 @@ BioticData_NMDToICESBioticOne <- function(
 		MinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
 		MaxTrawlDepth = fishingdepthmax,
 		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
-		Distance = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
+		Distance = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
 		Netopening = verticaltrawlopening,
 		CodendMesh = NA,
 		SweepLength = getGOVSweepByEquipment(gear),
 		GearExceptions = NA, # Should this be set?
 		DoorType = trawldoortype,
-		WarpLength = wirelength,
-		WarpDiameter = wirediameter,
-		WarpDensity = wiredensity,
+		# Warp length in integer meter: 
+		WarpLength = round(wirelength),
+		# Warp diameter in integer millimeter: 
+		WarpDiameter = round(wirediameter),
+		# Warp density in integer kg per linear meter of warp.: 
+		WarpDensity = round(wiredensity),
 		DoorSurface = trawldoorarea,
-		DoorWeight = trawldoorweight,
+		# Door weight in integer kilograms.
+		DoorWeight = round(trawldoorweight),
 		DoorSpread = trawldoorspread,
 		WingSpread = wingspread,
 		Buoyancy = NA,
@@ -434,11 +443,14 @@ BioticData_NMDToICESBioticOne <- function(
 		Rigging = NA,
 		Tickler = NA,
 		HydrographicStationID = NA,
-		TowDirection = direction,
+		# Direction is integer degrees: 
+		TowDirection = round(direction),
 		SpeedGround = NA,
 		SpeedWater = gearflow,
+		# Wind direction is integer degrees: 
 		WindDirection = winddirection,
-		WindSpeed = windspeed,
+		# Wind speed is meter per second: 
+		WindSpeed = round(windspeed),
 		SwellDirection = NA,
 		SwellHeight = NA,
 		LogDistance = NA,
