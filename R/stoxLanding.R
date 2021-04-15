@@ -127,9 +127,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
   outputColumns <- c(outputColumns, "RoundWeight")
   
   # format conversions
-  cd <- as.POSIXct(aggLandings$CatchDate, format="%d.%m.%Y")
-  attributes(cd)$tzone <- "UTC"
-  aggLandings$CatchDate <- as.POSIXct(substr(as.character(cd),1,10), format="%Y-%m-%d", tzone="UTC")
+  aggLandings$CatchDate <- as.POSIXct(aggLandings$CatchDate, format="%d.%m.%Y", tzone="UTC")
   
   aggLandings$Year <- as.integer(aggLandings$Year)
   
