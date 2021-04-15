@@ -224,10 +224,6 @@ createRecordTypeMatrix <- function(ICESDataTableName, ICESData) {
 		trimws(as.matrix(thisTable))
 	)
 	
-	
-	
-	
-	
 	unname(rbind(header, record))
 }
 
@@ -516,7 +512,9 @@ BioticData_NMDToICESBioticOne <- function(
 		WeightUnit = 'gr',
 		IndividualWeight = individualweight * 1000,
 		IndividualSex = ifelse(is.na(sex), NA, ifelse(sex == "1", "F", "M")),
-		IndividualMaturity = getDATRASMaturity(getQuarter(stationstartdate), aphia, specialstage, maturationstage),
+		#IndividualMaturity = getDATRASMaturity(getQuarter(stationstartdate), aphia, specialstage, maturationstage),
+		# Here specialstage is assumed to be have been translated to ICES "M6" codes as per http://vocab.ices.dk/?ref=1480:
+		IndividualMaturity = specialstage,
 		MaturityScale = "M6",
 		IndividualAge = age,
 		AgePlusGroup = NA,

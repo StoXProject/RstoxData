@@ -189,10 +189,10 @@ getGOVSweepByEquipment <- function(gear) {
 
 # Get Haul validity
 getHaulVal <- function(gearcondition, samplequality) {
-	temp <-  as.data.table(cbind(g=gearcondition, s=samplequality))
-	temp[, res:="I"]
-	temp[(is.na(g) | g %in% c("1","2")) &
-		 	(is.na(s) | s %in% c("0", "1")), res:="V"]
+	temp <-  data.table::data.table(g = gearcondition, s = samplequality)
+	temp[, res := "I"]
+	temp[(is.na(g) | g %in% c("1", "2")) &
+		 	(is.na(s) | s %in% c("0", "1")), res := "V"]
 	
 	return(temp$res)
 }
