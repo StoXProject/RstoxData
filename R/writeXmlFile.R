@@ -236,7 +236,75 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   
   stream = file(fileName, open="w", encoding=encoding)
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
-  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)
+  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)    
+    close(stream)
+  
+}
+
+#' write landings xml with routines for writing tabular data
+#' @noRd
+fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/formats/landinger/v2", encoding="UTF-8", xmlStandard="1.0"){
+  
+  if (namespace=="http://www.imr.no/formats/landinger/v2"){
+    xsdObject <- xsdObjects$landingerv2.xsd
+  }
+  else{
+    stop(paste("Namespace", namespace, "not supported"))
+  }
+  
+  dataTables <- typeConvert(dataTables, xsdObject)
+  
+  # write prequel and opening tag
+  stream = file(fileName, open="w", encoding=encoding)
+  writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
+  writeLines(paste("<Landingsdata xmlns=\"", namespace, "\">", sep=""), stream)
+  close(stream)
+  
+  #
+  # manipulate data frame to include xml markup for all non-root levels
+  # for landings they are all the same number of rows
+  #
+  
+  keys <- xsdObject$tableHeaders$Seddellinje[1:xsdObject$prefixLens[["Seddellinje"]]]
+  output <- dataTables$Seddellinje[, names(dataTables$Seddellinje)[names(dataTables$Seddellinje) %in% keys], with=F]
+  
+  # open seddellinje
+  namesSL <- names(output)
+  output$SLopen <- "<Seddellinje"
+  output <- output[,c("SLopen", namesSL), with=F]
+  
+  for (k in keys){
+    output[[k]][is.na(output[[k]])] <- ""
+    output[[k]] <- paste(k, "=\"", output[[k]], "\"", sep="")
+  }
+  output[[k]] <- paste(output[[k]], ">", sep="")
+  
+  nonkeys <- xsdObject$tableHeaders$Seddellinje[(xsdObject$prefixLens[["Seddellinje"]]+1):length(xsdObject$tableHeaders$Seddellinje)]
+  for (k in nonkeys){
+    output[[k]][!is.na(dataTables$Seddellinje[[k]])] <- paste("<",k,">",dataTables$Seddellinje[[k]][!is.na(dataTables$Seddellinje[[k]])],paste("</",k,">",sep=""),sep="")
+  }
+  
+  #
+  # do all other levels
+  #
+  
+  otherLevels <- names(xsdObject$treeStruct)[!(names(xsdObject$treeStruct) %in% c("Landingsdata", "Seddellinje"))]
+  for (l in otherLevels){
+    output[[paste("open", l)]] <- paste("<",l,">", sep="")
+    nonkeys <- xsdObject$tableHeaders[[l]][!(xsdObject$tableHeaders[[l]] %in% keys)]
+    for (k in nonkeys){
+      output[[paste("open",k)]][!is.na(dataTables[[l]][[k]])] <- paste("<",k,">",dataTables[[l]][!is.na(dataTables[[l]][[k]])][[k]],"</",k,">",sep="")
+    }
+    output[[paste("close", l)]] <- paste("</",l,">", sep="")
+  }
+  
+  output$SLclose <- "</Seddellinje>"
+  
+  data.table::fwrite(output, fileName, append = T, sep=" ", quote = F)
+  
+  #close opening tag
+  stream = file(fileName, open="a", encoding=encoding)
+  writeLines("</Landingsdata>", stream)
   close(stream)
   
 }

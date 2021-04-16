@@ -3,13 +3,19 @@ context("Test write XML")
 #' writes file with writeXmlFile
 #' read back in with readXmlFile
 #' asserts that data is equal to what was read back
-expect_equal_read_back_in_xml <- function(data, xsdObject, namespace){
+expect_equal_read_back_in_xml <- function(data, xsdObject, namespace, writer="writeXmlFile"){
   
   #force ordering by keys
   data <- setKeysDataTables(data, xsdObject)
   
   tmp <- tempfile(fileext = "xml")
-  writeXmlFile(tmp, data, xsdObject, namespace)
+  if (writer == "writeXmlFile"){
+    writeXmlFile(tmp, data, xsdObject, namespace)    
+  }
+  else if (writer == "fWriteLandings"){
+    fWriteLandings(tmp, data, namespace)
+  }
+
   backIn <- readXmlFile(tmp)
   unlink(tmp)
   
@@ -18,7 +24,6 @@ expect_equal_read_back_in_xml <- function(data, xsdObject, namespace){
   
   #set keys again (for expect_equal)
   backIn <- setKeysDataTables(backIn, xsdObject)
-  
   expect_equal(data, backIn)
 }
 
@@ -49,4 +54,7 @@ example$metadata <- backIn$metadata
 expect_equal(example, backIn)
 
 
+context("test writing landinger v.2 fwrite")
+example <- RstoxData::readXmlFile(system.file("testresources","landing.xml", package="RstoxData"))
+expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "http://www.imr.no/formats/landinger/v2", writer="fWriteLandings")
 
