@@ -1,3 +1,9 @@
+# RstoxData v1.1.5 (2021-04-18)
+* Added TranslateICESAcoustic() and TranslateICESBiotic().
+* Added option of a conditional variable in DefineTranslation() and Translate*().
+* Removed maturity conversion in ICESBiotic().
+* Fixed format of columns of ReportICESBiotic().
+
 # RstoxData v1.1.2 (2021-03-30)
 
 * Fixed time format of StoxAcoustic().
