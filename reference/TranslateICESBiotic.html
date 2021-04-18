@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Order a data.table (by reference) by interpreting characters as numeric if possible — setorderv_numeric • RstoxData</title>
+<title>Translate ICESBioticData — TranslateICESBiotic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Order a data.table (by reference) by interpreting characters as numeric if possible — setorderv_numeric" />
-<meta property="og:description" content="Order a data.table (by reference) by interpreting characters as numeric if possible" />
+<meta property="og:title" content="Translate ICESBioticData — TranslateICESBiotic" />
+<meta property="og:description" content="This function translates one or more columns of ICESBioticData to new values given by the input Translation." />
 
 
 
@@ -111,38 +111,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Order a data.table (by reference) by interpreting characters as numeric if possible</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
-    <div class="hidden name"><code>setorderv_numeric.Rd</code></div>
+    <h1>Translate ICESBioticData</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/DefineAndUpdateVariables.R'><code>R/DefineAndUpdateVariables.R</code></a></small>
+    <div class="hidden name"><code>TranslateICESBiotic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Order a data.table (by reference) by interpreting characters as numeric if possible</p>
+    <p>This function translates one or more columns of <code><a href='ICESBioticData.html'>ICESBioticData</a></code> to new values given by the input <code>Translation</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>setorderv_numeric</span><span class='op'>(</span><span class='va'>dataOne</span>, by <span class='op'>=</span> <span class='cn'>NULL</span>, key <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>TranslateICESBiotic</span><span class='op'>(</span><span class='va'>ICESBioticData</span>, <span class='va'>Translation</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dataOne</th>
-      <td><p>A data.table.</p></td>
+      <th>ICESBioticData</th>
+      <td><p>An input of <a href='ModelData.html'>ModelData</a> object</p></td>
     </tr>
     <tr>
-      <th>by</th>
-      <td><p>Order by the given columns.</p></td>
-    </tr>
-    <tr>
-      <th>key</th>
-      <td><p>If given and <code>by</code> is empty, orderr by the columns with names ending with <code>key</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Passed on to <code><a href='https://Rdatatable.gitlab.io/data.table/reference/setorder.html'>setorderv</a></code></p></td>
+      <th>Translation</th>
+      <td><p>The process from which to get the <code><a href='Translation.html'>Translation</a></code> definition.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code><a href='ICESBioticData.html'>ICESBioticData</a></code> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
