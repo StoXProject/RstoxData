@@ -1,6 +1,4 @@
 
-
-
 #' Converts \code{AcousticData} to \code{ICESAcousticData}
 #'
 #' Note that this function only supports \code{AcousticData} object that is created from reading an ICES acoustic XML file.
@@ -603,12 +601,20 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 	formatType <- match.arg(formatType)
 	
 	# Create a table of the original and new column names, but remove keys:
-	columnNames <- lapply(data[tableNames], names)
-	newColumnNames <- mapply(paste0, tableNames, columnNames)
+	columnName <- lapply(data[tableNames], names)
+	tableName = rep(tableNames, lengths(columnName))
+	columnName <- unlist(columnName)
+	
+	areTableNames <- columnName  %in% names(data)
+	
+	newColumnName <- character(length(columnName))
+	newColumnName[areTableNames] <- paste0(columnName[areTableNames], "ID")
+	newColumnName[!areTableNames] <- paste0(tableName[!areTableNames], columnName[!areTableNames])
+	
 	conversionTable <- data.table::data.table(
-		columnNames = unlist(columnNames), 
-		tableName = rep(tableNames, lengths(columnNames)), 
-		newColumnNames = unlist(newColumnNames)
+		tableName = tableName,
+		columnName = columnName,
+		newColumnName = newColumnName
 	)
 	
 	# Remove the keys:
@@ -616,14 +622,16 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 	# Do not remove the key of the last table:
 	ICESKeys <- unique(unlist(ICESKeys[!names(ICESKeys) %in% tail(tableNames, 1)]))
 	
+	conversionTable <- conversionTable[!(duplicated(columnName) & columnName %in% ICESKeys), ]
 	
-	conversionTable <- conversionTable[!(duplicated(columnNames) & columnNames %in% ICESKeys), ]
+	# Remove rows where tableName and columnNames are identical:
+	conversionTable <- subset(conversionTable, tableName != columnName)
 	
 	# Split the conversionTable by tableName to allow for the duplicately named columns between tables:
 	conversionTableList <- split(conversionTable, by = "tableName")
 	
 	# Add again the keys:
-	keys <- conversionTable[columnNames %in% ICESKeys, ]
+	keys <- conversionTable[columnName %in% ICESKeys, ]
 	conversionTableList <- lapply(conversionTableList, rbind, keys)
 	conversionTableList <- lapply(conversionTableList, unique)
 	
@@ -631,8 +639,8 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 	mapply(
 		data.table::setnames, 
 		data[tableNames], 
-		old = lapply(conversionTableList, "[[", "columnNames"), 
-		new = lapply(conversionTableList, "[[", "newColumnNames"), 
+		old = lapply(conversionTableList, "[[", "columnName"), 
+		new = lapply(conversionTableList, "[[", "newColumnName"), 
 		skip_absent = TRUE
 	)
 }
