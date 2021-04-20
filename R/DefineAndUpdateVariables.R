@@ -148,8 +148,19 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 				Translation$Value
 			)
 		)
-		if(length(notPresentInTranslation)) {
-			warning("StoX: The following values are present in the data but not in the translation, and were not translated: ", paste(notPresentInTranslation, collapse = ", "), ".")
+		
+		# Get the combinations of ConditionalVariableName and VariableName missing in three Translation:
+		TranslationSplit <- split(Translation, c("ConditionalVariableName", "VariableName"))
+		missingCombinations <- lapply(TranslationSplit, getMissingCombinations, table = table)
+		
+		if(any(lengths(missingCombinations))) {
+			warnMessage <- c(
+				"StoX: The following values are present in the data but not in the translation, and were not translated:", 
+				unlist(lapply(missingCombinations, getMissingCombinationsWarning))
+			)
+			warnMessage <- paste(warnMessage, collapse = "\n")
+			
+			warning(warnMessage)
 		}
 		
 		# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
@@ -166,6 +177,44 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 	
 	a = 1 #????????
 }
+
+getMissingCombinations <- function(translation, table) {
+	# Get the columns of the translation that are present:
+	variableKeys <- intersect(c("ConditionalVariableName", "VariableName"), names(translation))
+	# Get the names of those columns in the data:
+	transNames <- translation[, ..variableKeys]
+	variablesInTable <- unname(unlist(transNames[1,]))
+	tab <- table[, ..variablesInTable]
+	# And the names of columns holding the values of those variables in the translation:
+	valueVariablesInTranslation <- intersect(c("ConditionalValue", "Value"), names(translation))
+	trans <- translation[, ..valueVariablesInTranslation]
+	names(trans) <- variablesInTable
+	# Match the type of the table:
+	matchClass(trans, tab)
+	
+	# Then simply set diff those values from those in the data, and unniquify:
+	missingCombinations <- tab[!trans, on = variablesInTable]
+	missingCombinations <- data.table::setorderv(unique(missingCombinations), variablesInTable)
+	return(missingCombinations)
+}
+
+getMissingCombinationsWarning <- function(x) {
+	c(
+		paste(names(x), collapse = ", "), 
+		x[, do.call(paste, c(.SD, list(sep = ", ")))], 
+		""
+	)
+}
+
+
+matchClass <- function(A, B) {
+	for (x in colnames(A)) {
+		A[, eval(x) := eval( call( paste0("as.", class(B[[x]])), get(x) ))]
+	}
+}
+
+
+
 
 # Function to apply to all tables of the input data, converting the variables:
 translateOneTranslationOneTable <- function(translationListOne, table, translate.keys = FALSE) {
