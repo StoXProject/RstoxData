@@ -24,370 +24,82 @@ RedefineData <- function(
 	return(StoxData)
 }
 
+##################################################
+#' Redefine StoxBioticData variables by data from BioticData
+#' 
+#' This function redefines one or more columns of \code{\link{StoxBioticData}} by columns of \code{\link{BioticData}}.
+#' 
+#' @param StoxBioticData An input of \link{ModelData} object
+#' @param BioticData An input of \link{ModelData} object
+#' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by. 
+#' 
+#' @return
+#' A \code{\link{StoxBioticData}} object.
+#' 
+#' @export
+#' 
+RedefineStoxBiotic <- function(
+	StoxBioticData, BioticData, 
+	Redefinition = data.table::data.table()
+) {
+	# Redefine StoxBioticData:
+	RedefineData(
+		StoxData = StoxBioticData, RawData = BioticData, 
+		Redefinition = Redefinition, 
+		StoxDataFormat = "Biotic"
+	)
+}
 
-# The general function for translating StoxData:
-TranslateData <- function(
-	StoxData, 
-	#TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
-	Translation# = data.table::data.table(), 
-	#TranslationProcessData
+
+##################################################
+#' Define translation
+#' 
+#' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
+#' 
+#' @inheritParams general_arguments
+#' @param DefinitionMethod  Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
+#' @param TranslationTable A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to.
+#' @param Conditional Logical: If TRUE the columns \code{ConditionalVariableName} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableName} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableName} must exist in the same table as \code{VariableName}. 
+#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}.
+#' 
+#' @return
+#' A \code{\link{Translation}} object.
+#' 
+#' @export
+#' 
+DefineTranslation <- function(
+	processData, UseProcessData = FALSE, 
+	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
+	TranslationTable = data.table::data.table(), 
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	FileName
 ) {
 	
-	#TranslationDefinition <- match.arg(TranslationDefinition)
-	
-	#if(TranslationDefinition == "FunctionInput") {
-	#	Translation <- TranslationProcessData
-	#}
-	#else if(TranslationDefinition != "FunctionParameter"){
-	#	stop("TranslationDefinition must be one of \"FunctionParameter\" and \"FunctionInput\"")
-	#}
-	
-	# Apply the translation:
-	StoxData <- translateVariables(data = StoxData, Translation = Translation)
-	
-	return(StoxData)
-}
-
-# The general function for converting StoxData:
-ConvertDataOld <- function(
-	StoxData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(), 
-	Conversion = data.table::data.table()
-) {
-	
-	# Get the ConversionFunction input:
-	ConversionFunction <- match.arg(ConversionFunction)
-	
-	# Check the Conversion for unique grouping variables:
-	if(!all(GruopingVariables %in% names(Conversion))) {
-		stop("All grouping variables must be present in the Conversion")
+	# Return immediately if UseProcessData = TRUE:
+	if(UseProcessData) {
+		return(processData)
 	}
 	
-	# Make a copy to allow for applying functions by reference:
-	StoxDataCopy <- data.table::copy(StoxData)
+	DefinitionMethod = match.arg(DefinitionMethod)
 	
-	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
-	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
-	
-	# Merge in the Conversion:
-	StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, Conversion, all.x = TRUE)
-	
-	# Apply the conversion function for each row of the Conversion:
-	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
-	for(Conversion in ConversionList) {
-		applyConversionFunction(
-			data = StoxDataCopyMerged, 
-			ConversionFunction = ConversionFunction, 
-			TargetVariable = Conversion$TargetVariable, 
-			SourceVariable = Conversion$SourceVariable, 
-			RoundOffTo = Conversion$RoundOffTo
+	if(DefinitionMethod == "ResourceFile") {
+		# Get the conversion table:
+		Translation <- readVariableTranslation(
+			processData = processData, 
+			FileName = FileName, 
+			UseProcessData = UseProcessData
 		)
 	}
-	
-	# Extract the StoxData from the merged:
-	StoxDataCopy <- getStoxDataFromMerged(
-		StoxDataMerged = StoxDataCopyMerged, 
-		StoxData = StoxDataCopy
-	)
-	
-	
-	
-	
-	return(StoxDataCopy)
-}
-
-
-
-# The general function for converting StoxData:
-ConvertData <- function(
-	StoxData, 
-	TargetVariable, 
-	GruopingVariables = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	Conversion = data.table::data.table()
-) {
-	
-	# Get the ConversionFunction input:
-	ConversionFunction <- match.arg(ConversionFunction)
-	
-	# Check the Conversion for unique grouping variables:
-	if(!all(GruopingVariables %in% names(Conversion))) {
-		stop("All grouping variables must be present in the Conversion")
-	}
-	
-	# Make a copy to allow for applying functions by reference:
-	StoxDataCopy <- data.table::copy(StoxData)
-	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
-	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
-	
-	# Apply the conversion function for each row of the Conversion:
-	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
-	for(Conversion in ConversionList) {
-		parameterNames <- setdiff(names(Conversion), c("SourceVariable", "RoundOffTo"))
-		applyConversionFunction(
-			data = StoxDataCopyMerged, 
-			ConversionFunction = ConversionFunction, 
-			#TargetVariable = Conversion$TargetVariable, 
-			TargetVariable = TargetVariable, 
-			SourceVariable = Conversion$SourceVariable, 
-			RoundOffTo = Conversion$RoundOffTo, 
-			parameters = lapply(split(Conversion[, ..parameterNames], seq_len(nrow(Conversion))), as.list)
-			#parameters = as.list(Conversion[, ..parameterNames])
-		)
-	}
-	
-	# Extract the StoxData from the merged:
-	StoxDataCopy <- getStoxDataFromMerged(
-		StoxDataMerged = StoxDataCopyMerged, 
-		StoxData = StoxDataCopy
-	)
-	
-	return(StoxDataCopy)
-}
-
-
-
-# The general function for converting StoxData:
-ConvertDataFree <- function(
-	StoxData, 
-	TargetVariable = character(), 
-	Conversion = character()
-) {
-	
-	if(!nchar(TargetVariable) || !nchar(Conversion)) {
-		warning("Unspecified TargetVariable or empty conversion expression. Data returned unchanged.")
-		return(StoxData)
-	}
-	
-	# Make a copy to allow for applying functions by reference:
-	StoxDataCopy <- data.table::copy(StoxData)
-	
-	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
-	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
-	
-	# Apply the conversion function for each row of the Conversion:
-	StoxDataCopyMerged[, c(TargetVariable) := eval(parse(text  = Conversion))]
-	
-	
-	
-	# Extract the StoxData from the merged:
-	StoxDataCopy <- getStoxDataFromMerged(
-		StoxDataMerged = StoxDataCopyMerged, 
-		StoxData = StoxDataCopy
-	)
-	
-	return(StoxDataCopy)
-}
-
-
-getStoxDataFromMerged <- function(StoxDataMerged, StoxData) {
-	toExtract <- lapply(StoxData, names)
-	lapply(toExtract, function(x) unique(StoxDataMerged[, ..x]))
-}
-
-# Function to convert one or more variables of StoxData:
-applyConversionFunctionTemp <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo) {
-	
-	# Get the conversion function:
-	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	do.call(ConversionFunctionName, list(
-		data, 
-		TargetVariable = TargetVariable, 
-		SourceVariable = SourceVariable, 
-		RoundOffTo = RoundOffTo
-	)
-	)
-	
-	return(data)
-}
-
-applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
-	
-	# Get the conversion function:
-	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	
-	# Add the current parameters:
-	for(parameter in parameters) {
-	#data[, eval(parameterName) := parameters[[parameterName]]]
-		data[, eval(names(parameter)) := parameter]
-	
-		do.call(ConversionFunctionName, 
-			list(
-				data, 
-				TargetVariable = TargetVariable, 
-				SourceVariable = SourceVariable, 
-				RoundOffTo = RoundOffTo
-			)
-		)
-		
-		# Remove the parameters again:
-		data[, eval(names(parameter)) := NULL]
-	}
-	
-	return(data)
-}
-
-
-# Function to convert one or more variables of StoxData:
-applyConversionFunctionFree <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
-	
-	# Get the conversion function:
-	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	
-	
-	# Add the current parameters:
-	#for(parameterName in names(parameters)) {
-		#data[, eval(parameterName) := parameters[[parameterName]]]
-		data[, eval(names(parameters)) := parameters]
-	#}
-	
-	
-	do.call(ConversionFunctionName, list(
-		data, 
-		TargetVariable = TargetVariable, 
-		SourceVariable = SourceVariable, 
-		RoundOffTo = RoundOffTo
-		)
-	)
-	
-	# Remove the parameters again:
-	data[, eval(names(parameters)) := NULL]
-	
-	return(data)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-###  # Function to convert one or more variables of StoxData:
-###  applyConversionFunction <- function(data, ConversionFunction) {
-###  	
-###  	# Get the conversion function:
-###  	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-###  	
-###  	# Get the unique target	and source variable (since the Conversion has been merged with the data):
-###  	uniqueTargetAndSource <- getUniqueTargetAndSource(data)
-###  	
-###  	# Loop through the rows of uniqueTargetAndSource:
-###  	rowIndicesOfTargetAndSource <- seq_len(nrow(uniqueTargetAndSource))
-###  	for(row in rowIndicesOfTargetAndSource) {
-###  		
-###  		# Get the current TargetVariable:
-###  		TargetVariable <- uniqueTargetAndSource$target[row]
-###  		SourceVariable <- uniqueTargetAndSource$source[row]
-###  		
-###  		# Get the row indices of the data:
-###  		#rowIndicesOfData <- 
-###  		#	data[[TargetVariable]] == data[[TargetVariable]][row] & 
-###  		#	data[[SourceVariable]] == data[[SourceVariable]][row]
-###  		#
-###  		
-###  		# Apply the conversion function:
-###  		#data[rowIndicesOfData, eval(TargetVariable) := do.call(ConversionFunctionName, list(.SD, SourceVariable = SourceVariable))]
-###  		##data[, eval(TargetVariable) := do.call(ConversionFunctionName, list(.SD, SourceVariable = SourceVariable))]
-###  		
-###  		do.call(ConversionFunctionName, list(data, TargetVariable = TargetVariable, SourceVariable = SourceVariable))
-###  	}
-###  	
-###  	return(data)
-###  }
-
-# The different available conversion functions, reflecting the methods listed as default in ConvertData (parameter ConversionFunction):
-ConversionFunction_Constant <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Constant)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Constant]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-	#data[valid, eval(TargetVariable) := RoundOff(get(TargetVariable), get(RoundOffTo))]
-}
-
-ConversionFunction_Addition <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Addition)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Addition + get(SourceVariable)]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-}
-
-ConversionFunction_Scaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Scaling)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Scaling * get(SourceVariable)]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-}
-
-ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Addition) & !is.na(data$Scaling)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Addition + Scaling * get(SourceVariable)]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-}
-
-
-roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
-	# Round off either to the values of a column or to oa numeric:
-	if(!RoundOffTo %in% names(data)) {
-		if(length(RoundOffTo) && nchar(RoundOffTo)) {
-			RoundOffToNumeric <- as.numeric(RoundOffTo)
-			if(!is.na(RoundOffToNumeric)) {
-				# Round off to the RoundOffToNumeric by reference:
-				#RoundOffTo <- RoundOffToNumeric
-				data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
-			}
-			else {
-				stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
-			}
-		}
+	else if(DefinitionMethod == "TranslationTable"){
+		Translation <- TranslationTable
 	}
 	else {
-		# Round off by reference:
-		data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), get(RoundOffTo))]	
+		stop("Invalid DefinitionMethod")
 	}
-}
-
-roundOff <- function(x, RoundOffTo) {
-	if(length(RoundOffTo)) {
-		round(x / RoundOffTo) * RoundOffTo
-	}
-	else {
-		x
-	}
-}
-
-
-# Helper function to get unique conversions:
-getUniqueTargetAndSource <- function(data) {
-	# Get the defined names of the target and source columns:
-	targetAndSourceVariables <- unlist(getRstoxDataDefinitions("targetAndSourceVariables"))
-	#targetAndSourceVariablesPresent <- intersect(names(data), targetAndSourceVariables)
-	# Uniquify and rename:
-	output <- unique(data[, ..targetAndSourceVariables])
-	setnames(output, c("target", "source"))
-	# Remoev rows with all NAs:
-	valid <- rowSums(is.na(output)) < ncol(output)
-	output <- output[valid, ]
 	
-	return(output)
+	return(Translation)
 }
+
 
 # Function for reading a conversion table:
 readVariableTranslation <- function(processData, FileName, UseProcessData = FALSE) {
@@ -426,7 +138,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE) {
 
 # Function to translate one table:
 translateOneTable <- function(table, Translation, translate.keys = FALSE) {
-	# Check that the table contains the variable to convert:
+	# Check that the table contains the variable to translate:
 	if(any(Translation$VariableName %in% names(table))) {
 		
 		# Check for values of the data that are not covered by the translation:
@@ -452,7 +164,7 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 		)
 	}
 	
-	a = 1
+	a = 1 #????????
 }
 
 # Function to apply to all tables of the input data, converting the variables:
@@ -468,10 +180,19 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 		
 		# Replace by the new value:
 		if(translationListOne$VariableName %in% names(table)) {
-			table[, c(translationListOne$VariableName) := replace(
-				x = get(translationListOne$VariableName), 
-				list = get(translationListOne$VariableName) %in% translationListOne$Value, 
-				values = translationListOne$NewValue)]
+			if("ConditionalVariableName" %in% names(translationListOne)) {
+				table[, c(translationListOne$VariableName) := replace(
+					x = get(translationListOne$VariableName), 
+					list = get(translationListOne$ConditionalVariableName) %in% translationListOne$ConditionalValue  &  
+						get(translationListOne$VariableName) %in% translationListOne$Value, 
+					values = translationListOne$NewValue)]
+			}
+			else {
+				table[, c(translationListOne$VariableName) := replace(
+					x = get(translationListOne$VariableName), 
+					list = get(translationListOne$VariableName) %in% translationListOne$Value, 
+					values = translationListOne$NewValue)]
+			}
 		}
 	}
 }
@@ -514,79 +235,7 @@ replaceAndDelete <- function(table, VariableReplacement) {
 
 
 
-##################################################
-#' Redefine StoxBioticData variables by data from BioticData
-#' 
-#' This function redefines one or more columns of \code{\link{StoxBioticData}} by columns of \code{\link{BioticData}}.
-#' 
-#' @param StoxBioticData An input of \link{ModelData} object
-#' @param BioticData An input of \link{ModelData} object
-#' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by. 
-#' 
-#' @return
-#' A \code{\link{StoxBioticData}} object.
-#' 
-#' @export
-#' 
-RedefineStoxBiotic <- function(
-	StoxBioticData, BioticData, 
-	Redefinition = data.table::data.table()
-) {
-	# Redefine StoxBioticData:
-	RedefineData(
-		StoxData = StoxBioticData, RawData = BioticData, 
-		Redefinition = Redefinition, 
-		StoxDataFormat = "Biotic"
-	)
-}
 
-
-##################################################
-#' Define translation
-#' 
-#' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
-#' 
-#' @inheritParams general_arguments
-#' @param DefinitionMethod  Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
-#' @param TranslationTable A table of the columns "VariableName", representing the variable to translate; "Value", giving the values to translate; and "NewValue", giving the values to translate to.
-#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}.
-#' 
-#' @return
-#' A \code{\link{Translation}} object.
-#' 
-#' @export
-#' 
-DefineTranslation <- function(
-	processData, UseProcessData = FALSE, 
-	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
-	TranslationTable = data.table::data.table(), 
-	FileName
-) {
-	
-	# Return immediately if UseProcessData = TRUE:
-	if(UseProcessData) {
-		return(processData)
-	}
-	
-	DefinitionMethod = match.arg(DefinitionMethod)
-	
-	if(DefinitionMethod == "ResourceFile") {
-		# Get the conversion table:
-		Translation <- readVariableTranslation(
-			processData = processData, 
-			FileName = FileName, 
-			UseProcessData = UseProcessData
-		)
-	}
-	else if(DefinitionMethod == "TranslationTable"){
-		Translation <- TranslationTable
-	}
-	else {
-		stop("Invalid DefinitionMethod")
-	}
-	
-	return(Translation)
-}
 
 ##################################################
 #' Translate StoxBioticData
@@ -606,13 +255,6 @@ TranslateStoxBiotic <- function(
 	Translation
 ) {
 	# Translate StoxBioticData:
-	#TranslateData(
-	#	StoxData = StoxBioticData, 
-	#	TranslationDefinition = TranslationDefinition, 
-	#	Translation = Translation, 
-	#	TranslationProcessData = StoxBioticTranslation
-	#)
-	
 	translateVariables(
 		data = StoxBioticData, 
 		Translation = Translation
@@ -1018,3 +660,382 @@ TranslateLanding <- function(
 
 
 
+
+##################################################
+#' Translate ICESBioticData
+#' 
+#' This function translates one or more columns of \code{\link{ICESBioticData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param ICESBioticData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{ICESBioticData}} object.
+#' 
+#' @export
+#' 
+TranslateICESBiotic <- function(
+	ICESBioticData, 
+	Translation
+) {
+	translateVariables(
+		data = ICESBioticData, 
+		Translation = Translation
+	)
+}
+
+
+##################################################
+#' Translate ICESAcousticData
+#' 
+#' This function translates one or more columns of \code{\link{ICESAcousticData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams TranslateStoxBiotic
+#' @param ICESAcousticData An input of \link{ModelData} object
+#' 
+#' @return
+#' A \code{\link{ICESAcousticData}} object.
+#' 
+#' @export
+#' 
+TranslateICESAcoustic <- function(
+	ICESAcousticData, 
+	Translation
+) {
+	translateVariables(
+		data = ICESAcousticData, 
+		Translation = Translation
+	)
+}
+
+
+
+
+
+# The general function for converting StoxData:
+ConvertDataOld <- function(
+	StoxData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(), 
+	Conversion = data.table::data.table()
+) {
+	
+	# Get the ConversionFunction input:
+	ConversionFunction <- match.arg(ConversionFunction)
+	
+	# Check the Conversion for unique grouping variables:
+	if(!all(GruopingVariables %in% names(Conversion))) {
+		stop("All grouping variables must be present in the Conversion")
+	}
+	
+	# Make a copy to allow for applying functions by reference:
+	StoxDataCopy <- data.table::copy(StoxData)
+	
+	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
+	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
+	
+	# Merge in the Conversion:
+	StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, Conversion, all.x = TRUE)
+	
+	# Apply the conversion function for each row of the Conversion:
+	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
+	for(Conversion in ConversionList) {
+		applyConversionFunction(
+			data = StoxDataCopyMerged, 
+			ConversionFunction = ConversionFunction, 
+			TargetVariable = Conversion$TargetVariable, 
+			SourceVariable = Conversion$SourceVariable, 
+			RoundOffTo = Conversion$RoundOffTo
+		)
+	}
+	
+	# Extract the StoxData from the merged:
+	StoxDataCopy <- getStoxDataFromMerged(
+		StoxDataMerged = StoxDataCopyMerged, 
+		StoxData = StoxDataCopy
+	)
+	
+	
+	
+	
+	return(StoxDataCopy)
+}
+
+
+
+# The general function for converting StoxData:
+ConvertData <- function(
+	StoxData, 
+	TargetVariable, 
+	GruopingVariables = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	Conversion = data.table::data.table()
+) {
+	
+	# Get the ConversionFunction input:
+	ConversionFunction <- match.arg(ConversionFunction)
+	
+	# Check the Conversion for unique grouping variables:
+	if(!all(GruopingVariables %in% names(Conversion))) {
+		stop("All grouping variables must be present in the Conversion")
+	}
+	
+	# Make a copy to allow for applying functions by reference:
+	StoxDataCopy <- data.table::copy(StoxData)
+	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
+	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
+	
+	# Apply the conversion function for each row of the Conversion:
+	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
+	for(Conversion in ConversionList) {
+		parameterNames <- setdiff(names(Conversion), c("SourceVariable", "RoundOffTo"))
+		applyConversionFunction(
+			data = StoxDataCopyMerged, 
+			ConversionFunction = ConversionFunction, 
+			#TargetVariable = Conversion$TargetVariable, 
+			TargetVariable = TargetVariable, 
+			SourceVariable = Conversion$SourceVariable, 
+			RoundOffTo = Conversion$RoundOffTo, 
+			parameters = lapply(split(Conversion[, ..parameterNames], seq_len(nrow(Conversion))), as.list)
+			#parameters = as.list(Conversion[, ..parameterNames])
+		)
+	}
+	
+	# Extract the StoxData from the merged:
+	StoxDataCopy <- getStoxDataFromMerged(
+		StoxDataMerged = StoxDataCopyMerged, 
+		StoxData = StoxDataCopy
+	)
+	
+	return(StoxDataCopy)
+}
+
+
+
+# The general function for converting StoxData:
+ConvertDataFree <- function(
+	StoxData, 
+	TargetVariable = character(), 
+	Conversion = character()
+) {
+	
+	if(!nchar(TargetVariable) || !nchar(Conversion)) {
+		warning("Unspecified TargetVariable or empty conversion expression. Data returned unchanged.")
+		return(StoxData)
+	}
+	
+	# Make a copy to allow for applying functions by reference:
+	StoxDataCopy <- data.table::copy(StoxData)
+	
+	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
+	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
+	
+	# Apply the conversion function for each row of the Conversion:
+	StoxDataCopyMerged[, c(TargetVariable) := eval(parse(text  = Conversion))]
+	
+	
+	
+	# Extract the StoxData from the merged:
+	StoxDataCopy <- getStoxDataFromMerged(
+		StoxDataMerged = StoxDataCopyMerged, 
+		StoxData = StoxDataCopy
+	)
+	
+	return(StoxDataCopy)
+}
+
+
+getStoxDataFromMerged <- function(StoxDataMerged, StoxData) {
+	toExtract <- lapply(StoxData, names)
+	lapply(toExtract, function(x) unique(StoxDataMerged[, ..x]))
+}
+
+# Function to convert one or more variables of StoxData:
+applyConversionFunctionTemp <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo) {
+	
+	# Get the conversion function:
+	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
+	do.call(ConversionFunctionName, list(
+		data, 
+		TargetVariable = TargetVariable, 
+		SourceVariable = SourceVariable, 
+		RoundOffTo = RoundOffTo
+	)
+	)
+	
+	return(data)
+}
+
+applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
+	
+	# Get the conversion function:
+	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
+	
+	# Add the current parameters:
+	for(parameter in parameters) {
+		#data[, eval(parameterName) := parameters[[parameterName]]]
+		data[, eval(names(parameter)) := parameter]
+		
+		do.call(ConversionFunctionName, 
+				list(
+					data, 
+					TargetVariable = TargetVariable, 
+					SourceVariable = SourceVariable, 
+					RoundOffTo = RoundOffTo
+				)
+		)
+		
+		# Remove the parameters again:
+		data[, eval(names(parameter)) := NULL]
+	}
+	
+	return(data)
+}
+
+
+# Function to convert one or more variables of StoxData:
+applyConversionFunctionFree <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
+	
+	# Get the conversion function:
+	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
+	
+	
+	# Add the current parameters:
+	#for(parameterName in names(parameters)) {
+	#data[, eval(parameterName) := parameters[[parameterName]]]
+	data[, eval(names(parameters)) := parameters]
+	#}
+	
+	
+	do.call(ConversionFunctionName, list(
+		data, 
+		TargetVariable = TargetVariable, 
+		SourceVariable = SourceVariable, 
+		RoundOffTo = RoundOffTo
+	)
+	)
+	
+	# Remove the parameters again:
+	data[, eval(names(parameters)) := NULL]
+	
+	return(data)
+}
+
+
+###  # Function to convert one or more variables of StoxData:
+###  applyConversionFunction <- function(data, ConversionFunction) {
+###  	
+###  	# Get the conversion function:
+###  	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
+###  	
+###  	# Get the unique target	and source variable (since the Conversion has been merged with the data):
+###  	uniqueTargetAndSource <- getUniqueTargetAndSource(data)
+###  	
+###  	# Loop through the rows of uniqueTargetAndSource:
+###  	rowIndicesOfTargetAndSource <- seq_len(nrow(uniqueTargetAndSource))
+###  	for(row in rowIndicesOfTargetAndSource) {
+###  		
+###  		# Get the current TargetVariable:
+###  		TargetVariable <- uniqueTargetAndSource$target[row]
+###  		SourceVariable <- uniqueTargetAndSource$source[row]
+###  		
+###  		# Get the row indices of the data:
+###  		#rowIndicesOfData <- 
+###  		#	data[[TargetVariable]] == data[[TargetVariable]][row] & 
+###  		#	data[[SourceVariable]] == data[[SourceVariable]][row]
+###  		#
+###  		
+###  		# Apply the conversion function:
+###  		#data[rowIndicesOfData, eval(TargetVariable) := do.call(ConversionFunctionName, list(.SD, SourceVariable = SourceVariable))]
+###  		##data[, eval(TargetVariable) := do.call(ConversionFunctionName, list(.SD, SourceVariable = SourceVariable))]
+###  		
+###  		do.call(ConversionFunctionName, list(data, TargetVariable = TargetVariable, SourceVariable = SourceVariable))
+###  	}
+###  	
+###  	return(data)
+###  }
+
+# The different available conversion functions, reflecting the methods listed as default in ConvertData (parameter ConversionFunction):
+ConversionFunction_Constant <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
+	valid <- !is.na(data$Constant)
+	# Apply the function:
+	data[valid, eval(TargetVariable) := Constant]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
+	#data[valid, eval(TargetVariable) := RoundOff(get(TargetVariable), get(RoundOffTo))]
+}
+
+ConversionFunction_Addition <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
+	valid <- !is.na(data$Addition)
+	# Apply the function:
+	data[valid, eval(TargetVariable) := Addition + get(SourceVariable)]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
+}
+
+ConversionFunction_Scaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
+	valid <- !is.na(data$Scaling)
+	# Apply the function:
+	data[valid, eval(TargetVariable) := Scaling * get(SourceVariable)]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
+}
+
+ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
+	# Get the valid rows (those for which the parameters are defined):
+	valid <- !is.na(data$Addition) & !is.na(data$Scaling)
+	# Apply the function:
+	data[valid, eval(TargetVariable) := Addition + Scaling * get(SourceVariable)]
+	# Round off:
+	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
+}
+
+
+roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
+	# Round off either to the values of a column or to oa numeric:
+	if(!RoundOffTo %in% names(data)) {
+		if(length(RoundOffTo) && nchar(RoundOffTo)) {
+			RoundOffToNumeric <- as.numeric(RoundOffTo)
+			if(!is.na(RoundOffToNumeric)) {
+				# Round off to the RoundOffToNumeric by reference:
+				#RoundOffTo <- RoundOffToNumeric
+				data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
+			}
+			else {
+				stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
+			}
+		}
+	}
+	else {
+		# Round off by reference:
+		data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), get(RoundOffTo))]	
+	}
+}
+
+roundOff <- function(x, RoundOffTo) {
+	if(length(RoundOffTo)) {
+		round(x / RoundOffTo) * RoundOffTo
+	}
+	else {
+		x
+	}
+}
+
+
+# Helper function to get unique conversions:
+getUniqueTargetAndSource <- function(data) {
+	# Get the defined names of the target and source columns:
+	targetAndSourceVariables <- unlist(getRstoxDataDefinitions("targetAndSourceVariables"))
+	#targetAndSourceVariablesPresent <- intersect(names(data), targetAndSourceVariables)
+	# Uniquify and rename:
+	output <- unique(data[, ..targetAndSourceVariables])
+	setnames(output, c("target", "source"))
+	# Remoev rows with all NAs:
+	valid <- rowSums(is.na(output)) < ncol(output)
+	output <- output[valid, ]
+	
+	return(output)
+}

@@ -151,6 +151,11 @@ stoxFunctionAttributes <- list(
 			FileName = list(
 				DefinitionMethod = "ResourceFile", 
 				UseProcessData = FALSE
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				DefinitionMethod = "TranslationTable", 
+				UseProcessData = FALSE
 			)
 		)
 	),
@@ -280,9 +285,20 @@ stoxFunctionAttributes <- list(
 		functionType = "modelData", 
 		functionCategory = "report", 
 		functionOutputDataType = "ReportICESDatrasData"
+	), 
+	
+	
+	TranslateICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESAcousticData"
+	),
+	
+	TranslateICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBioticData"
 	)
-	
-	
 	
 	
 )
@@ -499,16 +515,35 @@ processPropertyFormats <- list(
 	translationTable = list(
 		class = "table", 
 		title = "Translate columns of StoX data", 
-		columnNames = c(
-			"VariableName", 
-			"Value", 
-			"NewValue"
-		), 
-		variableTypes = c(
-			"character",
-			"character",
-			"character"
-		)
+		columnNames = function(Conditional) {
+			columnNames <- c(
+				"VariableName", 
+				"Value", 
+				"NewValue"
+			)
+			# Add a conditional variable:
+			if(Conditional) {
+				columnNames <- c(
+					"ConditionalVariableName", 
+					"ConditionalValue", 
+					columnNames
+				)
+			}
+			return(columnNames)
+		}, 
+		variableTypes = function(Conditional) {
+			rep("character", 3 + 2 * as.numeric(Conditional))
+		}
+		#columnNames = c(
+		#	"VariableName", 
+		#	"Value", 
+		#	"NewValue"
+		#), 
+		#variableTypes = c(
+		#	"character",
+		#	"character",
+		#	"character"
+		#)
 	), 
 	
 	
