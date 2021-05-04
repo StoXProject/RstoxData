@@ -1,3 +1,9 @@
+# RstoxData v1.1.6 (2021-05-04)
+* Added sanitizeFilter() to avoid system calls in filter.
+* Remoevd hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.
+* Optimized createOrderKey() for faster execution.
+* Renamed ReportICESAcoustic(), ReportICESBiotic() and ReportICESDatras() to WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), respectievly.
+
 # RstoxData v1.1.5 (2021-04-18)
 * Added TranslateICESAcoustic() and TranslateICESBiotic().
 * Added option of a conditional variable in DefineTranslation() and Translate*().

@@ -280,3 +280,80 @@ getICESShipCode <- function(platformname) {
 	return(x)
 }
 
+
+
+# Function to interpret ICES LengthCode from NMCBiotic lengthresolution. This function uses getLengthResolutionTable() which defines the relationship between these.
+getLengthCodeICES <- function(lengthresolution) {
+	# Interpret/approximate the lengthresolution as mm, halfcm or cm, which also implies modifying the length if cm (see convertLengthGivenLengthCode()):
+	lengthResolutionTable <- getLengthResolutionTable()
+	LengthCode <- lengthResolutionTable$LengthCode[match(lengthresolution, lengthResolutionTable$lengthresolution)]
+	nonValid <- !is.na(lengthresolution) & is.na(LengthCode)
+	if(any(nonValid)) {
+		warning("The following lengthresolution do not match any of the LengthCode defined by http://vocab.ices.dk/?ref=1486: ", paste(unique(lengthresolution[nonValid]), collapse = ", "), ". The following table shows the valid lengthresolution:\n",  paste(names(lengthResolutionTable), collapse = "\t"), "\n", paste(lengthResolutionTable[, do.call(paste, c(.SD, list(sep = "\t")))], collapse = "\n"))
+	}
+	return(LengthCode)
+}
+
+getLengthResolutionTable <- function() {
+	# The length resolutions defined by NMDReference as per 2021-04-22:
+	lengthResolutionTable <- data.table::data.table(
+		lengthresolution = 1:12, 
+		shortname = c(
+			"1 mm", 
+			"5 mm", 
+			"1 cm", 
+			"3 cm", 
+			"5 cm", 
+			"0.5 mm", 
+			"0.1 mm", 
+			"0.1 mm", 
+			"2 mm", 
+			"3 mm", 
+			"2 cm", 
+			"20 cm"
+		)
+	)
+	# Interpret length code:
+	#value_unit <- strsplit(lengthResolutionTable$shortname, " ")
+	#value <- as.numeric(sapply(value_unit, "[[", 1))
+	#unit <- sapply(value_unit, "[[", 2)
+	#mm <- value * 10^(match(unit, c("mm", "cm")) - 1)
+	
+	valid <- data.table::data.table(
+		shortname = c("1 mm", "5 mm", "1 cm"), 
+		LengthCode = c("mm", "halfcm", "cm")
+	)
+	
+	lengthResolutionTable[, LengthCode := valid$LengthCode[match(shortname, valid$shortname)]]
+	
+	return(lengthResolutionTable)
+}
+
+scaleLengthUsingLengthCode <- function(length, LengthCode, inputUnit) {
+	
+	lengthCode_unit_table <- data.table::data.table(
+		lengthCode = c("mm", "halfcm", "cm"), 
+		reportingUnit = c("mm", "mm", "cm")
+	)
+	
+	outputUnit <- lengthCode_unit_table[match(LengthCode, lengthCode), reportingUnit]
+	
+	outputLength <- length * scaleUnit(inputUnit, outputUnit)
+	
+	return(outputLength)
+}
+
+# Use the units package to scale 
+scaleUnit <- function(inputLengthUnit, outputLengthUnit) {
+	output <- double(max(length(inputLengthUnit), length(outputLengthUnit))) + 1
+	
+	# Use mixed units here as there may be fish with different units, and then update the units with set_units():
+	output <- units::mixed_units(output, inputLengthUnit)
+	output <- units::set_units(output, outputLengthUnit)
+	
+	output <- units::drop_units(output)
+	return(output)
+}
+
+
+

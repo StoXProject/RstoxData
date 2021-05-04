@@ -271,20 +271,20 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "ICESDatrasData"
 	),
 	
-	ReportICESAcoustic = list(
+	WriteICESAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "report", 
-		functionOutputDataType = "ReportICESAcousticData"
+		functionOutputDataType = "WriteICESAcousticData"
 	), 
-	ReportICESBiotic = list(
+	WriteICESBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "report", 
-		functionOutputDataType = "ReportICESBioticData"
+		functionOutputDataType = "WriteICESBioticData"
 	), 
-	ReportICESDatras = list(
+	WriteICESDatras = list(
 		functionType = "modelData", 
 		functionCategory = "report", 
-		functionOutputDataType = "ReportICESDatrasData"
+		functionOutputDataType = "WriteICESDatrasData"
 	), 
 	
 	

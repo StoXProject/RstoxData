@@ -19,6 +19,25 @@ backwardCompatibility <- list(
 			functionName = "DefineStoxBioticTranslation", 
 			modelName = "baseline", 
 			newFunctionName = "RstoxData::DefineTranslation"
+		), 
+		# Renamed from Report to Write for the ICES export functions:
+		list(
+			changeVersion = "1.1.6", 
+			functionName = "ReportICESAcoustic", 
+			modelName = "report", 
+			newFunctionName = "RstoxData::WriteICESAcoustic"
+		), 
+		list(
+			changeVersion = "1.1.6", 
+			functionName = "ReportICESBiotic", 
+			modelName = "report", 
+			newFunctionName = "RstoxData::WriteICESBiotic"
+		), 
+		list(
+			changeVersion = "1.1.6", 
+			functionName = "ReportICESDatras", 
+			modelName = "report", 
+			newFunctionName = "RstoxData::WriteICESDatras"
 		)
 	), 
 	

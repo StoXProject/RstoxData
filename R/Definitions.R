@@ -12,6 +12,22 @@
 #' 
 initiateRstoxData <- function(){
 	
+	# Define basic units to be used in StoX
+	# Find some way to check whether the unit has already been defined:
+	#units::install_unit(symbol = "ind", name = "individual")
+	#units::install_unit(def = "ind per nautical_mile^2", name = "nautical_areal_number_density")
+	#units::install_unit(def = "1000 ind per nautical_mile^2", name = "nautical_areal_thousand_density")
+	#units::install_unit(def = "1000000 ind per nautical_mile^2", name = "nautical_areal_million_density")
+	#units::install_unit(def = "1000000000 ind per nautical_mile^2", name = "nautical_areal_billion_density")
+	#####units::install_unit(def = "g per nautical_mile^2", name = "nautical_areal_gram_density")
+	#####units::install_unit(def = "kg per nautical_mile^2", name = "nautical_areal_kilogram_density")
+	#####units::install_unit(def = "tonnes per nautical_mile^2", name = "nautical_areal_tonnes_density")
+	#####units::install_unit(def = "kilotonnes per nautical_mile^2", name = "nautical_areal_kilotonnes_density")
+	#####units::install_unit(def = "megatonnes per nautical_mile^2", name = "nautical_areal_megatonnes_density")
+	#units::install_unit(name = "square_meter_per_square_nautical_mile", def = "meter^2 per nautical_mile^2", symbol = "sA")
+	#units::install_unit(name = "10log square_meter_per_square_nautical_mile", def = "10 lg(re sA)", symbol = "SA")
+	
+	
 	# Define the number of digits (12) and the number of significant digits (6, used if values are very low) used by the Rstox packages:
 	digits <- 12
 	signifDigits <- 6

@@ -1,11 +1,11 @@
 
-#' Converts \code{AcousticData} to \code{ICESAcousticData}
+#' Convert AcousticData to ICESAcousticData.
 #'
-#' Note that this function only supports \code{AcousticData} object that is created from reading an ICES acoustic XML file.
+#' Note that this function only supports \code{\link{AcousticData}} object created from reading an ICES acoustic XML files.
 #'
-#' @param AcousticData A \code{AcousticData} object from an ICES acoustic XML format file.
+#' @param AcousticData A \code{\link{AcousticData}} object from an ICES acoustic XML format file.
 #'
-#' @return List of data.table objects in the ICES acoustic CSV format.
+#' @return An \code{\link{ICESAcousticData}} object.
 #'
 #' @export
 ICESAcoustic <- function(AcousticData){
@@ -47,7 +47,6 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 	hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
 	tablesToKeep <- c(independentTables, hierarchicalTables)
 	
-	
 	# Add the Survey to the Cruise table, with a hack to get the last line (until it has been fixed so that only the code and not the value is present):
 	ICESAcousticDataOne$Cruise$Survey <- utils::tail(ICESAcousticDataOne$Survey$Code, 1)
 	
@@ -63,7 +62,8 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 		ICESAcousticDataOne[tablesToKeep] <- translateVariables(
 			data = ICESAcousticDataOne[tablesToKeep], 
 			Translation = vocabulary, 
-			translate.keys = TRUE
+			translate.keys = TRUE, 
+			warnMissingTranslation = FALSE
 		)
 	}
 	
@@ -108,6 +108,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 	renameToTableNameFirst(
 		ICESAcousticDataOne, 
 		tableNames = hierarchicalTables, 
+		setToID = independentTables, 
 		formatType = "Acoustic"
 	)
 	
@@ -132,7 +133,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 
 
 
-#' Reports \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#' Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
 #'
 #' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
 #'
@@ -140,18 +141,18 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 #'
 #' @export
 #' 
-ReportICESAcoustic <- function(ICESAcousticData){
+WriteICESAcoustic <- function(ICESAcousticData){
 	
-	ICESAcousticCSVData <- lapply(
+	WriteICESAcousticData <- lapply(
 		ICESAcousticData, 
-		ReportICESAcousticOne
+		WriteICESAcousticOne
 	)
 	
-	return(ICESAcousticCSVData)
+	return(WriteICESAcousticData)
 }
 
 
-ReportICESAcousticOne <- function(ICESAcousticDataOne){
+WriteICESAcousticOne <- function(ICESAcousticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne)
@@ -252,12 +253,10 @@ expandWidth <- function(x, na = NA) {
 
 
 
-
-
-#' Write ICES biotic CSV format file
+#' Convert BioticData to ICESBiotic format
 #'
-#' Given an \code{BioticData} object, this function will write an ICES biotic CSV file. Note that this function only supports
-#' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
+#' Given an \code{\link{BioticData}} object, this function converts to ICESBiotic format. Note that this function only supports
+#' \code{BioticData} generated from NMDBiotic version > 3 XML files.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
 #' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).
@@ -266,7 +265,7 @@ expandWidth <- function(x, na = NA) {
 #' @param AllowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
 #' https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml. Setting this parameter to TRUE will remove the unlisted species records.
 #'        
-#' @return List of data.table objects in the ICES acoustic CSV format.
+#' @return An \code{\link{ICESBioticData}} object.
 #'
 #' @export
 ICESBiotic <- function(
@@ -362,7 +361,8 @@ BioticData_ICESToICESBioticOne <- function(BioticData_ICESOne) {
 		BioticDataOne[tablesToTranslate] <- translateVariables(
 			data = BioticDataOne[tablesToTranslate], 
 			Translation = vocabulary, 
-			translate.keys = TRUE
+			translate.keys = TRUE, 
+			warnMissingTranslation = FALSE
 		)
 	}
 	
@@ -417,7 +417,8 @@ BioticData_NMDToICESBioticOne <- function(
 		Distance = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
 		Netopening = verticaltrawlopening,
 		CodendMesh = NA,
-		SweepLength = getGOVSweepByEquipment(gear),
+		#SweepLength = getGOVSweepByEquipment(gear),
+		SweepLength = sweeplength,
 		GearExceptions = NA, # Should this be set?
 		DoorType = trawldoortype,
 		# Warp length in integer meter: 
@@ -447,7 +448,8 @@ BioticData_NMDToICESBioticOne <- function(
 		WindSpeed = round(windspeed),
 		SwellDirection = NA,
 		SwellHeight = NA,
-		LogDistance = NA,
+		#LogDistance = NA,
+		LogDistance = logstart,
 		Stratum = NA
 	)]
 	
@@ -462,20 +464,21 @@ BioticData_NMDToICESBioticOne <- function(
 		Number = serialnumber,
 		SpeciesCode = aphia,
 		SpeciesCategory = catchpartnumber,
-		DataType = "R", # Always raw for NMDBiotic
+		DataType = "R", # Always raw for NMDBiotic, and on 2021-04-21 only R is implemented by ICES at all
 		SpeciesValidity = ifelse(is.na(catchproducttype), 0, catchproducttype), # What is meant here. SpeciesValidity can only be 0 or 1, but catchproducttype has a range of values. Should it be ifelse(is.na(catchproducttype), 0, 1) ??
 		SpeciesCategoryNumber = catchcount,
-		WeightUnit = "kg",
+		WeightUnit = "kg", # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
 		SpeciesCategoryWeight = catchweight,
 		SpeciesSex = NA,
 		SubsampledNumber = lengthsamplecount,
 		SubsamplingFactor = catchcount / lengthsamplecount,
 		SubsampleWeight = lengthsampleweight,
-		LengthCode = NA, # Not relevant??
-		LengthClass = NA,
-		LengthType = "1", # Should not this be interpreted from the catchsample$lengthmeasurement ???
+		LengthCode = NA, # NMDBiotic has no way of storing a length distribution.
+		LengthClass = NA, # NMDBiotic has no way of storing a length distribution.
+		#LengthType = "1", # Should not this be interpreted from the catchsample$lengthmeasurement ???
+		LengthType = lengthmeasurement, 
 		NumberAtLength = lengthsamplecount,
-		WeightAtLength = NA
+		WeightAtLength = NA # Not relevant for NMDBiotic. Used in the Baltic Acoustic Survey, as noted in the documentation of ICESBiotic.
 	)]
 	
 	# Logic for missing important records
@@ -497,6 +500,7 @@ BioticData_NMDToICESBioticOne <- function(
 	indRaw <- merge(indRaw, BioticData_NMDOne$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
 	indRaw <- merge(catchRaw, indRaw, by = intersect(names(catchRaw), names(indRaw)))
 	
+	
 	Biology <- indRaw[, .(
 		LocalID = cruise,
 		Gear = gear,
@@ -505,15 +509,21 @@ BioticData_NMDToICESBioticOne <- function(
 		SpeciesCategory = catchpartnumber,
 		StockCode = NA,
 		FishID = specimenid,
-		LengthCode = "mm",
-		LengthClass = length * 1000,
-		WeightUnit = 'gr',
-		IndividualWeight = individualweight * 1000,
-		IndividualSex = ifelse(is.na(sex), NA, ifelse(sex == "1", "F", "M")),
+		#LengthCode = "mm", 
+		LengthCode = getLengthCodeICES(lengthresolution), 
+		#LengthClass = length * 1000
+		LengthClass = scaleLengthUsingLengthCode(length, getLengthCodeICES(lengthresolution), inputUnit = "m"), 
+		#WeightUnit = 'gr',
+		WeightUnit = 'kg', # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
+		#IndividualWeight = individualweight * 1000, # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
+		IndividualWeight = individualweight,
+		#IndividualSex = ifelse(is.na(sex), NA, ifelse(sex == "1", "F", "M")),
+		IndividualSex = sex,
 		#IndividualMaturity = getDATRASMaturity(getQuarter(stationstartdate), aphia, specialstage, maturationstage),
 		# Here specialstage is assumed to be have been translated to ICES "M6" codes as per http://vocab.ices.dk/?ref=1480:
 		IndividualMaturity = specialstage,
-		MaturityScale = "M6",
+		#MaturityScale = "M6",
+		MaturityScale = NA,
 		IndividualAge = age,
 		AgePlusGroup = NA,
 		AgeSource = "Otolith",
@@ -560,25 +570,25 @@ BioticData_NMDToICESBioticOne <- function(
 
 
 
-#' Reports \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
+#' Writes \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
 #'
 #' @param ICESBioticData A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.
 #'
 #' @return List of string matrices in the ICES acoustic CSV format.
 #'
 #' @export
-ReportICESBiotic <- function(ICESBioticData){
+WriteICESBiotic <- function(ICESBioticData){
 	
-	ICESBioticCSVData <- lapply(
+	WriteICESBioticData <- lapply(
 		ICESBioticData, 
-		ReportICESBioticOne
+		WriteICESBioticOne
 	)
 	
-	return(ICESBioticCSVData)
+	return(WriteICESBioticData)
 }
 
 
-ReportICESBioticOne <- function(ICESBioticDataOne){
+WriteICESBioticOne <- function(ICESBioticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	ICESBioticCSVDataOne <- convertToHeaderRecordMatrix(ICESBioticDataOne)
@@ -596,7 +606,7 @@ ReportICESBioticOne <- function(ICESBioticDataOne){
 
 
 # Function to add the table name to the column names, but not to the keys.
-renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "Acoustic")) {
+renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType = c("Biotic", "Acoustic")) {
 	
 	formatType <- match.arg(formatType)
 	
@@ -605,7 +615,8 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 	tableName = rep(tableNames, lengths(columnName))
 	columnName <- unlist(columnName)
 	
-	areTableNames <- columnName  %in% names(data)
+	#areTableNames <- columnName  %in% names(data)
+	areTableNames <- columnName  %in% setToID
 	
 	newColumnName <- character(length(columnName))
 	newColumnName[areTableNames] <- paste0(columnName[areTableNames], "ID")
@@ -655,17 +666,15 @@ renameToTableNameFirst <- function(data, tableNames, formatType = c("Biotic", "A
 
 
 
-#' Write ICES DATRAS (NS-IBTS) format file
+#' Convert BioticData to ICESDatras format
 #'
-#' Given an \code{BioticData} object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
-#' \code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
+#' Given an \code{\link{BioticData}} object, this function converts to ICESDatras format. Note that this function only supports
+#' \code{\link{BioticData}} NMDBiotic version > 3 XML files.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
 #'
-#' @return List of data.table objects in the ICES DATRAS CSV format.
+#' @return An \code{\link{ICESDatrasData}} object.
 #'
-#' @importFrom stats aggregate
-#' @importFrom data.table copy
 #' @export
 ICESDatras <- function(
 	BioticData
@@ -969,12 +978,12 @@ ICESDatrasOne <- function(
 	# We need to combine them if we have two different TotalNo and catcatchwgt.
 	
 	# Find duplicate species in a haul
-	dupl <- aggregate(catchcategory ~ aphia + serialnumber, BioticDataOne$catchsample, FUN = function(x) length(unique(x)))
+	dupl <- stats::aggregate(catchcategory ~ aphia + serialnumber, BioticDataOne$catchsample, FUN = function(x) length(unique(x)))
 	dupl <- dupl[dupl$catchcategory > 1, ]
 	
 	# Find the above in our DATRAS HL
 	if(nrow(dupl)) {
-		found <- aggregate(CatCatchWgt ~ StNo + SpecCode + Sex + CatIdentifier, hl[(hl$SpecCode %in% dupl$aphia & hl$StNo %in% dupl$serialnumber),], FUN = function(x) length(unique(x)))
+		found <- stats::aggregate(CatCatchWgt ~ StNo + SpecCode + Sex + CatIdentifier, hl[(hl$SpecCode %in% dupl$aphia & hl$StNo %in% dupl$serialnumber),], FUN = function(x) length(unique(x)))
 		found <- found[found$CatCatchWgt > 1, ]
 		for(iz in seq_len(nrow(found))) {
 			tmpHL <- hl[hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"], ]
@@ -996,7 +1005,7 @@ ICESDatrasOne <- function(
 	# Find species with different SpecVal, if any of them have SpecVal == 1, delete any other records with different SpecVal
 	# otherwise, use the lowest SpecVal value for all
 	
-	tmp <- aggregate(SpecVal ~ SpecCode + StNo, hl, FUN = function(x) length(unique(x)))
+	tmp <- stats::aggregate(SpecVal ~ SpecCode + StNo, hl, FUN = function(x) length(unique(x)))
 	tmp <- tmp[tmp$SpecVal>1, ]
 	
 	for( rownum in seq_len(nrow(tmp)) ) {
@@ -1135,26 +1144,26 @@ ICESDatrasOne <- function(
 
 
 
-#' Reports \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 #'
 #' @param ICESDatrasData A \code{\link{ICESDatrasData}} object returned from \code{\link{ICESDatras}}.
 #'
 #' @return List of string matrices in the ICES Datras CSV format.
 #'
 #' @export
-ReportICESDatras <- function(ICESDatrasData){
+WriteICESDatras <- function(ICESDatrasData){
 	
-	ICESDatrasCSVData <- lapply(
+	WriteICESDatrasData <- lapply(
 		ICESDatrasData, 
-		ReportICESDatrasOne, 
+		WriteICESDatrasOne, 
 		na = "-9"
 	)
 	
-	return(ICESDatrasCSVData)
+	return(WriteICESDatrasData)
 }
 
 
-ReportICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
+WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
 	
 	# Convert all tables to string matrix with header and record, and rbind:
 	ICESDatrasCSVDataOne <- convertToRecordTypeMatrix(ICESDatrasDataOne)

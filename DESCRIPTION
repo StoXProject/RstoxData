@@ -1,6 +1,6 @@
 Package: RstoxData
-Version: 1.1.5
-Date: 2021-04-18
+Version: 1.1.6
+Date: 2021-05-04
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
   person(given = "Ibrahim", 
@@ -37,7 +37,8 @@ Imports:
     data.table (>= 1.12.6),
     Rcpp (>= 1.0.0),
     xml2 (>= 1.2.2),
-    xslt (>= 1.4)
+    xslt (>= 1.4),
+    units (>= 0.7)
 Suggests: 
     testthat
 LinkingTo: 
