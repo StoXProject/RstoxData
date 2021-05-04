@@ -115,7 +115,7 @@ readVariableTranslation <- function(processData, FileName, UseProcessData = FALS
 }
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, Translation, translate.keys = FALSE, warnMissingTranslation = TRUE) {
+translateVariables <- function(data, Translation, translate.keys = FALSE, warnMissingTranslation = FALSE) {
 	
 	dataCopy <- data.table::copy(data)
 	
@@ -138,7 +138,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE, warnMi
 }
 
 # Function to translate one table:
-translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMissingTranslation = TRUE) {
+translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMissingTranslation = FALSE) {
 	# Check that the table contains the variable to translate:
 	if(any(Translation$VariableName %in% names(table))) {
 		
