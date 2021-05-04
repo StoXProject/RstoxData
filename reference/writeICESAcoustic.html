@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write ICES acoustic CSV format file — WriteICESAcoustic • RstoxData</title>
+<title>Writes ICESAcousticData to a csv file for each input acoustic file used to create the ICESAcousticData — WriteICESAcoustic • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Write ICES acoustic CSV format file — WriteICESAcoustic" />
-<meta property="og:description" content="Given an AcousticData object, this function will write an ICES acoustic CSV file. Note that this function only supports
-AcousticData object that is created from reading an ICES acoustic XML file." />
+<meta property="og:title" content="Writes ICESAcousticData to a csv file for each input acoustic file used to create the ICESAcousticData — WriteICESAcoustic" />
+<meta property="og:description" content="Writes ICESAcousticData to a csv file for each input acoustic file used to create the ICESAcousticData" />
 
 
 
@@ -73,13 +72,19 @@ AcousticData object that is created from reading an ICES acoustic XML file." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.6</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -89,7 +94,7 @@ AcousticData object that is created from reading an ICES acoustic XML file." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/StoXProject/RstoxData/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -106,34 +111,29 @@ AcousticData object that is created from reading an ICES acoustic XML file." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write ICES acoustic CSV format file</h1>
+    <h1>Writes <code><a href='ICESAcousticData.html'>ICESAcousticData</a></code> to a csv file for each input acoustic file used to create the <code><a href='ICESAcousticData.html'>ICESAcousticData</a></code></h1>
     <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxExport.R'><code>R/StoxExport.R</code></a></small>
-    <div class="hidden name"><code>writeICESAcoustic.Rd</code></div>
+    <div class="hidden name"><code>WriteICESAcoustic.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Given an <code>AcousticData</code> object, this function will write an ICES acoustic CSV file. Note that this function only supports
-<code>AcousticData</code> object that is created from reading an ICES acoustic XML file.</p>
+    <p>Writes <code><a href='ICESAcousticData.html'>ICESAcousticData</a></code> to a csv file for each input acoustic file used to create the <code><a href='ICESAcousticData.html'>ICESAcousticData</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>WriteICESAcoustic</span><span class='op'>(</span><span class='va'>AcousticData</span>, Combine <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>WriteICESAcoustic</span><span class='op'>(</span><span class='va'>ICESAcousticData</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>AcousticData</th>
-      <td><p>A <code>AcousticData</code> object from an ICES acoustic XML format file.</p></td>
-    </tr>
-    <tr>
-      <th>Combine</th>
-      <td><p>Logical: If TRUE stack the output tables for each acosutic file.</p></td>
+      <th>ICESAcousticData</th>
+      <td><p>A <code><a href='ICESAcousticData.html'>ICESAcousticData</a></code> object obtained from an ICES acoustic XML format file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of data.table objects in the ICES acoustic CSV format.</p>
+    <p>List of string matrices in the ICES acoustic CSV format.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -150,7 +150,7 @@ AcousticData object that is created from reading an ICES acoustic XML file." />
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

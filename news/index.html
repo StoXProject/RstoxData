@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.6</span>
       </span>
     </div>
 
@@ -114,6 +114,17 @@
       <small>Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="rstoxdata-v116-2021-05-04" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.6">
+<a href="#rstoxdata-v116-2021-05-04" class="anchor"></a>RstoxData v1.1.6 (2021-05-04)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added sanitizeFilter() to avoid system calls in filter.</li>
+<li>Remoevd hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.</li>
+<li>Optimized createOrderKey() for faster execution.</li>
+<li>Renamed ReportICESAcoustic(), ReportICESBiotic() and ReportICESDatras() to WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), respectievly.</li>
+</ul>
+</div>
     <div id="rstoxdata-v115-2021-04-18" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.5">
 <a href="#rstoxdata-v115-2021-04-18" class="anchor"></a>RstoxData v1.1.5 (2021-04-18)<small> Unreleased </small>
@@ -246,7 +257,7 @@
 <ul>
 <li>In <code>writeICESDatras()</code>: Change country code ‘NOR’ to ‘NO’.</li>
 <li>Change the default NumberOfCores to 1L in all parallel-able functions.</li>
-<li>Refactor <code>WriteICESAcoustic()</code>, <code>WriteICESBiotic()</code>, <code>WriteICESDatras()</code> into <code>prepareICESAcoustic()</code>, <code>prepareICESBiotic()</code>, <code>prepareICESDatras()</code>.</li>
+<li>Refactor <code><a href="../reference/WriteICESAcoustic.html">WriteICESAcoustic()</a></code>, <code><a href="../reference/WriteICESBiotic.html">WriteICESBiotic()</a></code>, <code><a href="../reference/WriteICESDatras.html">WriteICESDatras()</a></code> into <code>prepareICESAcoustic()</code>, <code>prepareICESBiotic()</code>, <code>prepareICESDatras()</code>.</li>
 <li>Tests: do not attempt to copy file outside <code><a href="https://rdrr.io/r/base/tempfile.html">tempdir()</a></code> in <code>test-readXmlFile.R</code> file.</li>
 <li>Github actions: Update <code>check-full.yaml</code> file.</li>
 <li>
