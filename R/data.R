@@ -184,9 +184,9 @@ NULL
 #' \item{\code{\link{ICESAcousticData}}}
 #' \item{\code{\link{ICESBioticData}}}
 #' \item{\code{\link{ICESDatrasData}}}
-#' \item{\code{\link{ReportICESAcousticData}}}
-#' \item{\code{\link{ReportICESBioticData}}}
-#' \item{\code{\link{ReportICESDatrasData}}}
+#' \item{\code{\link{WriteICESAcousticData}}}
+#' \item{\code{\link{WriteICESBioticData}}}
+#' \item{\code{\link{WriteICESDatrasData}}}
 #' }
 #' 
 #' @param BioticData \code{\link{BioticData}}.
@@ -424,7 +424,7 @@ NULL
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name ReportICESAcousticData
+#' @name WriteICESAcousticData
 #' 
 NULL
 
@@ -439,7 +439,7 @@ NULL
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name ReportICESBioticData
+#' @name WriteICESBioticData
 #' 
 NULL
 
@@ -454,7 +454,7 @@ NULL
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
-#' @name ReportICESDatrasData
+#' @name WriteICESDatrasData
 #' 
 NULL
 

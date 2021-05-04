@@ -133,7 +133,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 
 
 
-#' Reports \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#' Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
 #'
 #' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
 #'
@@ -141,18 +141,18 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 #'
 #' @export
 #' 
-ReportICESAcoustic <- function(ICESAcousticData){
+WriteICESAcoustic <- function(ICESAcousticData){
 	
-	ReportICESAcousticData <- lapply(
+	WriteICESAcousticData <- lapply(
 		ICESAcousticData, 
-		ReportICESAcousticOne
+		WriteICESAcousticOne
 	)
 	
-	return(ReportICESAcousticData)
+	return(WriteICESAcousticData)
 }
 
 
-ReportICESAcousticOne <- function(ICESAcousticDataOne){
+WriteICESAcousticOne <- function(ICESAcousticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne)
@@ -500,8 +500,6 @@ BioticData_NMDToICESBioticOne <- function(
 	indRaw <- merge(indRaw, BioticData_NMDOne$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
 	indRaw <- merge(catchRaw, indRaw, by = intersect(names(catchRaw), names(indRaw)))
 	
-	# Get the length code outside of the table to avoid duplicated warnings from getLengthCodeICES():
-	LengthCode = getLengthCodeICES(lengthresolution)
 	
 	Biology <- indRaw[, .(
 		LocalID = cruise,
@@ -512,9 +510,9 @@ BioticData_NMDToICESBioticOne <- function(
 		StockCode = NA,
 		FishID = specimenid,
 		#LengthCode = "mm", 
-		LengthCode = ..LengthCode, 
+		LengthCode = getLengthCodeICES(lengthresolution), 
 		#LengthClass = length * 1000
-		LengthClass = scaleLengthUsingLengthCode(length, ..LengthCode, inputUnit = "m"), 
+		LengthClass = scaleLengthUsingLengthCode(length, getLengthCodeICES(lengthresolution), inputUnit = "m"), 
 		#WeightUnit = 'gr',
 		WeightUnit = 'kg', # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
 		#IndividualWeight = individualweight * 1000, # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
@@ -572,25 +570,25 @@ BioticData_NMDToICESBioticOne <- function(
 
 
 
-#' Reports \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
+#' Writes \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
 #'
 #' @param ICESBioticData A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.
 #'
 #' @return List of string matrices in the ICES acoustic CSV format.
 #'
 #' @export
-ReportICESBiotic <- function(ICESBioticData){
+WriteICESBiotic <- function(ICESBioticData){
 	
-	ReportICESBioticData <- lapply(
+	WriteICESBioticData <- lapply(
 		ICESBioticData, 
-		ReportICESBioticOne
+		WriteICESBioticOne
 	)
 	
-	return(ReportICESBioticData)
+	return(WriteICESBioticData)
 }
 
 
-ReportICESBioticOne <- function(ICESBioticDataOne){
+WriteICESBioticOne <- function(ICESBioticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	ICESBioticCSVDataOne <- convertToHeaderRecordMatrix(ICESBioticDataOne)
@@ -1146,26 +1144,26 @@ ICESDatrasOne <- function(
 
 
 
-#' Reports \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 #'
 #' @param ICESDatrasData A \code{\link{ICESDatrasData}} object returned from \code{\link{ICESDatras}}.
 #'
 #' @return List of string matrices in the ICES Datras CSV format.
 #'
 #' @export
-ReportICESDatras <- function(ICESDatrasData){
+WriteICESDatras <- function(ICESDatrasData){
 	
-	ReportICESDatrasData <- lapply(
+	WriteICESDatrasData <- lapply(
 		ICESDatrasData, 
-		ReportICESDatrasOne, 
+		WriteICESDatrasOne, 
 		na = "-9"
 	)
 	
-	return(ReportICESDatrasData)
+	return(WriteICESDatrasData)
 }
 
 
-ReportICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
+WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
 	
 	# Convert all tables to string matrix with header and record, and rbind:
 	ICESDatrasCSVDataOne <- convertToRecordTypeMatrix(ICESDatrasDataOne)

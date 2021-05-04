@@ -336,7 +336,7 @@ scaleLengthUsingLengthCode <- function(length, LengthCode, inputUnit) {
 		reportingUnit = c("mm", "mm", "cm")
 	)
 	
-	outputUnit <- lengthCode_unit_table[lengthCode == LengthCode, reportingUnit]
+	outputUnit <- lengthCode_unit_table[match(LengthCode, lengthCode), reportingUnit]
 	
 	outputLength <- length * scaleUnit(inputUnit, outputUnit)
 	
@@ -345,10 +345,13 @@ scaleLengthUsingLengthCode <- function(length, LengthCode, inputUnit) {
 
 # Use the units package to scale 
 scaleUnit <- function(inputLengthUnit, outputLengthUnit) {
-	output <- 1
-	units(output) <- inputLengthUnit
-	units(output) <- outputLengthUnit
-	output <- as.numeric(output)
+	output <- double(max(length(inputLengthUnit), length(outputLengthUnit))) + 1
+	
+	# Use mixed units here as there may be fish with different units, and then update the units with set_units():
+	output <- units::mixed_units(output, inputLengthUnit)
+	output <- units::set_units(output, outputLengthUnit)
+	
+	output <- units::drop_units(output)
 	return(output)
 }
 

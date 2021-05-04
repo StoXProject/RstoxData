@@ -37,7 +37,8 @@ Imports:
     data.table (>= 1.12.6),
     Rcpp (>= 1.0.0),
     xml2 (>= 1.2.2),
-    xslt (>= 1.4)
+    xslt (>= 1.4),
+    units (>= 0.7)
 Suggests: 
     testthat
 LinkingTo: 
