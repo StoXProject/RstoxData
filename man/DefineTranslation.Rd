@@ -10,7 +10,7 @@ DefineTranslation(
   DefinitionMethod = c("ResourceFile", "TranslationTable"),
   TranslationTable = data.table::data.table(),
   Conditional = FALSE,
-  FileName
+  FileName = character()
 )
 }
 \arguments{

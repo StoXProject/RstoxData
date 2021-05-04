@@ -2,7 +2,7 @@
 % Please edit documentation in R/StoxExport.R
 \name{ICESDatras}
 \alias{ICESDatras}
-\title{Write ICES DATRAS (NS-IBTS) format file}
+\title{Convert BioticData to ICESDatras format}
 \usage{
 ICESDatras(BioticData)
 }
@@ -10,9 +10,9 @@ ICESDatras(BioticData)
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
 }
 \value{
-List of data.table objects in the ICES DATRAS CSV format.
+An \code{\link{ICESDatrasData}} object.
 }
 \description{
-Given an \code{BioticData} object, this function will write an ICES DATRAS (NS-IBTS) file. Note that this function only supports
-\code{BioticData} object that is created from reading an NMD biotic version 3 XML file.
+Given an \code{\link{BioticData}} object, this function converts to ICESDatras format. Note that this function only supports
+\code{\link{BioticData}} NMDBiotic version > 3 XML files.
 }

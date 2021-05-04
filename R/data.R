@@ -83,7 +83,7 @@ NULL
 #' \tabular{lllll}{
 #' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
 #' CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab 2021105 \cr
-#' Cruise \tab Unique Cruise identifier \tab None \tab Character type \tab 2021105 \cr
+#' Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic and LocalID for ICESBiotic) \tab None \tab Character \tab 2021105 \cr
 #' Platform  \tab Data collection platform identifier \tab None \tab Character \tab 1019 \cr
 #' }
 #' 

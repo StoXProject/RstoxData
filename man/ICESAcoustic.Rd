@@ -2,16 +2,16 @@
 % Please edit documentation in R/StoxExport.R
 \name{ICESAcoustic}
 \alias{ICESAcoustic}
-\title{Converts \code{AcousticData} to \code{ICESAcousticData}}
+\title{Convert AcousticData to ICESAcousticData.}
 \usage{
 ICESAcoustic(AcousticData)
 }
 \arguments{
-\item{AcousticData}{A \code{AcousticData} object from an ICES acoustic XML format file.}
+\item{AcousticData}{A \code{\link{AcousticData}} object from an ICES acoustic XML format file.}
 }
 \value{
-List of data.table objects in the ICES acoustic CSV format.
+An \code{\link{ICESAcousticData}} object.
 }
 \description{
-Note that this function only supports \code{AcousticData} object that is created from reading an ICES acoustic XML file.
+Note that this function only supports \code{\link{AcousticData}} object created from reading an ICES acoustic XML files.
 }

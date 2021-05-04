@@ -21,10 +21,18 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	
 	
 
-	
+	sanitizeFilter <- function(filters) {
+		# Detect one or more "system" followed by 0 or one "2" and 0 or more spaces and then one or more parenthesis start:
+		usesSystem <- grepl("system+2? *\\(+", filters)
+		if(usesSystem) {
+			stop("The following filter expression applies a call to the operating system, and may contain harmful code (please do not try to hack using StoX): ", filters)
+		}
+	}
 	
 
 	processFilter <- function(filters) {
+		# Do not accept system calls in filters:
+		sanitizeFilter(filters)
 		# Assume each individual filters relation are the AND (&) operator 
 		parsedFilterTxt <- paste(filters, collapse=" & ")
 		parsedFilter <- parse(text = parsedFilterTxt)

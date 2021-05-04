@@ -195,7 +195,7 @@ stoxBioticObject$convertLen[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 	outputFactor <- c(mm = 10, cm = 1)
 	conversionTable <- outer(
     	1 / weightFactor, 
-    	1 / weightFactor
+    	1 / outputFactor
     )
 	
 	# Keep NAs:

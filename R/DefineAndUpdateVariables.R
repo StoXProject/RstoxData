@@ -72,7 +72,7 @@ DefineTranslation <- function(
 	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
 	TranslationTable = data.table::data.table(), 
 	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
-	FileName
+	FileName = character()
 ) {
 	
 	# Return immediately if UseProcessData = TRUE:
@@ -115,7 +115,7 @@ readVariableTranslation <- function(processData, FileName, UseProcessData = FALS
 }
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, Translation, translate.keys = FALSE) {
+translateVariables <- function(data, Translation, translate.keys = FALSE, warnMissingTranslation = TRUE) {
 	
 	dataCopy <- data.table::copy(data)
 	
@@ -130,14 +130,15 @@ translateVariables <- function(data, Translation, translate.keys = FALSE) {
 		dataCopy, 
 		translateOneTable, 
 		Translation = Translation, 
-		translate.keys = translate.keys
+		translate.keys = translate.keys, 
+		warnMissingTranslation = warnMissingTranslation
 	)
 	
 	return(dataCopy[])
 }
 
 # Function to translate one table:
-translateOneTable <- function(table, Translation, translate.keys = FALSE) {
+translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMissingTranslation = TRUE) {
 	# Check that the table contains the variable to translate:
 	if(any(Translation$VariableName %in% names(table))) {
 		
@@ -149,18 +150,22 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 			)
 		)
 		
-		# Get the combinations of ConditionalVariableName and VariableName missing in three Translation:
-		TranslationSplit <- split(Translation, c("ConditionalVariableName", "VariableName"))
-		missingCombinations <- lapply(TranslationSplit, getMissingCombinations, table = table)
-		
-		if(any(lengths(missingCombinations))) {
-			warnMessage <- c(
-				"StoX: The following values are present in the data but not in the translation, and were not translated:", 
-				unlist(lapply(missingCombinations, getMissingCombinationsWarning))
-			)
-			warnMessage <- paste(warnMessage, collapse = "\n")
+		if(warnMissingTranslation) {
+			# Get the combinations of ConditionalVariableName and VariableName missing in three Translation:
+			variableKeys <- intersect(c("ConditionalVariableName", "VariableName"), names(Translation))
+			TranslationSplit <- split(Translation, by = variableKeys)
+			missingCombinations <- lapply(TranslationSplit, getMissingCombinations, table = table, variableKeys = variableKeys)
 			
-			warning(warnMessage)
+			
+			if(any(unlist(lapply(missingCombinations, nrow)))) {
+				warnMessage <- c(
+					"StoX: The following values are present in the data but not in the translation, and were not translated:", 
+					unlist(lapply(missingCombinations, getMissingCombinationsWarning))
+				)
+				warnMessage <- paste(warnMessage, collapse = "\n")
+				
+				warning(warnMessage)
+			}
 		}
 		
 		# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
@@ -178,12 +183,14 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE) {
 	a = 1 #????????
 }
 
-getMissingCombinations <- function(translation, table) {
-	# Get the columns of the translation that are present:
-	variableKeys <- intersect(c("ConditionalVariableName", "VariableName"), names(translation))
+getMissingCombinations <- function(translation, table, variableKeys) {
 	# Get the names of those columns in the data:
 	transNames <- translation[, ..variableKeys]
 	variablesInTable <- unname(unlist(transNames[1,]))
+	if(!all(variablesInTable %in% names(table))) {
+		return(NULL)
+	}
+	
 	tab <- table[, ..variablesInTable]
 	# And the names of columns holding the values of those variables in the translation:
 	valueVariablesInTranslation <- intersect(c("ConditionalValue", "Value"), names(translation))

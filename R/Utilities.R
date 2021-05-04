@@ -93,7 +93,7 @@ mergeByIntersect <- function(x, y, ..., msg = FALSE) {
 			output <- merge(x, y, by = by, ...)
 		}
 		else {
-			stop("No intersect between the names of x and y")
+			stop("No intersect between the names of ", deparse(substitute(x)), " and ", deparse(substitute(y)))
 		}
 	}
 	
@@ -373,6 +373,8 @@ setPrecisionLevelOneDT <- function(DT, digits, signifDigits) {
 
 roundSignif <- function(x, digits = 12, signifDigits = NULL) {
 	if(length(signifDigits)) {
+		# Use this in the future when units are implemented for all variables in all data type (unitsless being those without unit). Units can be added and remoevd so that we end up with only the units we need, and can display these in the documentation:
+		# digits <- pmax(signifDigits - floor(log10(abs(units::drop_units(x)))) - 1, digits)
 		digits <- pmax(signifDigits - floor(log10(abs(x))) - 1, digits)
 	}
 	round(x, digits)
@@ -638,6 +640,15 @@ createOrderKey <- function(x, split = "/") {
 	if(!is.character(x)) {
 		return(x)
 	}
+	firstNonNA <- x[1]
+	if(is.na(firstNonNA)) {
+		firstNonNA <- x[min(which(!is.na(x)))]
+	}
+	if(!grepl(split, firstNonNA)) {
+		return(x)
+	}
+	
+	# Split the vector by the 'split' parameter:
 	splitted <- strsplit(x, split)
 	
 	# Check that all have the same number of elements, that is the same number of splits:
