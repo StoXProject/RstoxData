@@ -220,23 +220,33 @@ get_os <- function() {
 }
 
 # Pick a suitable number of cores
-#' @importFrom parallel detectCores
-getCores <- function() {
-	cores <- as.integer(getOption("mc.cores"))
-	if (length(cores) == 0 || is.na(cores)) {
-		cores <- parallel::detectCores()
-		if (is.na(cores)) {
-			return(1)
-		} else {
-			# Don't use too many cores in autodetect
-			if (cores > 4)
-				return(4)
-			else
-				return(cores)
-		}
-	} else {
-		return(cores)
+#'
+#' @inheritParams lapplyOnCores
+#' @param x An optional vector or list which will be used in \code{\link{lapplyOnCores}} or \code{\link{mapplyOnCores}}, limiting the number of cores so that no more cores are used than the length of x.
+#' @param n Optional length of the data to apply parallel processing to.
+#'
+#' @return The number of cores to apply.
+#'
+#' @export
+#' 
+getNumberOfCores <- function(NumberOfCores = NULL, n = NULL) {
+	# Detect number of cores if not given:
+	if(!length(NumberOfCores)) {
+		NumberOfCores <- as.integer(getOption("mc.cores"))
+		if (!length(NumberOfCores) || is.na(NumberOfCores)) {
+			NumberOfCores <- parallel::detectCores()
+			if (is.na(NumberOfCores)) {
+				return(1)
+			}
+		} 
 	}
+	
+	# Do not use more cores than the number of elemens:
+	if(length(n)) {
+		NumberOfCores <- min(n, NumberOfCores)
+	}
+	
+	return(NumberOfCores)
 }
 
 #' Run a function on all elements of x on one or more cores
@@ -252,11 +262,7 @@ getCores <- function() {
 #' 
 lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 	# Get the number of cores to use:
-	if(length(NumberOfCores) == 0) {
-		NumberOfCores <- getCores()
-	}
-	# Do not use more cores than the number of files:
-	NumberOfCores <- min(length(x), NumberOfCores)
+	NumberOfCores <- getNumberOfCores(NumberOfCores, n = length(x))
 	
 	# Simple Lapply if onle one core:
 	if(NumberOfCores == 1) {
@@ -288,6 +294,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 #' Run a function on all elements of x on one or more cores
 #'
 #' @inheritParams lapplyOnCores
+#' @inheritParams getNumberOfCores
 #' @param ...,MoreArgs,SIMPLIFY See \code{\link[base]{mapply}}.
 #'
 #' @return A list of outputs from \code{FUN}.
@@ -296,17 +303,7 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 #' 
 mapplyOnCores <- function(FUN, NumberOfCores = 1L, ..., MoreArgs = NULL, SIMPLIFY = FALSE) {
 	# Get the number of cores to use:
-	if(length(NumberOfCores) == 0) {
-		NumberOfCores <- getCores()
-	}
-	# Do not use more cores than the number of files:
-	lll <- list(...)
-	if(length(lll)) {
-		NumberOfCores <- min(length(lll[[1]]), NumberOfCores)
-	}
-	else {
-		NumberOfCores <- 1
-	}
+	NumberOfCores <- getNumberOfCores(NumberOfCores, n = max(lengths(list(...))))
 	
 	# Simple mapply if only one core:
 	if(NumberOfCores == 1) {
