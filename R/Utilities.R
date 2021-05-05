@@ -219,10 +219,9 @@ get_os <- function() {
 	}
 }
 
-# Pick a suitable number of cores
+#' Pick a suitable number of cores
 #'
 #' @inheritParams lapplyOnCores
-#' @param x An optional vector or list which will be used in \code{\link{lapplyOnCores}} or \code{\link{mapplyOnCores}}, limiting the number of cores so that no more cores are used than the length of x.
 #' @param n Optional length of the data to apply parallel processing to.
 #'
 #' @return The number of cores to apply.
