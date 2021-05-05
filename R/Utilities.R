@@ -293,7 +293,6 @@ lapplyOnCores <- function(x, FUN, NumberOfCores = 1L, ...) {
 #' Run a function on all elements of x on one or more cores
 #'
 #' @inheritParams lapplyOnCores
-#' @inheritParams getNumberOfCores
 #' @param ...,MoreArgs,SIMPLIFY See \code{\link[base]{mapply}}.
 #'
 #' @return A list of outputs from \code{FUN}.
