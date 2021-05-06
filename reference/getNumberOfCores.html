@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Translation definition (from file or from table). — Translation • RstoxData</title>
+<title>Pick a suitable number of cores — getNumberOfCores • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Translation definition (from file or from table). — Translation" />
-<meta property="og:description" content="Translation definition (from file or from table)." />
+<meta property="og:title" content="Pick a suitable number of cores — getNumberOfCores" />
+<meta property="og:description" content="Pick a suitable number of cores" />
 
 
 
@@ -111,23 +111,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Translation definition (from file or from table).</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>Translation.Rd</code></div>
+    <h1>Pick a suitable number of cores</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
+    <div class="hidden name"><code>getNumberOfCores.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Translation definition (from file or from table).</p>
+    <p>Pick a suitable number of cores</p>
     </div>
 
+    <pre class="usage"><span class='fu'>getNumberOfCores</span><span class='op'>(</span>NumberOfCores <span class='op'>=</span> <span class='cn'>NULL</span>, n <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>NumberOfCores</th>
+      <td><p>The number of cores to use (defaulted to 1), truncated to the number of avaliable cores.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Optional length of the data to apply parallel processing to.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>This StoX data type is produced by <code><a href='DefineTranslation.html'>DefineTranslation</a></code>, and contains the columns VariableName, Value and NewValue.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
+    <p>The number of cores to apply.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
