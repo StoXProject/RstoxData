@@ -664,7 +664,10 @@ createOrderKey <- function(x, split = "/") {
 	}
 	
 	# Convert to integer ranks:
-	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, sort(unique(y))))]
+	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, sort(unique(y))))]
+	# Replicate data.table's soring which happend in C-locale (see ?data.table::setorderv):
+	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "C")))]
+	
 
 	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
 	numberOfDigits <- splittedDT[, lapply(.SD, max)]
