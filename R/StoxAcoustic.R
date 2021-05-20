@@ -495,7 +495,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		#add integration distance
-		data_list$Log<-merge(data_list$Log,data_list$Beam[,c('PingAxisInterval','LogKey')])
+		data_list$Log<-merge(data_list$Log,data_list$Beam[,c('PingAxisInterval','LogKey')], all.x = TRUE)
 		names(data_list$Log)[names(data_list$Log)=='PingAxisInterval'] <- 'LogDistance'
 		
 		# The LogOrigin2 should be NA until it gets incorporated in the ICESAcoustic format:
