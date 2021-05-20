@@ -4,7 +4,13 @@
 \alias{readXmlFile}
 \title{Read fisheries XML data format file}
 \usage{
-readXmlFile(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FALSE)
+readXmlFile(
+  xmlFilePath,
+  stream = TRUE,
+  useXsd = NULL,
+  usePrefix = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{xmlFilePath}{full path to the XML file to be read.}
@@ -12,6 +18,8 @@ readXmlFile(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FALSE)
 \item{stream}{a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to TRUE.}
 
 \item{useXsd}{Specify an xsd object to use. Default to NULL.}
+
+\item{usePrefix}{Manually specify a namespace prefix. Default to NULL.}
 
 \item{verbose}{Show verbose output. Default to FALSE.}
 }
