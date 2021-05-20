@@ -273,13 +273,23 @@ createXsdObject <- function(xsdFile) {
 autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	# Read first 500 characters
-	tmpText <- readChar(xmlFile, 500)
+	tmpText <- tryCatch(
+                {
+                    readChar(xmlFile, 500)
+                }, error=function(cond) {
+                    return(NULL)
+                })
+
+	if(is.na(tmpText) || is.null(tmpText)) {
+                return(NULL)
+        }
+
 	bits <- read_html(tmpText)
 
 	# Detect namespace prefix
 	pfx <- unlist(regmatches(tmpText, regexec("xmlns:(\\w+)=", tmpText)))[2]
 	if(is.na(pfx) || pfx %in% c("xsd", "xsi")) {
-		pfx <- NA
+		pfx <- NULL
 		prefix1 <- ""
 		prefix2 <- ""
 	} else {

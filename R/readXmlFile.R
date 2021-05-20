@@ -7,6 +7,7 @@
 #' @param xmlFilePath full path to the XML file to be read.
 #' @param stream a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to TRUE.
 #' @param useXsd Specify an xsd object to use. Default to NULL.
+#' @param usePrefix Manually specify a namespace prefix. Default to NULL.
 #' @param verbose Show verbose output. Default to FALSE.
 #'
 #' @return List of data.table objects containing the "flattened" XML data.
@@ -27,7 +28,7 @@
 #' @importFrom xslt xml_xslt
 #'
 #' @export
-readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FALSE) {
+readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
 
 	# To UTf-8
 	toUTF8 <- function(srcvec) {
@@ -179,13 +180,16 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, verbose = FAL
 		#return(NULL)
 	}
 
-	# Try to do autodetect
+	# Try to do autodetect anyway
 	found <- autodetectXml(xmlFilePath, xsdObjects, verbose)
+
 	if(is.null(useXsd))
 		useXsd <- found[["xsd"]]
+        if(is.null(usePrefix))
+                usePrefix <- found[["nsPrefix"]]
 
 	# See if we have a namespace prefix set
-	if(!is.na(found[["nsPrefix"]])) {
+	if(!is.null(usePrefix)) {
 		warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
 		stripXslt <- system.file("extdata/stripns.xsl", package = "RstoxData")
 		stripped <- xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
