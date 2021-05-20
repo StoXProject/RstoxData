@@ -275,7 +275,7 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 	# Read first 500 characters
 	tmpText <- tryCatch(
                 {
-                    readChar(xmlFile, 500)
+                    suppressWarnings(readChar(xmlFile, 500))
                 }, error=function(cond) {
                     return(NULL)
                 })
