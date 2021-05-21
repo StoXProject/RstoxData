@@ -180,6 +180,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 		#return(NULL)
 	}
 
+	# Check that the zip contains a properly named file:
+	checkFileNameInZip(xmlFilePath)
+	
 	# Try to do autodetect anyway
 	found <- autodetectXml(xmlFilePath, xsdObjects, verbose)
 
