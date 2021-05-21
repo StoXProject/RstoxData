@@ -74,7 +74,7 @@ the XML file inside the zip file should be using the same name as the zip file i
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.9</span>
       </span>
     </div>
 
@@ -124,7 +124,13 @@ Streaming XML pull parser can be used to avoid loading the whole XML into memory
 the XML file inside the zip file should be using the same name as the zip file itself (e.g. test.xml inside test.zip).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>readXmlFile</span><span class='op'>(</span><span class='va'>xmlFilePath</span>, stream <span class='op'>=</span> <span class='cn'>TRUE</span>, useXsd <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>readXmlFile</span><span class='op'>(</span>
+  <span class='va'>xmlFilePath</span>,
+  stream <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  useXsd <span class='op'>=</span> <span class='cn'>NULL</span>,
+  usePrefix <span class='op'>=</span> <span class='cn'>NULL</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,6 +146,10 @@ the XML file inside the zip file should be using the same name as the zip file i
     <tr>
       <th>useXsd</th>
       <td><p>Specify an xsd object to use. Default to NULL.</p></td>
+    </tr>
+    <tr>
+      <th>usePrefix</th>
+      <td><p>Manually specify a namespace prefix. Default to NULL.</p></td>
     </tr>
     <tr>
       <th>verbose</th>

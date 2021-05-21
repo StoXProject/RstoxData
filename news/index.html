@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.9</span>
       </span>
     </div>
 
@@ -114,13 +114,23 @@
       <small>Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="rstoxdata-v119-2021-05-21" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.9">
+<a href="#rstoxdata-v119-2021-05-21" class="anchor"></a>RstoxData v1.1.9 (2021-05-21)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fixed bugs and added auto-detect xsd for reading zipped xml files.</li>
+<li>Fixed bug in StoxAcoustic for ICESAcoustic data, where log-distances with no acoustic records were deleted.</li>
+<li>Changed to sort in C-locale in createOrderKey() using the stringi-package, to comply with data.table’s philosophy of platform independence.</li>
+</ul>
+</div>
     <div id="rstoxdata-v116-2021-05-04" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.6">
 <a href="#rstoxdata-v116-2021-05-04" class="anchor"></a>RstoxData v1.1.6 (2021-05-04)<small> Unreleased </small>
 </h1>
 <ul>
 <li>Added sanitizeFilter() to avoid system calls in filter.</li>
-<li>Remoevd hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.</li>
+<li>Removed hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.</li>
 <li>Optimized createOrderKey() for faster execution.</li>
 <li>Renamed ReportICESAcoustic(), ReportICESBiotic() and ReportICESDatras() to WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), respectievly.</li>
 </ul>
