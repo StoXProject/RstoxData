@@ -76,3 +76,15 @@ for(item in icesFiles) {
 	# There should be minimal differences (in the Survey table only)
 	expect_true(length(all.equal(icesDataA, icesDataB)) <= 1)
 }
+
+# Zipped files:
+context("test-readXmlFile: Zipped acoustic file")
+example <- system.file("testresources", "echosounder_cruiseNumber_2020821_Eros_first_two_strata.zip", package="RstoxData")
+parsedAcousticZip <- readXmlFile(example)
+expect_equal(parsedAcousticZip$sa$sa[1], 67.7185200)
+
+context("test-readXmlFile: Zipped biotic file")
+example <- system.file("testresources", "biotic_cruiseNumber_2020821_Eros_2020-05-29T00.02.34.006Z_first_two_strata.zip", package="RstoxData")
+parsedBioticZip <- readXmlFile(example)
+expect_equal(parsedBioticZip$individual$individualweight[1], 0.022)
+
