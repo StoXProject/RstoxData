@@ -8,6 +8,7 @@
 #include "xmlio/xmlzipfile.h"
 #include "miniz/miniz.h"
 #include <assert.h>
+#include <string>
 
 XML_BEGIN_NAMESPACE
 
@@ -19,11 +20,18 @@ ZipInputStream::ZipInputStream(const char *path, const char *filename)
 {
 	memset(&zip_archive, 0, sizeof(zip_archive));
 
+	// Get only the filename without leading path
+	std::string strfilename(filename);
+	size_t sep = strfilename.find_last_of("\\/");
+	if (sep != std::string::npos) {
+		strfilename = strfilename.substr(sep + 1, strfilename.size() - sep - 1);
+	}
+
 	status = mz_zip_reader_init_file(&zip_archive, path, 0);
 	if (!status)
 		throw ZipException(0);
 
-	zipstate = mz_zip_reader_extract_file_iter_new(&zip_archive, filename, 0);
+	zipstate = mz_zip_reader_extract_file_iter_new(&zip_archive, strfilename.c_str(), 0);
 
 	if(!zipstate)
 		throw ZipException(1);

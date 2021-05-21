@@ -1,6 +1,11 @@
+# RstoxData v1.1.9 (2021-05-21)
+* Fixed bugs and added auto-detect xsd for reading zipped xml files.
+* Fixed bug in StoxAcoustic for ICESAcoustic data, where log-distances with no acoustic records were deleted.
+* Changed to sort in C-locale in createOrderKey() using the stringi-package, to comply with data.table's philosophy of platform independence.
+
 # RstoxData v1.1.6 (2021-05-04)
 * Added sanitizeFilter() to avoid system calls in filter.
-* Remoevd hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.
+* Removed hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.
 * Optimized createOrderKey() for faster execution.
 * Renamed ReportICESAcoustic(), ReportICESBiotic() and ReportICESDatras() to WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), respectievly.
 

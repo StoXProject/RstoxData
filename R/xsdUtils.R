@@ -273,13 +273,23 @@ createXsdObject <- function(xsdFile) {
 autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	# Read first 500 characters
-	tmpText <- readChar(xmlFile, 500)
+	tmpText <- tryCatch(
+		{
+			suppressWarnings(readCharZip(xmlFile, 500))
+		}, error=function(cond) {
+			return(NULL)
+		})
+	
+	if(is.na(tmpText) || is.null(tmpText)) {
+                return(NULL)
+        }
+
 	bits <- read_html(tmpText)
 
 	# Detect namespace prefix
 	pfx <- unlist(regmatches(tmpText, regexec("xmlns:(\\w+)=", tmpText)))[2]
 	if(is.na(pfx) || pfx %in% c("xsd", "xsi")) {
-		pfx <- NA
+		pfx <- NULL
 		prefix1 <- ""
 		prefix2 <- ""
 	} else {
@@ -335,6 +345,31 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	return(list(xsd = xmlXsd, encoding = xmlEnc, nsPrefix = pfx))
 }
+
+readCharZip <- function(x, ...) {
+	if(tolower(tools::file_ext(x)) == "zip") {
+		file <- utils::unzip(zipfile = x, list = TRUE)[, "Name"]
+		file <- file[!grepl("__MACOSX", file)]
+		if(length(file) > 1) {
+			stop("Input data can be zipped, but then each file must be zipped individually, so that each zipfile contains only one file (and this file must have the same name as the zip, excluding file extension).")
+		}
+		readChar(unz(x, file), ...)
+	}
+	else {
+		readChar(x, ...)
+	}
+}
+
+checkFileNameInZip <- function(x) {
+	if(tolower(tools::file_ext(x)) == "zip") {
+		file <- utils::unzip(zipfile = x, list = TRUE)[, "Name"]
+		# Check whether a file named by the basename of the zip exists (sans ext):
+		if(!basename(tools::file_path_sans_ext(x)) %in% basename(tools::file_path_sans_ext(file))) {
+			stop("Zipped input data must contain the a file with the same name as the zip, excluding file extension.")
+		}
+	}
+}
+
 
 #' @importFrom data.table rbindlist setnames
 #' @importFrom xml2 as_list read_xml xml_find_all
