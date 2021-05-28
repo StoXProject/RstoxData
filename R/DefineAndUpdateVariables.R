@@ -31,7 +31,7 @@ RedefineData <- function(
 #' 
 #' @param StoxBioticData An input of \link{ModelData} object
 #' @param BioticData An input of \link{ModelData} object
-#' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by. 
+#' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "ReplaceBy", representing the variable from BioticData to replace by. 
 #' 
 #' @return
 #' A \code{\link{StoxBioticData}} object.
