@@ -1258,7 +1258,7 @@ getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longi
 		return(val * (180 / pi))
 	}
 	
-	datetime0 <- as.POSIXct("1990-12-30", tz = "GMT")
+	datetime0 <- as.POSIXct("1990-12-30", tz = "UTC")
 	
 	uniqueDates <- unique(stationstartdate)
 	
@@ -1274,7 +1274,7 @@ getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longi
 		nDays <- nDaysA[idx]
 		lat <- latitudestart[idx]
 		lng <- longitudestart[idx]
-		localdate <- as.POSIXct(uniqueDates[idx], tz = "GMT")
+		localdate <- as.POSIXct(uniqueDates[idx], tz = "UTC")
 		
 		# Compute
 		# Letters correspond to colums in the NOAA Excel
@@ -1332,7 +1332,7 @@ getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longi
 		}
 	}
 	
-	datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "GMT")
+	datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "UTC")
 	
 	return(unlist(lapply(datetime, getDN, ssTab)))
 }

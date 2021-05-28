@@ -6,7 +6,7 @@ CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y
 StationKey,Station,StationKey,StationKey,StationKey,StationKey,StationKey,Y
 Station,Station,"paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')",
 CatchPlatform,Station,catchplatform,catchplatform,platform,platform,Platform,
-DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT')","as.POSIXct(StartTime, tz='GMT')",
+DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='UTC')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='UTC')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='UTC')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='UTC')","as.POSIXct(StartTime, tz='UTC')",
 Latitude,Station,latitudestart,latitudestart,latitudestart,latitudestart,StartLatitude,
 Longitude,Station,longitudestart,longitudestart,longitudestart,longitudestart,StartLongitude,
 BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,
