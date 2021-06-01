@@ -15,7 +15,7 @@ RedefineStoxBiotic(
 
 \item{BioticData}{An input of \link{ModelData} object}
 
-\item{Redefinition}{A table of the columns "VariableName", representing the variable to redefine; and "RedefineBy", representing the variable from BioticData to replace by.}
+\item{Redefinition}{A table of the columns "VariableName", representing the variable to redefine; and "ReplaceBy", representing the variable from BioticData to replace by.}
 }
 \value{
 A \code{\link{StoxBioticData}} object.

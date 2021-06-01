@@ -526,7 +526,8 @@ BioticData_NMDToICESBioticOne <- function(
 		MaturityScale = NA,
 		IndividualAge = age,
 		AgePlusGroup = NA,
-		AgeSource = "Otolith",
+		#AgeSource = "Otolith",
+		AgeSource = translateAgeSource(agingstructure), 
 		GeneticSamplingFlag = NA,
 		StomachSamplingFlag = NA,
 		ParasiteSamplingFlag = NA,
@@ -1258,7 +1259,7 @@ getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longi
 		return(val * (180 / pi))
 	}
 	
-	datetime0 <- as.POSIXct("1990-12-30", tz = "GMT")
+	datetime0 <- as.POSIXct("1990-12-30", tz = "UTC")
 	
 	uniqueDates <- unique(stationstartdate)
 	
@@ -1274,7 +1275,7 @@ getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longi
 		nDays <- nDaysA[idx]
 		lat <- latitudestart[idx]
 		lng <- longitudestart[idx]
-		localdate <- as.POSIXct(uniqueDates[idx], tz = "GMT")
+		localdate <- as.POSIXct(uniqueDates[idx], tz = "UTC")
 		
 		# Compute
 		# Letters correspond to colums in the NOAA Excel
@@ -1332,7 +1333,7 @@ getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longi
 		}
 	}
 	
-	datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "GMT")
+	datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "UTC")
 	
 	return(unlist(lapply(datetime, getDN, ssTab)))
 }
@@ -1359,8 +1360,14 @@ convLenMeasType <- function(LenMeasType) {
 # Convert aging structure source
 # http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/agingstructure?version=2.0
 # http://vocab.ices.dk/?ref=1507
+# This function seems to incorrect, as the AgeSource documentation on here only lists three values:
+# http://vocab.ices.dk/?ref=1482
 convAgeSource <- function(AgeSource) {
 	# Convert table
+	if(!all(AgeSource %in% c("1", "2", "7"))) {
+		warning("The conversion from agingstructure to AgeSource may be wrong for other values than 1, 2 and 7. Please noify the developers of StoX.")
+	}
+	
 	ct <- c("1" = "scale",
 			"2" = "otolith",
 			"4" = "df-spine",
@@ -1368,6 +1375,17 @@ convAgeSource <- function(AgeSource) {
 			"7" = "vertebra",
 			"8" = "caudal-thorn")
 	return(ct[AgeSource])
+}
+
+
+translateAgeSource <- function(agingstructure) {
+	# Convert table
+	ct <- c(
+		"1" = "Scale",
+		"2" = "Otolith",
+		"7" = "Vertebra"
+	)
+	return(ct[agingstructure])
 }
 
 roundDrop0 <- function(x, digits = 0) {

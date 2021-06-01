@@ -639,6 +639,19 @@ createOrderKey <- function(x, split = "/") {
 	if(is.na(firstNonNA)) {
 		firstNonNA <- x[min(which(!is.na(x)))]
 	}
+	# If the first element is coercable to numierc, try converting the entire vector to numeric, and check that no NAs were generated:
+	if(!is.na(suppressWarnings(as.numeric(x[1])))) {
+		numberOfNAs <- sum(is.na(x))
+		xnumeric <- suppressWarnings(as.numeric(x))
+		if(sum(is.na(xnumeric)) > numberOfNAs) {
+			return(x)
+		}
+		else {
+			return(xnumeric)
+		}
+	}
+	
+	# Split by the 'split' argument:
 	if(!grepl(split, firstNonNA)) {
 		return(x)
 	}
