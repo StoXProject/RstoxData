@@ -639,7 +639,7 @@ createOrderKey <- function(x, split = "/") {
 	if(is.na(firstNonNA)) {
 		firstNonNA <- x[min(which(!is.na(x)))]
 	}
-	# If the first element is coercable to numierc, try converting the entire vector to numeric, and check that no NAs were generated:
+	# If the first element is coercable to numeric, try converting the entire vector to numeric, and check that no NAs were generated:
 	if(!is.na(suppressWarnings(as.numeric(x[1])))) {
 		numberOfNAs <- sum(is.na(x))
 		xnumeric <- suppressWarnings(as.numeric(x))
@@ -671,18 +671,21 @@ createOrderKey <- function(x, split = "/") {
 	# Only accept if all elements can be converted to numeric:
 	#if(any(is.na(splittedDT))) {
 	
-	# Acccpet if any oof the values are not NA:
+	# Acccpet if any of the values are not NA:
 	if(all(is.na(splittedDT))) {
 		return(x)
 	}
 	
+	#splittedDT[, lapply(.SD, function(y) if("havsil" %in% y) write(paste(stringi::stri_sort(unique(y), locale = "C"), collapse = ", "), "~/testtest.txt", append = TRUE))]
+	
+	splittedDT[, lapply(.SD, function(y) if("havsil" %in% y) warning(paste(stringi::stri_sort(unique(y), locale = "C"), collapse = ", ")))]
 	# Convert to integer ranks:
 	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, sort(unique(y))))]
-	# Replicate data.table's soring which happend in C-locale (see ?data.table::setorderv):
+	# Replicate data.table's sorting which happend in C-locale (see ?data.table::setorderv):
 	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "C")))]
 	
 
-	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
+	# Count the maximum number of digits for each column, and multiply by the cumulative number of digits:
 	numberOfDigits <- splittedDT[, lapply(.SD, max)]
 	numberOfDigits <- nchar(numberOfDigits)
 	exponent <- rev(c(0, cumsum(rev(numberOfDigits))[ -length(numberOfDigits)]))
