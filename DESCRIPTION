@@ -39,7 +39,7 @@ Imports:
     xml2 (>= 1.2.2),
     xslt (>= 1.4),
     units (>= 0.7),
-    stringi (>= 1.4.3)
+    stringr (>= 1.0.0)
 Suggests: 
     testthat
 LinkingTo: 
