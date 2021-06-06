@@ -79,12 +79,12 @@ for(item in icesFiles) {
 
 # Zipped files:
 context("test-readXmlFile: Zipped acoustic file")
-example <- system.file("testresources", "echosounder_cruiseNumber_2020821_Eros_first_two_strata.zip", package="RstoxData")
+example <- system.file("testresources", "echosounder_2020821.zip", package="RstoxData")
 parsedAcousticZip <- readXmlFile(example)
 expect_equal(parsedAcousticZip$sa$sa[1], 67.7185200)
 
 context("test-readXmlFile: Zipped biotic file")
-example <- system.file("testresources", "biotic_cruiseNumber_2020821_Eros_2020-05-29T00.02.34.006Z_first_two_strata.zip", package="RstoxData")
+example <- system.file("testresources", "biotic_2020821.zip", package="RstoxData")
 parsedBioticZip <- readXmlFile(example)
 expect_equal(parsedBioticZip$individual$individualweight[1], 0.022)
 
