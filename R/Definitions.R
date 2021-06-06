@@ -27,6 +27,7 @@ initiateRstoxData <- function(){
 	#units::install_unit(name = "square_meter_per_square_nautical_mile", def = "meter^2 per nautical_mile^2", symbol = "sA")
 	#units::install_unit(name = "10log square_meter_per_square_nautical_mile", def = "10 lg(re sA)", symbol = "SA")
 	
+	Sys.setlocale(category = "LC_COLLATE", locale = "C")
 	
 	# Define the number of digits (12) and the number of significant digits (6, used if values are very low) used by the Rstox packages:
 	digits <- 12
