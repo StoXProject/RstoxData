@@ -671,7 +671,7 @@ createOrderKey <- function(x, split = "/") {
 	# Only accept if all elements can be converted to numeric:
 	#if(any(is.na(splittedDT))) {
 	
-	# Acccpet if any oof the values are not NA:
+	# Acccpet if any of the values are not NA:
 	if(all(is.na(splittedDT))) {
 		return(x)
 	}
@@ -680,8 +680,8 @@ createOrderKey <- function(x, split = "/") {
 	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, sort(unique(y))))]
 	# Replicate data.table's soring which happend in C-locale (see ?data.table::setorderv):
 	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "C")))]
-	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringr::str_sort(unique(y), locale = "C")))]
-	
+	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringr::str_sort(unique(y), locale = "C")))]
+	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "en_US_POSIX")))]
 
 	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
 	numberOfDigits <- splittedDT[, lapply(.SD, max)]
