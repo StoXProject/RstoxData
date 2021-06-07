@@ -142,13 +142,13 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMi
 	# Check that the table contains the variable to translate:
 	if(any(Translation$VariableName %in% names(table))) {
 		
-		# Check for values of the data that are not covered by the translation:
-		notPresentInTranslation <- sort(
-			setdiff(
-				table[[Translation$VariableName[1]]], 
-				Translation$Value
-			)
-		)
+		## Check for values of the data that are not covered by the translation:
+		#notPresentInTranslation <- sort(
+		#	setdiff(
+		#		table[[Translation$VariableName[1]]], 
+		#		Translation$Value
+		#	)
+		#)
 		
 		if(warnMissingTranslation) {
 			# Get the combinations of ConditionalVariableName and VariableName missing in three Translation:
