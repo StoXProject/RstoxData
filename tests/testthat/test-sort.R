@@ -8,6 +8,8 @@ ss <- sapply(s, paste, collapse = ",")
 #write(paste(names(table(ss)), table(ss), sep = ": ", collapse = "; "), "~/testtest.txt")
 warning(paste(names(table(ss)), table(ss), sep = ": ", collapse = "; "))
 
+warning(locales[startsWith(ss, "Tunge")])
+
 warning(Sys.getlocale("LC_COLLATE"))
 
 cloc <- stringr::str_sort(expectedSort, locale = "C")
