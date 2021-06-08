@@ -1,3 +1,6 @@
+# RstoxData v1.1.13 (2021-06-07)
+* Changed to sort in en_US_POSIX-locale in createOrderKey() using the stringi-package, which ensures platform independence while replicating sorting done by data.table.
+
 # RstoxData v1.1.9 (2021-05-21)
 * Fixed bugs and added auto-detect xsd for reading zipped xml files.
 * Fixed bug in StoxAcoustic for ICESAcoustic data, where log-distances with no acoustic records were deleted.
