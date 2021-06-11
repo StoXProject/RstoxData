@@ -405,7 +405,7 @@ BioticData_NMDToICESBioticOne <- function(
 		StationName = station,
 		StartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
 		Duration = getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime),
-		Validity = getHaulVal(gearcondition, samplequality),
+		Validity = getHaulValiditySimple(gearcondition, samplequality),
 		StartLatitude = latitudestart,
 		StartLongitude = longitudestart,
 		StopLatitude = latitudeend,
@@ -488,9 +488,6 @@ BioticData_NMDToICESBioticOne <- function(
 	# NA means that nothing is subsampled
 	Catch[!is.na(SpeciesCategoryWeight) & is.na(SubsampleWeight), SubsampleWeight := 0]
 	
-	# Set Haul without any catch as invalid hauls
-	'%ni%' <- Negate('%in%')
-	Haul[Number %ni% unique(Catch$Number), Validity := "I"]
 	
 	# Combine required tables for the Biology level
 	indRaw <- BioticData_NMDOne$individual
@@ -500,6 +497,8 @@ BioticData_NMDToICESBioticOne <- function(
 	indRaw <- merge(indRaw, BioticData_NMDOne$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
 	indRaw <- merge(catchRaw, indRaw, by = intersect(names(catchRaw), names(indRaw)))
 	
+	# Take special care of the agingstructure, which should only be given for individuals with age:
+	indRaw[is.na(age), agingstructure := NA_character_]
 	
 	Biology <- indRaw[, .(
 		LocalID = cruise,
@@ -527,7 +526,8 @@ BioticData_NMDToICESBioticOne <- function(
 		IndividualAge = age,
 		AgePlusGroup = NA,
 		#AgeSource = "Otolith",
-		AgeSource = translateAgeSource(agingstructure), 
+		# Do not interpret agingstructure, as this should be the responsibility of the user:
+		AgeSource = agingstructure, 
 		GeneticSamplingFlag = NA,
 		StomachSamplingFlag = NA,
 		ParasiteSamplingFlag = NA,
@@ -1378,15 +1378,15 @@ convAgeSource <- function(AgeSource) {
 }
 
 
-translateAgeSource <- function(agingstructure) {
-	# Convert table
-	ct <- c(
-		"1" = "Scale",
-		"2" = "Otolith",
-		"7" = "Vertebra"
-	)
-	return(ct[agingstructure])
-}
+#translateAgeSource <- function(agingstructure) {
+#	# Convert table:
+#	ct <- c(
+#		"1" = "Scale",
+#		"2" = "Otolith",
+#		"7" = "Vertebra"
+#	)
+#	return(ct[agingstructure])
+#}
 
 roundDrop0 <- function(x, digits = 0) {
 	notNA <- !is.na(x)
