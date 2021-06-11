@@ -197,6 +197,15 @@ getHaulVal <- function(gearcondition, samplequality) {
 	return(temp$res)
 }
 
+# Set gearcondition == 1 & samplequality == 1 to "V", and all other to NA:
+getHaulValiditySimple <- function(gearcondition, samplequality) {
+	Validity <- rep(NA_character_, length(gearcondition))
+	valid <- gearcondition == 1 & samplequality == 1
+	Validity[valid] <- "V"
+	
+	return(Validity)
+}
+
 # Generate ICES rectangle from a coordinate
 # Stolen from: https://github.com/cran/mapplots/blob/master/R/ices.rect.R
 getICESrect <- function(lat, lng){

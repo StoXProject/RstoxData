@@ -4,7 +4,7 @@
 \alias{StoxBioticData}
 \title{StoX data type StoxBioticData}
 \description{
-Biotic data stored in the StoxBiotic format, which contains the variables needed for most estimation models used by StoX.
+Biotic data stored in the \code{\link[=StoxBioticFormat]{StoxBiotic format}}, which contains the variables needed for most estimation models used by StoX.
 }
 \details{
 This StoX data type is produced by \code{\link{StoxBiotic}}, and contains the tables Cruise, Station, Haul, SpeciesCategory, Sample and Individual in that hierarchical order.
