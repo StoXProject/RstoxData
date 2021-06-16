@@ -20,7 +20,7 @@ DefineTranslation(
 
 \item{DefinitionMethod}{Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
 
-\item{TranslationTable}{A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to.}
+\item{TranslationTable}{A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate DefineTranslation & Translate procecss to translate NAs.}
 
 \item{Conditional}{Logical: If TRUE the columns \code{ConditionalVariableName} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableName} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableName} must exist in the same table as \code{VariableName}.}
 

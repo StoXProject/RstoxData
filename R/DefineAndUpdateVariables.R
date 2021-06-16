@@ -58,7 +58,7 @@ RedefineStoxBiotic <- function(
 #' 
 #' @inheritParams general_arguments
 #' @param DefinitionMethod  Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
-#' @param TranslationTable A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to.
+#' @param TranslationTable A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate DefineTranslation & Translate procecss to translate NAs.
 #' @param Conditional Logical: If TRUE the columns \code{ConditionalVariableName} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableName} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableName} must exist in the same table as \code{VariableName}. 
 #' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}.
 #' 
@@ -139,6 +139,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE, warnMi
 
 # Function to translate one table:
 translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMissingTranslation = FALSE) {
+	
 	# Check that the table contains the variable to translate:
 	if(any(Translation$VariableName %in% names(table))) {
 		
@@ -225,6 +226,7 @@ matchClass <- function(A, B) {
 
 # Function to apply to all tables of the input data, converting the variables:
 translateOneTranslationOneTable <- function(translationListOne, table, translate.keys = FALSE) {
+	
 	# Do nothing if the variable is a key:
 	isKeys <- endsWith(translationListOne$VariableName, "Key")
 	if(!translate.keys && isKeys) {
@@ -232,7 +234,7 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 	}
 	else {
 		# Convert the class to the class of the existing value in the table:
-		translationListOne <- convertClassToExisting(translationListOne, table)
+		translationListOne <- convertClassToExistingOne(translationListOne, table)
 		
 		# Replace by the new value:
 		if(translationListOne$VariableName %in% names(table)) {
@@ -254,11 +256,11 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 }
 
 # Function to convert the class of the Value and NewValue of a translationList to the class of the existing value:
-convertClassToExisting <- function(translationList, x) {
+convertClassToExistingOne <- function(translationList, x) {
 	# Convert the NewValue to the class of the existing value:
 	existingClass <- class(x[[translationList$VariableName]])[1]
 	newClass <- class(translationList$Value)[1]
-	if(!identical(existingClass, newClass)) {
+	if(!identical(existingClass, newClass) && !is.na(translationList$Value)) {
 		class(translationList$Value) <- existingClass
 		#class(translationList$NewValue) <- existingClass
 	}
