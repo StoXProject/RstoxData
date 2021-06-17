@@ -1,3 +1,6 @@
+# RstoxData v1.2.0 (2021-06-18)
+* Final version for the release of StoX 3.1.0.
+
 # RstoxData v1.1.16 (2021-06-16)
 * Fixed bug in StoxBiotic(), where date and time were borrowed from Station to Haul, which could crash due to missing values in StationKey.
 * Removed interpretation of agingstructure in ICESBiotic().
