@@ -256,12 +256,22 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 }
 
 # Function to convert the class of the Value and NewValue of a translationList to the class of the existing value:
-convertClassToExistingOne <- function(translationList, x) {
+convertClassToExistingOne <- function(translationList, x, elements = c("Value", "NewValue")) {
+	for(element in elements) {
+		translationList <- convertClassToExistingOneElement(
+			translationList = translationList, 
+			x = x, 
+			element = element
+		)
+	}
+	return(translationList)
+}
+convertClassToExistingOneElement <- function(translationList, x, element) {
 	# Convert the NewValue to the class of the existing value:
 	existingClass <- class(x[[translationList$VariableName]])[1]
-	newClass <- class(translationList$Value)[1]
-	if(!identical(existingClass, newClass) && !is.na(translationList$Value)) {
-		class(translationList$Value) <- existingClass
+	newClass <- class(translationList[[element]])[1]
+	if(!identical(existingClass, newClass) && !is.na(translationList[[element]])) {
+		class(translationList[[element]]) <- existingClass
 		#class(translationList$NewValue) <- existingClass
 	}
 	return(translationList)
