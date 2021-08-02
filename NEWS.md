@@ -1,3 +1,8 @@
+# RstoxData v1.2.1 (2021-07-13)
+* Fix bundled miniz to not using unaligned access. This should fix CRAN's gcc-UBSAN check.
+* Bump miniz and pugixml to the latest release version.
+* Fixed bug where TranslateStoxBiotic() and similar functions changed type of the data, so that translating numeric values did not work properly. 
+
 # RstoxData v1.2.0 (2021-06-18)
 * Final version for the release of StoX 3.1.0.
 
