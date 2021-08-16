@@ -186,14 +186,18 @@ createHeaderRecordMatrix <- function(ICESDataTableName, ICESData) {
 		#paste0(ICESDataTableName, names(thisTable))
 		names(thisTable)
 	)
-		
-		
 	
+	# Format the table to a character table before converting to matrix class (used by RstoxFramework to write as csv). Here,  format(thisTable) cannot be used as it converts NAs to "NA" (at least per defaul):
+	cols <- names(thisTable)
+	thisTable[, (cols) := lapply(.SD, as.character), .SDcols = cols]
+	thisTable <- as.matrix(thisTable)
 	record <- cbind(
 		ICESDataTableName, 
 		"Record", 
 		# Convert all columns to string:
-		as.matrix(thisTable)
+		#as.matrix(thisTable, trim = TRUE)
+		#format(thisTable, justify = "none", trim = TRUE)
+		thisTable
 	)
 	
 	unname(rbind(header, record))

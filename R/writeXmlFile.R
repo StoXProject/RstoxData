@@ -107,7 +107,7 @@ writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", na
 typeConvert <- function(dataTables, xsdObject){
   for (n in names(xsdObject$tableTypes)){
     if(n %in% names(dataTables)){
-      if (nrow(dataTables[[n]])>0){
+      if (NROW(dataTables[[n]])){
         for (i in 1:length(xsdObject$tableHeaders[[n]])){
           name <- xsdObject$tableHeaders[[n]][[i]]
           xsdType <- xsdObject$tableTypes[[n]][[i]]
@@ -145,7 +145,7 @@ typeConvert <- function(dataTables, xsdObject){
           else if (is.integer(dataTables[[n]][[name]]) & xsdType == "xs:integer"){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
-          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:decimal"){
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType %in% c("xs:decimal", "xs:double", "xs:float")){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
           else if (is.character(dataTables[[n]][[name]]) & xsdType == "xs:date"){
@@ -237,6 +237,13 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   stream = file(fileName, open="w", encoding=encoding)
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
   writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)
+  
+  # Write the non-root tables:
+  lapply(setdiff(xsdObject$tableOrder, xsdObject$root), function(level) writeLevel(stream, dataTables, level, NULL, xsdObject, "", namespace))
+  
+  # Write the root:
+  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)
+  
   close(stream)
   
 }
