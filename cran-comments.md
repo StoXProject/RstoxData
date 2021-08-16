@@ -1,9 +1,9 @@
 ## Test environments
 * local R installation (Fedora-31): R 3.6.3
-* local R installation (MacOS): R 4.0.4
-* Github actions (ubuntu 18.04): oldrel, release
-* Github actions (Windows): oldrel, release
-* Github actions (MacOS): oldrel, release
+* local R installation (MacOS): R 4.1.0
+* Github actions (ubuntu 18.04): 3.6.3, oldrel, release
+* Github actions (Windows): 3.6.3, oldrel, release
+* Github actions (MacOS): 3.6.3, oldrel, release
 * R-hub (fedora-clang-devel): r-devel
 * R-hub (windows-x86_64-devel): r-devel
 * R-hub (ubuntu-gcc-release): r-release
