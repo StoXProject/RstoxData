@@ -1,3 +1,8 @@
+# RstoxData v1.2.3 (2021-08-18)
+* Fixed formatting of output from WriteICESBiotic() so that precision is kept and values are not padded with blanks and zeros. Fixed bug in writeXmlFile().
+* Fixed bug where TranslateStoxBiotic() and similar functions changed type of the data, so that translating numeric values did not work properly.
+* Changed Distance in ICESBiotic() to distance * 1852.
+
 # RstoxData v1.2.1 (2021-07-13)
 * Fix bundled miniz to not using unaligned access. This should fix CRAN's gcc-UBSAN check.
 * Bump miniz and pugixml to the latest release version.
