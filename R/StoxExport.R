@@ -418,7 +418,9 @@ BioticData_NMDToICESBioticOne <- function(
 		MinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
 		MaxTrawlDepth = fishingdepthmax,
 		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
-		Distance = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
+		#Distance = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
+		# Distance is in mnautiacl miles in NMDBiotic and in meters in ICEBiotic:
+		Distance = distance * 1852,
 		Netopening = verticaltrawlopening,
 		CodendMesh = NA,
 		#SweepLength = getGOVSweepByEquipment(gear),
