@@ -353,14 +353,16 @@ setRstoxPrecisionLevel <- function(x) {
 }
 # Function setting the precision of one data table:
 setPrecisionLevelOneDT <- function(DT, digits, signifDigits) {
-	# Detect numeric columns and round off to the specified number of digits:
-	atNumeric <- sapply(DT, is.numeric)
-	if(any(atNumeric)) {
-		numericCols <- names(DT)[atNumeric]
-		# DT[, (numericCols) := round(.SD, digits), .SDcols = numericCols]
-		#DT[, (numericCols) := roundSignif(.SD, digits = ..digits, signifDigits = ..signifDigits), .SDcols = numericCols]
-		for(numericCol in numericCols) {
-			DT[, eval(numericCol) := roundSignif(get(numericCol), digits = ..digits, signifDigits = ..signifDigits)]
+	if(NROW(DT)) {
+		# Detect numeric columns and round off to the specified number of digits:
+		atNumeric <- sapply(DT, is.numeric)
+		if(any(atNumeric)) {
+			numericCols <- names(DT)[atNumeric]
+			# DT[, (numericCols) := round(.SD, digits), .SDcols = numericCols]
+			#DT[, (numericCols) := roundSignif(.SD, digits = ..digits, signifDigits = ..signifDigits), .SDcols = numericCols]
+			for(numericCol in numericCols) {
+				DT[, eval(numericCol) := roundSignif(get(numericCol), digits = ..digits, signifDigits = ..signifDigits)]
+			}
 		}
 	}
 }
@@ -372,7 +374,9 @@ roundSignif <- function(x, digits = 12, signifDigits = NULL) {
 		# digits <- pmax(signifDigits - floor(log10(abs(units::drop_units(x)))) - 1, digits)
 		digits <- pmax(signifDigits - floor(log10(abs(x))) - 1, digits)
 	}
-	round(x, digits)
+	
+	out <- round(x, digits)
+	return(out)
 }
 
 ## Stolen from https://stackoverflow.com/questions/47190693/count-the-number-of-integer-digits:
@@ -711,3 +715,21 @@ as.numeric_IfPossible <- function(x) {
 		return(num)
 	}
 }
+
+createEmptyDataTable <- function(names, classes = NULL) {
+	# Create the named empty data.table:
+	DT <- setNames(data.table::data.table(matrix(nrow = 0, ncol = length(names))), names)
+	
+	# Accept  classes given as a vector of the same length as the names:
+	if(length(classes) == length(names) && !is.list(classes)) {
+		classes <- structure(as.list(classes), names = names)
+	}
+	for(col in names(classes)) {
+		data.table::set(DT, j = col, value = do.call(paste("as", classes[[col]], sep = "."), list(DT[[col]])))
+	}
+	
+	return(DT)
+}
+
+
+

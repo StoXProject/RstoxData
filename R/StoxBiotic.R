@@ -10,7 +10,6 @@
 #' @export
 #' 
 StoxBiotic <- function(BioticData) {
-	
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
     
@@ -55,7 +54,7 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 		FUN = StoxBiotic_secondPhase, 
 		NumberOfCores = NumberOfCores
 	)
-
+	
 	# Rbind for each StoxBiotic table:
 	StoxBioticData <- rbindlist_StoxFormat(StoxBioticData)
     
@@ -330,7 +329,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
         get(x, envir = parent.env(env))
     }
     
-    columns <- c("variable", "level", datatype)
+    columns <- c("variable", "level", datatype, "class")
     if(!datatype %in% names(stoxBioticObject$convertTable)) {
     	stop("The input format ", datatype, " is not yet supprted in RstoxData (")
     }
@@ -355,15 +354,21 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     
     # Apply the conversions, such as pasting keys, converting to POSIX, etc.:
     for (i in unique(convertTable[, level])) {
-        # Process conversion table
-        for(j in 1:nrow(convertTable[level==i,])) {
-            k <- convertTable[level==i,][j,]
-            data[[i]][, (unlist(k[,"variable"])) := eval(parse(text=k[, get(..("datatype"))]))]
+    	
+    	if(NROW(data[[i]])) {
+    		# Process conversion table
+    		for(j in 1:nrow(convertTable[level==i,])) {
+    			k <- convertTable[level==i,][j,]
+    			data[[i]][, (unlist(k[,"variable"])) := eval(parse(text=k[, get(..("datatype"))]))]
+    		}
+    		# Get key for transfer
+    		sourceColumns <- unlist(indices(data[[i]], vectors = TRUE))
+    		sourceColumns <- c(sourceColumns, unlist(convertTable[level==i, "variable"]))
+    		secondPhaseTables[[i]] <- data[[i]][, ..sourceColumns]
+    	}
+        else {
+        	secondPhaseTables[[i]] <- createEmptyDataTable(convertTable[level == i,]$variable, convertTable[level == i,]$class)
         }
-        # Get key for transfer
-        sourceColumns <- unlist(indices(data[[i]], vectors = TRUE))
-        sourceColumns <- c(sourceColumns, unlist(convertTable[level==i, "variable"]))
-        secondPhaseTables[[i]] <- data[[i]][, ..sourceColumns]
     }
     
     # Remove duplicated rows from SpeciesCategory
