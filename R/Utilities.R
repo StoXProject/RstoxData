@@ -718,7 +718,7 @@ as.numeric_IfPossible <- function(x) {
 
 createEmptyDataTable <- function(names, classes = NULL) {
 	# Create the named empty data.table:
-	DT <- setNames(data.table::data.table(matrix(nrow = 0, ncol = length(names))), names)
+	DT <- stats::setNames(data.table::data.table(matrix(nrow = 0, ncol = length(names))), names)
 	
 	# Accept  classes given as a vector of the same length as the names:
 	if(length(classes) == length(names) && !is.list(classes)) {
