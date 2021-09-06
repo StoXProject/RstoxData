@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // readXmlCpp
 Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding, bool verbose);
 RcppExport SEXP _RstoxData_readXmlCpp(SEXP inputFileSEXP, SEXP xsdObjectsSEXP, SEXP xsdOverrideSEXP, SEXP xmlEncodingSEXP, SEXP verboseSEXP) {
