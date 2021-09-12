@@ -12,25 +12,26 @@
 StoxBiotic <- function(BioticData) {
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
-    
-    # Extract the StoxBiotic data and rbind across files:
-    StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = 1L)
-    
-    # Remove rows of duplicated keys:
-    #StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
-    StoxBioticData <- removeRowsOfDuplicatedKeys(
-    	StoxData = StoxBioticData, 
-    	stoxDataFormat = "Biotic"
-    )
-    
-    # Order rows:
-    orderRowsByKeys(StoxBioticData)
-    
-    # Ensure that the numeric values are rounded to the defined number of digits:
-    setRstoxPrecisionLevel(StoxBioticData)
-    
-    return(StoxBioticData)
+	
+	# Extract the StoxBiotic data and rbind across files:
+	StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = 1L)
+	
+	# Remove rows of duplicated keys:
+	#StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
+	StoxBioticData <- removeRowsOfDuplicatedKeys(
+		StoxData = StoxBioticData, 
+		stoxDataFormat = "Biotic"
+	)
+	
+	# Order rows:
+	orderRowsByKeys(StoxBioticData)
+	
+	# Ensure that the numeric values are rounded to the defined number of digits:
+	setRstoxPrecisionLevel(StoxBioticData)
+	
+	return(StoxBioticData)
 }
+
 
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
 BioticData2GeneralSamplingHierarchy <- function(
@@ -139,84 +140,85 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 
 	    # Use custom suffixes as it contains duplicate header name between tables
 	    data <- mergeDataTables(data, toMerge)
-
+	    
 	    # Merge Biology manually as there is no obvious key relation with Catch table
 	    toAdd <- c("WeightUnit", "LengthCode", "LengthClass")
 	    setnames(data$Biology, toAdd, paste0(toAdd, ".Biology"))
 
 	    # Set intersection column
 	    byVars <- intersect(names(data$Catch), names(data$Biology))
-
-	    # Function for merging the appropriate Catch row with the corresponding Biology record
-	    # Also check for missing biology
-	    # This function generates individuals from the "NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType":
-	    specialMerge <- function(x) {
-	    	xLenC <- unlist(x[1, "LengthCode"])
-
-			# Two scenarios, catch samples are by length or not
-			if(!is.na(xLenC)) {
-				byVarX <- c(byVars, "LengthCode", "LengthClass")
-				byVarY <- c(byVars, "LengthCode.Biology", "LengthClass.Biology")
-			} else {
-				byVarX <- byVars
-				byVarY <- byVars
-			}
-	    	
-	    	
-			xtmp <- merge(x, data$Biology, by.x = byVarX, by.y = byVarY)
-			xtmp[, WeightMeasurement:= TRUE]
-
-			if(!is.na(xLenC)) {
-				xtmp[, `:=`(LengthCode.Biology=LengthCode, LengthClass.Biology=LengthClass)]
-
-				# Check NumberAtLength == Number of individual
-				countNL <- unlist(x[1, "NumberAtLength"])
-				lenDiff <- countNL - nrow(xtmp)
-
-				if(!is.na(lenDiff) && lenDiff > 0) {
-					# Calculate weight
-					avWt <- unlist(x[1, "WeightAtLength"])/countNL
-					WtUnit <- unlist(x[1, "WeightUnit"])
-					# Generate a sample individual
-					xadd <- merge(x, data$Biology[0, ], by.x = byVarX, by.y = byVarY, all.x = TRUE)
-					xadd[, `:=`(LengthCode.Biology=LengthCode, LengthClass.Biology=LengthClass)]
-					xadd[, `:=`(WeightMeasurement = FALSE, IndividualWeight = avWt, WeightUnit.Biology = WtUnit)]
-					# Duplicate as required
-					if( lenDiff > 1 ){
-						xaddList <- rep(list(xadd), lenDiff)
-						xadd <- rbindlist(xaddList)
-					}
-					# Combine
-					xtmp <- rbind(xtmp, xadd)
-				}
-			}
-
-			return(xtmp)
-		}
-
+	    
 	    # Get row count
 	    nrowC <- nrow(data$Biology)
 	    
-	    # Loop merge
-	    tmpBiology <- list()
-	    for(y in seq_len(nrow(data$Catch))) {
-			tmpBiology[[y]] <- specialMerge(data$Catch[y,])
-	    }
+	    # Match keys of Catch and Biotic and obtain the indices in the Biology table for each row of the Catch table: 
+	    keyColumns <- intersect(names(data$Catch), names(data$Biology))
+	    keysCatchPasted <- data$Catch[, do.call(paste0, .SD), .SDcols = keyColumns]
+	    keysBiologyPasted <- data$Biology[, do.call(paste0, .SD), .SDcols = keyColumns]
+	    BiologyIndex <- split(seq_along(keysBiologyPasted), match(keysBiologyPasted, keysCatchPasted))
+	    catchIndicesInBiology <- as.list(double(length(keysCatchPasted)))
+	    catchIndicesInBiology[as.numeric(names(BiologyIndex))] <- BiologyIndex
 	    
-	    # Combine results
-	    data$Biology <- rbindlist(tmpBiology, use.names=TRUE)
+	    # All individuals stored in the Biology table have weight measured:
+	    data$Biology[, WeightMeasurement := TRUE]
+	    
+	    # Add the number of sampled individuals in the Biology table for each combination of the keys of the Catch table:
+	    data$Biology[, NumberOfSampledIndividuals := .N, by = c(byVars, "LengthCode.Biology", "LengthClass.Biology")]
+	    # Merge this into the Catch table:
+	    byVarX <- c(byVars, "LengthCode", "LengthClass")
+	    byVarY <- c(byVars, "LengthCode.Biology", "LengthClass.Biology")
+	    data$Catch <- merge(
+	    	data$Catch, 
+	    	unique(data$Biology[, c(byVarY, "NumberOfSampledIndividuals"), with=FALSE]), 
+	    	by.x = byVarX, 
+	    	by.y = byVarY, 
+	    	all.x = TRUE, 
+	    	sort = FALSE
+	    )
+	    
+	    # Translate NAs to 0, and calculate also the number of individuals to generate from average weigth:
+	    data$Catch[is.na(NumberOfSampledIndividuals), NumberOfSampledIndividuals := 0]
+	    data$Catch[, NumberOfIndividualsToGenerate := NumberAtLength - NumberOfSampledIndividuals]
+		# Get the indices of the rows of the Catch table for which we should generate individuals:
+	    atGenerateIndividuals <- which(
+	    	data$Catch$NumberAtLength > data$Catch$NumberOfSampledIndividuals & 
+	    	!is.na(data$Catch$LengthCode)
+	    )
+	    
+	    # Generate the individuals:
+	    generatedBiology <- lapply(
+	    	atGenerateIndividuals, 
+	    	specialMerge, 
+	    	Catch = data$Catch, 
+	    	byVars = byVars
+	    )
+	    # Combine results and merge add to the Biology table:
+	    generatedBiology <- rbindlist(generatedBiology, use.names = TRUE)
+	    data$Biology <- rbind(
+	    	data$Biology, 
+	    	generatedBiology, # Place the generated individuals last.
+	    	fill = TRUE
+	    )
+	    
+	    
+	    # Merge in also the StationName from Haul to Biology, as it is not a key in the ICESBiotic:
+	    data$Biology <- mergeByIntersect(data$Biology, unique(data$Catch[, c(byVars, "StationName"), with = FALSE]))
+	    
+	    # Order by the keys:
+	    data.table::setorderv(data$Biology, byVars)
+	    
 	    
 	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
 	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
 	    	stop("Error in merging.")
 	    }
 	    
-	    # Keep only the original columns and the "StationName", which is not a key in the ICESBiotic:
-	    columnsToKeep <- c(
-	    	names(data$Biology), 
-	    	"StationName"
-	    )
-	    data$Biology <- data$Biology[, .SD, .SDcols = columnsToKeep]
+	    ### # Keep only the original columns and the "StationName", which is not a key in the ICESBiotic:
+	    ### columnsToKeep <- c(
+	    ### 	names(data$Biology), 
+	    ### 	"StationName"
+	    ### )
+	    ### data$Biology <- data$Biology[, .SD, .SDcols = columnsToKeep]
 
 	    # Fix Individual ID for those coming from Catch:
 	    FishIDBy <- head(sapply(tableKey, "[[", 1), -1)
@@ -228,14 +230,12 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    data$Biology[is.na(FishID), FishID := seq_len(.N) + maxFishID, by = FishIDBy]
 	    data$Biology[, maxFishID := NULL]
 	    
-	    
-
-		# Fix the SampleCount
-		colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
-		data$Catch[, SubsampledNumber:=ifelse(!is.na(NumberAtLength), sum(NumberAtLength), SubsampledNumber), by=colAgg]
-
+	    # Fix the SampleCount
+		#colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
+		data$Catch[, SubsampledNumber:=ifelse(!is.na(NumberAtLength), sum(NumberAtLength), SubsampledNumber), by=byVars]
 		# Purge duplicate samples
-		data$Catch <- data$Catch[!duplicated(data$Catch[, ..colAgg])]
+		#data$Catch <- data$Catch[!duplicated(data$Catch[, ..byVars])]
+		data$Catch <- unique(data$Catch, by = byVars)
 	  } 
     else {
 	    warning("Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
@@ -295,7 +295,39 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 }
 
 
-
+# Function for merging the appropriate Catch row with the corresponding Biology record
+# Also check for missing biology
+# This function generates individuals from the "NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType":
+specialMerge <- function(catchRowIndex, Catch, byVars) {
+	
+	# For convenience extract the current row and the LengthCode:
+	thisCatch <- Catch[catchRowIndex, ]
+	
+	# Create NumberOfIndividualsToGenerate identical individuals:
+	averageWeigth <- rep(
+		thisCatch$WeightAtLength / thisCatch$NumberAtLength, 
+		thisCatch$NumberOfIndividualsToGenerate
+	)
+	
+	generatedBiologyOneCatch <- data.table::data.table(
+		thisCatch[, byVars, with = FALSE], 
+		FishID = NA, 
+		LengthCode = thisCatch$LengthCode, 
+		LengthClass = thisCatch$LengthClass, 
+		WeightMeasurement = FALSE, 
+		IndividualWeight = averageWeigth, 
+		WeightUnit = thisCatch$WeightUnit,  
+		
+		LengthCode.Biology = thisCatch$LengthCode, 
+		LengthClass.Biology = thisCatch$LengthClass, 
+		WeightUnit.Biology = thisCatch$WeightUnit
+		
+		
+		
+	)
+	
+	return(generatedBiologyOneCatch)
+}
 
 # Function to get the StoxBiotic on one file:
 StoxBiotic_firstPhase <- function(BioticData) {
