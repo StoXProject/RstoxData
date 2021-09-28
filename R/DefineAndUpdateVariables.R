@@ -290,12 +290,14 @@ lapplyToStoxData <- function(x, fun, ...) {
 
 # Function to replace the existing column by the new, as stored in the VariableReplacement:
 replaceAndDelete <- function(table, VariableReplacement) {
-	present <- which(VariableReplacement$VariableName %in% names(table))
-	if(any(present)) {
+	
+	presentVariableName <- which(VariableReplacement$VariableName  %in%  names(table))
+	hasReplaceBy <- VariableReplacement$ReplaceBy  %in%  names(table)
+	if(length(presentVariableName) && hasReplaceBy) {
 		# Delete the present column:
-		table[, (VariableReplacement[present, VariableName]) := NULL]
+		table[, (VariableReplacement[presentVariableName, VariableName]) := NULL]
 		# ... and then rename the new to the old name:
-		setnames(table, VariableReplacement[present, ReplaceBy], VariableReplacement[present, VariableName])
+		setnames(table, VariableReplacement[presentVariableName, ReplaceBy], VariableReplacement[presentVariableName, VariableName])
 	}
 }
 

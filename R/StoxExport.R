@@ -114,7 +114,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 	
 	# Merge the Log, Sample and Data to make the merged Data table:
 	hierarchicalTablesSansCruise <- setdiff(hierarchicalTables, "Cruise")
-	LogSampleData <- RstoxData::mergeDataTables(ICESAcousticDataOne[hierarchicalTablesSansCruise], output.only.last = TRUE, all = TRUE)
+	LogSampleData <- mergeDataTables(ICESAcousticDataOne[hierarchicalTablesSansCruise], output.only.last = TRUE, all = TRUE)
 	LogSampleData <- unique(LogSampleData)
 	
 	# Create the output:
@@ -418,8 +418,9 @@ BioticData_NMDToICESBioticOne <- function(
 		MinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
 		MaxTrawlDepth = fishingdepthmax,
 		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
+		# Before, the function getDistanceMeter() was used, which was inherited from old Datras code. Instead we use the distance that is given by NMDBiotic:
 		#Distance = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
-		# Distance is in mnautiacl miles in NMDBiotic and in meters in ICEBiotic:
+		# Distance is in nautical miles in NMDBiotic and in meters in ICEBiotic:
 		Distance = distance * 1852,
 		Netopening = verticaltrawlopening,
 		CodendMesh = NA,
