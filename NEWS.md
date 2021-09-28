@@ -1,3 +1,9 @@
+# RstoxData v1.2.6 (2021-09-28)
+* Final version for the release of StoX 3.2.0.
+* Added class to stox-biotic-final-phase.csv, used when generating an empty table in StoxBiotic().
+* Added support for empty tables in StoxBiotic() and in setPrecisionLevelOneDT(). 
+* Refactored StoxBiotic() for ICESBiotic xml files with NumberAtLength given.
+
 # RstoxData v1.2.3 (2021-08-18)
 * Fixed formatting of output from WriteICESBiotic() so that precision is kept and values are not padded with blanks and zeros. Fixed bug in writeXmlFile().
 * Fixed bug where TranslateStoxBiotic() and similar functions changed type of the data, so that translating numeric values did not work properly.
