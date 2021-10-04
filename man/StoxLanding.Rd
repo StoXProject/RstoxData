@@ -7,13 +7,13 @@
 StoxLanding(LandingData)
 }
 \arguments{
-\item{LandingData}{Sales-notes data. See \code{\link[RstoxData]{LandingData}}}
+\item{LandingData}{Sales-notes data. See \code{\link{LandingData}}}
 }
 \value{
-\code{\link[RstoxData]{StoxLandingData}}, aggregated landings data.
+\code{\link{StoxLandingData}}, aggregated landings data.
 }
 \description{
-Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
+Convert landing data to the aggregated format \code{\link{StoxLandingData}}
 }
 \details{
 All columns that are not the ones aggregated (weight), will be used as aggregation variables.

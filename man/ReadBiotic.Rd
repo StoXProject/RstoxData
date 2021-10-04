@@ -24,5 +24,5 @@ bioticData <- ReadBiotic(exampleFile)
 
 }
 \seealso{
-\code{\link[RstoxData]{readXmlFile}}.
+\code{\link{readXmlFile}} for reading xml files of the formats NMDAcoustic.
 }

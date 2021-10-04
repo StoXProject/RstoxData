@@ -10,8 +10,8 @@ is.LandingData(LandingData)
 \item{LandingData}{argument to be checked for data conformity}
 }
 \value{
-logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{LandingData}}
+logical, TRUE if argument conformed to specification for \code{\link{LandingData}}
 }
 \description{
-Checks if argument conforms to specification for \code{\link[RstoxData]{LandingData}}
+Checks if argument conforms to specification for \code{\link{LandingData}}
 }

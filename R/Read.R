@@ -16,7 +16,7 @@
 #' exampleFile <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
 #' bioticData <- ReadBiotic(exampleFile)
 #' 
-#' @seealso \code{\link[RstoxData]{readXmlFile}}.
+#' @seealso \code{\link{readXmlFile}} for reading xml files of the formats NMDAcoustic.
 #' 
 #' @export
 #' 
@@ -56,7 +56,7 @@ ReadBiotic <- function(FileNames) {
 #'     "testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
 #' bioticData <- ReadBiotic(exampleFile)
 #' 
-#' @seealso \code{\link[RstoxData]{readXmlFile}}.
+#' @seealso \code{\link{readXmlFile}}.
 #' 
 #' @export
 #' 
@@ -90,14 +90,14 @@ ReadAcoustic <- function(FileNames) {
 #' @param FileNames The paths of the landing files.
 #' 
 #' @return
-#' An object of StoX data type \code{\link[RstoxData]{LandingData}}).
+#' An object of StoX data type \code{\link{LandingData}}).
 #' 
 #' @examples
 #' exampleFile <- system.file(
 #'     "testresources","landing.xml", package="RstoxData")
 #' landingData <- ReadLanding(exampleFile)
 #' 
-#' @seealso \code{\link[RstoxData]{readXmlFile}}.
+#' @seealso \code{\link{readXmlFile}}.
 #' 
 #' @export
 #' 
