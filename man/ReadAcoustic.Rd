@@ -25,5 +25,5 @@ bioticData <- ReadBiotic(exampleFile)
 
 }
 \seealso{
-\code{\link[RstoxData]{readXmlFile}}.
+\code{\link{readXmlFile}}.
 }

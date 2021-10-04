@@ -1,8 +1,8 @@
 #' Check if argument is LandingData
 #' @description 
-#'  Checks if argument conforms to specification for \code{\link[RstoxData]{LandingData}}
+#'  Checks if argument conforms to specification for \code{\link{LandingData}}
 #' @param LandingData argument to be checked for data conformity
-#' @return logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{LandingData}}
+#' @return logical, TRUE if argument conformed to specification for \code{\link{LandingData}}
 #' @name is.LandingData
 #' @export
 is.LandingData <- function(LandingData){
@@ -136,7 +136,7 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 
 #' Convert landing data
 #' @description
-#'  Convert landing data to the aggregated format \code{\link[RstoxData]{StoxLandingData}}
+#'  Convert landing data to the aggregated format \code{\link{StoxLandingData}}
 #' @details 
 #'  All columns that are not the ones aggregated (weight), will be used as aggregation variables.
 #' 
@@ -160,8 +160,8 @@ extractNMDlandingsV2 <- function(LandingData, appendColumns=character(), appendC
 #'   \item{RoundWeight}{Rundvekt}
 #'  }
 #'  
-#' @param LandingData Sales-notes data. See \code{\link[RstoxData]{LandingData}}
-#' @return \code{\link[RstoxData]{StoxLandingData}}, aggregated landings data.
+#' @param LandingData Sales-notes data. See \code{\link{LandingData}}
+#' @return \code{\link{StoxLandingData}}, aggregated landings data.
 #' @name StoxLanding
 #' @export
 StoxLanding <- function(LandingData){
@@ -190,9 +190,9 @@ StoxLanding <- function(LandingData){
 
 #' Check if argument is StoxLandingData
 #' @description 
-#'  Checks if argument conforms to specification for \code{\link[RstoxData]{StoxLandingData}}
+#'  Checks if argument conforms to specification for \code{\link{StoxLandingData}}
 #' @param StoxLandingData argument to be checked for data conformity
-#' @return logical, TRUE if argument conformed to specification for \code{\link[RstoxData]{StoxLandingData}}
+#' @return logical, TRUE if argument conformed to specification for \code{\link{StoxLandingData}}
 #' @name is.StoxLandingData
 #' @export
 is.StoxLandingData <- function(StoxLandingData){

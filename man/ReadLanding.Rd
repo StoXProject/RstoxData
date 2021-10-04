@@ -10,7 +10,7 @@ ReadLanding(FileNames)
 \item{FileNames}{The paths of the landing files.}
 }
 \value{
-An object of StoX data type \code{\link[RstoxData]{LandingData}}).
+An object of StoX data type \code{\link{LandingData}}).
 }
 \description{
 This function reads multiple landing files (sales-notes) to a list with a list of tables for each file.
@@ -25,5 +25,5 @@ landingData <- ReadLanding(exampleFile)
 
 }
 \seealso{
-\code{\link[RstoxData]{readXmlFile}}.
+\code{\link{readXmlFile}}.
 }
