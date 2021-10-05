@@ -1,41 +1,55 @@
+# RstoxData v1.3.0 (2021-10-08)
+
+* Fixed error in links to documentation in RstoxData.
+* Final version for the release of StoX 3.2.0.
+
 # RstoxData v1.2.6 (2021-09-28)
+
 * Final version for the release of StoX 3.2.0.
 * Added class to stox-biotic-final-phase.csv, used when generating an empty table in StoxBiotic().
 * Added support for empty tables in StoxBiotic() and in setPrecisionLevelOneDT(). 
 * Refactored StoxBiotic() for ICESBiotic xml files with NumberAtLength given.
 
 # RstoxData v1.2.3 (2021-08-18)
+
 * Fixed formatting of output from WriteICESBiotic() so that precision is kept and values are not padded with blanks and zeros. Fixed bug in writeXmlFile().
 * Fixed bug where TranslateStoxBiotic() and similar functions changed type of the data, so that translating numeric values did not work properly.
 * Changed Distance in ICESBiotic() to distance * 1852.
 
 # RstoxData v1.2.1 (2021-07-13)
+
 * Fix bundled miniz to not using unaligned access. This should fix CRAN's gcc-UBSAN check.
 * Bump miniz and pugixml to the latest release version.
 * Fixed bug where TranslateStoxBiotic() and similar functions changed type of the data, so that translating numeric values did not work properly. 
 
 # RstoxData v1.2.0 (2021-06-18)
+
 * Final version for the release of StoX 3.1.0.
 
 # RstoxData v1.1.16 (2021-06-16)
+
 * Fixed bug in StoxBiotic(), where date and time were borrowed from Station to Haul, which could crash due to missing values in StationKey.
 * Removed interpretation of agingstructure in ICESBiotic().
 
 # RstoxData v1.1.13 (2021-06-07)
+
 * Changed to sort in en_US_POSIX-locale in createOrderKey() using the stringi-package, which ensures platform independence while replicating sorting done by data.table.
 
 # RstoxData v1.1.9 (2021-05-21)
+
 * Fixed bugs and added auto-detect xsd for reading zipped xml files.
 * Fixed bug in StoxAcoustic for ICESAcoustic data, where log-distances with no acoustic records were deleted.
 * Changed to sort in C-locale in createOrderKey() using the stringi-package, to comply with data.table's philosophy of platform independence.
 
 # RstoxData v1.1.6 (2021-05-04)
+
 * Added sanitizeFilter() to avoid system calls in filter.
 * Removed hard coded conversions in ICESBiotic(), moving the responsibility of such conversions to the translation functions.
 * Optimized createOrderKey() for faster execution.
 * Renamed ReportICESAcoustic(), ReportICESBiotic() and ReportICESDatras() to WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), respectievly.
 
 # RstoxData v1.1.5 (2021-04-18)
+
 * Added TranslateICESAcoustic() and TranslateICESBiotic().
 * Added option of a conditional variable in DefineTranslation() and Translate*().
 * Removed maturity conversion in ICESBiotic().
