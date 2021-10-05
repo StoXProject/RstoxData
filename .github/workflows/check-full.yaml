@@ -89,6 +89,12 @@ jobs:
           remotes::install_cran("drat")
         shell: Rscript {0}
 
+      - name: Install s2 on Windows
+        if: runner.os == 'Windows'
+        run: |
+          remotes::install_cran("s2", type = "binary")
+        shell: Rscript {0}
+
       - name: Session info
         run: |
           options(width = 100)
