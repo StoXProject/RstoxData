@@ -1,5 +1,6 @@
 # RstoxData v1.3.0 (2021-10-08)
 
+* Removed warning due to error in translateVariables().
 * Fixed error in links to documentation in RstoxData.
 * Final version for the release of StoX 3.2.0.
 

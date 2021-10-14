@@ -10,6 +10,7 @@
 #' @export
 #' 
 StoxBiotic <- function(BioticData) {
+	
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
 	
@@ -128,7 +129,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     		# Uniqueify since some columns (keys) are present in several tables:
     		vocabulary <- unique(vocabulary)
     		
-    		data[tablesToTranslate] <- translateVariables(
+    		translateVariables(
     			data = data[tablesToTranslate], 
     			Translation = vocabulary, 
     			translate.keys = TRUE
