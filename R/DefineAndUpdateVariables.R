@@ -117,8 +117,6 @@ readVariableTranslation <- function(processData, FileName, UseProcessData = FALS
 # Function to convert variables given a conversion table:
 translateVariables <- function(data, Translation, translate.keys = FALSE, warnMissingTranslation = FALSE) {
 	
-	dataCopy <- data.table::copy(data)
-	
 	# Check whether the reuired columns are present in the translation table:
 	requiredColumns <- getRstoxDataDefinitions("TranslationRequiredColumns")
 	if(! all(requiredColumns %in% names(Translation))) {
@@ -127,14 +125,14 @@ translateVariables <- function(data, Translation, translate.keys = FALSE, warnMi
 	
 	# Run the conversion for each table of the data:
 	lapplyToStoxData(
-		dataCopy, 
+		data, 
 		translateOneTable, 
 		Translation = Translation, 
 		translate.keys = translate.keys, 
 		warnMissingTranslation = warnMissingTranslation
 	)
 	
-	return(dataCopy[])
+	a = 1 #????????
 }
 
 # Function to translate one table:
@@ -329,6 +327,8 @@ TranslateStoxBiotic <- function(
 		data = StoxBioticData, 
 		Translation = Translation
 	)
+	
+	return(StoxBioticData)
 }
 
 
@@ -426,6 +426,8 @@ TranslateStoxAcoustic <- function(
 		data = StoxAcousticData, 
 		Translation = Translation
 	)
+	
+	return(StoxAcousticData)
 }
 
 
@@ -519,6 +521,8 @@ TranslateBiotic <- function(
 		data = BioticData, 
 		Translation = Translation
 	)
+	
+	return(BioticData)
 }
 
 
@@ -610,6 +614,8 @@ TranslateAcoustic <- function(
 		data = AcousticData, 
 		Translation = Translation
 	)
+	
+	return(AcousticData)
 }
 
 
@@ -700,6 +706,8 @@ TranslateStoxLanding <- function(
 		data = StoxLandingData, 
 		Translation = Translation
 	)
+	
+	return(StoxLandingData)
 }
 
 
@@ -724,6 +732,8 @@ TranslateLanding <- function(
 		data = LandingData, 
 		Translation = Translation
 	)
+	
+	return(LandingData)
 }
 
 
@@ -752,6 +762,8 @@ TranslateICESBiotic <- function(
 		data = ICESBioticData, 
 		Translation = Translation
 	)
+	
+	return(ICESBioticData)
 }
 
 
@@ -776,6 +788,8 @@ TranslateICESAcoustic <- function(
 		data = ICESAcousticData, 
 		Translation = Translation
 	)
+	
+	return(ICESAcousticData)
 }
 
 

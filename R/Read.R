@@ -25,7 +25,7 @@ ReadBiotic <- function(FileNames) {
 	# Read BioticData possibly on several cores:
 	BioticData <- lapplyOnCores(
 		FileNames, 
-		FUN = RstoxData::readXmlFile, 
+		FUN = readXmlFile, 
 		NumberOfCores = 1L
 	)
 	
@@ -65,7 +65,7 @@ ReadAcoustic <- function(FileNames) {
 	# Read AcousticData possibly on several cores:
 	AcousticData <- lapplyOnCores(
 		FileNames, 
-		FUN = RstoxData::readXmlFile, 
+		FUN = readXmlFile, 
 		NumberOfCores = 1L
 	)
 	
@@ -106,7 +106,7 @@ ReadLanding <- function(FileNames) {
   # Read LandingData possibly on several cores:
   LandingData <- lapplyOnCores(
     FileNames, 
-    FUN = RstoxData::readXmlFile, 
+    FUN = readXmlFile, 
     NumberOfCores = 1L
   )
   

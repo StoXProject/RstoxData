@@ -59,7 +59,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 		# Uniqueify since some columns (keys) are present in several tables:
 		vocabulary <- unique(vocabulary)
 		
-		ICESAcousticDataOne[tablesToKeep] <- translateVariables(
+		translateVariables(
 			data = ICESAcousticDataOne[tablesToKeep], 
 			Translation = vocabulary, 
 			translate.keys = TRUE, 
@@ -362,7 +362,7 @@ BioticData_ICESToICESBioticOne <- function(BioticData_ICESOne) {
 		# Uniqueify since some columns (keys) are present in several tables:
 		vocabulary <- unique(vocabulary)
 		
-		BioticDataOne[tablesToTranslate] <- translateVariables(
+		translateVariables(
 			data = BioticDataOne[tablesToTranslate], 
 			Translation = vocabulary, 
 			translate.keys = TRUE, 

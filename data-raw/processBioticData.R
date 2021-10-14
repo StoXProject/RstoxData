@@ -211,7 +211,7 @@ stoxBioticObject$convertLen[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 	# Keep NAs:
 	conversionFactor <- rep(NA_real_, length(inputUnit))
 	inputUnit_isNA <- is.na(inputUnit)
-	# Get the convesion factor:
+	# Get the conversion factor:
 	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
     
     return(conversionFactor)
@@ -230,7 +230,7 @@ stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 	# Keep NAs:
 	conversionFactor <- rep(NA_real_, length(inputUnit))
 	inputUnit_isNA <- is.na(inputUnit)
-	# Get the convesion factor:
+	# Get the conversion factor:
 	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
 	
 	return(conversionFactor)

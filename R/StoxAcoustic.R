@@ -585,7 +585,7 @@ StoxAcousticOne <- function(data_list) {
 		# Uniqueify since some columns (keys) are present in several tables:
 		vocabulary <- unique(vocabulary)
 		
-		data_list[tablesToReturn] <- translateVariables(
+		translateVariables(
 			data = data_list[tablesToReturn], 
 			Translation = vocabulary, 
 			translate.keys = TRUE

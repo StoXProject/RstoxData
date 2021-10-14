@@ -209,7 +209,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	} else if(useXsd == "icesBiotic") {
 		xsdObjects$icesBiotic.xsd <- icesBioticPreprocess(xsdObjects$icesBiotic.xsd)
 	}
-
+	
 	# Invoke C++ xml reading
 	if(stream) {
 		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd, found[["encoding"]], verbose)

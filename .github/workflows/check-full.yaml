@@ -81,20 +81,25 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "18.04"))')
 
-      - name: Install dependencies
+      - name: Install dependencies on Linux
+        if: runner.os == 'Linux'
         run: |
           remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Install dependencies on Windows and macOS
+        if: runner.os != 'Linux'
+        run: |
+          remotes::install_deps(dependencies = TRUE, type = "binary")
+        shell: Rscript {0}
+
+      - name: Install CRANdependencies
+        run: |
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("git2r")
           remotes::install_cran("drat")
         shell: Rscript {0}
-
-      - name: Install s2 on Windows
-        if: runner.os == 'Windows'
-        run: |
-          remotes::install_cran("s2", type = "binary")
-        shell: Rscript {0}
-
+        
       - name: Session info
         run: |
           options(width = 100)
