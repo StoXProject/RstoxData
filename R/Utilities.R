@@ -15,8 +15,9 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	## Get data type:
 	plen <- NULL
 	if(!is.null(data[["metadata"]])) {
-		if(!exists("xsdObjects"))
+		if(!exists("xsdObjects")) {
 			xsdObjects <- RstoxData::xsdObjects
+		}
 		datatype <- unlist(data[["metadata"]][1, "useXsd"])
 		plen <- xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
 	}
@@ -506,7 +507,7 @@ AddToStoxData <- function(
 	toAdd <- lapply(toAdd, unique)
 	
 	# Merge with the present StoxBioticData:
-	StoxData <- mapply(mergeAndOverwriteDataTable, StoxData, toAdd, sort = FALSE)
+	StoxData <- mapply(mergeAndOverwriteDataTable, StoxData, toAdd, all.x = TRUE, sort = FALSE)
 	
 	return(StoxData)
 }

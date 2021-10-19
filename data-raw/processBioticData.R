@@ -10,6 +10,8 @@ stoxBioticObject$complexMaps <- list()
 stoxBioticObject$convertLenRes <- list()
 stoxBioticObject$convertLen <- list()
 stoxBioticObject$convertWt <- list()
+# It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
+#stoxBioticObject$getEffectiveTowDistance_fishingdepthcount <- list()
 stoxBioticObject$borrowVariables <- list()
 
 
@@ -38,6 +40,12 @@ stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- function(x) {
 }
 stoxBioticObject$convertLen[["nmdbioticv3.1"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3.1"]] <- NULL
+# It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
+#stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]] <- function(distance, fishingdepthcount) {
+#	fishingdepthcount[is.na(fishingdepthcount)] <-  1
+#	EffectiveTowDistance <- distance / fishingdepthcount
+#	return(EffectiveTowDistance)
+#}
 stoxBioticObject$borrowVariables[["nmdbioticv3.1"]] <- list(
 	list(
 		variable = "lengthmeasurement", 
@@ -85,6 +93,8 @@ stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- function(x) {
 }
 stoxBioticObject$convertLen[["nmdbioticv3"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3"]] <- NULL
+# It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
+#stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]]
 stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- list(
 	list(
 		variable = "lengthmeasurement", 
@@ -132,6 +142,13 @@ stoxBioticObject$convertLenRes[["nmdbioticv1.4"]] <- function(x) {
 }
 stoxBioticObject$convertLen[["nmdbioticv1.4"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv1.4"]] <- NULL
+# It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
+#stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.4"]] <- function(distance, fishingdepthmax) {
+#	if(any(fishingdepthmax > 9000)) {
+#		"StoX: Detected fishingdepthmax > 9000, which has historically been used to indicate trawling at multiple depths. This is not supported by StoX. The data must be converted to NMDBiotic >= 3, and fishingdepthcount, fishingdepthmin and fishingdepthmax interpreted from the codes defined by IMR, in case you need EffectiveTowDistance to be compensated for trawling at multiple depths."
+#	}
+#	return(distance)
+#}
 stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 	list(
 		variable = "lengthmeasurement", 
@@ -165,6 +182,8 @@ stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- fread("stox-translate-nmdbiot
 stoxBioticObject$convertLenRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertLenRes[["nmdbioticv1.4"]]
 stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
 stoxBioticObject$convertWt[["nmdbioticv1.1"]] <- stoxBioticObject$convertWt[["nmdbioticv1.4"]]
+# It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
+#stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.1"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.4"]]
 stoxBioticObject$borrowVariables[["nmdbioticv1.1"]] <- stoxBioticObject$borrowVariables[["nmdbioticv1.4"]]
 
 
