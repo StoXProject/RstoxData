@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>StoX data type ICESDatrasData — ICESDatrasData • RstoxData</title>
+<title>Divide EffectiveTowDistance by fishingdepthcount for NMDBiotic data — CompensateEffectiveTowDistanceForFishingDepthCount • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="StoX data type ICESDatrasData — ICESDatrasData" />
-<meta property="og:description" content="Biotic data stored in the ICESDatras (CSV) format." />
+<meta property="og:title" content="Divide EffectiveTowDistance by fishingdepthcount for NMDBiotic data — CompensateEffectiveTowDistanceForFishingDepthCount" />
+<meta property="og:description" content="This function is specific for use with StoxBioticData generated from files of the format NMDBiotic3.0 or higher, where the variable fishingdepthcount can be used to indicate that the trawl was hauled at multiple depths. Use this function with causion, as it assumes that the target species is ONLY located in one of the depths at which the trawl was hauled, and that the trawl was hauled for equal distance at each fishing depth." />
 
 
 
@@ -111,23 +111,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>StoX data type ICESDatrasData</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>ICESDatrasData.Rd</code></div>
+    <h1>Divide EffectiveTowDistance by fishingdepthcount for NMDBiotic data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/StoxBiotic.R'><code>R/StoxBiotic.R</code></a></small>
+    <div class="hidden name"><code>CompensateEffectiveTowDistanceForFishingDepthCount.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Biotic data stored in the ICESDatras (CSV) format.</p>
+    <p>This function is specific for use with <code><a href='StoxBioticData.html'>StoxBioticData</a></code> generated from files of the format NMDBiotic3.0 or higher, where the variable fishingdepthcount can be used to indicate that the trawl was hauled at multiple depths. Use this function with causion, as it assumes that the target species is ONLY located in one of the depths at which the trawl was hauled, and that the trawl was hauled for equal distance at each fishing depth.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>CompensateEffectiveTowDistanceForFishingDepthCount</span><span class='op'>(</span><span class='va'>StoxBioticData</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>StoxBioticData</th>
+      <td><p><code><a href='StoxBioticData.html'>StoxBioticData</a></code>.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>This StoX data type is produced by <code><a href='ICESDatras.html'>ICESDatras</a></code>, and contains one list per input biotic file read to produec the input to <code><a href='ICESDatras.html'>ICESDatras</a></code>, each holding the tables HH, HL and CA, in that hierarchical order.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='DataTypes.html'>DataTypes</a></code> for a list of all StoX data types produced by <code><a href='RstoxData.html'>RstoxData</a></code></p></div>
+    <p>An object of StoX data type <code><a href='StoxBioticData.html'>StoxBioticData</a></code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
