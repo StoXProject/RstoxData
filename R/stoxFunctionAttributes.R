@@ -186,6 +186,11 @@ stoxFunctionAttributes <- list(
 		)
 	), 
 	
+	CompensateEffectiveTowDistanceForFishingDepthCount = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticData"
+	),
 	
 	TranslateStoxAcoustic = list(
 		functionType = "modelData", 
@@ -299,7 +304,6 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESBioticData"
 	)
-	
 	
 )
 

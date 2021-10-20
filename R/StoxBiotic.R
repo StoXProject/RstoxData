@@ -10,7 +10,6 @@
 #' @export
 #' 
 StoxBiotic <- function(BioticData) {
-	
 	# Convert from BioticData to the general sampling hierarchy:
 	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
 	
@@ -119,7 +118,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     	
     	# Apply translations defined in the table 'vocabulary':
     	if(length(data$vocabulary)) {
-    		tablesToTranslate <- setdiff(names(data), "vocabulary")
+    		tablesToTranslate <- setdiff(names(data), c("metadata", "vocabulary"))
     		tablesToTranslate <- tablesToTranslate[sapply(data[tablesToTranslate], nrow) > 0]
     		
     		vocabulary <- findVariablesMathcinigVocabulary(
@@ -530,4 +529,30 @@ checkDataSource <- function(BioticData) {
 # This can be used later if TowDuration is needed:
 # TowDuration,Haul,"as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","Duration",
 # EffectiveTowDuration,Haul,TowDuration,TowDuration,TowDuration,TowDuration,TowDuration,
+
+
+
+#' Divide EffectiveTowDistance by fishingdepthcount for NMDBiotic data
+#' 
+#' This function is specific for use with \code{\link{StoxBioticData}} generated from files of the format NMDBiotic3.0 or higher, where the variable fishingdepthcount can be used to indicate that the trawl was hauled at multiple depths. Use this function with causion, as it assumes that the target species is ONLY located in one of the depths at which the trawl was hauled, and that the trawl was hauled for equal distance at each fishing depth.
+#'
+#' @inheritParams ModelData
+#'
+#' @return An object of StoX data type \code{\link{StoxBioticData}}.
+#'
+#' @export
+#' 
+CompensateEffectiveTowDistanceForFishingDepthCount <- function(StoxBioticData) {
+	# This function requires fishingdepthcount to be present (added using AddToStoxBiotic()):
+	if(!"fishingdepthcount" %in% names(StoxBioticData$Haul)) {
+		stop("fishingdepthcount must be present in StoxBioticData in order to compensate for multiple fishing depths. Add this using AddToStoxBiotic(). This is only present in NMDBiotic v3 and later.")
+	}
+	
+	# Make a copy and change EffectiveTowDistance:
+	StoxBioticDataCopy <- data.table::copy(StoxBioticData)
+	StoxBioticDataCopy$Haul[, EffectiveTowDistance := EffectiveTowDistance / fishingdepthcount]
+	
+	return(StoxBioticDataCopy)
+}
+
 
