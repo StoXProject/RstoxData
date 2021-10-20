@@ -2,18 +2,16 @@
 % Please edit documentation in R/StoxBiotic.R
 \name{CompensateEffectiveTowDistanceForFishingDepthCount}
 \alias{CompensateEffectiveTowDistanceForFishingDepthCount}
-\title{Add variables to StoxBioticData from BioticData}
+\title{Divide EffectiveTowDistance by fishingdepthcount for NMDBiotic data}
 \usage{
 CompensateEffectiveTowDistanceForFishingDepthCount(StoxBioticData)
 }
 \arguments{
 \item{StoxBioticData}{\code{\link{StoxBioticData}}.}
-
-\item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.
 }
 \description{
-Add variables to StoxBioticData from BioticData
+This function is specific for use with \code{\link{StoxBioticData}} generated from files of the format NMDBiotic3.0 or higher, where the variable fishingdepthcount can be used to indicate that the trawl was hauled at multiple depths. Use this function with causion, as it assumes that the target species is ONLY located in one of the depths at which the trawl was hauled, and that the trawl was hauled for equal distance at each fishing depth.
 }
