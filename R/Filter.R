@@ -231,7 +231,7 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
 #'
 #' @export
 #' 
-FilterBiotic <- function(BioticData, FilterExpression, FilterUpwards = FALSE) {
+FilterBiotic <- function(BioticData, FilterExpression = list(), FilterUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
     FilterExpression <- expandFilterExpressionList(FilterExpression)
     
@@ -255,7 +255,7 @@ FilterBiotic <- function(BioticData, FilterExpression, FilterUpwards = FALSE) {
 #'
 #' @export
 #' 
-FilterAcoustic <- function(AcousticData, FilterExpression, FilterUpwards = FALSE) {
+FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpwards = FALSE) {
     # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
     FilterExpression <- expandFilterExpressionList(FilterExpression)
     
@@ -280,7 +280,7 @@ FilterAcoustic <- function(AcousticData, FilterExpression, FilterUpwards = FALSE
 #'
 #' @export
 #' 
-FilterStoxBiotic <- function(StoxBioticData, FilterExpression, FilterUpwards = FALSE) {
+FilterStoxBiotic <- function(StoxBioticData, FilterExpression = list(), FilterUpwards = FALSE) {
     filterData(
         StoxBioticData, 
         filterExpression = FilterExpression, 
@@ -301,7 +301,7 @@ FilterStoxBiotic <- function(StoxBioticData, FilterExpression, FilterUpwards = F
 #'
 #' @export
 #' 
-FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, FilterUpwards = FALSE) {
+FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression = list(), FilterUpwards = FALSE) {
     filterData(
         StoxAcousticData, 
         filterExpression = FilterExpression, 
@@ -321,7 +321,7 @@ FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression, FilterUpwards
 #'
 #' @export
 #' 
-FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
+FilterStoxLanding <- function(StoxLandingData, FilterExpression = list()) {
   
   StoxLandingData <- filterData(
     StoxLandingData, 
@@ -345,7 +345,7 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression) {
 #'
 #' @export
 #' 
-FilterLanding <- function(LandingData, FilterExpression, FilterUpwards = FALSE) {
+FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards = FALSE) {
   filterData(
     LandingData, 
     filterExpression = FilterExpression, 

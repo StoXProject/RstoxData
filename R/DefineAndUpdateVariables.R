@@ -71,6 +71,8 @@ DefineTranslation <- function(
 	processData, UseProcessData = FALSE, 
 	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
 	TranslationTable = data.table::data.table(), 
+	ValueColumn = character(), 
+	NewValueColumn = character(), 
 	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
 	FileName = character()
 ) {
@@ -87,6 +89,8 @@ DefineTranslation <- function(
 		Translation <- readVariableTranslation(
 			processData = processData, 
 			FileName = FileName, 
+			ValueColumn = ValueColumn, 
+			VNewalueColumn = NewValueColumn, 
 			UseProcessData = UseProcessData
 		)
 	}
@@ -102,7 +106,7 @@ DefineTranslation <- function(
 
 
 # Function for reading a conversion table:
-readVariableTranslation <- function(processData, FileName, UseProcessData = FALSE) {
+readVariableTranslation <- function(processData, FileName, ValueColumn, NewValueColumn, UseProcessData = FALSE) {
 	
 	# Return immediately if UseProcessData = TRUE:
 	if(UseProcessData) {
@@ -110,6 +114,10 @@ readVariableTranslation <- function(processData, FileName, UseProcessData = FALS
 	}
 	
 	conversion <- data.table::fread(FileName, encoding = "UTF-8")
+	
+	# Get the Value and NewValue:
+	conversion[, Value := eval(ValueColumn)]
+	conversion[, NewValue := eval(NewValueColumn)]
 	
 	return(conversion)
 }

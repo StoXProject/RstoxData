@@ -9,6 +9,8 @@ DefineTranslation(
   UseProcessData = FALSE,
   DefinitionMethod = c("ResourceFile", "TranslationTable"),
   TranslationTable = data.table::data.table(),
+  ValueColumn = character(),
+  NewValueColumn = character(),
   Conditional = FALSE,
   FileName = character()
 )

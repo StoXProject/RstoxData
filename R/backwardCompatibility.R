@@ -1,6 +1,24 @@
 #' Backward compabitibility actions:
 #' @export
 backwardCompatibility <- list(
+	
+	addParameter = list(
+		list(
+			changeVersion = "1.2.11", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ValueColumn", 
+			parameterValue = "Value"
+		), 
+		list(
+			changeVersion = "1.2.11", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "NewValueColumn", 
+			parameterValue = "NewValue"
+		)
+	), 
+	
 	renameFunction = list(
 		list(
 			changeVersion = "1.0.23", 
