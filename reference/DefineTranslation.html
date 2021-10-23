@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.11</span>
       </span>
     </div>
 
@@ -125,6 +125,8 @@
   UseProcessData <span class='op'>=</span> <span class='cn'>FALSE</span>,
   DefinitionMethod <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ResourceFile"</span>, <span class='st'>"TranslationTable"</span><span class='op'>)</span>,
   TranslationTable <span class='op'>=</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span><span class='op'>(</span><span class='op'>)</span>,
+  ValueColumn <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  NewValueColumn <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   Conditional <span class='op'>=</span> <span class='cn'>FALSE</span>,
   FileName <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
@@ -147,6 +149,10 @@
     <tr>
       <th>TranslationTable</th>
       <td><p>A table of the columns <code>VariableName</code>, representing the variable to translate; <code>Value</code>, giving the values to translate; and <code>NewValue</code>, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate DefineTranslation &amp; Translate procecss to translate NAs.</p></td>
+    </tr>
+    <tr>
+      <th>ValueColumn, NewValueColumn</th>
+      <td><p>The name of the columns of <code>TranslationTable</code> representing the current values and the values to translate to, respectively.</p></td>
     </tr>
     <tr>
       <th>Conditional</th>
