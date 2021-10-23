@@ -156,6 +156,16 @@ stoxFunctionAttributes <- list(
 			Conditional = list(
 				DefinitionMethod = "TranslationTable", 
 				UseProcessData = FALSE
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ValueColumn = list(
+				DefinitionMethod = "ResourceFile", 
+				UseProcessData = FALSE
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			NewValueColumn = list(
+				DefinitionMethod = "ResourceFile", 
+				UseProcessData = FALSE
 			)
 		)
 	),

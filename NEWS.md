@@ -1,3 +1,10 @@
+# RstoxData v1.2.11 (2021-10-23)
+* Added the parameters ValueColumn and NewValueColumn to DefineTranslaion().
+
+# RstoxData v1.2.10 (2021-10-20)
+
+* Added CompensateEffectiveTowDistanceForFishingDepthCount() for NMDBiotic data with hauls made at several depths.
+
 # RstoxData v1.2.7 (2021-10-08)
 
 * Fixed error in links to documentation in RstoxData.

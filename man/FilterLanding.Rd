@@ -4,7 +4,7 @@
 \alias{FilterLanding}
 \title{Filter LandingData}
 \usage{
-FilterLanding(LandingData, FilterExpression, FilterUpwards = FALSE)
+FilterLanding(LandingData, FilterExpression = list(), FilterUpwards = FALSE)
 }
 \arguments{
 \item{LandingData}{Input \code{\link{LandingData}} data.}

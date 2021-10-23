@@ -4,7 +4,7 @@
 \alias{FilterStoxLanding}
 \title{Filter StoxLanding data}
 \usage{
-FilterStoxLanding(StoxLandingData, FilterExpression)
+FilterStoxLanding(StoxLandingData, FilterExpression = list())
 }
 \arguments{
 \item{StoxLandingData}{Input \code{\link{StoxLandingData}} data.}
