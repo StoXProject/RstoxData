@@ -484,6 +484,12 @@ AddToStoxData <- function(
 	StoxDataFormat <- match.arg(StoxDataFormat)
 	if(StoxDataFormat == "Biotic") {
 		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
+		
+		allNames <- unlist(lapply(GeneralSamplingHierarchy, names))
+		if(any(VariableNames %in% allNames)) {
+			warning("StoX: The following VariableNames are already present in the data, and will be overwritten: ", paste0(intersect(VariableNames, allNames)))
+		}
+		
 		# Define a vector of the variables to extract:
 		toExtract <- c(
 			getRstoxDataDefinitions("StoxBioticKeys"), 
