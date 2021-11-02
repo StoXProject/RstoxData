@@ -1,3 +1,6 @@
+# RstoxData v1.2.12 (2021-10-26)
+* Added warning when adding a variable that already exists in AddToStoxBiotic(), particularly aimed at SpeciesCategory in ICESBiotic, which has a different meaning that SpeciesCategory in StoxBioticData.
+
 # RstoxData v1.2.11 (2021-10-23)
 * Added the parameters ValueColumn and NewValueColumn to DefineTranslaion().
 
