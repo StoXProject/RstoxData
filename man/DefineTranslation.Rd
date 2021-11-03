@@ -36,3 +36,6 @@ A \code{\link{Translation}} object.
 \description{
 This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
 }
+\seealso{
+
+}
