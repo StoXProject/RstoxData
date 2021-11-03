@@ -66,6 +66,8 @@ RedefineStoxBiotic <- function(
 #' @return
 #' A \code{\link{Translation}} object.
 #' 
+#' @seealso \code{\link{TranslateStoxBiotic}}, \code{\link{TranslateStoxAcoustic}}, \code{\link{TranslateBiotic}}, \code{\link{TranslateAcoustic}}, \code{\link{TranslateStoxLanding}}, \code{\link{TranslateLanding}}, \code{\link{TranslateICESBiotic}} and \code{\link{TranslateICESAcoustic} for applying the translation.
+#'
 #' @export
 #' 
 DefineTranslation <- function(
