@@ -119,8 +119,8 @@ readVariableTranslation <- function(processData, FileName, ValueColumn, NewValue
 	conversion <- data.table::fread(FileName, encoding = "UTF-8")
 	
 	# Get the Value and NewValue:
-	conversion[, Value := eval(ValueColumn)]
-	conversion[, NewValue := eval(NewValueColumn)]
+	conversion[, Value := get(ValueColumn)]
+	conversion[, NewValue := get(NewValueColumn)]
 	
 	return(conversion)
 }

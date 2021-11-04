@@ -1,3 +1,6 @@
+# RstoxData v1.2.13 (2021-11-04)
+* Fixed bug in readVariableTranslation() (where eval() was used instead of get()).
+
 # RstoxData v1.2.12 (2021-10-26)
 * Added warning when adding a variable that already exists in AddToStoxBiotic(), particularly aimed at SpeciesCategory in ICESBiotic, which has a different meaning that SpeciesCategory in StoxBioticData.
 
