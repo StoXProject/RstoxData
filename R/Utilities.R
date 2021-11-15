@@ -22,7 +22,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 		plen <- xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
 	}
 
-    # Merge all tables by default:
+	# Merge all tables by default:
 	if(length(tableNames) == 0) {
 		tableNames <- names(data)
 	}
