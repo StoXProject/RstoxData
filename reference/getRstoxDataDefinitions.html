@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.16</span>
       </span>
     </div>
 
@@ -140,75 +140,76 @@
     <p>A list of definitions.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>getRstoxDataDefinitions</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $digits
-#&gt; [1] 12
-#&gt; 
-#&gt; $fpath
-#&gt; [1] "/Users/runner/work/_temp/Library/RstoxData/extdata"
-#&gt; 
-#&gt; $ICESAcousticKeys
-#&gt; $ICESAcousticKeys$Cruise
-#&gt; [1] "LocalID"
-#&gt; 
-#&gt; $ICESAcousticKeys$Log
-#&gt; [1] "LocalID"  "Distance"
-#&gt; 
-#&gt; $ICESAcousticKeys$Sample
-#&gt; [1] "LocalID"           "Distance"          "ChannelDepthUpper"
-#&gt; 
-#&gt; $ICESAcousticKeys$Data
-#&gt; [1] "LocalID"           "Distance"          "ChannelDepthUpper"
-#&gt; [4] "SaCategory"       
-#&gt; 
-#&gt; 
-#&gt; $ICESBioticKeys
-#&gt; $ICESBioticKeys$Cruise
-#&gt; [1] "LocalID"
-#&gt; 
-#&gt; $ICESBioticKeys$Haul
-#&gt; [1] "LocalID" "Gear"    "Number" 
-#&gt; 
-#&gt; $ICESBioticKeys$Catch
-#&gt; [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    
-#&gt; [5] "SpeciesCategory"
-#&gt; 
-#&gt; $ICESBioticKeys$Biology
-#&gt; [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    
-#&gt; [5] "SpeciesCategory" "StockCode"       "FishID"         
-#&gt; 
-#&gt; 
-#&gt; $nonUniqueFormats
-#&gt; [1] "nmdbioticv1"   "nmdbioticv1.1" "nmdbioticv1.2" "nmdbioticv1.3"
-#&gt; [5] "nmdbioticv1.4"
-#&gt; 
-#&gt; $signifDigits
-#&gt; [1] 6
-#&gt; 
-#&gt; $StoxAcousticKeys
-#&gt; [1] "CruiseKey"           "LogKey"              "BeamKey"            
-#&gt; [4] "AcousticCategoryKey" "ChannelReferenceKey" "NASCKey"            
-#&gt; 
-#&gt; $StoxBioticKeys
-#&gt; [1] "CruiseKey"          "StationKey"         "HaulKey"           
-#&gt; [4] "SpeciesCategoryKey" "SampleKey"          "IndividualKey"     
-#&gt; [7] "SubIndividualKey"  
-#&gt; 
-#&gt; $StoxTimeZone
-#&gt; [1] "UTC"
-#&gt; 
-#&gt; $targetAndSourceVariables
-#&gt; $targetAndSourceVariables$target
-#&gt; [1] "TargetVariable"
-#&gt; 
-#&gt; $targetAndSourceVariables$source
-#&gt; [1] "SourceVariable"
-#&gt; 
-#&gt; 
-#&gt; $TranslationRequiredColumns
-#&gt; [1] "VariableName" "Value"        "NewValue"    
-#&gt; </div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>getRstoxDataDefinitions</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $digits</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 12</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $fpath</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/Users/runner/work/_temp/Library/RstoxData/extdata"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESAcousticKeys</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESAcousticKeys$Cruise</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESAcousticKeys$Log</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"  "Distance"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESAcousticKeys$Sample</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"           "Distance"          "ChannelDepthUpper"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESAcousticKeys$Data</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"           "Distance"          "ChannelDepthUpper"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [4] "SaCategory"       </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESBioticKeys</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESBioticKeys$Cruise</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESBioticKeys$Haul</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID" "Gear"    "Number" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESBioticKeys$Catch</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [5] "SpeciesCategory"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $ICESBioticKeys$Biology</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [5] "SpeciesCategory" "StockCode"       "FishID"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nonUniqueFormats</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "nmdbioticv1"   "nmdbioticv1.1" "nmdbioticv1.2" "nmdbioticv1.3"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [5] "nmdbioticv1.4"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $signifDigits</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 6</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $StoxAcousticKeys</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "CruiseKey"           "LogKey"              "BeamKey"            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [4] "AcousticCategoryKey" "ChannelReferenceKey" "NASCKey"            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $StoxBioticKeys</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "CruiseKey"          "StationKey"         "HaulKey"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [4] "SpeciesCategoryKey" "SampleKey"          "IndividualKey"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [7] "SubIndividualKey"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $StoxTimeZone</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "UTC"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $targetAndSourceVariables</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $targetAndSourceVariables$target</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "TargetVariable"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $targetAndSourceVariables$source</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "SourceVariable"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $TranslationRequiredColumns</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "VariableName" "Value"        "NewValue"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
