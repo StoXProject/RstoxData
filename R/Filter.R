@@ -55,6 +55,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 			return(ret)
 		}
 		
+		# Run the filter:
 		test <- try(ret[[tableName]] <- y[[tableName]][eval(filts),], silent = TRUE)
 		if(class(test)[1] == "try-error") {
 			warning("StoX: Apply filter error:\n", test[1])
@@ -75,7 +76,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 						key <- intersect(names(y[[parent + 1]]), names(y[[parent - goUp]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
-							deleted <- fsetdiff(unique(y[[parent - goUp]][, ..key]), unique(ret[[names(y)[parent - goUp]]][, ..key]))
+							deleted <- data.table::fsetdiff(unique(y[[parent - goUp]][, ..key]), unique(ret[[names(y)[parent - goUp]]][, ..key]))
 							# Propagate to child
 							ret[[names(y)[parent+1]]] <- y[[parent+1]][!deleted, on = names(deleted)]
 						}
