@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.17</span>
       </span>
     </div>
 
@@ -125,9 +125,12 @@
   UseProcessData <span class='op'>=</span> <span class='cn'>FALSE</span>,
   DefinitionMethod <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ResourceFile"</span>, <span class='st'>"TranslationTable"</span><span class='op'>)</span>,
   TranslationTable <span class='op'>=</span> <span class='fu'>data.table</span><span class='fu'>::</span><span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table</a></span><span class='op'>(</span><span class='op'>)</span>,
+  VariableName <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   ValueColumn <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   NewValueColumn <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   Conditional <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ConditionalVariableName <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  ConditionalValueColumn <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   FileName <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -148,7 +151,11 @@
     </tr>
     <tr>
       <th>TranslationTable</th>
-      <td><p>A table of the columns <code>VariableName</code>, representing the variable to translate; <code>Value</code>, giving the values to translate; and <code>NewValue</code>, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate DefineTranslation &amp; Translate procecss to translate NAs.</p></td>
+      <td><p>A table of the columns <code>VariableName</code>, representing the variable to translate; <code>Value</code>, giving the values to translate; and <code>NewValue</code>, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate <code>DefineTranslation</code> &amp; Translate process to translate NAs.</p></td>
+    </tr>
+    <tr>
+      <th>VariableName</th>
+      <td><p>An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same <code><a href='Translation.html'>Translation</a></code>, a column named "VariableName" must be inclcuded in <code>TranslationTable</code> (possibly read from the <code>FileName</code>) AND <code>VariableName</code> must be an empty string (blank field in the GUI).</p></td>
     </tr>
     <tr>
       <th>ValueColumn, NewValueColumn</th>
@@ -159,8 +166,16 @@
       <td><p>Logical: If TRUE the columns <code>ConditionalVariableName</code> and <code>ConditionalValue</code> are expected in the <code>TranslationTable</code>. These define a variable interacting with the <code>VariableName</code> and <code>Value</code>, so that <code>VariableName</code> is changed from <code>Value</code> to <code>NewValue</code> only when <code>ConditionalVariableName</code> has the value given by <code>ConditionalValue</code>. Note that <code>ConditionalVariableName</code> must exist in the same table as <code>VariableName</code>.</p></td>
     </tr>
     <tr>
+      <th>ConditionalVariableName</th>
+      <td><p>Similar to <code>VariableName</code>, but naming the conditional variable.</p></td>
+    </tr>
+    <tr>
+      <th>ConditionalValueColumn</th>
+      <td><p>The name of the column of <code>TranslationTable</code> representing the conditional values.</p></td>
+    </tr>
+    <tr>
       <th>FileName</th>
-      <td><p>The csv file holding a table with the three variables listed for <code>TranslationTable</code>.</p></td>
+      <td><p>The csv file holding a table with the three variables listed for <code>TranslationTable</code>, and possibly the two listed for <code>Conditional</code>.</p></td>
     </tr>
     </table>
 

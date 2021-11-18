@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.17</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
     <p>This function translates one or more columns of <code><a href='BioticData.html'>BioticData</a></code> to new values given by the input <code>Translation</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>TranslateBiotic</span><span class='op'>(</span><span class='va'>BioticData</span>, <span class='va'>Translation</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>TranslateBiotic</span><span class='op'>(</span><span class='va'>BioticData</span>, <span class='va'>Translation</span>, PreserveClass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,6 +132,10 @@
     <tr>
       <th>Translation</th>
       <td><p>The process from which to get the <code><a href='Translation.html'>Translation</a></code> definition.</p></td>
+    </tr>
+    <tr>
+      <th>PreserveClass</th>
+      <td><p>Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (<code>PreserveClass</code> = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using <code>PreserveClass</code> = FALSE.</p></td>
     </tr>
     </table>
 
