@@ -407,7 +407,7 @@ BioticData_NMDToICESBioticOne <- function(
 		Gear = gear, # Is gear assumed formatted correctly in the input file???
 		Number = serialnumber,
 		StationName = station,
-		StartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
+		StartTime = ifelse(is.na(stationstartdate) | is.na(stationstarttime), NA_character_, gsub("Z", " ", paste0(stationstartdate, substr(stationstarttime, 1, 5)))),
 		Duration = getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime),
 		Validity = getHaulValiditySimple(gearcondition, samplequality),
 		StartLatitude = latitudestart,
@@ -417,16 +417,16 @@ BioticData_NMDToICESBioticOne <- function(
 		StatisticalRectangle = getICESrect(latitudestart, longitudestart),
 		MinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
 		MaxTrawlDepth = fishingdepthmax,
-		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA),
+		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA_real_),
 		# Before, the function getDistanceMeter() was used, which was inherited from old Datras code. Instead we use the distance that is given by NMDBiotic:
 		#Distance = getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend),
 		# Distance is in nautical miles in NMDBiotic and in meters in ICEBiotic:
 		Distance = distance * 1852,
 		Netopening = verticaltrawlopening,
-		CodendMesh = NA,
+		CodendMesh = NA_integer_,
 		#SweepLength = getGOVSweepByEquipment(gear),
 		SweepLength = sweeplength,
-		GearExceptions = NA, # Should this be set?
+		GearExceptions = NA_character_, # Should this be set?
 		DoorType = trawldoortype,
 		# Warp length in integer meter: 
 		WarpLength = round(wirelength),
@@ -439,25 +439,25 @@ BioticData_NMDToICESBioticOne <- function(
 		DoorWeight = round(trawldoorweight),
 		DoorSpread = trawldoorspread,
 		WingSpread = wingspread,
-		Buoyancy = NA,
-		KiteArea = NA,
-		GroundRopeWeight = NA,
-		Rigging = NA,
-		Tickler = NA,
-		HydrographicStationID = NA,
+		Buoyancy = NA_integer_,
+		KiteArea = NA_real_,
+		GroundRopeWeight = NA_integer_,
+		Rigging = NA_character_,
+		Tickler = NA_integer_,
+		HydrographicStationID = NA_character_,
 		# Direction is integer degrees: 
 		TowDirection = round(direction),
-		SpeedGround = NA,
+		SpeedGround = NA_real_,
 		SpeedWater = gearflow,
 		# Wind direction is integer degrees: 
 		WindDirection = winddirection,
 		# Wind speed is meter per second: 
 		WindSpeed = round(windspeed),
-		SwellDirection = NA,
-		SwellHeight = NA,
+		SwellDirection = NA_integer_,
+		SwellHeight = NA_real_,
 		#LogDistance = NA,
 		LogDistance = logstart,
-		Stratum = NA
+		Stratum = NA_character_
 	)]
 	
 	catchRaw <- merge(BioticData_NMDOne$catchsample, haulRaw, by = intersect(names(BioticData_NMDOne$catchsample), names(haulRaw)))
@@ -476,16 +476,16 @@ BioticData_NMDToICESBioticOne <- function(
 		SpeciesCategoryNumber = catchcount,
 		WeightUnit = "kg", # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
 		SpeciesCategoryWeight = catchweight,
-		SpeciesSex = NA,
+		SpeciesSex = NA_character_,
 		SubsampledNumber = lengthsamplecount,
 		SubsamplingFactor = catchcount / lengthsamplecount,
 		SubsampleWeight = lengthsampleweight,
-		LengthCode = NA, # NMDBiotic has no way of storing a length distribution.
-		LengthClass = NA, # NMDBiotic has no way of storing a length distribution.
+		LengthCode = NA_character_, # NMDBiotic has no way of storing a length distribution.
+		LengthClass = NA_integer_, # NMDBiotic has no way of storing a length distribution.
 		#LengthType = "1", # Should not this be interpreted from the catchsample$lengthmeasurement ???
 		LengthType = lengthmeasurement, 
 		NumberAtLength = lengthsamplecount,
-		WeightAtLength = NA # Not relevant for NMDBiotic. Used in the Baltic Acoustic Survey, as noted in the documentation of ICESBiotic.
+		WeightAtLength = NA_real_ # Not relevant for NMDBiotic. Used in the Baltic Acoustic Survey, as noted in the documentation of ICESBiotic.
 	)]
 	
 	# Logic for missing important records
@@ -513,7 +513,7 @@ BioticData_NMDToICESBioticOne <- function(
 		Number = serialnumber,
 		SpeciesCode = aphia,
 		SpeciesCategory = catchpartnumber,
-		StockCode = NA,
+		StockCode = NA_character_,
 		FishID = specimenid,
 		#LengthCode = "mm", 
 		LengthCode = getLengthCodeICES(lengthresolution), 
@@ -529,16 +529,16 @@ BioticData_NMDToICESBioticOne <- function(
 		# Here specialstage is assumed to be have been translated to ICES "M6" codes as per http://vocab.ices.dk/?ref=1480:
 		IndividualMaturity = specialstage,
 		#MaturityScale = "M6",
-		MaturityScale = NA,
+		MaturityScale = NA_character_,
 		IndividualAge = age,
-		AgePlusGroup = NA,
+		AgePlusGroup = NA_character_,
 		#AgeSource = "Otolith",
 		# Do not interpret agingstructure, as this should be the responsibility of the user:
 		AgeSource = agingstructure, 
-		GeneticSamplingFlag = NA,
-		StomachSamplingFlag = NA,
-		ParasiteSamplingFlag = NA,
-		IndividualVertebraeCount = NA
+		GeneticSamplingFlag = NA_character_,
+		StomachSamplingFlag = NA_character_,
+		ParasiteSamplingFlag = NA_character_,
+		IndividualVertebraeCount = NA_integer_
 	)]
 	
 	if(AllowRemoveSpecies) {

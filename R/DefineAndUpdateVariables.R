@@ -58,10 +58,13 @@ RedefineStoxBiotic <- function(
 #' 
 #' @inheritParams general_arguments
 #' @param DefinitionMethod  Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
-#' @param TranslationTable A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate DefineTranslation & Translate procecss to translate NAs.
+#' @param TranslationTable A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate \code{\link{DefineTranslation}} & Translate process to translate NAs.
+#' @param VariableName An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same \code{\link{Translation}}, a column named "VariableName" must be inclcuded in \code{TranslationTable} (possibly read from the \code{FileName}) AND \code{VariableName} must be an empty string (blank field in the GUI).
 #' @param ValueColumn,NewValueColumn The name of the columns of \code{TranslationTable} representing the current values and the values to translate to, respectively.
 #' @param Conditional Logical: If TRUE the columns \code{ConditionalVariableName} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableName} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableName} must exist in the same table as \code{VariableName}. 
-#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}.
+#' @param ConditionalVariableName Similar to \code{VariableName}, but naming the conditional variable.
+#' @param ConditionalValueColumn The name of the column of \code{TranslationTable} representing the conditional values.
+#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}, and possibly the two listed for \code{Conditional}.
 #' 
 #' @return
 #' A \code{\link{Translation}} object.
@@ -74,9 +77,12 @@ DefineTranslation <- function(
 	processData, UseProcessData = FALSE, 
 	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
 	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
 	ValueColumn = character(), 
 	NewValueColumn = character(), 
 	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableName = character(),
+	ConditionalValueColumn = character(), 
 	FileName = character()
 ) {
 	
@@ -92,8 +98,12 @@ DefineTranslation <- function(
 		Translation <- readVariableTranslation(
 			processData = processData, 
 			FileName = FileName, 
+			VariableName = VariableName, 
 			ValueColumn = ValueColumn, 
 			NewValueColumn = NewValueColumn, 
+			Conditional = Conditional, 
+			ConditionalVariableName = ConditionalVariableName, 
+			ConditionalValueColumn = ConditionalValueColumn, 
 			UseProcessData = UseProcessData
 		)
 	}
@@ -104,29 +114,46 @@ DefineTranslation <- function(
 		stop("Invalid DefinitionMethod")
 	}
 	
+	# Clean the table (keep only relevant columns):
+	if(Conditional) {
+		Translation <- Translation[, c("VariableName", "Value", "NewValue", "ConditionalVariableName", "ConditionalValue")]
+	}
+	else {
+		Translation <- Translation[, c("VariableName", "Value", "NewValue")]
+	}
+	
 	return(Translation)
 }
 
 
 # Function for reading a conversion table:
-readVariableTranslation <- function(processData, FileName, ValueColumn, NewValueColumn, UseProcessData = FALSE) {
+readVariableTranslation <- function(processData, FileName, VariableName, ValueColumn, NewValueColumn, Conditional, ConditionalVariableName, ConditionalValueColumn, UseProcessData = FALSE) {
 	
 	# Return immediately if UseProcessData = TRUE:
 	if(UseProcessData) {
 		return(processData)
 	}
 	
-	conversion <- data.table::fread(FileName, encoding = "UTF-8")
+	conversion <- data.table::fread(FileName, encoding = "UTF-8", colClasses = "character")
 	
 	# Get the Value and NewValue:
+	if(length(VariableName) && nchar(VariableName)) {
+		conversion[, VariableName := ..VariableName]
+	}
 	conversion[, Value := get(ValueColumn)]
 	conversion[, NewValue := get(NewValueColumn)]
+	if(Conditional) {
+		if(length(ConditionalVariableName) && nchar(ConditionalVariableName)) {
+			conversion[, ConditionalVariableName := ..ConditionalVariableName]
+		}
+		conversion[, ConditionalValue := get(ConditionalValueColumn)]
+	}
 	
 	return(conversion)
 }
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, Translation, translate.keys = FALSE, warnMissingTranslation = FALSE) {
+translateVariables <- function(data, Translation, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
 	
 	# Check whether the reuired columns are present in the translation table:
 	requiredColumns <- getRstoxDataDefinitions("TranslationRequiredColumns")
@@ -140,6 +167,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE, warnMi
 		translateOneTable, 
 		Translation = Translation, 
 		translate.keys = translate.keys, 
+		PreserveClass = PreserveClass, 
 		warnMissingTranslation = warnMissingTranslation
 	)
 	
@@ -147,7 +175,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE, warnMi
 }
 
 # Function to translate one table:
-translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMissingTranslation = FALSE) {
+translateOneTable <- function(table, Translation, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
 	
 	# Check that the table contains the variable to translate:
 	if(any(Translation$VariableName %in% names(table))) {
@@ -186,7 +214,8 @@ translateOneTable <- function(table, Translation, translate.keys = FALSE, warnMi
 			translationList, 
 			translateOneTranslationOneTable, 
 			table = table, 
-			translate.keys = translate.keys
+			translate.keys = translate.keys, 
+			PreserveClass = PreserveClass
 		)
 	}
 	
@@ -234,7 +263,7 @@ matchClass <- function(A, B) {
 
 
 # Function to apply to all tables of the input data, converting the variables:
-translateOneTranslationOneTable <- function(translationListOne, table, translate.keys = FALSE) {
+translateOneTranslationOneTable <- function(translationListOne, table, translate.keys = FALSE, PreserveClass = TRUE) {
 	
 	# Do nothing if the variable is a key:
 	isKeys <- endsWith(translationListOne$VariableName, "Key")
@@ -243,7 +272,19 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 	}
 	else {
 		# Convert the class to the class of the existing value in the table:
-		translationListOne <- convertClassToExistingOne(translationListOne, table)
+		if(PreserveClass) {
+			translationListOneConverted <- convertClassToExistingOne(translationListOne, table)
+			if(!identical(translationListOneConverted, translationListOne)) {
+				
+				atNAAndDiffering <- sapply(translationListOne, is.na) & !sapply(translationListOneConverted, is.na)
+				
+				if(any(atNAAndDiffering)) {
+					warning("StoX: NAs introduced when converting class of the columns ", paste(names(translationListOne)[atNAAndDiffering], collapse = ", "), ", to the class of the corresponding column of the data. To prevent converting class of the translation to the class of the data, use PreserveClass = FALSE.")
+				}
+				translationListOne <- translationListOneConverted
+			}
+		}
+		
 		
 		# Replace by the new value:
 		if(translationListOne$VariableName %in% names(table)) {
@@ -323,6 +364,7 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' 
 #' @param StoxBioticData An input of \link{ModelData} object
 #' @param Translation The process from which to get the \code{\link{Translation}} definition.
+#' @param PreserveClass Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (\code{PreserveClass} = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using \code{PreserveClass} = FALSE.
 #' 
 #' @return
 #' A \code{\link{StoxBioticData}} object.
@@ -331,12 +373,14 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' 
 TranslateStoxBiotic <- function(
 	StoxBioticData, 
-	Translation
+	Translation,  
+	PreserveClass = TRUE
 ) {
 	# Translate StoxBioticData:
 	translateVariables(
 		data = StoxBioticData, 
-		Translation = Translation
+		Translation = Translation,
+		PreserveClass = PreserveClass
 	)
 	
 	return(StoxBioticData)
@@ -431,11 +475,13 @@ ConvertStoxBioticFree <- function(
 #' 
 TranslateStoxAcoustic <- function(
 	StoxAcousticData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = StoxAcousticData, 
-		Translation = Translation
+		Translation = Translation,  
+		PreserveClass = PreserveClass
 	)
 	
 	return(StoxAcousticData)
@@ -526,11 +572,13 @@ ConvertStoxAcousticFree <- function(
 #' 
 TranslateBiotic <- function(
 	BioticData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = BioticData, 
-		Translation = Translation
+		Translation = Translation, 
+		PreserveClass = PreserveClass
 	)
 	
 	return(BioticData)
@@ -619,11 +667,13 @@ ConvertBioticFree <- function(
 #' 
 TranslateAcoustic <- function(
 	AcousticData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = AcousticData, 
-		Translation = Translation
+		Translation = Translation, 
+		PreserveClass = PreserveClass
 	)
 	
 	return(AcousticData)
@@ -711,11 +761,13 @@ ConvertAcousticFree <- function(
 #' 
 TranslateStoxLanding <- function(
 	StoxLandingData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = StoxLandingData, 
-		Translation = Translation
+		Translation = Translation, 
+		PreserveClass = PreserveClass
 	)
 	
 	return(StoxLandingData)
@@ -737,11 +789,13 @@ TranslateStoxLanding <- function(
 #' 
 TranslateLanding <- function(
 	LandingData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = LandingData, 
-		Translation = Translation
+		Translation = Translation, 
+		PreserveClass = PreserveClass
 	)
 	
 	return(LandingData)
@@ -767,11 +821,13 @@ TranslateLanding <- function(
 #' 
 TranslateICESBiotic <- function(
 	ICESBioticData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = ICESBioticData, 
-		Translation = Translation
+		Translation = Translation, 
+		PreserveClass = PreserveClass
 	)
 	
 	return(ICESBioticData)
@@ -793,11 +849,13 @@ TranslateICESBiotic <- function(
 #' 
 TranslateICESAcoustic <- function(
 	ICESAcousticData, 
-	Translation
+	Translation, 
+	PreserveClass = TRUE
 ) {
 	translateVariables(
 		data = ICESAcousticData, 
-		Translation = Translation
+		Translation = Translation,
+		PreserveClass = PreserveClass
 	)
 	
 	return(ICESAcousticData)

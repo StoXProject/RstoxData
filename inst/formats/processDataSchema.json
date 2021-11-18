@@ -8,14 +8,16 @@
 				"properties": {
 					"VariableName": { "type": "string" },
 					"Value": { "type": "string" },
-					"NewValue": { "type": "string" }
+					"NewValue": { "type": "string" }, 
+					"ConditionalVariableName": { "type": "string" },
+					"ConditionalValue": { "type": "string" }
 				},
 				"required": [
 					"VariableName", 
 					"Value", 
 					"NewValue"
-					]
+				]
 			}
-			]
+		]
 	}
 }
