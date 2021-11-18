@@ -16,6 +16,27 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "NewValueColumn", 
 			parameterValue = "NewValue"
+		), 
+		list(
+			changeVersion = "1.2.17", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "VariableName", 
+			parameterValue = "VariableName"
+		), 
+		list(
+			changeVersion = "1.2.17", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ConditionalValueColumn", 
+			parameterValue = "ConditionalValue"
+		), 
+		list(
+			changeVersion = "1.2.17", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ConditionalVariableName", 
+			parameterValue = "ConditionalVariableName"
 		)
 	), 
 	

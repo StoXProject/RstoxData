@@ -154,7 +154,11 @@ stoxFunctionAttributes <- list(
 			), 
 			# These two are joined with AND, and must both be fulfilled:
 			Conditional = list(
-				DefinitionMethod = "TranslationTable", 
+				#DefinitionMethod = "TranslationTable", 
+				UseProcessData = FALSE
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
@@ -165,6 +169,17 @@ stoxFunctionAttributes <- list(
 			# These two are joined with AND, and must both be fulfilled:
 			NewValueColumn = list(
 				DefinitionMethod = "ResourceFile", 
+				UseProcessData = FALSE
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableName = list(
+				Conditional = TRUE, 
+				UseProcessData = FALSE
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalValueColumn = list(
+				DefinitionMethod = "ResourceFile", 
+				Conditional = TRUE, 
 				UseProcessData = FALSE
 			)
 		)
@@ -529,20 +544,23 @@ processPropertyFormats <- list(
 	translationTable = list(
 		class = "table", 
 		title = "Translate columns of StoX data", 
-		columnNames = function(Conditional) {
+		columnNames = function(Conditional, VariableName, ConditionalVariableName) {
 			columnNames <- c(
-				"VariableName", 
+				# If VariableName is not given as a parameter, add it to the format:
+				if(!length(VariableName) || !nchar(VariableName)) "VariableName", 
 				"Value", 
 				"NewValue"
 			)
 			# Add a conditional variable:
 			if(Conditional) {
 				columnNames <- c(
-					"ConditionalVariableName", 
+					# If ConditionalVariableName is not given as a parameter, add it to the format:
+					if(!length(ConditionalVariableName) || !nchar(ConditionalVariableName)) "ConditionalVariableName", 
 					"ConditionalValue", 
 					columnNames
 				)
 			}
+			
 			return(columnNames)
 		}, 
 		variableTypes = function(Conditional) {

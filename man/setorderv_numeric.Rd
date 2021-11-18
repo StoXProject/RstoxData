@@ -11,7 +11,7 @@ setorderv_numeric(dataOne, by = NULL, key = NULL, ...)
 
 \item{by}{Order by the given columns.}
 
-\item{key}{If given and \code{by} is empty, orderr by the columns with names ending with \code{key}.}
+\item{key}{If given and \code{by} is empty, order by the columns with names ending with \code{key}.}
 
 \item{...}{Passed on to \code{\link[data.table]{setorderv}}}
 }

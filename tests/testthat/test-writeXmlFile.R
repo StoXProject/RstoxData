@@ -6,18 +6,18 @@ context("Test write XML")
 expect_equal_read_back_in_xml <- function(data, xsdObject, namespace){
   
   #force ordering by keys
-  data <- setKeysDataTables(data, xsdObject)
+  data <- RstoxData:::setKeysDataTables(data, xsdObject)
   
   tmp <- tempfile(fileext = "xml")
-  writeXmlFile(tmp, data, xsdObject, namespace)
-  backIn <- readXmlFile(tmp)
+  RstoxData:::writeXmlFile(tmp, data, xsdObject, namespace)
+  backIn <- RstoxData:::readXmlFile(tmp)
   unlink(tmp)
   
   # force filename to be the same
   backIn$metadata$file <- data$metadata$file
   
   #set keys again (for expect_equal)
-  backIn <- setKeysDataTables(backIn, xsdObject)
+  backIn <- RstoxData:::setKeysDataTables(backIn, xsdObject)
   
   expect_equal(data, backIn)
 }
@@ -33,7 +33,7 @@ expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "h
 context("test biotic 3.1 to 3.0 conversion")
 example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
 tmp <- tempfile(fileext = "xml")
-writeXmlFile(tmp, example, xsdObjects$nmdbioticv3.xsd, "http://www.imr.no/formats/nmdbiotic/v3")
+RstoxData:::writeXmlFile(tmp, example, xsdObjects$nmdbioticv3.xsd, "http://www.imr.no/formats/nmdbiotic/v3")
 backIn <- readXmlFile(tmp)
 unlink(tmp)
 
