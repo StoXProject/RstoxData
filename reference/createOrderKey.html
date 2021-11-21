@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run filter on any StoX related data source — filterData • RstoxData</title>
+<title>Convert a vector to an integer vector where individual string elelents at interpreted as numeric if possible. — createOrderKey • RstoxData</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Run filter on any StoX related data source — filterData" />
-<meta property="og:description" content="Run filter on any StoX related data source" />
+<meta property="og:title" content="Convert a vector to an integer vector where individual string elelents at interpreted as numeric if possible. — createOrderKey" />
+<meta property="og:description" content="Convert a vector to an integer vector where individual string elelents at interpreted as numeric if possible." />
 
 
 
@@ -111,46 +111,30 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run filter on any StoX related data source</h1>
-    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Filter.R'><code>R/Filter.R</code></a></small>
-    <div class="hidden name"><code>filterData.Rd</code></div>
+    <h1>Convert a vector to an integer vector where individual string elelents at interpreted as numeric if possible.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/R/Utilities.R'><code>R/Utilities.R</code></a></small>
+    <div class="hidden name"><code>createOrderKey.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Run filter on any StoX related data source</p>
+    <p>Convert a vector to an integer vector where individual string elelents at interpreted as numeric if possible.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>filterData</span><span class='op'>(</span>
-  <span class='va'>inputData</span>,
-  <span class='va'>filterExpression</span>,
-  propagateDownwards <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  propagateUpwards <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>createOrderKey</span><span class='op'>(</span><span class='va'>x</span>, split <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>inputData</th>
-      <td><p>An input data. Can be a list of biotic data (StoX data type <code><a href='BioticData.html'>BioticData</a></code>), list of acoustic data, StoxBiotic data, or StoxAcoustic data.</p></td>
+      <th>x</th>
+      <td><p>A vector.</p></td>
     </tr>
     <tr>
-      <th>filterExpression</th>
-      <td><p>Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.</p></td>
-    </tr>
-    <tr>
-      <th>propagateDownwards</th>
-      <td><p>Whether the filter action will propagate in the downwards direction. Default to TRUE.</p></td>
-    </tr>
-    <tr>
-      <th>propagateUpwards</th>
-      <td><p>Whether the filter action will propagate in the upwards direction. Default to FALSE.</p></td>
+      <th>split</th>
+      <td><p>A character to split strings by.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>An object of filtered data in the same format as the input data.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
