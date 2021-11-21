@@ -734,7 +734,7 @@ createOrderKeyNewWithoutError <- function(x, split = "/") {
 	# Remove NAs and add at the end:
 	areNAs <- is.na(x)
 	# Use c() here to rid off attributes:
-	x <- c(na.omit(x))
+	x <- c(stats::na.omit(x))
 	
 	# Split the keys:
 	if(!is.character(x)) {
