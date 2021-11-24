@@ -600,7 +600,7 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 
 #' Order a StoX format by keys
 #'
-#' @param An object of type \code{\link{StoxAcousticData}} or \code{\link{StoxBioticData}}
+#' @param data An object of type \code{\link{StoxAcousticData}} or \code{\link{StoxBioticData}}
 #'
 #' @export
 #' 

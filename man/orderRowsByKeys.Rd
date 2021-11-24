@@ -7,7 +7,7 @@
 orderRowsByKeys(data)
 }
 \arguments{
-\item{An}{object of type \code{\link{StoxAcousticData}} or \code{\link{StoxBioticData}}}
+\item{data}{An object of type \code{\link{StoxAcousticData}} or \code{\link{StoxBioticData}}}
 }
 \description{
 Order a StoX format by keys
