@@ -598,7 +598,12 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 }
 
 
-
+#' Order a StoX format by keys
+#'
+#' @param An object of type \code{\link{StoxAcousticData}} or \code{\link{StoxBioticData}}
+#'
+#' @export
+#' 
 orderRowsByKeys <- function(data) {
 	lapply(data, setorderv_numeric, key = "Key")
 }

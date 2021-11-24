@@ -46,5 +46,5 @@ A \code{\link{Translation}} object.
 This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
 }
 \seealso{
-
+\code{\link{TranslateStoxBiotic}}, \code{\link{TranslateStoxAcoustic}}, \code{\link{TranslateBiotic}}, \code{\link{TranslateAcoustic}}, \code{\link{TranslateStoxLanding}}, \code{\link{TranslateLanding}}, \code{\link{TranslateICESBiotic}} and \code{\link{TranslateICESAcoustic}} for applying the translation.
 }
