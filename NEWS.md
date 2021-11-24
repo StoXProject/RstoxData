@@ -1,3 +1,7 @@
+# RstoxData v1.2.18 (2021-11-22)
+* Reverted to the original createOrderKey() of StoX 3.1.0, used in setorderv_numeric() and further in RstoxBase::formatOutput(), in order to produce the same seeds in RstoxBase::ImputeSuperIndividuals().
+* Added parameters VariableName, ConditionalVariableName and ConditionalValueColumn to DefineTranslation(), to support full flexibility of column names in the resource file. Also added the parameter PreserveClass to Translate* functions, specifying whether to allow for the translation to change class of the data, e.g. form integer to string. Specified NAs in ICESBiotic() to the class defined by ICES.
+
 # RstoxData v1.2.13 (2021-11-04)
 * Fixed bug in readVariableTranslation() (where eval() was used instead of get()).
 
