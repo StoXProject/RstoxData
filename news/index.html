@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.19</span>
       </span>
     </div>
 
@@ -114,6 +114,15 @@
       <small>Source: <a href='https://github.com/StoXProject/RstoxData/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="rstoxdata-v1218-2021-11-22" class="section level1">
+<h1 class="page-header" data-toc-text="1.2.18">
+<a href="#rstoxdata-v1218-2021-11-22" class="anchor"></a>RstoxData v1.2.18 (2021-11-22)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Reverted to the original createOrderKey() of StoX 3.1.0, used in setorderv_numeric() and further in RstoxBase::formatOutput(), in order to produce the same seeds in RstoxBase::ImputeSuperIndividuals().</li>
+<li>Added parameters VariableName, ConditionalVariableName and ConditionalValueColumn to DefineTranslation(), to support full flexibility of column names in the resource file. Also added the parameter PreserveClass to Translate* functions, specifying whether to allow for the translation to change class of the data, e.g. form integer to string. Specified NAs in ICESBiotic() to the class defined by ICES.</li>
+</ul>
+</div>
     <div id="rstoxdata-v1213-2021-11-04" class="section level1">
 <h1 class="page-header" data-toc-text="1.2.13">
 <a href="#rstoxdata-v1213-2021-11-04" class="anchor"></a>RstoxData v1.2.13 (2021-11-04)<small> Unreleased </small>
