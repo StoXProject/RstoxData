@@ -62,6 +62,7 @@ jobs:
         run: |
           install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
           saveRDS(pak::pkg_deps("local::.", dependencies = TRUE), ".github/r-depends.rds")
+          install.packages('remotes')
         shell: Rscript {0}
 
       - name: Cache R packages
