@@ -133,24 +133,38 @@ readVariableTranslation <- function(processData, FileName, VariableName, ValueCo
 	if(UseProcessData) {
 		return(processData)
 	}
-	
+
 	conversion <- data.table::fread(FileName, encoding = "UTF-8", colClasses = "character")
-	
 	# Get the Value and NewValue:
 	if(length(VariableName) && nchar(VariableName)) {
 		conversion[, VariableName := ..VariableName]
 	}
-	conversion[, Value := get(ValueColumn)]
-	conversion[, NewValue := get(NewValueColumn)]
+	
+	addVariable(ValueColumn, conversion, warningLevel = 2)
+	addVariable(NewValueColumn, conversion, warningLevel = 2)
 	if(Conditional) {
 		if(length(ConditionalVariableName) && nchar(ConditionalVariableName)) {
 			conversion[, ConditionalVariableName := ..ConditionalVariableName]
 		}
-		conversion[, ConditionalValue := get(ConditionalValueColumn)]
+		addVariable(ConditionalValueColumn, conversion, warningLevel = 2)
 	}
 	
 	return(conversion)
 }
+
+
+addVariable <- function(name, table, warningLevel = 1) {
+	nameVariableColumn <- deparse(substitute(name))
+	nameVariable <- substr(nameVariableColumn, 1, nchar(nameVariableColumn) - 6)
+	if(name %in% names(table)) {
+		table[, eval(nameVariable) := get(name)]
+	}
+	else {
+		warningMessage <- paste0("StoX: ", nameVariableColumn, " was \"", name, "\", but must be one of the column names of the conversion table:\n\t", paste(names(table), collapse = "\n\t"))
+		do.call(if(warningLevel == 1) warning else stop, list(warningMessage))
+	}
+}
+
 
 # Function to convert variables given a conversion table:
 translateVariables <- function(data, Translation, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {

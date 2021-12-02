@@ -23,10 +23,10 @@ jobs:
           - {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
           - {os: windows-latest, r: 'oldrel',  pkgext: '.zip'}
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
-          - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://packagemanager.rstudio.com/cran/latest"}
-          - {os: ubuntu-18.04,   r: 'release', pkgext: '.tar.gz', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.6',  pkgext: '.tar.gz', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-18.04,   r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-18.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-18.04,   r: '3.6',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -61,19 +61,19 @@ jobs:
       - name: Query dependencies
         run: |
           install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
       - name: Cache R packages
         if: runner.os != 'Windows'
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          key: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
+          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-
 
-      - name: Install system dependencies
+      - name: Install system dependencies on Linux
         if: runner.os == 'Linux'
         run: |
           while read -r cmd
@@ -90,9 +90,24 @@ jobs:
       - name: Install dependencies on Windows and macOS
         if: runner.os != 'Linux'
         run: |
+          # First try binary and then possibly source:
+          options(install.packages.check.source = "no")
           remotes::install_deps(dependencies = TRUE, type = "binary")
+          installed <- utils::installed.packages()[, "Package"]
+          needed <- remotes::dev_package_deps()
+          missing <- setdiff(needed$package, installed)
+          if(length(missing)) {
+            message("Installing the following packages using default type:\n", paste0(missing, collapse = ", "))
+            utils::install.packages(missing, dependencies = TRUE)
+          }
         shell: Rscript {0}
 
+      - name: Prepare for CRANdependencies on Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y libcurl4-openssl-dev
+        shell: bash
+      
       - name: Install CRANdependencies
         run: |
           remotes::install_cran("rcmdcheck")
