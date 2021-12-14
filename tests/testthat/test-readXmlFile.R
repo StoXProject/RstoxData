@@ -77,6 +77,15 @@ for(item in icesFiles) {
 	expect_true(length(all.equal(icesDataA, icesDataB)) <= 1)
 }
 
+context("Test BOM")
+icesDataA <- readXmlFile(paste0(exampleDir, "/", "ICES_Biotic_2.xml"), stream = T)
+expect_warning(icesDataB <- readXmlFile(paste0(exampleDir, "/", "ICES_Biotic_2_BOM.xml"), stream = T), "Removed byte-order-mark from UTF-8 encoded data.")
+expect_equal(icesDataA$Haul$LocalID, icesDataB$Haul$LocalID)
+# should be exactly the same except metadata (filename)
+expect_true(length(all.equal(icesDataA, icesDataB)) == 1) 
+icesDataA$metadata$file <- icesDataB$metadata$file
+expect_true(all.equal(icesDataA, icesDataB)) 
+
 # Zipped files:
 context("test-readXmlFile: Zipped acoustic file")
 example <- system.file("testresources", "echosounder_2020821.zip", package="RstoxData")
