@@ -7,6 +7,13 @@ expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedet
 expect_equal(nrow(defaultParseBiotic$fishstation), 2)
 expect_equal(defaultParseBiotic$fishstation$fishingbait[[1]], "1")
 
+context("test-readXmlFile: useXsd-option")
+readXmlFile(example, stream = T, useXsd = "nmdbioticv3.1")
+expect_error(readXmlFile(example, stream = T, useXsd = "unkown"), "useXsd=unkown is not supported. Supported values:")
+expect_warning(readXmlFile(example, stream = T, useXsd = "nmdbioticv3"))
+expect_error(readXmlFile(example, stream = F, useXsd = "nmdbioticv3"))
+
+
 context("test-readXmlFile: stream parse NMD Biotic v3.1")
 streamParseBiotic <- readXmlFile(example, stream = T)
 expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(streamParseBiotic)))
