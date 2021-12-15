@@ -68,3 +68,10 @@ expect_equal(icesDataB$Sample[1, ]$SampleCount, 6)
 
 context(paste("test-StoxBiotic: ICES biotic data (with missing individual)", item, "to StoxBiotic DOM == stream"))
 expect_true(all.equal(icesDataA, icesDataB))
+
+context("Test repeating catchpartnumbers")
+example <- system.file("testresources","repeatingcp.xml", package="RstoxData")
+biotic <- ReadBiotic(example)
+sb <- StoxBiotic(biotic)
+expect_equal(nrow(biotic$repeatingcp.xml$catchsample), nrow(sb$Sample))
+
