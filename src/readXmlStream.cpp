@@ -651,9 +651,12 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 		// Open input file (in Windows use UTF-8 to UTF-16 conversion)
 #ifndef _WIN32
 		istream = new XML::FileInputStream(inputFileName.c_str());
-		if (istream->discardUtf8BOM()){
-		  Rcpp::warning("Removed byte-order-mark from UTF-8 encoded data.");
-		}
+		istream->discardUtf8BOM();
+		  
+		//not sure these warnings work on windows.
+    //if (istream->discardUtf8BOM()){
+		//  Rcpp::warning("Removed byte-order-mark from UTF-8 encoded data.");
+		//}
 #else
 		std::wstring filePath;
 		filePath.resize(inputFileName.size());
