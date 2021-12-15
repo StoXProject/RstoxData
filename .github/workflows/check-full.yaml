@@ -18,9 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'oldrel',  pkgext: '.tgz'}
-          - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
+          - {os: macOS-10.15,   r: 'oldrel',  pkgext: '.tgz'}
+          - {os: macOS-10.15,   r: 'release', pkgext: '.tgz'}
+          - {os: macOS-10.15,   r: '3.6',     pkgext: '.tgz'}
           - {os: windows-latest, r: 'oldrel',  pkgext: '.zip'}
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
