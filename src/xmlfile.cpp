@@ -66,29 +66,6 @@ int FileInputStream::read(XML_Char *buf, size_t bufLen)
 }
 
 //
-// Checks if the next three bytes on the stream correspond to UTF-8 byte-order mark (BOM) and discards these bytes from the stream.
-// Puts these bytes back on the stream if BOM is not found.
-// Return true if BOM was removed, otherwise return false;
-//
-bool FileInputStream::discardUtf8BOM()
-{
-  char c1 = getc(mFile);
-  char c2 = getc(mFile);
-  char c3 = getc(mFile);
-  if (c1 == '\xEF' && c2 == '\xBB' && c3 == '\xBF') {
-    return true;
-  }
-  else{
-    ungetc(c3, mFile);
-    ungetc(c2, mFile);
-    ungetc(c1, mFile);
-  }
-
-  return false;
-  
-}
-
-//
 // FileInputStream
 //
 FileOutputStream::FileOutputStream(const char *path)
