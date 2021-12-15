@@ -6,7 +6,7 @@
 #'
 #' @param xmlFilePath full path to the XML file to be read.
 #' @param stream a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to TRUE.
-#' @param useXsd Specify an xsd object to use. Default to NULL, in which case auto-detection is attempted. Valid options are the schemas listed in names(RstoxData::xsdObjects), but without the suffix ".xsd".
+#' @param useXsd Specify an xsd object to use. Default to NULL.
 #' @param usePrefix Manually specify a namespace prefix. Default to NULL.
 #' @param verbose Show verbose output. Default to FALSE.
 #'
@@ -36,13 +36,6 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 		return(srcvec)
 	}
 
-	if (!is.null(useXsd)){
-	  supportedXsds <- gsub(".xsd", "", names(RstoxData::xsdObjects))
-	  if (!(useXsd %in% supportedXsds)){
-	    stop("useXsd=", useXsd, " is not supported. Supported values: ", paste(supportedXsds, collapse=","))
-	  }
-	}
-	
 	# Ices Acoustic XSD needs several additional treatments
 	icesAcousticPreprocess <- function(xsdObject) {
 
@@ -197,17 +190,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 		useXsd <- found[["xsd"]]
         if(is.null(usePrefix))
                 usePrefix <- found[["nsPrefix"]]
-	
-	if (!is.null(useXsd)){
-	  if (useXsd != found["xsd"] & stream){
-	    warning(paste("useXsd=", useXsd, " is different from schema for detected namespace (",found["xsd"],")."))
-	  }
-	  if (useXsd != found["xsd"] & !stream){
-	    #Don't know exactly why this fails for DOM parsing.
-	    stop(paste("useXsd=", useXsd, " is different from schema for detected namespace (",found["xsd"],"). If the namespaces are compatible: Use stream=T to read in data anyway."))
-	  }
-	}
-	
+
 	# See if we have a namespace prefix set
 	if(!is.null(usePrefix)) {
 		warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
@@ -221,9 +204,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	}
 
 	# Apply preprocess for ICES XSDs
-	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
+	if(useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
-	} else if(!is.null(useXsd) && useXsd == "icesBiotic") {
+	} else if(useXsd == "icesBiotic") {
 		xsdObjects$icesBiotic.xsd <- icesBioticPreprocess(xsdObjects$icesBiotic.xsd)
 	}
 	
