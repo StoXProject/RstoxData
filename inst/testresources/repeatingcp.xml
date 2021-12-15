@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<missions xmlns="http://www.imr.no/formats/nmdbiotic/v3">
+    <mission missiontype="1" startyear="2018" platform="9000" missionnumber="50">
+        <missiontypename>Beskatning Kommersielle prøver</missiontypename>
+        <platformname>Kommersielle fartøy</platformname>
+        <missionstartdate>2018-01-01Z</missionstartdate>
+        <missionstopdate>2018-12-31Z</missionstopdate>
+        <purpose>Kommersielle prøver for KOLMULE</purpose>
+        <fishstation serialnumber="39501">
+            <nation>58</nation>
+            <catchplatform>9125</catchplatform>
+            <station>9501</station>
+            <stationstartdate>2018-02-23Z</stationstartdate>
+            <system>2</system>
+            <area>48</area>
+            <location>11</location>
+            <gear>3530</gear>
+            <gearcount>1</gearcount>
+            <catchsample catchsampleid="1">
+                <commonname>kolmule</commonname>
+                <catchcategory>164774</catchcategory>
+                <catchpartnumber>1</catchpartnumber>
+                <aphia>126439</aphia>
+                <scientificname>Micromesistius poutassou</scientificname>
+                <catchweight>1867000.0</catchweight>
+                <individual specimenid="1">
+                    <individualproducttype>1</individualproducttype>
+                    <individualweight>0.092</individualweight>
+                    <lengthresolution>2</lengthresolution>
+                    <length>0.265</length>
+                </individual>
+            </catchsample>
+            <catchsample catchsampleid="2">
+                <commonname>kolmule</commonname>
+                <catchcategory>164774</catchcategory>
+                <catchpartnumber>1</catchpartnumber>
+                <aphia>126439</aphia>
+                <scientificname>Micromesistius poutassou</scientificname>
+                <catchweight>7000.0</catchweight>
+                <individual specimenid="1">
+                    <individualproducttype>1</individualproducttype>
+                    <individualweight>0.092</individualweight>
+                    <lengthresolution>2</lengthresolution>
+                    <length>0.265</length>
+                </individual>
+                <individual specimenid="2">
+                    <individualproducttype>1</individualproducttype>
+                    <individualweight>0.092</individualweight>
+                    <lengthresolution>2</lengthresolution>
+                    <length>0.265</length>
+                </individual>
+            </catchsample>
+	</fishstation>
+    </mission>
+</missions>
