@@ -33,17 +33,15 @@ BugReports: https://github.com/StoXProject/RstoxData/issues
 License: LGPL-3
 LazyData: true
 Encoding: UTF-8
-Imports: Rcpp (>= 1.0.0), data.table (>= 1.12.6), xml2 (>= 1.2.2), xslt
-        (>= 1.4), units (>= 0.7), stringi (>= 1.4.3)
-Suggests: testthat
-LinkingTo: Rcpp
-RoxygenNote: 7.1.2
-NeedsCompilation: yes
-Packaged: 2021-12-13 13:19:58 UTC; a5362
-Author: Ibrahim Umar [cre, aut],
-  Sindre Vatnehol [aut],
-  Arne Johannes Holmin [aut],
-  Edvin Fuglebakk [aut],
-  Espen Johnsen [aut],
-  Norwegian Institute of Marine Research [cph, fnd]
-Maintainer: Ibrahim Umar <ibrahim.umar@hi.no>
+Imports: 
+    Rcpp (>= 1.0.0),
+    data.table (>= 1.12.6),
+    xml2 (>= 1.2.2),
+    xslt (>= 1.4),
+    units (>= 0.7),
+    stringi (>= 1.4.3)
+Suggests: 
+    testthat
+LinkingTo: 
+    Rcpp
+RoxygenNote: 7.1.1
