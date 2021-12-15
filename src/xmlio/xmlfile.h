@@ -70,6 +70,7 @@ public:
 #endif
 	virtual ~FileInputStream();
 	virtual int read(XML_Char *buf, size_t bufLen);
+	virtual bool discardUtf8BOM();
 private:
 	FILE *mFile;
 };
