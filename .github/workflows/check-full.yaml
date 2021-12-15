@@ -36,14 +36,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install R on MacOS
-        if: runner.os == 'macOS'
-        run: |
-          # R is not included in macOS-latest after this was changed to MacOS-11
-          # see https://github.com/actions/virtual-environments/issues/4060
-          brew install r
-        shell: bash
-
       - name: Do autorelease increment, tagging, and environment setup
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
