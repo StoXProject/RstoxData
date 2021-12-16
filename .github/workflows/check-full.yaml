@@ -26,8 +26,8 @@ jobs:
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-latest,   r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-latest,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-latest,   r: '3.6',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-18.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-18.04,   r: '3.6',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
