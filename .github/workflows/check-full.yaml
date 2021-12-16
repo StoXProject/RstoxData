@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - master
+      - develop
 
 name: R-CMD-check
 
@@ -18,13 +19,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-10.15,   r: 'oldrel',  pkgext: '.tgz'}
-          - {os: macOS-10.15,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-10.15,   r: '3.6',     pkgext: '.tgz'}
+          - {os: macOS-latest,   r: 'oldrel',  pkgext: '.tgz'}
+          - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
+          - {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
           - {os: windows-latest, r: 'oldrel',  pkgext: '.zip'}
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-18.04,   r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-latest,   r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-18.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-18.04,   r: '3.6',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
 
@@ -50,7 +51,7 @@ jobs:
           echo "PKG_REPO=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
         shell: bash
 
-      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
           rtools-version: ${{ matrix.config.rtools }}
