@@ -75,7 +75,6 @@ unlink(testing)
 context("test-readXmlFile: ICES acoustic and biotic data reading")
 icesFiles <- c("ICES_Acoustic_1.xml", "ICES_Biotic_1.xml", "ICES_Acoustic_2.xml", "ICES_Biotic_2.xml")
 exampleDir <- system.file("testresources","", package="RstoxData")
-print(paste0(exampleDir, "/", icesFiles))
 
 for(item in icesFiles) {
 	icesDataA <- readXmlFile(paste0(exampleDir, "/", item), stream = T)
