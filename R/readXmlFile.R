@@ -30,6 +30,9 @@
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
 
+  # make sure path is in native encoding
+  #xmlFilePath <- enc2native(xmlFilePath)
+  
 	# To UTf-8
 	toUTF8 <- function(srcvec) {
 		Encoding(srcvec) <- "UTF-8"

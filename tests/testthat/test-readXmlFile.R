@@ -63,12 +63,16 @@ encParse <- readXmlFile(example, stream = T)
 expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
 
 context("test-readXmlFile: Path encoding")
-testing <- paste0(tempfile(pattern=""), "_bio_å_prøve.xml")
+testing <- paste0(tempfile(pattern=""), "_bio_å_prøv æ.xml")
 file.copy(example, testing)
 encParse <- readXmlFile(testing, stream = F)
 expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
 encParse <- readXmlFile(testing, stream = T)
 expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+
+testing <- stringi::stri_encode(testing, from="UTF-8", to="latin1")
+encParse <- readXmlFile(testing, stream = T)
+
 unlink(testing)
 
 # ICES data
