@@ -20,13 +20,6 @@ StoxUnits <- rbind(StoxUnits, list("length", "nmi", "nautical mile", 1852))
 StoxUnits <- rbind(StoxUnits, list("cardinality", "i", "individuals", 1))
 StoxUnits <- rbind(StoxUnits, list("cardinality", "ki", "thousand individuals", 1e3))
 StoxUnits <- rbind(StoxUnits, list("cardinality", "Mi", "million individuals", 1e6))
-StoxUnits <- rbind(StoxUnits, list("fraction", "0.", "decimal", 1))
-StoxUnits <- rbind(StoxUnits, list("fraction", "%", "percent", 1e-2))
-# treat age separate from time, as it is not a fixed ratio to actual time units
-StoxUnits <- rbind(StoxUnits, list("age", "yr", "year", 1))
-StoxUnits <- rbind(StoxUnits, list("time", "s", "second", 1))
-StoxUnits <- rbind(StoxUnits, list("time", "min", "minute", 60))
-StoxUnits <- rbind(StoxUnits, list("time", "h", "hour", 60*60))
 
 stopifnot(!any(duplicated(StoxUnits$symbol)))
 
