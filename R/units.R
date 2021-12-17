@@ -9,11 +9,11 @@
 #' @param desired symbol of unit desired after conversion
 #' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
 #' @return value expressed in 'desired' unit.
-#' @examples
+#' @example 
 #'  convertUnits(c(1,2), "km", "nmi")
 #'  convertUnits(10, "t", "g")
-#' @noRd
-convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUnits){
+#' @export
+convertUnits <- function(value, unit, desired, conversionTable=StoxUnits){
   
   if (!(unit %in% conversionTable$symbol)){
     stop(paste("Symbol", unit, "not found in 'conversionTable'"))
@@ -31,92 +31,5 @@ convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUn
   conversion = facUnit / facDesired
   
   return(value*conversion)
-  
-}
-
-#' Set units of value
-#' @description 
-#'  Set unit of a value in accordance with StoX convention (adds the attribute 'stoxUnit').
-#'  Converts unit if already set.
-#' @details 
-#'  The argument 'conversionTable' defines valid units and their symbols.
-#'  This defaults to \code{\link[RstoxData]{StoxUnits}}.
-#' @param value value to set unit for.
-#' @param desired the desired unit for the column
-#' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
-#' @param assertNew logical. If true an error is raised if value already has a unit.
-#' @return converted value with the attribute 'Unit' set / altered.
-#' @examples 
-#'  dt <- data.table::data.table(weight=c(1000,1200))
-#'  dt$weight <- setUnit(dt$weight, "g")
-#'  print(dt$weight)
-#'  dt$weight <- setUnit(dt$weight, "kg")
-#'  print(dt$weight)
-#' @export
-setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits, assertNew=FALSE){
-  
-  if (!(desired %in% conversionTable$symbol)){
-    stop(paste("Symbol", desired, "not found in 'conversionTable'"))
-  }
-  
-  if (!is.null(attr(value, "stoxUnit"))){
-    if (assertNew){
-      stop("Unit is already set.")
-    }
-    value <- convertUnits(value, attr(value, "stoxUnit"), desired, conversionTable)
-  }
-  
-  attr(value, "stoxUnit") <- desired
-  
-  return(value)
-
-}
-
-#' Get unit for value
-#' @description 
-#'  Get unit of a value in accordance with StoX convention.
-#' @param value value to read unit from
-#' @param property the property of the unit that is to be returned (e.g. 'symbol' or 'name')
-#' @param unitTable formatted as \code{\link[RstoxData]{StoxUnits}}
-#' @return the unit of value. <NA> if unit is not set
-#' @examples 
-#'  dt <- data.table::data.table(weight=c(1000,1200))
-#'  dt$weight <- setUnit(dt$weight, "g")
-#'  print(getUnit(dt$weight, "name"))
-#' @export
-getUnit <- function(value, property=c("symbol", "name"), unitTable=RstoxData::StoxUnits){
-  if (is.null(attr(value, "stoxUnit"))){
-    return(as.character(NA))
-  }
-  
-  property <- match.arg(property)
-  
-  unit <- attr(value, "stoxUnit")
-  if (!(unit %in% unitTable$symbol)){
-    stop(paste("Symbol", unit, "not found in 'conversionTable'"))
-  }
-  
-  return(unitTable[[property]][unitTable$symbol==unit])
-  
-}
-
-#' Get available units
-#' @description 
-#'  Get the unit symbmols that are available for a given quantity.
-#'  The available quntities and units are defined by the argument unitTable
-#'  which defaults to RstoxData::StoxUnits
-#' @param quantity quantity to get units for, such as 'mass', 'length' etc.
-#' @param unitTable formatted as \code{\link[RstoxData]{StoxUnits}}
-#' @return a character vector with availble unit symbols.
-#' @examples 
-#'  print(getUnitOptions("mass"))
-#' @export
-getUnitOptions <- function(quantity, unitTable=RstoxData::StoxUnits){
-  
-  if (!(quantity %in% unitTable$quantity)){
-    stop(paste(quantity, "is not a valid quantity."))
-  }
-  
-  return(unitTable$symbol[unitTable$quantity==quantity])
   
 }
