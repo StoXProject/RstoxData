@@ -12,8 +12,8 @@
 #' @example 
 #'  convertUnits(c(1,2), "km", "nmi")
 #'  convertUnits(10, "t", "g")
-#' @noRd
-convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUnits){
+#' @export
+convertUnits <- function(value, unit, desired, conversionTable=StoxUnits){
   
   if (!(unit %in% conversionTable$id)){
     stop(paste(unit, "not found in 'conversionTable'"))
