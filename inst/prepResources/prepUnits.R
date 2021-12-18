@@ -20,6 +20,8 @@ StoxUnits <- rbind(StoxUnits, list("length", "nmi", "nautical mile", 1852))
 StoxUnits <- rbind(StoxUnits, list("cardinality", "i", "individuals", 1))
 StoxUnits <- rbind(StoxUnits, list("cardinality", "ki", "thousand individuals", 1e3))
 StoxUnits <- rbind(StoxUnits, list("cardinality", "Mi", "million individuals", 1e6))
+StoxUnits <- rbind(StoxUnits, list("fraction", "0.", "decimal", 1))
+StoxUnits <- rbind(StoxUnits, list("fraction", "%", "percent", 1e-2))
 
 stopifnot(!any(duplicated(StoxUnits$symbol)))
 
