@@ -9,11 +9,11 @@
 #' @param desired symbol of unit desired after conversion
 #' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
 #' @return value expressed in 'desired' unit.
-#' @example 
+#' @examples
 #'  convertUnits(c(1,2), "km", "nmi")
 #'  convertUnits(10, "t", "g")
 #' @export
-convertUnits <- function(value, unit, desired, conversionTable=StoxUnits){
+convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUnits){
   
   if (!(unit %in% conversionTable$symbol)){
     stop(paste("Symbol", unit, "not found in 'conversionTable'"))
