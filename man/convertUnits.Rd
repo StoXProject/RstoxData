@@ -4,7 +4,7 @@
 \alias{convertUnits}
 \title{convert units}
 \usage{
-convertUnits(value, unit, desired, conversionTable = StoxUnits)
+convertUnits(value, unit, desired, conversionTable = RstoxData::StoxUnits)
 }
 \arguments{
 \item{value}{to be expressed in different unit}
