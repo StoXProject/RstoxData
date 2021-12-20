@@ -26,8 +26,8 @@ The argument 'conversionTable' defines valid units and their symbols.
 }
 \examples{
  dt <- data.table::data.table(weight=c(1000,1200))
- dt$weight <- setDtUnit(dt$weight, "g")
+ dt$weight <- setUnit(dt$weight, "g")
  print(dt$weight)
- dt$weight <- setDtUnit(dt$weight, "kg")
+ dt$weight <- setUnit(dt$weight, "kg")
  print(dt$weight)
 }
