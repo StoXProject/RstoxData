@@ -25,3 +25,7 @@ Express values in a different unit.
 The argument 'conversionTable' defines valid units and their symbols.
  This defaults to \code{\link[RstoxData]{StoxUnits}}.
 }
+\examples{
+ convertUnits(c(1,2), "km", "nmi")
+ convertUnits(10, "t", "g")
+}
