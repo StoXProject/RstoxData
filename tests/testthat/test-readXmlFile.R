@@ -7,6 +7,13 @@ expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedet
 expect_equal(nrow(defaultParseBiotic$fishstation), 2)
 expect_equal(defaultParseBiotic$fishstation$fishingbait[[1]], "1")
 
+context("test-readXmlFile: useXsd-option")
+readXmlFile(example, stream = T, useXsd = "nmdbioticv3.1")
+expect_error(readXmlFile(example, stream = T, useXsd = "unkown"), "useXsd=unkown is not supported. Supported values:")
+expect_warning(readXmlFile(example, stream = T, useXsd = "nmdbioticv3"))
+expect_error(readXmlFile(example, stream = F, useXsd = "nmdbioticv3"))
+
+
 context("test-readXmlFile: stream parse NMD Biotic v3.1")
 streamParseBiotic <- readXmlFile(example, stream = T)
 expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(streamParseBiotic)))
@@ -76,6 +83,15 @@ for(item in icesFiles) {
 	# There should be minimal differences (in the Survey table only)
 	expect_true(length(all.equal(icesDataA, icesDataB)) <= 1)
 }
+
+context("Test BOM")
+icesDataA <- readXmlFile(paste0(exampleDir, "/", "ICES_Biotic_2.xml"), stream = T)
+icesDataB <- readXmlFile(paste0(exampleDir, "/", "ICES_Biotic_2_BOM.xml"), stream = T)
+expect_equal(icesDataA$Haul$LocalID, icesDataB$Haul$LocalID)
+# should be exactly the same except metadata (filename)
+expect_true(length(all.equal(icesDataA, icesDataB)) == 1) 
+icesDataA$metadata$file <- icesDataB$metadata$file
+expect_true(all.equal(icesDataA, icesDataB)) 
 
 # Zipped files:
 context("test-readXmlFile: Zipped acoustic file")
