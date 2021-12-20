@@ -12,7 +12,7 @@
 #' @examples
 #'  convertUnits(c(1,2), "km", "nmi")
 #'  convertUnits(10, "t", "g")
-#' @export
+#' @noRd
 convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUnits){
   
   if (!(unit %in% conversionTable$symbol)){
@@ -47,9 +47,9 @@ convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUn
 #' @return converted value with the attribute 'Unit' set / altered.
 #' @examples 
 #'  dt <- data.table::data.table(weight=c(1000,1200))
-#'  dt$weight <- setDtUnit(dt$weight, "g")
+#'  dt$weight <- setUnit(dt$weight, "g")
 #'  print(dt$weight)
-#'  dt$weight <- setDtUnit(dt$weight, "kg")
+#'  dt$weight <- setUnit(dt$weight, "kg")
 #'  print(dt$weight)
 #' @export
 setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits){
@@ -73,13 +73,14 @@ setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits){
 #'  Get unit of a value in accordance with StoX convention.
 #' @param value value to read unit from
 #' @param property the property of the unit that is to be returned (e.g. 'symbol' or 'name')
+#' @param unitTable formatted as \code{\link[RstoxData]{StoxUnits}}
 #' @return the unit of value. <NA> if unit is not set
 #' @examples 
 #'  dt <- data.table::data.table(weight=c(1000,1200))
-#'  dt$weight <- setDtUnit(dt$weight, "g")
-#'  print(getUnit(dt), "name")
+#'  dt$weight <- setUnit(dt$weight, "g")
+#'  print(getUnit(dt$weight, "name"))
 #' @export
-getUnit <- function(value, property=c("symbol", "name"), conversionTable=RstoxData::StoxUnits){
+getUnit <- function(value, property=c("symbol", "name"), unitTable=RstoxData::StoxUnits){
   if (is.null(attr(value, "stoxUnit"))){
     return(as.character(NA))
   }
@@ -87,10 +88,10 @@ getUnit <- function(value, property=c("symbol", "name"), conversionTable=RstoxDa
   property <- match.arg(property)
   
   unit <- attr(value, "stoxUnit")
-  if (!(unit %in% conversionTable$symbol)){
+  if (!(unit %in% unitTable$symbol)){
     stop(paste("Symbol", unit, "not found in 'conversionTable'"))
   }
   
-  return(conversionTable[[property]][conversionTable$symbol==unit])
+  return(unitTable[[property]][unitTable$symbol==unit])
   
 }
