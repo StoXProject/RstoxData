@@ -7,13 +7,15 @@
 getUnit(
   value,
   property = c("symbol", "name"),
-  conversionTable = RstoxData::StoxUnits
+  unitTable = RstoxData::StoxUnits
 )
 }
 \arguments{
 \item{value}{value to read unit from}
 
 \item{property}{the property of the unit that is to be returned (e.g. 'symbol' or 'name')}
+
+\item{unitTable}{formatted as \code{\link[RstoxData]{StoxUnits}}}
 }
 \value{
 the unit of value. <NA> if unit is not set
@@ -23,6 +25,6 @@ Get unit of a value in accordance with StoX convention.
 }
 \examples{
  dt <- data.table::data.table(weight=c(1000,1200))
- dt$weight <- setDtUnit(dt$weight, "g")
- print(getUnit(dt), "name")
+ dt$weight <- setUnit(dt$weight, "g")
+ print(getUnit(dt$weight, "name"))
 }
