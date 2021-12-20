@@ -36,7 +36,7 @@ convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUn
 
 #' Set units of value
 #' @description 
-#'  Set unit of a value in accordance with StoX convention (adds the attribute 'unit').
+#'  Set unit of a value in accordance with StoX convention (adds the attribute 'stoxUnit').
 #'  Converts unit if already set.
 #' @details 
 #'  The argument 'conversionTable' defines valid units and their symbols.
@@ -58,11 +58,11 @@ setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits){
     stop(paste("Symbol", desired, "not found in 'conversionTable'"))
   }
   
-  if (!is.null(attr(value, "unit"))){
-    value <- convertUnits(value, attr(value, "unit"), desired, conversionTable)
+  if (!is.null(attr(value, "stoxUnit"))){
+    value <- convertUnits(value, attr(value, "stoxUnit"), desired, conversionTable)
   }
   
-  attr(value, "unit") <- desired
+  attr(value, "stoxUnit") <- desired
   
   return(value)
 
@@ -80,13 +80,13 @@ setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits){
 #'  print(getUnit(dt), "name")
 #' @export
 getUnit <- function(value, property=c("symbol", "name"), conversionTable=RstoxData::StoxUnits){
-  if (is.null(attr(value, "unit"))){
+  if (is.null(attr(value, "stoxUnit"))){
     return(as.character(NA))
   }
   
   property <- match.arg(property)
   
-  unit <- attr(value, "unit")
+  unit <- attr(value, "stoxUnit")
   if (!(unit %in% conversionTable$symbol)){
     stop(paste("Symbol", unit, "not found in 'conversionTable'"))
   }
