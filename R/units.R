@@ -33,3 +33,64 @@ convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUn
   return(value*conversion)
   
 }
+
+#' Set units of value
+#' @description 
+#'  Set unit of a value in accordance with StoX convention (adds the attribute 'stoxUnit').
+#'  Converts unit if already set.
+#' @details 
+#'  The argument 'conversionTable' defines valid units and their symbols.
+#'  This defaults to \code{\link[RstoxData]{StoxUnits}}.
+#' @param value value to set unit for.
+#' @param desired the desired unit for the column
+#' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
+#' @return converted value with the attribute 'Unit' set / altered.
+#' @examples 
+#'  dt <- data.table::data.table(weight=c(1000,1200))
+#'  dt$weight <- setDtUnit(dt$weight, "g")
+#'  print(dt$weight)
+#'  dt$weight <- setDtUnit(dt$weight, "kg")
+#'  print(dt$weight)
+#' @export
+setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits){
+  
+  if (!(desired %in% conversionTable$symbol)){
+    stop(paste("Symbol", desired, "not found in 'conversionTable'"))
+  }
+  
+  if (!is.null(attr(value, "stoxUnit"))){
+    value <- convertUnits(value, attr(value, "stoxUnit"), desired, conversionTable)
+  }
+  
+  attr(value, "stoxUnit") <- desired
+  
+  return(value)
+
+}
+
+#' Get unit for value
+#' @description 
+#'  Get unit of a value in accordance with StoX convention.
+#' @param value value to read unit from
+#' @param property the property of the unit that is to be returned (e.g. 'symbol' or 'name')
+#' @return the unit of value. <NA> if unit is not set
+#' @examples 
+#'  dt <- data.table::data.table(weight=c(1000,1200))
+#'  dt$weight <- setDtUnit(dt$weight, "g")
+#'  print(getUnit(dt), "name")
+#' @export
+getUnit <- function(value, property=c("symbol", "name"), conversionTable=RstoxData::StoxUnits){
+  if (is.null(attr(value, "stoxUnit"))){
+    return(as.character(NA))
+  }
+  
+  property <- match.arg(property)
+  
+  unit <- attr(value, "stoxUnit")
+  if (!(unit %in% conversionTable$symbol)){
+    stop(paste("Symbol", unit, "not found in 'conversionTable'"))
+  }
+  
+  return(conversionTable[[property]][conversionTable$symbol==unit])
+  
+}
