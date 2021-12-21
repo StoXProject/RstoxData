@@ -34,3 +34,10 @@ expect_equal(getUnit(dt$weight), "kg")
 expect_equal(getUnit(dt$weight, "name"), "kilogram")
 expect_true(is.na(getUnit(dt$var)))
 expect_error(getUnit(dt$weight, "names"), "'arg' should be one of")
+
+
+massoptions <- getUnitOptions("mass")
+expect_true(all(c("g", "kg", "t", "kt") %in% massoptions))
+lengthoptions <- getUnitOptions("length")
+expect_true(all(c("mm", "cm", "m", "km", "nmi") %in% lengthoptions))
+expect_error(getUnitOptions("nonsense"), "nonsense is not a valid quantity.")
