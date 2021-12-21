@@ -1,5 +1,6 @@
 # RstoxData v1.2.20 (2021-12-02)
 * Added warning when ValueColumn, NewValueColumn or ConditionalValueColumn did not exist in the file in DefineTranslation().
+* Added return value from setorderv_numeric().
 
 # RstoxData v1.2.18 (2021-11-22)
 * Reverted to the original createOrderKey() of StoX 3.1.0, used in setorderv_numeric() and further in RstoxBase::formatOutput(), in order to produce the same seeds in RstoxBase::ImputeSuperIndividuals().

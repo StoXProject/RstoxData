@@ -641,6 +641,8 @@ setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
 		# Remove the orderKeys:
 		dataOne[, (orderKeys) := NULL]
 	}
+	
+	return(dataOne)
 }
 
 
@@ -712,6 +714,8 @@ createOrderKey <- function(x, split = "/") {
 	# Replicate data.table's soring which happend in C-locale (see ?data.table::setorderv):
 	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "C")))]
 	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringr::str_sort(unique(y), locale = "C")))]
+	
+	# This sorting (en_US_POSIX) is the same that data.table uses in setorder/setorderv(), which uses the ICU C locale (https://icu.unicode.org/design/locale/root):
 	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "en_US_POSIX")))]
 	
 	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
