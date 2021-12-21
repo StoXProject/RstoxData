@@ -227,21 +227,25 @@ getUnitOptions <- function(quantity, unitTable=RstoxData::StoxUnits){
 
 #' Get available units
 #' @description 
-#'  Get the unit symbmols that are available for a given quantity.
-#'  The available quntities and units are defined by the argument unitTable
+#'  Get the unit shortnames, symbols or names that are available for a given quantity.
+#'  The available quantities and units are defined by the argument unitTable
 #'  which defaults to RstoxData::StoxUnits
+#'  
 #' @param quantity quantity to get units for, such as 'mass', 'length' etc.
+#' @param property the property of the unit that is to be returned (e.g. 'symbol' or 'shortname')
 #' @param unitTable formatted as \code{\link[RstoxData]{StoxUnits}}
 #' @return a character vector with availble unit symbols.
 #' @examples 
 #'  print(getUnitOptions("mass"))
 #' @export
-getUnitOptions <- function(quantity, unitTable=RstoxData::StoxUnits){
+getUnitOptions <- function(quantity, property=c("shortname", "symbol", "name"), unitTable=RstoxData::StoxUnits){
+  
+  property <- match.arg(property)
   
   if (!(quantity %in% unitTable$quantity)){
     stop(paste(quantity, "is not a valid quantity."))
   }
   
-  return(unitTable$symbol[unitTable$quantity==quantity])
+  return(unitTable[[property]][unitTable$quantity==quantity])
   
 }
