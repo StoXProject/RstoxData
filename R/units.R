@@ -44,6 +44,7 @@ convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUn
 #' @param value value to set unit for.
 #' @param desired the desired unit for the column
 #' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
+#' @param assertNew logical. If true an error is raised if value already has a unit.
 #' @return converted value with the attribute 'Unit' set / altered.
 #' @examples 
 #'  dt <- data.table::data.table(weight=c(1000,1200))
@@ -52,13 +53,16 @@ convertUnits <- function(value, unit, desired, conversionTable=RstoxData::StoxUn
 #'  dt$weight <- setUnit(dt$weight, "kg")
 #'  print(dt$weight)
 #' @export
-setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits){
+setUnit <- function(value, desired, conversionTable=RstoxData::StoxUnits, assertNew=FALSE){
   
   if (!(desired %in% conversionTable$symbol)){
     stop(paste("Symbol", desired, "not found in 'conversionTable'"))
   }
   
   if (!is.null(attr(value, "stoxUnit"))){
+    if (assertNew){
+      stop("Unit is already set.")
+    }
     value <- convertUnits(value, attr(value, "stoxUnit"), desired, conversionTable)
   }
   
