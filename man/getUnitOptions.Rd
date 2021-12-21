@@ -7,7 +7,8 @@
 getUnitOptions(
   quantity,
   property = c("shortname", "symbol", "name"),
-  unitTable = RstoxData::StoxUnits
+  unitTable = RstoxData::StoxUnits,
+  conversionRange = NULL
 )
 }
 \arguments{
@@ -16,15 +17,20 @@ getUnitOptions(
 \item{property}{the property of the unit that is to be returned (e.g. 'symbol' or 'shortname')}
 
 \item{unitTable}{formatted as \code{\link[RstoxData]{StoxUnits}}}
+
+\item{conversionRange}{pair of numeric values providing the lower and upper bound of which values for unitTable$conversion should be provided}
 }
 \value{
-a character vector with availble unit symbols.
+a character vector with available unit symbols.
 }
 \description{
 Get the unit shortnames, symbols or names that are available for a given quantity.
  The available quantities and units are defined by the argument unitTable
  which defaults to RstoxData::StoxUnits
+ 
+ This is useful for providing user options, and the options can be limited to a suitable range based on 'conversionRange'
 }
 \examples{
  print(getUnitOptions("mass"))
+ print(getUnitOptions("mass", conversionRange=c(1e-3,1e3)))
 }
