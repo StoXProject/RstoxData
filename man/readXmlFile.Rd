@@ -17,7 +17,7 @@ readXmlFile(
 
 \item{stream}{a streaming XML pull parser is used if this is set to TRUE. An XML DOM parser is used if this is set to FALSE. Default to TRUE.}
 
-\item{useXsd}{Specify an xsd object to use. Default to NULL.}
+\item{useXsd}{Specify an xsd object to use. Default to NULL, in which case auto-detection is attempted. Valid options are the schemas listed in names(RstoxData::xsdObjects), but without the suffix ".xsd".}
 
 \item{usePrefix}{Manually specify a namespace prefix. Default to NULL.}
 
