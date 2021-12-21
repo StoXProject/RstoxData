@@ -24,6 +24,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -36,18 +38,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.21</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -57,7 +53,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/StoXProject/RstoxData/">
+  <a href="https://github.com/StoXProject/RstoxData/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -74,70 +70,72 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rstoxdata" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rstoxdata" class="anchor"></a>RstoxData</h1></div>
-<p><img src="https://github.com/StoXProject/RstoxData/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></p>
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div class="section level1">
+<div class="page-header"><h1 id="rstoxdata">RstoxData<a class="anchor" aria-label="anchor" href="#rstoxdata"></a>
+</h1></div>
+<div class="figure">
+<img src="https://github.com/StoXProject/RstoxData/workflows/R-CMD-check/badge.svg" alt=""><p class="caption">R-CMD-check</p>
+</div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>RstoxData is a package to parse and manipulate various data formats for fisheries.</p>
 <p>The package contains functions for reading, filtering and writing fisheries’ trawl survey samples (biotic), acoustic trawl survey and commercial catch samples (landings) data in XML formats.</p>
 <p>Loaded data can also be filtered by using any supported R conditional syntax such as <code>longitude &gt; 10</code>, or by user pre-defined functions such as <code>inside()</code>.</p>
-<div id="supported-formats" class="section level3">
-<h3 class="hasAnchor">
-<a href="#supported-formats" class="anchor"></a>Supported formats:</h3>
-<div id="a-norwegian-institute-of-marine-research-imr-data-definitions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#a-norwegian-institute-of-marine-research-imr-data-definitions" class="anchor"></a>A. Norwegian Institute of Marine Research (IMR) (<a href="https://www.imr.no/formats/">data definitions</a>):</h4>
-<ol>
+<div class="section level3">
+<h3 id="supported-formats">Supported formats:<a class="anchor" aria-label="anchor" href="#supported-formats"></a>
+</h3>
+<div class="section level4">
+<h4 id="a-norwegian-institute-of-marine-research-imr-data-definitions">A. Norwegian Institute of Marine Research (IMR) (<a href="https://www.imr.no/formats/" class="external-link">data definitions</a>):<a class="anchor" aria-label="anchor" href="#a-norwegian-institute-of-marine-research-imr-data-definitions"></a>
+</h4>
+<ol style="list-style-type: decimal">
 <li>Biotic (fish trawl survey) XML format (up to version 3.1).</li>
 <li>Acoustic (acoustic/echosounder trawl surveys) XML format (version 1).</li>
 <li>Landings (commercial catch samples) XML format (version 2).</li>
 </ol>
 </div>
-<div id="b-norwegian-directorate-of-fisheries" class="section level4">
-<h4 class="hasAnchor">
-<a href="#b-norwegian-directorate-of-fisheries" class="anchor"></a>B. Norwegian Directorate of Fisheries:</h4>
-<ol>
+<div class="section level4">
+<h4 id="b-norwegian-directorate-of-fisheries">B. Norwegian Directorate of Fisheries:<a class="anchor" aria-label="anchor" href="#b-norwegian-directorate-of-fisheries"></a>
+</h4>
+<ol style="list-style-type: decimal">
 <li>Sales Notes data in the LSS format.</li>
 <li>Electronic logbooks (ERS) in tabular format.</li>
 </ol>
 </div>
-<div id="c-international-council-for-the-exploration-of-the-sea-ices-data-definitions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#c-international-council-for-the-exploration-of-the-sea-ices-data-definitions" class="anchor"></a>C. International Council for the Exploration of the Sea (ICES) (<a href="https://ices.dk/data/data-portals/Pages/acoustic.aspx">data definitions</a>):</h4>
-<ol>
+<div class="section level4">
+<h4 id="c-international-council-for-the-exploration-of-the-sea-ices-data-definitions">C. International Council for the Exploration of the Sea (ICES) (<a href="https://ices.dk/data/data-portals/Pages/acoustic.aspx" class="external-link">data definitions</a>):<a class="anchor" aria-label="anchor" href="#c-international-council-for-the-exploration-of-the-sea-ices-data-definitions"></a>
+</h4>
+<ol style="list-style-type: decimal">
 <li>Biotic (fish trawl survey) XML format.</li>
 <li>Acoustic (acoustic/echosounder trawl surveys) XML format.</li>
 </ol>
 </div>
 </div>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<ol>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<ol style="list-style-type: decimal">
 <li>
 <p>Install from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"RstoxData"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RstoxData"</span><span class="op">)</span></code></pre></div>
 </li>
 <li><p>Install the latest release from our local repository: <code>r  install.packages("RstoxData", repos = c("https://stoxproject.github.io/repo/", "https://cloud.r-project.org/"))</code></p></li>
 <li><p>Install the latest version from GitHub: <code>r  devtools::install_github("https://github.com/StoXProject/RstoxData")</code></p></li>
 </ol>
-<p>On computers that return errors when trying to run the Rtools through RStudio (most institutional Windows machines), install the binary directly from <a href="https://github.com/StoXProject/RstoxData/releases" class="uri">https://github.com/StoXProject/RstoxData/releases</a>. Download the newest RstoxData zip file, click the <code>Packages</code> tab -&gt; <code>Install</code> -&gt; <code>Install from:</code> <code>Package Archive File</code> -&gt; <code>Install</code>. If the installer does not complain, the package is installed correctly.</p>
+<p>On computers that return errors when trying to run the Rtools through RStudio (most institutional Windows machines), install the binary directly from <a href="https://github.com/StoXProject/RstoxData/releases" class="external-link uri">https://github.com/StoXProject/RstoxData/releases</a>. Download the newest RstoxData zip file, click the <code>Packages</code> tab -&gt; <code>Install</code> -&gt; <code>Install from:</code> <code>Package Archive File</code> -&gt; <code>Install</code>. If the installer does not complain, the package is installed correctly.</p>
 </div>
-<div id="license" class="section level2">
-<h2 class="hasAnchor">
-<a href="#license" class="anchor"></a>License</h2>
-<p>LGPL-3 © Norwegian Institute of Marine research (IMR) (<a href="https://www.hi.no/en">homepage</a>).</p>
-<p>The development of RstoxData package is mainly supported by IMR’s <a href="http://www.redus.no">REDUS</a> and SEA2DATA projects.</p>
-<p>RstoxData is part of the bigger <a href="https://stoxproject.github.io">StoX ecosystem</a>.</p>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>LGPL-3 © Norwegian Institute of Marine research (IMR) (<a href="https://www.hi.no/en" class="external-link">homepage</a>).</p>
+<p>The development of RstoxData package is mainly supported by IMR’s <a href="http://www.redus.no" class="external-link">REDUS</a> and SEA2DATA projects.</p>
+<p>RstoxData is part of the bigger <a href="https://stoxproject.github.io" class="external-link">StoX ecosystem</a>.</p>
 <hr>
-<div id="for-historical-release-notes-see-httpsgithubcomstoxprojectrstoxdatablobmasternewsmd" class="section level3">
-<h3 class="hasAnchor">
-<a href="#for-historical-release-notes-see-httpsgithubcomstoxprojectrstoxdatablobmasternewsmd" class="anchor"></a>For historical release notes, see: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="uri">https://github.com/StoXProject/RstoxData/blob/master/NEWS.md</a>
+<div class="section level3">
+<h3 id="for-historical-release-notes-see-httpsgithubcomstoxprojectrstoxdatablobmasternewsmd">For historical release notes, see: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="external-link uri">https://github.com/StoXProject/RstoxData/blob/master/NEWS.md</a>
+<a class="anchor" aria-label="anchor" href="#for-historical-release-notes-see-httpsgithubcomstoxprojectrstoxdatablobmasternewsmd"></a>
 </h3>
 </div>
 </div>
@@ -146,24 +144,31 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=RstoxData">https://​cloud.r-project.org/​package=RstoxData</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/StoXProject/RstoxData/">https://​github.com/​StoXProject/​RstoxData/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/StoXProject/RstoxData/issues">https://​github.com/​StoXProject/​RstoxData/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=RstoxData" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/StoXProject/RstoxData/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/StoXProject/RstoxData/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/LGPL-3">LGPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/LGPL-3" class="external-link">LGPL-3</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing RstoxData</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Ibrahim Umar <br><small class="roles"> Maintainer, author </small>  </li>
 <li>Sindre Vatnehol <br><small class="roles"> Author </small>  </li>
@@ -174,16 +179,20 @@
 </ul>
 </div>
 
+
+
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Edvin Fuglebakk, Espen Johnsen, Norwegian Institute of Marine Research.</p>
+  <p></p>
+<p>Developed by Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Edvin Fuglebakk, Espen Johnsen, Norwegian Institute of Marine Research.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -191,6 +200,8 @@
 
   
 
+
+  
 
   </body>
 </html>
