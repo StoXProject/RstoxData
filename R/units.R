@@ -234,16 +234,29 @@ getUnitOptions <- function(quantity, unitTable=RstoxData::StoxUnits){
 #' @param quantity quantity to get units for, such as 'mass', 'length' etc.
 #' @param property the property of the unit that is to be returned (e.g. 'symbol' or 'shortname')
 #' @param unitTable formatted as \code{\link[RstoxData]{StoxUnits}}
-#' @return a character vector with availble unit symbols.
+#' @param conversionRange pair of numeric values providing the lower and upper bound of which values for unitTable$conversion should be provided
+#' @return a character vector with available unit symbols.
 #' @examples 
 #'  print(getUnitOptions("mass"))
+#'  print(getUnitOptions("mass", conversionRange=c(1e-3,1e3)))
 #' @export
-getUnitOptions <- function(quantity, property=c("shortname", "symbol", "name"), unitTable=RstoxData::StoxUnits){
+getUnitOptions <- function(quantity, property=c("shortname", "symbol", "name"), unitTable=RstoxData::StoxUnits, conversionRange=NULL){
   
   property <- match.arg(property)
   
   if (!(quantity %in% unitTable$quantity)){
     stop(paste(quantity, "is not a valid quantity."))
+  }
+  
+  if (!is.null(conversionRange)){
+    unitTable <- unitTable[unitTable$quantity==quantity,]
+    minC <- min(conversionRange)
+    maxC <- max(conversionRange)
+    unitTable <- unitTable[unitTable$conversion >= minC & unitTable$conversion <= maxC,]
+    
+    if (nrow(unitTable) == 0){
+      stop("No units found in the requested conversion range.")
+    }
   }
   
   return(unitTable[[property]][unitTable$quantity==quantity])
