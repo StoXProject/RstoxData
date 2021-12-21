@@ -17,8 +17,9 @@
 #'  }
 #'  
 #'  The 'id', 'quantity', and 'conversion' defines a unit. 
-#'  'symbol', shortname' and 'name' are descriptions, which may be exchanged without affecting RstoxData functions that make use of this table.
-#'  'symbol', shortname' and 'name' should always be unique for a given quantity
+#'  'symbol', shortname' and 'name' should are unique for a given quantity
+#'  
+#' @seealso \code{\link[RstoxData]{setUnit}}, \code{\link[RstoxData]{getUnit}}, \code{\link[RstoxData]{findUnit}}, and \code{\link[RstoxData]{getUnitOptions}}
 #'
 #' @keywords datasets
 #'
