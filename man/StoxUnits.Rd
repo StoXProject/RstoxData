@@ -16,8 +16,7 @@ A \code{\link[data.table]{data.table}} with the following columns:
  }
  
  The 'id', 'quantity', and 'conversion' defines a unit. 
- 'symbol', shortname' and 'name' are descriptions, which may be exchanged without affecting RstoxData functions that make use of this table.
- 'symbol', shortname' and 'name' should alway be unique for a given quantity
+ 'symbol', shortname' and 'name' should are unique for a given quantity
 }
 \usage{
 data(StoxUnits)
@@ -28,5 +27,8 @@ Standard units used in Stox
 \examples{
 data(StoxUnits)
 
+}
+\seealso{
+\code{\link[RstoxData]{setUnit}}, \code{\link[RstoxData]{getUnit}}, \code{\link[RstoxData]{findUnit}}, and \code{\link[RstoxData]{getUnitOptions}}
 }
 \keyword{datasets}
