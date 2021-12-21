@@ -4,17 +4,12 @@
 \alias{setUnit}
 \title{Set units of value}
 \usage{
-setUnit(
-  value,
-  desired,
-  conversionTable = RstoxData::StoxUnits,
-  assertNew = FALSE
-)
+setUnit(value, id, conversionTable = RstoxData::StoxUnits, assertNew = FALSE)
 }
 \arguments{
 \item{value}{value to set unit for.}
 
-\item{desired}{the desired unit for the column}
+\item{id}{id of the desired unit for the column}
 
 \item{conversionTable}{formatted as \code{\link[RstoxData]{StoxUnits}}}
 
@@ -30,11 +25,13 @@ Set unit of a value in accordance with StoX convention (adds the attribute 'stox
 \details{
 The argument 'conversionTable' defines valid units and their symbols.
  This defaults to \code{\link[RstoxData]{StoxUnits}}.
+
+ Providing id as NA removes unit from value
 }
 \examples{
  dt <- data.table::data.table(weight=c(1000,1200))
- dt$weight <- setUnit(dt$weight, "g")
+ dt$weight <- setUnit(dt$weight, "mass-g")
  print(dt$weight)
- dt$weight <- setUnit(dt$weight, "kg")
+ dt$weight <- setUnit(dt$weight, "mass-kg")
  print(dt$weight)
 }
