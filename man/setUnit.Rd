@@ -4,7 +4,12 @@
 \alias{setUnit}
 \title{Set units of value}
 \usage{
-setUnit(value, desired, conversionTable = RstoxData::StoxUnits)
+setUnit(
+  value,
+  desired,
+  conversionTable = RstoxData::StoxUnits,
+  assertNew = FALSE
+)
 }
 \arguments{
 \item{value}{value to set unit for.}
@@ -12,6 +17,8 @@ setUnit(value, desired, conversionTable = RstoxData::StoxUnits)
 \item{desired}{the desired unit for the column}
 
 \item{conversionTable}{formatted as \code{\link[RstoxData]{StoxUnits}}}
+
+\item{assertNew}{logical. If true an error is raised if value already has a unit.}
 }
 \value{
 converted value with the attribute 'Unit' set / altered.
