@@ -3,9 +3,12 @@
 # If the format is extended, update the documentation in R/Stox-Units-datadoc.R
 #
 # Units should be considered defined by quantity, id, and conversion. 
-# Changing any of these for a unit breaches backwards compatibility.
+# Changing any of these for a unit breaches backwards compatibility wrp to stored units.
 # symbol, shortname and name are auxiliary information. 
-# These could be changed or clarified, but must be kept unique for a given quantity.
+# Changes to any of these may break backwards compatibility for code that lookip unit by name, symbol or shortname
+# 
+# Typically, the user "sees" shortname, symbol and name.
+# 
 
 StoxUnits <- data.table::data.table(id=character(),
                                     quantity=character(),
