@@ -6,8 +6,8 @@
 \usage{
 findUnit(
   quantity,
-  symbol = NULL,
   shortname = NULL,
+  symbol = NULL,
   name = NULL,
   unitTable = RstoxData::StoxUnits
 )
@@ -15,9 +15,9 @@ findUnit(
 \arguments{
 \item{quantity}{The quantity to look up units for}
 
-\item{symbol}{Symbol of the desired unit}
-
 \item{shortname}{shortname of the desired unit}
+
+\item{symbol}{Symbol of the desired unit}
 
 \item{name}{name of the desired unit}
 
