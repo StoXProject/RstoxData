@@ -4,10 +4,16 @@
 \alias{getUnitOptions}
 \title{Get available units}
 \usage{
-getUnitOptions(quantity, unitTable = RstoxData::StoxUnits)
+getUnitOptions(
+  quantity,
+  property = c("shortname", "symbol", "name"),
+  unitTable = RstoxData::StoxUnits
+)
 }
 \arguments{
 \item{quantity}{quantity to get units for, such as 'mass', 'length' etc.}
+
+\item{property}{the property of the unit that is to be returned (e.g. 'symbol' or 'shortname')}
 
 \item{unitTable}{formatted as \code{\link[RstoxData]{StoxUnits}}}
 }
@@ -15,8 +21,8 @@ getUnitOptions(quantity, unitTable = RstoxData::StoxUnits)
 a character vector with availble unit symbols.
 }
 \description{
-Get the unit symbmols that are available for a given quantity.
- The available quntities and units are defined by the argument unitTable
+Get the unit shortnames, symbols or names that are available for a given quantity.
+ The available quantities and units are defined by the argument unitTable
  which defaults to RstoxData::StoxUnits
 }
 \examples{

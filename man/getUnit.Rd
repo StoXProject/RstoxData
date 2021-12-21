@@ -6,7 +6,7 @@
 \usage{
 getUnit(
   value,
-  property = c("symbol", "name"),
+  property = c("id", "shortname", "symbol", "name"),
   unitTable = RstoxData::StoxUnits
 )
 }
@@ -21,10 +21,10 @@ getUnit(
 the unit of value. <NA> if unit is not set
 }
 \description{
-Get unit of a value in accordance with StoX convention.
+Get unit id, shortname, symbol or name of a value in accordance with StoX convention.
 }
 \examples{
  dt <- data.table::data.table(weight=c(1000,1200))
- dt$weight <- setUnit(dt$weight, "g")
+ dt$weight <- setUnit(dt$weight, "mass-g")
  print(getUnit(dt$weight, "name"))
 }
