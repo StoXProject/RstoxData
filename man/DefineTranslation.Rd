@@ -7,7 +7,7 @@
 DefineTranslation(
   processData,
   UseProcessData = FALSE,
-  DefinitionMethod = c("ResourceFile", "TranslationTable"),
+  DefinitionMethod = c("ResourceFile", "Table"),
   TranslationTable = data.table::data.table(),
   VariableName = character(),
   ValueColumn = character(),
@@ -23,7 +23,7 @@ DefineTranslation(
 
 \item{UseProcessData}{Logical: If TRUE use the existing function output in the process.}
 
-\item{DefinitionMethod}{Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
+\item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{Table}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
 
 \item{TranslationTable}{A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate \code{\link{DefineTranslation}} & Translate process to translate NAs.}
 
