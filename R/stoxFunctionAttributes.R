@@ -144,7 +144,7 @@ stoxFunctionAttributes <- list(
 			), 
 			# These two are joined with AND, and must both be fulfilled:
 			TranslationTable = list(
-				DefinitionMethod = "TranslationTable", 
+				DefinitionMethod = "Table", 
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:

@@ -10,16 +10,16 @@
 
 # Global variables
 utils::globalVariables(c(
-	 ".", "..ConditionalVariableName", "..Country", "..Organisation", "..SurveyName",
-	 "..VariableName", "..allDuplicated", "..colList", "..columns", "..digits", "..keep", "..key",
-	 "..parameterNames", "..signifDigits", "..sourceColumns", "..targetAndSourceVariables",
-	 "..toKeep", "..valueVariablesInTranslation", "..varToExtract", "..variableKeys",
-	 "..variablesInTable", "..x", "AcousticCategory", "Addition", "BeamKey", "Channel",
-	 "ChannelDepthLower", "ChannelDepthUpper", "ConditionalValue", "Constant", "Country", "Cruise",
-	 "CruiseKey", "DateTime", "DoorType", "EDSU", "EchoType", "EffectiveTowDistance", "FishID",
-	 "Gear", "GearEx", "HaulNo", "HaulVal", "LengthCode", "LocalID", "LogKey", "N", "NewValue",
-	 "NumberAtLength", "NumberOfIndividualsToGenerate", "NumberOfSampledIndividuals", "Quarter",
-	 "ReplaceBy", "SaCategory", "Scaling", "Ship", "SpecVal", "SpeciesCategoryNumber",
+	 ".", "..ConditionalVariableName", "..Country", "..NAToInsert", "..Organisation",
+	 "..SurveyName", "..VariableName", "..allDuplicated", "..colList", "..columns", "..digits",
+	 "..keep", "..key", "..parameterNames", "..signifDigits", "..sourceColumns",
+	 "..targetAndSourceVariables", "..toKeep", "..valueVariablesInTranslation", "..varToExtract",
+	 "..variableKeys", "..variablesInTable", "..x", "AcousticCategory", "Addition", "BeamKey",
+	 "Channel", "ChannelDepthLower", "ChannelDepthUpper", "ConditionalValue", "Constant", "Country",
+	 "Cruise", "CruiseKey", "DateTime", "DoorType", "EDSU", "EchoType", "EffectiveTowDistance",
+	 "FishID", "Gear", "GearEx", "HaulNo", "HaulVal", "LengthCode", "LocalID", "LogKey", "N",
+	 "NewValue", "NumberAtLength", "NumberOfIndividualsToGenerate", "NumberOfSampledIndividuals",
+	 "Quarter", "ReplaceBy", "SaCategory", "Scaling", "Ship", "SpecVal", "SpeciesCategoryNumber",
 	 "SpeciesCategoryWeight", "SpeciesCode", "StatRec", "SubsampleWeight", "SubsampledNumber",
 	 "Survey", "SweepLngt", "Time", "TransducerOrientation", "Value", "VariableName",
 	 "WeightMeasurement", "age", "agingstructure", "ap", "aphia", "bottomdepthstart",
@@ -27,7 +27,7 @@ utils::globalVariables(c(
 	 "catchweight", "cc", "cruise", "cw", "direction", "distance", "fishingdepthcount",
 	 "fishingdepthmax", "fishingdepthmin", "freq", "g", "gear", "gearcondition", "gearflow", "hv",
 	 "inapplicableFormats", "individualweight", "isCrustacean", "isHerringOrSprat", "isPelagic",
-	 "latitudeend", "latitudestart", "lenInterval", "lengthCode", "lengthmeasurement",
+	 "iskey", "latitudeend", "latitudestart", "lenInterval", "lengthCode", "lengthmeasurement",
 	 "lengthresolution", "lengthsamplecount", "lengthsampleweight", "level", "lngtClass",
 	 "lngtCode", "logstart", "longitudeend", "longitudestart", "lsCountTot", "lsc",
 	 "maturationstage", "maturity", "maxFishID", "meanW", "missionstartdate", "missionstopdate",
@@ -39,7 +39,7 @@ utils::globalVariables(c(
 	 "subFactor", "subWeight", "suffixes", "sweeplength", "target", "tissuesample", "totWeight",
 	 "totalNo", "transceiver", "trawldoorarea", "trawldoorspread", "trawldoortype",
 	 "trawldoorweight", "verticaltrawlopening", "winddirection", "windspeed", "wingspread",
-	 "wiredensity", "wirediameter", "wirelength"))
+	 "wiredensity", "wirediameter", "wirelength", "xsdObjects"))
 
 .onLoad <- function(libname, pkgname) {
 	# Initiate the RstoxData environment:

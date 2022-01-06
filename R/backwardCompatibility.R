@@ -162,6 +162,14 @@ backwardCompatibility <- list(
 			parameterName = "DefinitionMethod", 
 			value = "Table", 
 			newValue = "TranslationTable"
+		), 
+		list(
+			changeVersion = "1.3.1", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "DefinitionMethod", 
+			value = "TranslationTable", 
+			newValue = "Table"
 		)
 	), 
 	

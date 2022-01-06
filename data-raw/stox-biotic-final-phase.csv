@@ -1,4 +1,4 @@
-variable,level,nmdbioticv3.1,nmdbioticv3,nmdbioticv1.4,nmdbioticv1.1,icesBiotic,key,class
+variable,level,nmdbioticv3.1,nmdbioticv3,nmdbioticv1.4,nmdbioticv1.1,icesBiotic,iskey,class
 CruiseKey,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 Cruise,Cruise,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,,character
 Platform,Cruise,platform,platform,platform,platform,Platform,,character

@@ -177,7 +177,7 @@ getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = 
 		if(!exists("stoxBioticObject")) {
 			data(stoxBioticObject, package="RstoxData", envir = environment())
 		}
-		keys <- stoxBioticObject$convertTable[key == "Y", c("variable", "level")]
+		keys <- stoxBioticObject$convertTable[iskey == "Y", c("variable", "level")]
 		keys <- split(keys, by = "level")
 		keys <- lapply(keys, "[[", "variable")
 	}

@@ -57,7 +57,7 @@ RedefineStoxBiotic <- function(
 #' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
 #' 
 #' @inheritParams general_arguments
-#' @param DefinitionMethod  Character: A string naming the method to use, one of "TranslationTable" for defining the \code{TranslationTable}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
+#' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Table}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
 #' @param TranslationTable A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate \code{\link{DefineTranslation}} & Translate process to translate NAs.
 #' @param VariableName An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same \code{\link{Translation}}, a column named "VariableName" must be inclcuded in \code{TranslationTable} (possibly read from the \code{FileName}) AND \code{VariableName} must be an empty string (blank field in the GUI).
 #' @param ValueColumn,NewValueColumn The name of the columns of \code{TranslationTable} representing the current values and the values to translate to, respectively.
@@ -75,7 +75,7 @@ RedefineStoxBiotic <- function(
 #' 
 DefineTranslation <- function(
 	processData, UseProcessData = FALSE, 
-	DefinitionMethod = c("ResourceFile", "TranslationTable"), 
+	DefinitionMethod = c("ResourceFile", "Table"), 
 	TranslationTable = data.table::data.table(), 
 	VariableName = character(),
 	ValueColumn = character(), 
@@ -107,11 +107,27 @@ DefineTranslation <- function(
 			UseProcessData = UseProcessData
 		)
 	}
-	else if(DefinitionMethod == "TranslationTable"){
+	else if(DefinitionMethod == "Table"){
 		Translation <- TranslationTable
 	}
 	else {
 		stop("Invalid DefinitionMethod")
+	}
+	
+	# Add the VariableName if given as a parameter and not in the table:
+	if(length(VariableName) && nchar(VariableName) && ! "VariableName" %in% names(Translation)) {
+		Translation <- data.table::data.table(
+			VariableName = VariableName, 
+			Translation
+		)
+	}
+	# Add the VariableName if given as a parameter and not in the table:
+	if(Conditional && length(ConditionalVariableName) && nchar(ConditionalVariableName) && ! "ConditionalVariableName" %in% names(Translation)) {
+		Translation <- data.table::data.table(
+			Translation[, c("VariableName", "Value", "NewValue")], 
+			ConditionalVariableName = ConditionalVariableName, 
+			Translation[, c("ConditionalValue")]
+		)
 	}
 	
 	# Clean the table (keep only relevant columns):
@@ -331,12 +347,18 @@ convertClassToExistingOne <- function(translationList, x, elements = c("Value", 
 	return(translationList)
 }
 convertClassToExistingOneElement <- function(translationList, x, element) {
+	
 	# Convert the NewValue to the class of the existing value:
 	existingClass <- class(x[[translationList$VariableName]])[1]
 	newClass <- class(translationList[[element]])[1]
-	if(!identical(existingClass, newClass) && !is.na(translationList[[element]])) {
-		class(translationList[[element]]) <- existingClass
-		#class(translationList$NewValue) <- existingClass
+	if(!identical(existingClass, newClass)) {
+		if(is.na(translationList[[element]])) {
+			translationList[[element]] <- getRstoxDataDefinitions("getNAByType")(existingClass)
+		}
+		else {
+			class(translationList[[element]]) <- existingClass
+		}
+		#class(translationList[[element]]) <- existingClass
 	}
 	return(translationList)
 }
