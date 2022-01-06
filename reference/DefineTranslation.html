@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">DefineTranslation</span><span class="op">(</span>
   <span class="va">processData</span>,
   UseProcessData <span class="op">=</span> <span class="cn">FALSE</span>,
-  DefinitionMethod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ResourceFile"</span>, <span class="st">"TranslationTable"</span><span class="op">)</span>,
+  DefinitionMethod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ResourceFile"</span>, <span class="st">"Table"</span><span class="op">)</span>,
   TranslationTable <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="op">)</span>,
   VariableName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
   ValueColumn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
@@ -75,7 +75,7 @@
 <dt>UseProcessData</dt>
 <dd><p>Logical: If TRUE use the existing function output in the process.</p></dd>
 <dt>DefinitionMethod</dt>
-<dd><p>Character: A string naming the method to use, one of "TranslationTable" for defining the <code>TranslationTable</code>, and "ResourceFile" for reading the table from the file given by <code>FileName</code>.</p></dd>
+<dd><p>Character: A string naming the method to use, one of "Table" for defining the <code>Table</code>, and "ResourceFile" for reading the table from the file given by <code>FileName</code>.</p></dd>
 <dt>TranslationTable</dt>
 <dd><p>A table of the columns <code>VariableName</code>, representing the variable to translate; <code>Value</code>, giving the values to translate; and <code>NewValue</code>, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate <code>DefineTranslation</code> &amp; Translate process to translate NAs.</p></dd>
 <dt>VariableName</dt>
