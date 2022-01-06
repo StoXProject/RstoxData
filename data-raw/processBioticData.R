@@ -70,7 +70,7 @@ keysForComplexMaps <- data.table::data.table(
 
 getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
 	NMDBioticFormat.xsd <- paste0(NMDBioticFormat, ".xsd")
-	data.table::data.table(
+	complexMap <- data.table::data.table(
 		format = NMDBioticFormat, 
 		# The agedetermination has been merged into the individual table, so we can hard code to "individual":
 		#level = NMDBioticTableName, 
@@ -79,7 +79,63 @@ getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
 		target = "Individual", 
 		iskey = ""
 	)
+	
+	# Skip the variables from the higher tables:
+	atIndividual <- which(xsdObjects[[NMDBioticFormat.xsd]]$tableOrder == "individual")
+	tableJustBeforeIndividual <- xsdObjects[[NMDBioticFormat.xsd]]$tableOrder[atIndividual - 1]
+	numberOfVariablesToRemoveAtStart <- xsdObjects[[NMDBioticFormat.xsd]]$prefixLens[tableJustBeforeIndividual]
+	
+	
+	complexMap <- complexMap[-seq_len(numberOfVariablesToRemoveAtStart), ]
+	
+	return(complexMap)
 }
+
+
+getComplexMap <- function(NMDBioticFormat, keysForComplexMaps) {
+	
+	# Read complex maps, and add Keys and variables from individual and agedetermination:
+	NMDBioticFormat.csv <- paste0(NMDBioticFormat, ".csv")
+	file <- paste0("stox-translate-", NMDBioticFormat.csv)
+	
+	complexMaps <- rbind(
+		data.table::fread(file), 
+		getIndividualComplexMap("individual", NMDBioticFormat), 
+		getIndividualComplexMap("agedetermination", NMDBioticFormat)
+	)
+	if(any(duplicated(complexMaps$variable))) {
+		complexMaps[duplicated(variable), variable := paste(variable, level, sep = ".")]
+	}
+	
+	# Add keys:
+	complexMaps <- rbind(
+		data.table::data.table(
+			format = NMDBioticFormat, 
+			keysForComplexMaps
+		), 
+		complexMaps
+	)
+	
+	return(complexMaps)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -103,14 +159,9 @@ stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- list(
 stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- rbind(
-	data.table::data.table(
-		format = "nmdbioticv3.1", 
-		keysForComplexMaps
-	), 
-	data.table::fread("stox-translate-nmdbioticv3.1.csv"), 
-	getIndividualComplexMap("individual", "nmdbioticv3.1"), 
-	getIndividualComplexMap("agedetermination", "nmdbioticv3.1")
+stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- getComplexMap(
+	NMDBioticFormat = "nmdbioticv3.1", 
+	keysForComplexMaps = keysForComplexMaps
 )
 
 ## Length conversion
@@ -167,14 +218,9 @@ stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
 stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual")) 
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv3"]] <- rbind(
-	data.table::data.table(
-		format = "nmdbioticv3", 
-		keysForComplexMaps
-	), 
-	data.table::fread("stox-translate-nmdbioticv3.csv"), 
-	getIndividualComplexMap("individual", "nmdbioticv3"), 
-	getIndividualComplexMap("agedetermination", "nmdbioticv3")
+stoxBioticObject$complexMaps[["nmdbioticv3"]] <- getComplexMap(
+	NMDBioticFormat = "nmdbioticv3", 
+	keysForComplexMaps = keysForComplexMaps
 )
 
 ## Length conversion
@@ -227,14 +273,9 @@ stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- list(
 stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- rbind(
-	data.table::data.table(
-		format = "nmdbioticv1.4", 
-		keysForComplexMaps
-	), 
-	data.table::fread("stox-translate-nmdbioticv1.4.csv"), 
-	getIndividualComplexMap("individual", "nmdbioticv1.4"), 
-	getIndividualComplexMap("agedetermination", "nmdbioticv1.4")
+stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- getComplexMap(
+	NMDBioticFormat = "nmdbioticv1.4", 
+	keysForComplexMaps = keysForComplexMaps
 )
 
 ## Length conversion
@@ -282,14 +323,9 @@ stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- stoxBioticObject$tableKeyLis
 stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- stoxBioticObject$tableMapList[["nmdbioticv1.4"]]
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- rbind(
-	data.table::data.table(
-		format = "nmdbioticv1.1", 
-		keysForComplexMaps
-	), 
-	data.table::fread("stox-translate-nmdbioticv1.1.csv"), 
-	getIndividualComplexMap("individual", "nmdbioticv1.1"), 
-	getIndividualComplexMap("agedetermination", "nmdbioticv1.1")
+stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- getComplexMap(
+	NMDBioticFormat = "nmdbioticv1.1", 
+	keysForComplexMaps = keysForComplexMaps
 )
 
 ## Length conversion
