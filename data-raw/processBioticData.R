@@ -81,7 +81,11 @@ getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
 	)
 	
 	# Skip the variables from the higher tables:
-	numberOfVariablesToRemoveAtStart <- xsdObjects$nmdbioticv1.4.xsd$prefixLens[xsdObjects$nmdbioticv1.4.xsd$tableOrder[which(xsdObjects$nmdbioticv1.4.xsd$tableOrder == "individual") - 1]]
+	atIndividual <- which(xsdObjects[[NMDBioticFormat.xsd]]$tableOrder == "individual")
+	tableJustBeforeIndividual <- xsdObjects[[NMDBioticFormat.xsd]]$tableOrder[atIndividual - 1]
+	numberOfVariablesToRemoveAtStart <- xsdObjects[[NMDBioticFormat.xsd]]$prefixLens[tableJustBeforeIndividual]
+	
+	
 	complexMap <- complexMap[-seq_len(numberOfVariablesToRemoveAtStart), ]
 	
 	return(complexMap)
