@@ -114,6 +114,22 @@ DefineTranslation <- function(
 		stop("Invalid DefinitionMethod")
 	}
 	
+	# Add the VariableName if given as a parameter and not in the table:
+	if(length(VariableName) && nchar(VariableName) && ! "VariableName" %in% names(Translation)) {
+		Translation <- data.table::data.table(
+			VariableName = VariableName, 
+			Translation
+		)
+	}
+	# Add the VariableName if given as a parameter and not in the table:
+	if(Conditional && length(ConditionalVariableName) && nchar(ConditionalVariableName) && ! "ConditionalVariableName" %in% names(Translation)) {
+		Translation <- data.table::data.table(
+			Translation[, c("VariableName", "Value", "NewValue")], 
+			ConditionalVariableName = ConditionalVariableName, 
+			Translation[, c("ConditionalValue")]
+		)
+	}
+	
 	# Clean the table (keep only relevant columns):
 	if(Conditional) {
 		Translation <- Translation[, c("VariableName", "Value", "NewValue", "ConditionalVariableName", "ConditionalValue")]
@@ -331,12 +347,18 @@ convertClassToExistingOne <- function(translationList, x, elements = c("Value", 
 	return(translationList)
 }
 convertClassToExistingOneElement <- function(translationList, x, element) {
+	
 	# Convert the NewValue to the class of the existing value:
 	existingClass <- class(x[[translationList$VariableName]])[1]
 	newClass <- class(translationList[[element]])[1]
-	if(!identical(existingClass, newClass) && !is.na(translationList[[element]])) {
-		class(translationList[[element]]) <- existingClass
-		#class(translationList$NewValue) <- existingClass
+	if(!identical(existingClass, newClass)) {
+		if(is.na(translationList[[element]])) {
+			translationList[[element]] <- getRstoxDataDefinitions("getNAByType")(existingClass)
+		}
+		else {
+			class(translationList[[element]]) <- existingClass
+		}
+		#class(translationList[[element]]) <- existingClass
 	}
 	return(translationList)
 }

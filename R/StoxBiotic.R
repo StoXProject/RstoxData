@@ -92,7 +92,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
         data$individual[,preferredagereading:= ifelse(is.na(preferredagereading), 1, preferredagereading)]
         
         ## Merge individual and age
-        data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
+    	data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
         
         ## Cascading merge tables
         toMerge <- c("mission", "fishstation", "catchsample", "individual", "prey")
@@ -272,6 +272,9 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     	for (dest in destinations) {
     		# List the columns to copy to the destination table:
             colList <- unlist(complexMap[target==dest & level==origin, "variable"])
+            # Allow missing columns, specifically agedeterminationid, as this was used for merging (and is thus missing in the data):
+            colList <- intersect(colList, names(data[[origin]]))
+            
             if(!is.null(firstPhaseTables[[dest]])) stop("Error")
             # Copy the columns:
             firstPhaseTables[[dest]] <- data[[origin]][, ..colList]

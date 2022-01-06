@@ -572,10 +572,76 @@ BioticData_NMDToICESBioticOne <- function(
 		Biology = Biology
 	)
 	
+	setClassICESBiotic(ICESBioticCSV, tables = c("Cruise", "Haul", "Catch", "Biology"))
+	
 	return(ICESBioticCSV)
 }
 
 
+
+
+setClassICESBiotic <- function(data, tables = c("Cruise", "Haul", "Catch", "Biology")) {
+	# Get the classes per table:
+	classes <- mapply(
+		structure, 
+		lapply(
+			xsdObjects$icesBiotic.xsd$tableTypes[tables], 
+			translateSimple, 
+			old = c(
+				"xsd:float", 
+				"xsd:int", 
+				"xsd:string", 
+				"xs:string"
+			), 
+			new = c(
+				"numeric", 
+				"integer", 
+				"character", 
+				"character"
+			)
+		), 
+		names = xsdObjects$icesBiotic.xsd$tableHeaders[tables], 
+		SIMPLIFY = FALSE
+	)
+	classes <- lapply(classes, as.list)
+	
+	for(table in tables) {
+		data[[table]] <- data[[table]][, lapply(names(.SD), changeClassOfNonNA, classes = classes[[table]], data = data[[table]])]
+	}
+}
+
+translateSimple <- function(x, old, new) {
+	if(length(old) != length(new)) {
+		stop("old and new need to be of equal length.")
+	}
+	for(ind in seq_along(old)) {
+		x <- replace(x, x == old[ind], new[ind])
+	}
+	return(x)
+}
+
+# Copy of the function in RstoxFramework. Move this to RstoxData?:
+firstClass <- function(x) {
+	out <- class(x)[1]
+	if(out == "double") {
+		out <- "numeric"
+	}
+	return(out)
+}
+
+
+changeClassOfNonNA <- function(name, classes, data) {
+	if(name %in% names(data) && name %in% names(classes) && firstClass(data[[name]]) != classes[[name]]) {
+		thisClass <- classes[[name]]
+		if(all(is.na(data[[name]]))) {
+			NAToInsert <- getRstoxDataDefinitions("getNAByType")(thisClass)
+			data[, c(name) := ..NAToInsert]
+		}
+		else {
+			data[, c(name) := get(paste("as", thisClass, sep = "."))(get(name))]
+		}
+	}
+}
 
 
 #' Writes \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}

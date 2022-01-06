@@ -100,6 +100,17 @@ initiateRstoxData <- function(){
 		Biology = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "StockCode", "FishID")
 	)
 	
+	NA_classes <- list(
+		numeric = NA_real_, 
+		double = NA_real_, 
+		integer = NA_integer_, 
+		character = NA_character_
+	)
+	getNAByType <- function(type = c("numeric", "double", "integer", "character")) {
+		type <- match.arg(type)
+		NA_classes[[type]]
+	}
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())

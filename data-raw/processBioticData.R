@@ -1,7 +1,42 @@
+# data-raw/process.R
+# XSD data pre-processing
+
+library(xml2)
+library(usethis)
+
+setwd(file.path(getwd(), "RstoxData"))
+
+source("R/xsdUtils.R")
+
+xsdFiles <- list.files("data-raw/", pattern="*.xsd",  full.names = TRUE)
+
+xsdObjects <- lapply(xsdFiles, createXsdObject)
+
+names(xsdObjects) <- basename(xsdFiles)
+
+# Result ordering
+xsdObjects[["nmdbioticv1.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
+xsdObjects[["nmdbioticv1.1.xsd"]]$tableOrder <- c("missions", "mission",  "missionlog", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
+xsdObjects[["nmdbioticv1.2.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
+xsdObjects[["nmdbioticv1.3.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
+xsdObjects[["nmdbioticv1.4.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
+xsdObjects[["nmdbioticv3.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylengthfrequencytable", "copepodedevstagefrequencytable", "tag")
+xsdObjects[["nmdbioticv3.1.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylengthfrequencytable", "copepodedevstagefrequencytable", "tag")
+
+
+xsdObjects[["nmdechosounderv1.xsd"]]$tableOrder <- c("echosounder_dataset", "distance_list", "distance", "frequency", "ch_type", "sa_by_acocat", "sa", "acocat_list", "acocat")
+xsdObjects[["landingerv2.xsd"]]$tableOrder <- c("Landingsdata", "Seddellinje", "Art", "Produkt", "Dellanding", "Redskap", "Kvote", "Mottakendefartøy", "Fartøy", "Fisker", "Fangstdata", "Produksjon", "Mottaker", "Salgslagdata")
+
+xsdObjects[["icesAcoustic.xsd"]]$tableOrder <- c("Acoustic", "Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
+xsdObjects[["icesBiotic.xsd"]]$tableOrder <- c("Biotic", "Cruise", "Survey", "Haul", "Catch", "Biology")
+
+use_data(xsdObjects, overwrite = TRUE)
+
 library(data.table)
 library(usethis)
 
-# setwd(file.path(getwd(), "RstoxData", "data-raw"))
+
+setwd(file.path(getwd(), "data-raw"))
 
 # Read Data file and translation table
 stoxBioticObject <- list()
@@ -13,6 +48,41 @@ stoxBioticObject$convertWt <- list()
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount <- list()
 stoxBioticObject$borrowVariables <- list()
+
+
+# Define the keys on each level, to add to the complexMaps:
+StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual")
+StoxBioticLevelsSansCruise <- setdiff(StoxBioticLevels, "Cruise")
+StoxBioticLevelsNumeric <- structure(seq_along(StoxBioticLevels), names = StoxBioticLevels)
+StoxBioticLevelsNumericSansCruise <- StoxBioticLevelsNumeric[names(StoxBioticLevelsNumeric) != "Cruise"]
+NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample", "individual")
+
+
+keysForComplexMaps <- data.table::data.table(
+	level = rep(NMDLevels, StoxBioticLevelsNumericSansCruise), 
+	variable = paste0(
+		StoxBioticLevels[unlist(lapply(StoxBioticLevelsNumericSansCruise, sequence))], 
+		"Key"
+	), 
+	target = rep(StoxBioticLevelsSansCruise, StoxBioticLevelsNumericSansCruise), 
+	iskey = "Y"
+)
+
+getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
+	NMDBioticFormat.xsd <- paste0(NMDBioticFormat, ".xsd")
+	data.table::data.table(
+		format = NMDBioticFormat, 
+		# The agedetermination has been merged into the individual table, so we can hard code to "individual":
+		#level = NMDBioticTableName, 
+		level = "individual", 
+		variable = xsdObjects[[NMDBioticFormat.xsd]]$tableHeaders[[NMDBioticTableName]], 
+		target = "Individual", 
+		iskey = ""
+	)
+}
+
+
+
 
 
 ##### NMDBioticv3.1 #####
@@ -31,7 +101,18 @@ stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- list(
                 )
 #stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual"))
 stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
-stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- fread("stox-translate-nmdbioticv3.1.csv", stringsAsFactors=FALSE)
+
+# Read complex maps, and add Keys and variables from individual and agedetermination:
+stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- rbind(
+	data.table::data.table(
+		format = "nmdbioticv3.1", 
+		keysForComplexMaps
+	), 
+	data.table::fread("stox-translate-nmdbioticv3.1.csv"), 
+	getIndividualComplexMap("individual", "nmdbioticv3.1"), 
+	getIndividualComplexMap("agedetermination", "nmdbioticv3.1")
+)
+
 ## Length conversion
 stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- function(x) {
 	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
@@ -84,7 +165,18 @@ stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
                 )
 #stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual")) 
 stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual")) 
-stoxBioticObject$complexMaps[["nmdbioticv3"]] <- fread("stox-translate-nmdbioticv3.csv", stringsAsFactors=FALSE)
+
+# Read complex maps, and add Keys and variables from individual and agedetermination:
+stoxBioticObject$complexMaps[["nmdbioticv3"]] <- rbind(
+	data.table::data.table(
+		format = "nmdbioticv3", 
+		keysForComplexMaps
+	), 
+	data.table::fread("stox-translate-nmdbioticv3.csv"), 
+	getIndividualComplexMap("individual", "nmdbioticv3"), 
+	getIndividualComplexMap("agedetermination", "nmdbioticv3")
+)
+
 ## Length conversion
 stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- function(x) {
 	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
@@ -133,7 +225,18 @@ stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- list(
                 )
 #stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual"))
 stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
-stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- fread("stox-translate-nmdbioticv1.4.csv", stringsAsFactors=FALSE)
+
+# Read complex maps, and add Keys and variables from individual and agedetermination:
+stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- rbind(
+	data.table::data.table(
+		format = "nmdbioticv1.4", 
+		keysForComplexMaps
+	), 
+	data.table::fread("stox-translate-nmdbioticv1.4.csv"), 
+	getIndividualComplexMap("individual", "nmdbioticv1.4"), 
+	getIndividualComplexMap("agedetermination", "nmdbioticv1.4")
+)
+
 ## Length conversion
 stoxBioticObject$convertLenRes[["nmdbioticv1.4"]] <- function(x) {
 	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
@@ -177,7 +280,18 @@ stoxBioticObject$indageHeadersList[["nmdbioticv1.1"]] <- stoxBioticObject$indage
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- stoxBioticObject$tableKeyList[["nmdbioticv1.4"]]
 stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- stoxBioticObject$tableMapList[["nmdbioticv1.4"]]
-stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- fread("stox-translate-nmdbioticv1.1.csv", stringsAsFactors=FALSE)
+
+# Read complex maps, and add Keys and variables from individual and agedetermination:
+stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- rbind(
+	data.table::data.table(
+		format = "nmdbioticv1.1", 
+		keysForComplexMaps
+	), 
+	data.table::fread("stox-translate-nmdbioticv1.1.csv"), 
+	getIndividualComplexMap("individual", "nmdbioticv1.1"), 
+	getIndividualComplexMap("agedetermination", "nmdbioticv1.1")
+)
+
 ## Length conversion
 stoxBioticObject$convertLenRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertLenRes[["nmdbioticv1.4"]]
 stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
