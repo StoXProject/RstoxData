@@ -38,7 +38,7 @@ utils::globalVariables(c(
 	 "subFactor", "subWeight", "suffixes", "sweeplength", "target", "tissuesample", "totWeight",
 	 "totalNo", "transceiver", "trawldoorarea", "trawldoorspread", "trawldoortype",
 	 "trawldoorweight", "verticaltrawlopening", "winddirection", "windspeed", "wingspread",
-	 "wiredensity", "wirediameter", "wirelength", "xsdObjects"))
+	 "wiredensity", "wirediameter", "wirelength"))
 
 .onLoad <- function(libname, pkgname) {
 	# Initiate the RstoxData environment:
