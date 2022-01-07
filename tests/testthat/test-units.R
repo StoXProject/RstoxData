@@ -8,7 +8,7 @@ expect_equal(symbol, "mass-kg")
 expect_equal(shortname, "mass-kg")
 expect_equal(name, "mass-kg")
 
-expect_error(findUnit("mass", "m"), "m is not a valid symbol for quantity: mass")
+expect_error(findUnit("mass", "m"), "m is not a valid shortname for quantity: mass")
 expect_error(findUnit("mass", shortname="m"), "m is not a valid shortname for quantity: mass")
 expect_error(findUnit("mass", name="m"), "m is not a valid name for quantity: mass")
 
