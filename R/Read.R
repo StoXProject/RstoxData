@@ -6,9 +6,6 @@
 #' 
 #' @param FileNames The paths of the biotic files.
 #' 
-#' @details
-#' This function is awesome and does excellent stuff.
-#' 
 #' @return
 #' An object of StoX data type BioticData: A list of a list of data.tables of the different levels of the input biotic files.
 #' 
@@ -45,9 +42,6 @@ ReadBiotic <- function(FileNames) {
 #' This function reads multiple acoustic file to a list with a list of tables for each file.
 #' 
 #' @param FileNames The paths of the acoustic files.
-#' 
-#' @details
-#' This function is awesome and does excellent stuff.
 #' 
 #' @return
 #' An object of StoX data type AcousticData: A list of a list of data.tables of the different levels of the input acoustic files.

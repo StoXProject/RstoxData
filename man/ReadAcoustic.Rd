@@ -15,9 +15,6 @@ An object of StoX data type AcousticData: A list of a list of data.tables of the
 \description{
 This function reads multiple acoustic file to a list with a list of tables for each file.
 }
-\details{
-This function is awesome and does excellent stuff.
-}
 \examples{
 exampleFile <- system.file(
     "testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")

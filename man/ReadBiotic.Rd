@@ -15,9 +15,6 @@ An object of StoX data type BioticData: A list of a list of data.tables of the d
 \description{
 This function reads multiple biotic file to a list with a list of tables for each file.
 }
-\details{
-This function is awesome and does excellent stuff.
-}
 \examples{
 exampleFile <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
 bioticData <- ReadBiotic(exampleFile)
