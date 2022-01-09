@@ -1,3 +1,9 @@
+# RstoxData v1.3.3 (2022-01-09)
+* Changed type of the columns of the Translation process data to accept strings, numeric and boolean (preivously restricted to string).
+
+# RstoxData v1.3.2 (2022-01-07)
+* Changed TranslationTable to Table in DefineTranslation(). Fixed bug where NA in Tanslation was not converted properly to the type of the existing data. Added change of class in ICESBiotic() as per the XSD. Fixed bug in AddToStoxBiotic(), where variables from agedetermination in NMDBiotic >= 3 were not added. Code changed to use the xsd to determine the variables that can be added.
+
 # RstoxData v1.2.20 (2021-12-02)
 * Final version for the release of StoX 3.2.0.
 
