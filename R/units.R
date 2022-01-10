@@ -9,7 +9,7 @@
 #' @param desired id of unit desired after conversion
 #' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
 #' @return value expressed in 'desired' unit.
-#' @example 
+#' @examples
 #'  convertUnits(c(1,2), "km", "nmi")
 #'  convertUnits(10, "t", "g")
 #' @noRd
@@ -102,6 +102,7 @@ findUnit <- function(quantity, shortname=NULL, symbol=NULL, name=NULL, unitTable
 #' @param value value to set unit for.
 #' @param id id of the desired unit for the column
 #' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
+#' @param assertNew logical. If true an error is raised if value already has a unit.
 #' @return converted value with the attribute 'Unit' set / altered.
 #' @examples 
 #'  dt <- data.table::data.table(weight=c(1000,1200))

@@ -12,6 +12,8 @@ setUnit(value, id, conversionTable = RstoxData::StoxUnits, assertNew = FALSE)
 \item{id}{id of the desired unit for the column}
 
 \item{conversionTable}{formatted as \code{\link[RstoxData]{StoxUnits}}}
+
+\item{assertNew}{logical. If true an error is raised if value already has a unit.}
 }
 \value{
 converted value with the attribute 'Unit' set / altered.
