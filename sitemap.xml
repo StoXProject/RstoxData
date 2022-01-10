@@ -139,6 +139,9 @@
     <loc>/reference/StoxLandingData.html</loc>
   </url>
   <url>
+    <loc>/reference/StoxUnits.html</loc>
+  </url>
+  <url>
     <loc>/reference/TranslateAcoustic.html</loc>
   </url>
   <url>
@@ -193,6 +196,9 @@
     <loc>/reference/filterData.html</loc>
   </url>
   <url>
+    <loc>/reference/findUnit.html</loc>
+  </url>
+  <url>
     <loc>/reference/generalSamplingHierarhcy.html</loc>
   </url>
   <url>
@@ -206,6 +212,12 @@
   </url>
   <url>
     <loc>/reference/getStoxKeys.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getUnit.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getUnitOptions.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -251,6 +263,9 @@
   </url>
   <url>
     <loc>/reference/setRstoxPrecisionLevel.html</loc>
+  </url>
+  <url>
+    <loc>/reference/setUnit.html</loc>
   </url>
   <url>
     <loc>/reference/setorderv_numeric.html</loc>
