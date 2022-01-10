@@ -380,7 +380,12 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
       stop(paste("File", FileName, "already exists."))
     }
     
-    fWriteLandings(FileName, data, namespace, encoding) 
+    if (!l10n_info()[["UTF-8"]] && encoding == "UTF-8"){
+      fWriteLandings(FileName, data, namespace, encoding) 
+    }
+    else{
+      writeXmlFile(FileName, data, RstoxData::xsdObjects$landingerv2.xsd, namespace, encoding)  
+    }
   }
   
 }

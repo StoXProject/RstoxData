@@ -67,10 +67,15 @@ if (l10n_info()[["UTF-8"]]){
 context("Test public functions Landing. Single file")
 tmp <- tempfile(fileext = ".xml")
 example <- RstoxData::ReadLanding(system.file("testresources","landing.xml", package="RstoxData"))
+
+#force ordering
+example$landing.xml <- setKeysDataTables(example$landing.xml, RstoxData::xsdObjects$landingerv2.xsd)
 WriteLanding(example, tmp)
 backIn <- RstoxData::ReadLanding(tmp)
 names(backIn) <- names(example)
 backIn$landing.xml$metadata$file <- example$landing.xml$metadata$file
+#set keys again (for expect_equal)
+backIn$landing.xml <- setKeysDataTables(backIn$landing.xml, RstoxData::xsdObjects$landingerv2.xsd)
 expect_equal(example, backIn)
 
 
@@ -89,6 +94,8 @@ backIn <- RstoxData::ReadLanding(tmp2)
 example$landing.xml <- NULL
 names(backIn) <- names(example)
 backIn$l2$metadata$file <- example$l2$metadata$file
+#set keys again (for expect_equal)
+backIn$l2 <- setKeysDataTables(backIn$l2, RstoxData::xsdObjects$landingerv2.xsd)
 expect_equal(example, backIn)
 
 unlink(tmp)
