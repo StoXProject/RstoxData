@@ -13,12 +13,7 @@ expect_equal_read_back_in_xml <- function(data, xsdObject, namespace, writer="wr
     writeXmlFile(tmp, data, xsdObject, namespace)    
   }
   else if (writer == "fWriteLandings"){
-    if (l10n_info()[["UTF-8"]]){
       fWriteLandings(tmp, data, namespace)
-    }
-    else{
-      expect_error(fWriteLandings(tmp, data, namespace))
-    }
   }
 
   backIn <- readXmlFile(tmp)
@@ -60,9 +55,14 @@ expect_equal(example, backIn)
 
 
 context("test writing landinger v.2 fwrite")
-example <- RstoxData::readXmlFile(system.file("testresources","landing.xml", package="RstoxData"))
-expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "http://www.imr.no/formats/landinger/v2", writer="fWriteLandings")
-
+if (l10n_info()[["UTF-8"]]){
+  example <- RstoxData::readXmlFile(system.file("testresources","landing.xml", package="RstoxData"))
+  expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "http://www.imr.no/formats/landinger/v2", writer="fWriteLandings")
+} else{
+  tmp <- tempfile(fileext = ".xml")
+  expect_error(fWriteLandings(tmp, example, "http://www.imr.no/formats/landinger/v2"))
+  unlink(tmp)
+}
 
 context("Test public functions Landing. Single file")
 tmp <- tempfile(fileext = ".xml")
