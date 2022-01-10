@@ -9,7 +9,7 @@
 #' @param desired id of unit desired after conversion
 #' @param conversionTable formatted as \code{\link[RstoxData]{StoxUnits}}
 #' @return value expressed in 'desired' unit.
-#' @example 
+#' @examples 
 #'  convertUnits(c(1,2), "km", "nmi")
 #'  convertUnits(10, "t", "g")
 #' @noRd
