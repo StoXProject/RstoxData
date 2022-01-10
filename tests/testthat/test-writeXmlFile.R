@@ -13,7 +13,12 @@ expect_equal_read_back_in_xml <- function(data, xsdObject, namespace, writer="wr
     writeXmlFile(tmp, data, xsdObject, namespace)    
   }
   else if (writer == "fWriteLandings"){
-    fWriteLandings(tmp, data, namespace)
+    if (l10n_info()[["UTF-8"]]){
+      fWriteLandings(tmp, data, namespace)
+    }
+    else{
+      expect_error(fWriteLandings(tmp, data, namespace))
+    }
   }
 
   backIn <- readXmlFile(tmp)
