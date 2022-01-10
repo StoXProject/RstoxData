@@ -266,7 +266,7 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
   #
   
   if (namespace=="http://www.imr.no/formats/landinger/v2"){
-    xsdObject <- xsdObjects$landingerv2.xsd
+    xsdObject <- RstoxData::xsdObjects$landingerv2.xsd
   }
   else{
     stop(paste("Namespace", namespace, "not supported."))
@@ -453,19 +453,19 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
     namespace <- namespaces[[i]]
     
     if (namespace == "http://www.imr.no/formats/nmdbiotic/v3.1"){
-      xsdObject = xsdObjects$nmdbioticv3.1.xsd
+      xsdObject = RstoxData::xsdObjects$nmdbioticv3.1.xsd
     }
     else if (namespace == "http://www.imr.no/formats/nmdbiotic/v3"){
-      xsdObject = xsdObjects$nmdbioticv3.xsd
+      xsdObject = RstoxData::xsdObjects$nmdbioticv3.xsd
     }
     else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.1"){
-      xsdObject = xsdObjects$nmdbioticv1.1.xsd
+      xsdObject = RstoxData::xsdObjects$nmdbioticv1.1.xsd
     }
     else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.2"){
-      xsdObject = xsdObjects$nmdbioticv1.2.xsd
+      xsdObject = RstoxData::xsdObjects$nmdbioticv1.2.xsd
     }
     else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.3"){
-      xsdObject = xsdObjects$nmdbioticv1.3.xsd
+      xsdObject = RstoxData::xsdObjects$nmdbioticv1.3.xsd
     }
     else{
       stop(paste("Namespace", namespace, "not supported."))
