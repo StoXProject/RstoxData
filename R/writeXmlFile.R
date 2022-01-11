@@ -107,7 +107,7 @@ writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", na
 typeConvert <- function(dataTables, xsdObject){
   for (n in names(xsdObject$tableTypes)){
     if(n %in% names(dataTables)){
-      if (NROW(dataTables[[n]])){
+      if (nrow(dataTables[[n]])>0){
         for (i in 1:length(xsdObject$tableHeaders[[n]])){
           name <- xsdObject$tableHeaders[[n]][[i]]
           xsdType <- xsdObject$tableTypes[[n]][[i]]
@@ -145,7 +145,7 @@ typeConvert <- function(dataTables, xsdObject){
           else if (is.integer(dataTables[[n]][[name]]) & xsdType == "xs:integer"){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
-          else if (is.numeric(dataTables[[n]][[name]]) & xsdType %in% c("xs:decimal", "xs:double", "xs:float")){
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:decimal"){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
           else if (is.character(dataTables[[n]][[name]]) & xsdType == "xs:date"){
@@ -236,15 +236,251 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   
   stream = file(fileName, open="w", encoding=encoding)
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
-  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)
+  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)    
+    close(stream)
   
-  # Write the non-root tables:
-  lapply(setdiff(xsdObject$tableOrder, xsdObject$root), function(level) writeLevel(stream, dataTables, level, NULL, xsdObject, "", namespace))
+}
+
+#' write landings xml with data.table-routines for writing tabular data
+#' @noRd
+fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/formats/landinger/v2", encoding="UTF-8", xmlStandard="1.0"){
   
-  # Write the root:
-  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)
+  #
+  # temporary encoding restriction
+  #
+  # Better encoding support fordata.table::fwrite is expected in future releases of data.table
+  # see https://github.com/Rdatatable/data.table/pull/4785
+  #
+  # Set dependency to appropriate data.table version and remove the following checks
+  #
   
+  if (encoding != "UTF-8"){
+    stop(paste("Encoding", encoding, "is not supported."))
+  }
+  if (!l10n_info()[["UTF-8"]]){
+    stop("R must be set to a UTF-8 locale to write UTF-8 encoded files with 'fWriteLandings'")
+  }
+  
+  #
+  # /temporary encoding restriction
+  #
+  
+  if (namespace=="http://www.imr.no/formats/landinger/v2"){
+    xsdObject <- RstoxData::xsdObjects$landingerv2.xsd
+  }
+  else{
+    stop(paste("Namespace", namespace, "not supported."))
+  }
+  
+  dataTables <- typeConvert(dataTables, xsdObject)
+  
+  # write prequel and opening tag
+  stream = file(fileName, open="w", encoding=encoding)
+  writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
+  writeLines(paste("<Landingsdata xmlns=\"", namespace, "\">", sep=""), stream)
+  close(stream)
+  
+  #
+  # manipulate data frame to include xml markup for all non-root levels
+  # for landings they are all the same number of rows
+  #
+  
+  keys <- xsdObject$tableHeaders$Seddellinje[1:xsdObject$prefixLens[["Seddellinje"]]]
+  output <- dataTables$Seddellinje[, names(dataTables$Seddellinje)[names(dataTables$Seddellinje) %in% keys], with=F]
+  
+  # open seddellinje
+  namesSL <- names(output)
+  output$SLopen <- "<Seddellinje"
+  output <- output[,c("SLopen", namesSL), with=F]
+  
+  for (k in keys){
+    output[[k]][is.na(output[[k]])] <- ""
+    output[[k]] <- paste(k, "=\"", output[[k]], "\"", sep="")
+  }
+  output[[k]] <- paste(output[[k]], ">", sep="")
+  
+  nonkeys <- xsdObject$tableHeaders$Seddellinje[(xsdObject$prefixLens[["Seddellinje"]]+1):length(xsdObject$tableHeaders$Seddellinje)]
+  for (k in nonkeys){
+    output[[k]][!is.na(dataTables$Seddellinje[[k]])] <- paste("<",k,">",dataTables$Seddellinje[[k]][!is.na(dataTables$Seddellinje[[k]])],paste("</",k,">",sep=""),sep="")
+  }
+  
+  #
+  # do all other levels
+  #
+  
+  otherLevels <- names(xsdObject$treeStruct)[!(names(xsdObject$treeStruct) %in% c("Landingsdata", "Seddellinje"))]
+  for (l in otherLevels){
+    output[[paste("open", l)]] <- paste("<",l,">", sep="")
+    nonkeys <- xsdObject$tableHeaders[[l]][!(xsdObject$tableHeaders[[l]] %in% keys)]
+    for (k in nonkeys){
+      output[[paste("open",k)]][!is.na(dataTables[[l]][[k]])] <- paste("<",k,">",dataTables[[l]][!is.na(dataTables[[l]][[k]])][[k]],"</",k,">",sep="")
+    }
+    output[[paste("close", l)]] <- paste("</",l,">", sep="")
+  }
+  
+  output$SLclose <- "</Seddellinje>"
+  
+  data.table::fwrite(output, fileName, append = T, sep=" ", quote = F)
+  
+  #close opening tag
+  stream = file(fileName, open="a", encoding=encoding)
+  writeLines("</Landingsdata>", stream)
   close(stream)
   
 }
 
+#' Write landing
+#' @description 
+#'  Write landing data as XML file(s).
+#' @details
+#'  \code{\link[RstoxData]{LandingData}} may contain several data sets.
+#'  In that case the parameters 'FileNames' and 'namespaces' must be procided for each
+#'  in the order they appear in 'LandingData'.
+#' @param LandingData \code{\link[RstoxData]{LandingData}} data to write.
+#' @param FileNames paths to files that should be written to
+#' @param namespaces XML namespaces to use for formatting.
+#' @param encoding encoding to use for writing files
+#' @param overwrite whether to overwrite any existing file(s)
+#' @noRd
+WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-8", overwrite=F){
+  
+  #
+  # set default namespace if not specified
+  #
+  if (is.null(namespaces)){
+    namespaces <- c()
+    for (l in LandingData){
+      if (l$metadata$useXsd == "landingerv2"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/landinger/v2")
+      }
+      else{
+        stop(paste("Does not recognize namespace for", l$metadata$useXsd, "Provide explicit namespace."))
+      }
+    }
+  }
+  
+  
+  if (!length(LandingData) == length(FileNames)){
+    stop("Provide exactly one file name and one namespace for each data set in 'LandingData'")
+  }
+  if (!length(LandingData) == length(namespaces)){
+    stop("Provide exactly one file name and one namespace for each data set in 'LandingData'")
+  }
+  
+  #
+  # write files
+  #
+  for (i in 1:length(LandingData)){
+    
+    FileName <- FileNames[[i]]
+    data <- LandingData[[i]] 
+    namespace <- namespaces[[i]]
+    
+    if (file.exists(FileName) & !overwrite){
+      stop(paste("File", FileName, "already exists."))
+    }
+    
+    if (l10n_info()[["UTF-8"]] && encoding == "UTF-8"){
+      fWriteLandings(FileName, data, namespace, encoding) 
+    }
+    else{
+      writeXmlFile(FileName, data, RstoxData::xsdObjects$landingerv2.xsd, namespace, encoding)  
+    }
+  }
+  
+}
+
+#' Write Biotic
+#' @description 
+#'  Write biotic data as XML file(s).
+#' @details
+#'  \code{\link[RstoxData]{BioticData}} may contain several data sets.
+#'  In that case the parameters 'FileNames' and 'namespaces' must be procided for each
+#'  in the order they appear in 'BioticData'.
+#' @details 
+#'  Supports writing to namespaces:
+#'   http://www.imr.no/formats/nmdbiotic/v1.1
+#'   http://www.imr.no/formats/nmdbiotic/v1.2
+#'   http://www.imr.no/formats/nmdbiotic/v1.3
+#'   http://www.imr.no/formats/nmdbiotic/v3
+#'   http://www.imr.no/formats/nmdbiotic/v3.1
+#' @param BioticData \code{\link[RstoxData]{BioticData}} data to write.
+#' @param FileNames paths to files that should be written to
+#' @param namespaces XML namespaces to use for formatting.
+#' @param encoding encoding to use for writing files
+#' @param overwrite whether to overwrite any existing file(s)
+#' @noRd
+WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8", overwrite=F){
+  
+  # set default namespace if not specified
+  if (is.null(namespaces)){
+    namespaces <- c()
+    for (l in BioticData){
+      if (l$metadata$useXsd == "nmdbioticv1.1"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.1")
+      }
+      if (l$metadata$useXsd == "nmdbioticv1.2"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.2")
+      }
+      if (l$metadata$useXsd == "nmdbioticv1.3"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.3")
+      }
+      if (l$metadata$useXsd == "nmdbioticv1.4"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.4")
+      }
+      if (l$metadata$useXsd == "nmdbioticv3"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v3")
+      }
+      if (l$metadata$useXsd == "nmdbioticv3.1"){
+        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v3.1")
+      }
+      else{
+        stop(paste("Does not recognize namespace for", l$metadata$useXsd, "Provide explicit namespace."))
+      }
+    }
+  }
+  
+  if (!length(BioticData) == length(FileNames)){
+    stop("Provide exactly one file name and one namespace for each data set in 'LandingData'")
+  }
+  if (!length(BioticData) == length(namespaces)){
+    stop("Provide exactly one file name and one namespace for each data set in 'LandingData'")
+  }
+  
+  
+  #
+  # write files
+  #
+  for (i in 1:length(BioticData)){
+    
+    FileName <- FileNames[[i]]
+    data <- BioticData[[i]] 
+    namespace <- namespaces[[i]]
+    
+    if (namespace == "http://www.imr.no/formats/nmdbiotic/v3.1"){
+      xsdObject = RstoxData::xsdObjects$nmdbioticv3.1.xsd
+    }
+    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v3"){
+      xsdObject = RstoxData::xsdObjects$nmdbioticv3.xsd
+    }
+    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.1"){
+      xsdObject = RstoxData::xsdObjects$nmdbioticv1.1.xsd
+    }
+    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.2"){
+      xsdObject = RstoxData::xsdObjects$nmdbioticv1.2.xsd
+    }
+    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.3"){
+      xsdObject = RstoxData::xsdObjects$nmdbioticv1.3.xsd
+    }
+    else{
+      stop(paste("Namespace", namespace, "not supported."))
+    }
+    
+    if (file.exists(FileName) & !overwrite){
+      stop(paste("File", FileName, "already exists."))
+    }
+    
+    writeXmlFile(FileName, data, xsdObject, namespace, encoding)    
+  }
+
+}
