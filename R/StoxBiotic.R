@@ -230,7 +230,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 	    data$Biology[is.na(FishID), FishID := seq_len(.N) + maxFishID, by = FishIDBy]
 	    data$Biology[, maxFishID := NULL]
 	    
-	    # Fix the SampleCount
+	    # Fix the SampleNumber
 		#colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
 		data$Catch[, SubsampledNumber:=ifelse(!is.na(NumberAtLength), sum(NumberAtLength), SubsampledNumber), by=byVars]
 		# Purge duplicate samples

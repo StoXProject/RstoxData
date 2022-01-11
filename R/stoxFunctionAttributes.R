@@ -159,6 +159,7 @@ stoxFunctionAttributes <- list(
 			), 
 			# These two are joined with AND, and must both be fulfilled:
 			VariableName = list(
+				DefinitionMethod = "Table", 
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
@@ -173,6 +174,7 @@ stoxFunctionAttributes <- list(
 			), 
 			# These two are joined with AND, and must both be fulfilled:
 			ConditionalVariableName = list(
+				DefinitionMethod = "Table", 
 				Conditional = TRUE, 
 				UseProcessData = FALSE
 			), 

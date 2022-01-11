@@ -131,9 +131,9 @@ NULL
 #' SampleKey \tab Key of the Sample level \tab None \tab Character \tab  \cr          
 #' Sample \tab Unique Sample identifier \tab None \tab Character \tab  \cr             
 #' CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab Kg \tab Numeric \tab 49.9 \cr
-#' CatchFractionCount \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab None \tab Numeric \tab 295 \cr 
+#' CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab None \tab Numeric \tab 295 \cr 
 #' SampleWeight \tab Total weight of the sample for individual measurements \tab Kg \tab Numeric \tab 4.6 \cr       
-#' SampleCount \tab Size of the sample for individual measurements \tab None \tab Numeric \tab 100 \cr
+#' SampleNumber \tab Size of the sample for individual measurements \tab None \tab Numeric \tab 100 \cr
 #' }
 #' 
 #' 
