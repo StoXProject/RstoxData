@@ -1,3 +1,7 @@
+# RstoxData v1.3.5 (2022-01-09)
+* Hiding the parameters VariableName and ConditionalVariableName when DefinitionMethod = "Table" in Translation().
+* Renamed CatchFractionCount to CatchFractionNumber and SampleCount to SampleNumber in StoxBiotic. CatchFractionCount was considered misleading, as this variable is often not a result of counting but rather an estimate from total and sampled weight.
+
 # RstoxData v1.3.3 (2022-01-09)
 * Changed type of the columns of the Translation process data to accept strings, numeric and boolean (preivously restricted to string).
 
