@@ -34,9 +34,9 @@ SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryK
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
 Sample,Sample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')",,character
 CatchFractionWeight,Sample,"ifelse(catchproducttype %in% 1, catchweight, NA_real_)","ifelse(catchproducttype %in% 1, catchweight, NA_real_)","ifelse(producttype %in% 1, weight, NA_real_)","ifelse(producttype %in% 1, weight, NA_real_)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",,numeric
-CatchFractionCount,Sample,catchcount,catchcount,count,count,SpeciesCategoryNumber,,integer
+CatchFractionNumber,Sample,catchcount,catchcount,count,count,SpeciesCategoryNumber,,integer
 SampleWeight,Sample,"ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)","ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)","SubsampleWeight * convertWt(WeightUnit, 'kg')",,numeric
-SampleCount,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,,integer
+SampleNumber,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,,integer
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,Individual,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 HaulKey,Individual,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
