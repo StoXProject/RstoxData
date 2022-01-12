@@ -5,15 +5,18 @@
 # As long as we do not touch these files, 
 # we will continue to treat them like that and exclude it from our testing-coverage reports, 
 # the same way we do not report testing of formal dependencies like other R-packages.
-# Files that we have found the need to alter, will be removed from this ignore-file
+# Files that we have found the need to alter, will be removed from this ignore-file.
+# For this reason src/xmlfile.cpp, src/readXml.cpp and src/readXmlStream.cpp are not listed below
 src/pugixml/pugixml.cpp
-src/pugixml/pugixml.h
+src/pugixml/pugixml.hpp
 src/xmlio/xmlzipfile.h
 src/xmlio/xmlfile.h
 src/xmlio/xmlfile.cpp
 src/xmlio/xmlstream.h
+src/xmlio/xmlinput.h
 src/xmlinput_c.c
 src/miniz.c
+src/xmlzipfile.cpp
 src/xmlinput.cpp
 src/xmlinput.h
 src/xmloutput.cpp
