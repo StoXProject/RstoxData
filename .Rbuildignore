@@ -1,5 +1,6 @@
 ^LICENSE$
 ^\.github
+^\.covrignore
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^data-raw$
