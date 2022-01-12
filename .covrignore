@@ -1,0 +1,19 @@
+# Some code has been copied into the repository from other sources for practical reasons, 
+# and because their licence allows
+# In development we have been treating these similarly to external dependencies 
+# like other R-packages and c-libraries
+# As long as we do not touch these files, 
+# we will continue to treat them like that and exclude it from our testing-coverage reports, 
+# the same way we do not report testing of formal dependencies like other R-packages.
+# Files that we have found the need to alter, will be removed from this ignore-file
+src/pugixml/pugixml.cpp
+src/pugixml/pugixml.h
+src/xmlio/xmlzipfile.h
+src/xmlio/xmlfile.h
+src/xmlio/xmlfile.cpp
+src/xmlio/xmlstream.h
+src/xmlinput_c.c
+src/miniz.c
+src/xmlinput.cpp
+src/xmlinput.h
+src/xmloutput.cpp
