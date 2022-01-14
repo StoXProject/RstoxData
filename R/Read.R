@@ -24,6 +24,7 @@ ReadBiotic <- function(FileNames) {
 		FileNames, 
 		FUN = readXmlFile, 
 		stream = TRUE, 
+		#stream = FALSE, 
 		NumberOfCores = 1L
 	)
 	
@@ -62,6 +63,7 @@ ReadAcoustic <- function(FileNames) {
 		FileNames, 
 		FUN = readXmlFile, 
 		stream = TRUE, 
+		#stream = FALSE, 
 		NumberOfCores = 1L
 	)
 	
@@ -104,6 +106,7 @@ ReadLanding <- function(FileNames) {
     FileNames, 
     FUN = readXmlFile, 
     stream = TRUE, 
+    #stream = FALSE, 
     NumberOfCores = 1L
   )
   
