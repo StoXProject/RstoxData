@@ -114,21 +114,21 @@ DefineTranslation <- function(
 		stop("Invalid DefinitionMethod")
 	}
 	
-	# Add the VariableName if given as a parameter and not in the table:
-	if(length(VariableName) && nchar(VariableName) && ! "VariableName" %in% names(Translation)) {
-		Translation <- data.table::data.table(
-			VariableName = VariableName, 
-			Translation
-		)
-	}
-	# Add the VariableName if given as a parameter and not in the table:
-	if(Conditional && length(ConditionalVariableName) && nchar(ConditionalVariableName) && ! "ConditionalVariableName" %in% names(Translation)) {
-		Translation <- data.table::data.table(
-			Translation[, c("VariableName", "Value", "NewValue")], 
-			ConditionalVariableName = ConditionalVariableName, 
-			Translation[, c("ConditionalValue")]
-		)
-	}
+	## Add the VariableName if given as a parameter and not in the table:
+	#if(length(VariableName) && nchar(VariableName) && ! "VariableName" %in% names(Translation)) {
+	#	Translation <- data.table::data.table(
+	#		VariableName = VariableName, 
+	#		Translation
+	#	)
+	#}
+	## Add the ConditionalVariableName if given as a parameter and not in the table:
+	#if(Conditional && length(ConditionalVariableName) && nchar(ConditionalVariableName) && ! "ConditionalVariableName" %in% name#s(Translation)) {
+	#	Translation <- data.table::data.table(
+	#		Translation[, c("VariableName", "Value", "NewValue")], 
+	#		ConditionalVariableName = ConditionalVariableName, 
+	#		Translation[, c("ConditionalValue")]
+	#	)
+	#}
 	
 	# Clean the table (keep only relevant columns):
 	if(Conditional) {
@@ -156,11 +156,20 @@ readVariableTranslation <- function(processData, FileName, VariableName, ValueCo
 		conversion[, VariableName := ..VariableName]
 	}
 	
+	if(!length(ValueColumn) || !nchar(ValueColumn)) {
+		stop("ValueColumn must be given as the name of the column giving the values to be translated.")
+	}
+	if(!length(NewValueColumn) || !nchar(NewValueColumn)) {
+		stop("NewValueColumn must be given as the name of the column giving the values to be translated to.")
+	}
 	addVariable(ValueColumn, conversion, warningLevel = 2)
 	addVariable(NewValueColumn, conversion, warningLevel = 2)
 	if(Conditional) {
 		if(length(ConditionalVariableName) && nchar(ConditionalVariableName)) {
 			conversion[, ConditionalVariableName := ..ConditionalVariableName]
+		}
+		if(!length(ConditionalValueColumn) || !nchar(ConditionalValueColumn)) {
+			stop("ConditionalValueColumn must be given as the name of the column giving the conditional values.")
 		}
 		addVariable(ConditionalValueColumn, conversion, warningLevel = 2)
 	}
