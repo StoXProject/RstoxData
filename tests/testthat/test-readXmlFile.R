@@ -2,6 +2,7 @@
 example <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
 example_cdata <- system.file("testresources","landing_cdata.xml", package="RstoxData")
 example_wo_cdata <- system.file("testresources","landing.xml", package="RstoxData")
+example_malformed <- system.file("testresources","landing_nonl.xml", package="RstoxData")
 
 context("test-readXmlFile: DOM parse NMD Biotic v3.1")
 defaultParseBiotic <- readXmlFile(example, stream = F)
@@ -15,6 +16,10 @@ comp<-readXmlFile(example_wo_cdata, stream = F)
 expect_equal(length(all.equal(comp, dd)),2) #should differ in one row and in metadata
 expect_true("BAKE & SHAKE" %in% dd[["Fart\u00F8y"]][["Fart\u00F8ynavn"]])
 expect_equal(nrow(dd$Seddellinje), 20)
+
+context("Test readXmlFile malformed xml")
+expect_error(readXmlFile(example_malformed, stream = F))
+
 
 context("test-readXmlFile: DOM parse NMD Biotic v3.1")
 defaultParseBiotic <- readXmlFile(example, stream = F)

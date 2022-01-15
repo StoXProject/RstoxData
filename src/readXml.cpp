@@ -165,16 +165,11 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
         filePath.resize(newSize);
 #endif
   
-  pugi::xml_parse_result result = doc.load_file(filePath.c_str());
+  pugi::xml_parse_result result = doc.load_file(filePath.c_str(), pugi::parse_default, pugi::encoding_utf8);
 	if (!result) {
-	  if (result.status == 14){
-	    Rcpp::Rcout << "Note: " << inputFile[0] << "contains start-tag end-tag mismatch. This may be due to CDATA sections." << std::endl;  
-	  }
-	  else{
-	    Rcpp::Rcout << "Unable to read " << inputFile[0] << std::endl;
-	    Rcpp::Rcout << "Error description: " << result.description() << std::endl;
-	    return -1;
-	  }
+	  Rcpp::Rcout << "Unable to read " << inputFile[0] << std::endl;
+	  Rcpp::Rcout << "Error description: " << result.description() << std::endl;
+	  return -1;
 	}
 	
 	// Get namespace
