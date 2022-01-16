@@ -315,37 +315,37 @@ convertToLandingData <- function(lssLandings){
                     "Fiskerkommune"="Fiskerkommune",
                     "Fiskernasjonalitet (kode)"="Fiskernasjonalitet_kode",
                     "Fiskernasjonalitet"="Fiskernasjonalitet_bokm\u00E5l",      
-                    "Fart\u00F8ynavn"="Fart\u00F8ynavn",
-                    "Fart\u00F8y ID"="Fart\u00F8yID",           
+                    "Fartoynavn"="Fart\u00F8ynavn",
+                    "Fartoy ID"="Fart\u00F8yID",           
                     "Registreringsmerke (seddel)"="Registreringsmerke_seddel",
                     "Radiokallesignal (seddel)"="Radiokallesignal_seddel",
-                    "St\u00F8rste lengde"="St\u00F8rsteLengde",
+                    "Storste lengde"="St\u00F8rsteLengde",
                     "Lengdegruppe (kode)"="Lengdegruppe_kode",
                     "Lengdegruppe"="Lengdegruppe_bokm\u00E5l",
                     "Bruttotonnasje 1969"="Bruttotonnasje1969",
                     "Bruttotonnasje annen"="BruttotonnasjeAnnen",
-                    "Bygge\u00E5r"="Bygge\u00E5r",
-                    "Ombyggings\u00E5r"="Ombyggings\u00E5r",
+                    "Byggear"="Bygge\u00E5r",
+                    "Ombyggingsar"="Ombyggings\u00E5r",
                     "Motorkraft"="Motorkraft",
-                    "Motorbygge\u00E5r"="Motorbygge\u00E5r",   
-                    "Fart\u00F8y gjelder fra dato"="Fart\u00F8yGjelderFraDato",
-                    "Fart\u00F8y gjelder til dato"="Fart\u00F8yGjelderTilDato",
-                    "Fart\u00F8ytype (kode)"="Fart\u00F8ytype_kode",
-                    "Fart\u00F8ytype"="Fart\u00F8ytype_bokm\u00E5l",
-                    "Kvotefart\u00F8y reg.merke"="Kvotefart\u00F8yRegMerke",
-                    "Fart\u00F8ykommune (kode)"="Fart\u00F8ykommune_kode",
-                    "Fart\u00F8ykommune"="Fart\u00F8ykommune",
-                    "Fart\u00F8yfylke (kode)"="Fart\u00F8yfylke_kode",
-                    "Fart\u00F8yfylke"="Fart\u00F8yfylke",
-                    "Fart\u00F8ynasjonalitet (kode)"="Fart\u00F8ynasjonalitet_kode",
-                    "Fart\u00F8ynasjonalitet"="Fart\u00F8ynasjonalitet_bokm\u00E5l",
-                    "Mottakende fart\u00F8y reg.merke"="MottakendeFart\u00F8yRegMerke",
-                    "Mottakende fart\u00F8y rkal"="MottakendeFart\u00F8yRKAL",
-                    "Mottakende fart\u00F8ytype (kode)"="MottakendeFart\u00F8ytype_kode",
+                    "Motorbyggear"="Motorbygge\u00E5r",   
+                    "Fartoy gjelder fra dato"="Fart\u00F8yGjelderFraDato",
+                    "Farto gjelder til dato"="Fart\u00F8yGjelderTilDato",
+                    "Fartotype (kode)"="Fart\u00F8ytype_kode",
+                    "Fartotype"="Fart\u00F8ytype_bokm\u00E5l",
+                    "Kvotefartoy reg.merke"="Kvotefart\u00F8yRegMerke",
+                    "Fartoykommune (kode)"="Fart\u00F8ykommune_kode",
+                    "Fartoykommune"="Fart\u00F8ykommune",
+                    "Fartoyfylke (kode)"="Fart\u00F8yfylke_kode",
+                    "Fartoyfylke"="Fart\u00F8yfylke",
+                    "Fartoynasjonalitet (kode)"="Fart\u00F8ynasjonalitet_kode",
+                    "Fartoynasjonalitet"="Fart\u00F8ynasjonalitet_bokm\u00E5l",
+                    "Mottakende farto reg.merke"="MottakendeFart\u00F8yRegMerke",
+                    "Mottakende farto rkal"="MottakendeFart\u00F8yRKAL",
+                    "Mottakende fartotype (kode)"="MottakendeFart\u00F8ytype_kode",
                     "Mottakende fart.type"="MottakendeFart\u00F8ytype_bokm\u00E5l",
-                    "Mottakende fart\u00F8ynasj. (kode)"="MottakendeFart\u00F8ynasj_kode",
+                    "Mottakende fartoynasj. (kode)"="MottakendeFart\u00F8ynasj_kode",
                     "Mottakende fart.nasj"="MottakendeFart\u00F8ynasj_bokm\u00E5l",
-                    "Fangst\u00E5r"="Fangst\u00E5r",
+                    "Fangstar"="Fangst\u00E5r",
                     "Siste fangstdato"="SisteFangstdato" ,
                     "Kvotetype (kode)"="Kvotetype_kode",
                     "Kvotetype"="Kvotetype_bokm\u00E5l",
@@ -355,15 +355,15 @@ convertToLandingData <- function(lssLandings){
                     "Redskap - hovedgruppe"="HovedgruppeRedskap_bokm\u00E5l",
                     "Fangstfelt (kode)"="Fangstfelt_kode",
                     "Kyst/hav (kode)"="KystHav_kode",
-                    "Hovedomr\u00E5de (kode)"="Hovedomr\u00E5de_kode",
-                    "Hovedomr\u00E5de"="Hovedomr\u00E5de_bokm\u00E5l",
+                    "Hovedomrade (kode)"="Hovedomr\u00E5de_kode",
+                    "Hovedomrade"="Hovedomr\u00E5de_bokm\u00E5l",
                     "Lokasjon (kode)"="Lokasjon_kode",
                     "Sone (kode)"="Sone_kode",
                     "Sone"="Sone_bokm\u00E5l",
-                    "Omr\u00E5degruppering"="Omr\u00E5degruppering_bokm\u00E5l",
-                    "Hovedomr\u00E5de FAO (kode)"="Hovedomr\u00E5deFAO_kode",
-                    "Hovedomr\u00E5de FAO"="Hovedomr\u00E5deFAO_bokm\u00E5l",
-                    "Nord/s\u00F8r for 62 grader nord"="NordS\u00F8rFor62GraderNord",
+                    "Omradegruppering"="Omr\u00E5degruppering_bokm\u00E5l",
+                    "Hovedomrade FAO (kode)"="Hovedomr\u00E5deFAO_kode",
+                    "Hovedomrade FAO"="Hovedomr\u00E5deFAO_bokm\u00E5l",
+                    "Nord/sor for 62 grader nord"="NordS\u00F8rFor62GraderNord",
                     "Fangstdagbok (nummer)"="Fangstdagbok_nummer",
                     "Fangstdagbok (turnummer)"="Fangstdagbok_turnummer",
                     "Landingsdato"="Landingsdato",
@@ -382,13 +382,13 @@ convertToLandingData <- function(lssLandings){
                     "Art FAO"="ArtFAO_bokm\u00E5l",
                     "Produkttilstand (kode)"="Produkttilstand_kode",
                     "Produkttilstand"="Produkttilstand_bokm\u00E5l",
-                    "Konserveringsm\u00E5te (kode)"="Konserveringsm\u00E5te_kode",
-                    "Konserveringsm\u00E5te"="Konserveringsm\u00E5te_bokm\u00E5l",
-                    "Landingsm\u00E5te (kode)"="Landingsm\u00E5te_kode",
-                    "Landingsm\u00E5te"="Landingsm\u00E5te_bokm\u00E5l",
+                    "Konserveringsmate (kode)"="Konserveringsm\u00E5te_kode",
+                    "Konserveringsmate"="Konserveringsm\u00E5te_bokm\u00E5l",
+                    "Landingsmate (kode)"="Landingsm\u00E5te_kode",
+                    "Landingsmate"="Landingsm\u00E5te_bokm\u00E5l",
                     "Kvalitet (kode)"="Kvalitet_kode",
                     "Kvalitet"="Kvalitet_bokm\u00E5l",
-                    "St\u00F8rrelsesgruppering (kode)"="St\u00F8rrelsesgruppering_kode",
+                    "Storrelsesgruppering (kode)"="St\u00F8rrelsesgruppering_kode",
                     "Anvendelse (kode)"="Anvendelse_kode",
                     "Anvendelse"="Anvendelse_bokm\u00E5l",
                     "Anvendelse hovedgruppe (kode)"="HovedgruppeAnvendelse_kode",
@@ -397,6 +397,43 @@ convertToLandingData <- function(lssLandings){
                     "Bruttovekt"="Bruttovekt",
                     "Produktvekt"="Produktvekt",
                     "Rundvekt"="Rundvekt")
+  
+  
+  names(nameMap)[26] <- "Fart\u00F8ynavn"
+  names(nameMap)[27] <- "Fart\u00F8y ID"
+  names(nameMap)[30] <- "St\u00F8rste lengde"
+  names(nameMap)[35] <- "Bygge\u00E5r"
+  names(nameMap)[36] <- "Ombyggings\u00E5r"
+  names(nameMap)[38] <- "Motorbygge\u00E5r"
+  names(nameMap)[39] <- "Fart\u00F8y gjelder fra dato"
+  names(nameMap)[40] <- "Fart\u00F8y gjelder til dato"
+  names(nameMap)[41] <- "Fart\u00F8ytype (kode)"
+  names(nameMap)[42] <- "Fart\u00F8ytype"
+  names(nameMap)[43] <- "Kvotefart\u00F8y reg.merke"
+  names(nameMap)[44] <- "Fart\u00F8ykommune (kode)"
+  names(nameMap)[45] <- "Fart\u00F8ykommune"
+  names(nameMap)[46] <- "Fart\u00F8yfylke (kode)"
+  names(nameMap)[47] <- "Fart\u00F8yfylke"
+  names(nameMap)[48] <- "Fart\u00F8ynasjonalitet (kode)"
+  names(nameMap)[49] <- "Fart\u00F8ynasjonalitet"
+  names(nameMap)[50] <- "Mottakende fart\u00F8y reg.merke"
+  names(nameMap)[51] <- "Mottakende fart\u00F8y rkal"
+  names(nameMap)[52] <- "Mottakende fart\u00F8ytype (kode)"
+  names(nameMap)[54] <- "Mottakende fart\u00F8ynasj. (kode)"
+  names(nameMap)[56] <- "Fangst\u00E5r"
+  names(nameMap)[66] <- "Hovedomr\u00E5de (kode)"
+  names(nameMap)[67] <- "Hovedomr\u00E5de"
+  names(nameMap)[71] <- "Omr\u00E5degruppering"
+  names(nameMap)[72] <- "Hovedomr\u00E5de FAO (kode)"
+  names(nameMap)[73] <- "Hovedomr\u00E5de FAO"
+  names(nameMap)[74] <- "Nord/s\u00F8r for 62 grader nord"
+  names(nameMap)[93] <- "Konserveringsm\u00E5te (kode)"
+  names(nameMap)[94] <- "Konserveringsm\u00E5te"
+  names(nameMap)[95] <- "Landingsm\u00E5te (kode)"
+  names(nameMap)[96] <- "Landingsm\u00E5te"
+  names(nameMap)[99] <- "St\u00F8rrelsesgruppering (kode)"
+  
+  stopifnot(all(names(nameMap) %in% names(lssLandings)))
   
   #change column names to those in xsdObj
   remove <- names(lssLandings)[is.na(nameMap[names(lssLandings)])]
