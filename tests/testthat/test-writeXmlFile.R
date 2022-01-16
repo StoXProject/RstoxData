@@ -35,6 +35,12 @@ context("test writing landinger v.2")
 example <- RstoxData::readXmlFile(system.file("testresources","landing.xml", package="RstoxData"))
 expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "http://www.imr.no/formats/landinger/v2")
 
+context("test writing cdata landing")
+example <- RstoxData::readXmlFile(system.file("testresources","landing.xml", package="RstoxData"))
+example$Fisker$Fiskerkommune[1] <- "<Fisk/>"
+expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "http://www.imr.no/formats/landinger/v2")
+
+
 context("test biotic 3.1 to 3.0 conversion")
 example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
 tmp <- tempfile(fileext = "xml")
