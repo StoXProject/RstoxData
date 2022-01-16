@@ -164,12 +164,14 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
         int newSize = MultiByteToWideChar(CP_UTF8, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());
         filePath.resize(newSize);
 #endif
-
-	if (!doc.load_file(filePath.c_str())) {
-		Rcpp::Rcout << "Unable to read " << inputFile[0] << std::endl;
-		return -1;
+  
+  pugi::xml_parse_result result = doc.load_file(filePath.c_str(), pugi::parse_default, pugi::encoding_utf8);
+	if (!result) {
+	  Rcpp::Rcout << "Unable to read " << inputFile[0] << std::endl;
+	  Rcpp::Rcout << "Error description: " << result.description() << std::endl;
+	  return -1;
 	}
-
+	
 	// Get namespace
 	char* xmlns = NULL;
 	char* ns = NULL;
@@ -196,7 +198,7 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 		}
 	}
 #endif
-
+	
 	// If there is a user supplied xsd namespace
 	if (xsdOverride.isNotNull()) {
 		xmlns = Rcpp::as<Rcpp::CharacterVector>(xsdOverride)[0];
@@ -217,7 +219,7 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 	} else {
 		ns = NULL;
 	}
-
+  
 	char xsd[50];
 	
 	// If there is a user supplied xsd namespace
