@@ -188,6 +188,36 @@ setKeysDataTables <- function(dataTables, xsdObject){
   return(dataTables)
 }
 
+#' Insert C_DATA in chr columns that will be mapped to text nodes of elements,
+#' if they need it (contain reserved characters, or other characters that are useful to escape)
+#' @noRd
+insertcdata <- function(dataTables, xsdObject){
+  for (dt in names(dataTables)){
+    if (ncol(dataTables[[dt]]) > 0 && dt != "metadata"){
+      ns <- names(dataTables[[dt]])
+      ns <- ns[xsdObject$prefixLens[[dt]]:length(ns)]
+      for (coln in ns){
+        if ("character" %in% class(dataTables[[dt]][[coln]])){
+          #reserved characters
+          indLt <- grepl("<", dataTables[[dt]][[coln]], fixed=T)
+          indGt <- grepl(">", dataTables[[dt]][[coln]], fixed=T)
+          indAmp <- grepl("&", dataTables[[dt]][[coln]], fixed=T)
+          
+          #others that are useful to escape
+          indQm <- grepl("?", dataTables[[dt]][[coln]], fixed=T)
+          indPc <- grepl("%", dataTables[[dt]][[coln]], fixed=T)
+          
+          mask <- indLt | indGt | indAmp | indQm | indPc
+          if (any(mask)){
+            dataTables[[dt]][[coln]][mask] <- paste("<![CDATA[", dataTables[[dt]][[coln]][mask], "]]>", sep="")
+          }
+        } 
+      }
+    }
+  }
+  return(dataTables)
+}
+
 #' Generic xml writer
 #' @description
 #'  Support generic writing of xml formats parsed by RstoxData.
@@ -231,6 +261,7 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   # (including the relative ordering of complex and simple elements)
   # consider adding information about key structure in xsdObjects
   
+  dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
   dataTables <- setKeysDataTables(dataTables, xsdObject)
   
@@ -272,6 +303,7 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
     stop(paste("Namespace", namespace, "not supported."))
   }
   
+  dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
   
   # write prequel and opening tag
@@ -343,6 +375,10 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
 #' @param overwrite whether to overwrite any existing file(s)
 #' @noRd
 WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-8", overwrite=F){
+  
+  if (!is.LandingData(LandingData)){
+    stop("'LandingData' is not a 'LandingData object' see '?RstoxData::LandingData.")
+  }
   
   #
   # set default namespace if not specified
