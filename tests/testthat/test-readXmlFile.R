@@ -17,6 +17,13 @@ expect_equal(length(all.equal(comp, dd)),2) #should differ in one row and in met
 expect_true("BAKE & SHAKE" %in% dd[["Fart\u00F8y"]][["Fart\u00F8ynavn"]])
 expect_equal(nrow(dd$Seddellinje), 20)
 
+context("Test readXmlFile with cdata streaming")
+dd<-readXmlFile(example_cdata, stream = T)
+comp<-readXmlFile(example_wo_cdata, stream = F)
+expect_equal(length(all.equal(comp, dd)),2) #should differ in one row and in metadata
+expect_true("BAKE & SHAKE" %in% dd[["Fart\u00F8y"]][["Fart\u00F8ynavn"]])
+expect_equal(nrow(dd$Seddellinje), 20)
+
 context("Test readXmlFile malformed xml")
 expect_error(readXmlFile(example_malformed, stream = F))
 
