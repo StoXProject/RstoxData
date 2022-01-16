@@ -386,6 +386,7 @@ static void sElemHandler(XML::Element &elem, void *userData)
 	const XML::Handler handlers[] = {
 		XML::Handler(sElemHandler),
 		XML::Handler(sDataHandler),
+		XML::Handler(XML_Handler_CDATA, sDataHandler),
 		XML::Handler::END
 	};
 
@@ -596,6 +597,7 @@ static void rootHandler(XML::Element &elem, void *userData)
 	const XML::Handler handlers[] = {
 		XML::Handler(sElemHandler),
 		XML::Handler(sDataHandler),
+		XML::Handler(XML_Handler_CDATA, sDataHandler),
 		XML::Handler::END
 	};
 
