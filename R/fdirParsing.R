@@ -287,7 +287,7 @@ readErsFile <- function(file, encoding="Latin-1"){
 #' @return \code{\link[RstoxData]{LandingData}} the converted landings
 #' @export
 convertToLandingData <- function(lssLandings){
-  xsdObject=xsdObjects$landingerv2.xsd
+  xsdObject=RstoxData::xsdObjects$landingerv2.xsd
   
   #name mapping between lss and landingerv2.xsd
   nameMap <- list("Dokumentnummer"="Dokumentnummer",
