@@ -35,3 +35,5 @@ expect_true("RC" %in% names(data))
 expect_true(is.numeric(data$RUNDVEKT))
 expect_true(is.numeric(data[["ST\u00D8RSTE_LENGDE"]]))
 expect_equal(nrow(data),9)
+expect_true("UTC" %in% attr(as.POSIXlt(data$STARTTIDSPUNKT), "tzone"))
+

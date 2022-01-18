@@ -270,8 +270,8 @@ readErsFile <- function(file, encoding="Latin-1"){
   typ <- unlist(spec_log)
   
   logb <- read_psv(file, encoding, col_types=typ)
-  logb$STARTTIDSPUNKT <- as.POSIXct(logb$STARTTIDSPUNKT, format="%Y-%m-%d %H:%M:%S")
-  logb$STOPPTIDSPUNKT <- as.POSIXct(logb$STOPPTIDSPUNKT, format="%Y-%m-%d %H:%M:%S")
+  logb$STARTTIDSPUNKT <- as.POSIXct(logb$STARTTIDSPUNKT, format="%Y-%m-%d %H:%M:%S", tz="UTC")
+  logb$STOPPTIDSPUNKT <- as.POSIXct(logb$STOPPTIDSPUNKT, format="%Y-%m-%d %H:%M:%S", tz="UTC")
   
   return(logb)
 }
@@ -287,7 +287,7 @@ readErsFile <- function(file, encoding="Latin-1"){
 #' @return \code{\link[RstoxData]{LandingData}} the converted landings
 #' @export
 convertToLandingData <- function(lssLandings){
-  xsdObject=xsdObjects$landingerv2.xsd
+  xsdObject=RstoxData::xsdObjects$landingerv2.xsd
   
   #name mapping between lss and landingerv2.xsd
   nameMap <- list("Dokumentnummer"="Dokumentnummer",
