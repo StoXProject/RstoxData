@@ -102,7 +102,7 @@ writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", na
   
 }
 
-#' converts evrything to character before XML writing
+#' converts everything to character before XML writing
 #' @noRd
 typeConvert <- function(dataTables, xsdObject){
   for (n in names(xsdObject$tableTypes)){
@@ -148,6 +148,13 @@ typeConvert <- function(dataTables, xsdObject){
           else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:decimal"){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:integer"){
+            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+          }
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:long"){
+            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+          }
+          
           else if (is.character(dataTables[[n]][[name]]) & xsdType == "xs:date"){
             ok <- is.na(dataTables[[n]][[name]])
             ok <- ok | !is.na(as.POSIXct(dataTables[[n]][[name]], format="%Y-%m-%d"))
