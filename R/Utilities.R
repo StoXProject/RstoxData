@@ -480,6 +480,13 @@ AddToStoxData <- function(
 	# Check the the BioticData are all from the same source (ICES/NMD):
 	checkDataSource(RawData)
 	
+	# If from NMDBiotic <= 1.4, skip all non-relevant tables (as e.g. the prey table does not contain the keys necessary to merge with individual, thus resulting in different columns than data from NMDBiotic >= 3):
+	for(RawDataName in names(RawData)) {
+		if(RawData[[RawDataName]]$metadata$useXsd %in% c("nmdbioticv1.1", "nmdbioticv1.4")) {
+			RawData[[RawDataName]] <- subset(RawData[[RawDataName]], ! names(RawData[[RawDataName]]) %in% c("missionlog", "prey", "preylength", "copepodedevstage", "tag"))
+		}
+	}
+	
 	# Convert from BioticData to the general sampling hierarchy:
 	StoxDataFormat <- match.arg(StoxDataFormat)
 	if(StoxDataFormat == "Biotic") {
@@ -511,6 +518,9 @@ AddToStoxData <- function(
 	toAdd <- toAdd[names(StoxData)]
 	# Keep only unique rows:
 	toAdd <- lapply(toAdd, unique)
+	
+	
+	# add a ccheck for exxisting variables, and remoev these with a warning
 	
 	# Merge with the present StoxBioticData:
 	StoxData <- mapply(mergeAndOverwriteDataTable, StoxData, toAdd, all.x = TRUE, sort = FALSE)

@@ -406,7 +406,7 @@ stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 }
 
 # Universal second phase conversion
-stoxBioticObject$convertTable <- fread("stox-biotic-final-phase.csv", stringsAsFactors=FALSE)
+stoxBioticObject$convertTable <- data.table::fread("stox-biotic-final-phase.csv")
 
 
 use_data(stoxBioticObject, overwrite = TRUE)
