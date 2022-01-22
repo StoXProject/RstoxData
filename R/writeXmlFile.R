@@ -102,7 +102,7 @@ writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", na
   
 }
 
-#' converts evrything to character before XML writing
+#' converts everything to character before XML writing
 #' @noRd
 typeConvert <- function(dataTables, xsdObject){
   for (n in names(xsdObject$tableTypes)){
@@ -148,6 +148,13 @@ typeConvert <- function(dataTables, xsdObject){
           else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:decimal"){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:integer"){
+            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+          }
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:long"){
+            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+          }
+          
           else if (is.character(dataTables[[n]][[name]]) & xsdType == "xs:date"){
             ok <- is.na(dataTables[[n]][[name]])
             ok <- ok | !is.na(as.POSIXct(dataTables[[n]][[name]], format="%Y-%m-%d"))
@@ -183,6 +190,36 @@ setKeysDataTables <- function(dataTables, xsdObject){
   for (dt in names(dataTables)){
     if (length(xsdObject$tableHeaders[[dt]])>0){
       data.table::setkeyv(dataTables[[dt]], xsdObject$tableHeaders[[dt]][1:xsdObject$prefixLens[[dt]]])
+    }
+  }
+  return(dataTables)
+}
+
+#' Insert C_DATA in chr columns that will be mapped to text nodes of elements,
+#' if they need it (contain reserved characters, or other characters that are useful to escape)
+#' @noRd
+insertcdata <- function(dataTables, xsdObject){
+  for (dt in names(dataTables)){
+    if (ncol(dataTables[[dt]]) > 0 && dt != "metadata"){
+      ns <- names(dataTables[[dt]])
+      ns <- ns[xsdObject$prefixLens[[dt]]:length(ns)]
+      for (coln in ns){
+        if ("character" %in% class(dataTables[[dt]][[coln]])){
+          #reserved characters
+          indLt <- grepl("<", dataTables[[dt]][[coln]], fixed=T)
+          indGt <- grepl(">", dataTables[[dt]][[coln]], fixed=T)
+          indAmp <- grepl("&", dataTables[[dt]][[coln]], fixed=T)
+          
+          #others that are useful to escape
+          indQm <- grepl("?", dataTables[[dt]][[coln]], fixed=T)
+          indPc <- grepl("%", dataTables[[dt]][[coln]], fixed=T)
+          
+          mask <- indLt | indGt | indAmp | indQm | indPc
+          if (any(mask)){
+            dataTables[[dt]][[coln]][mask] <- paste("<![CDATA[", dataTables[[dt]][[coln]][mask], "]]>", sep="")
+          }
+        } 
+      }
     }
   }
   return(dataTables)
@@ -231,6 +268,7 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   # (including the relative ordering of complex and simple elements)
   # consider adding information about key structure in xsdObjects
   
+  dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
   dataTables <- setKeysDataTables(dataTables, xsdObject)
   
@@ -272,6 +310,7 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
     stop(paste("Namespace", namespace, "not supported."))
   }
   
+  dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
   
   # write prequel and opening tag
@@ -343,6 +382,10 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
 #' @param overwrite whether to overwrite any existing file(s)
 #' @noRd
 WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-8", overwrite=F){
+  
+  if (!is.LandingData(LandingData)){
+    stop("'LandingData' is not a 'LandingData object' see '?RstoxData::LandingData.")
+  }
   
   #
   # set default namespace if not specified
