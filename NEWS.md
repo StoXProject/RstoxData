@@ -1,3 +1,8 @@
+# RstoxData v1.5.2 (2022-01-22)
+"Added warnings for when (catch)producttype != 1, (sample)producttype != 1, (individual)producttype != 1, or lengthmeasurement != 'E'. 
+* Added support for NMDBiotic files of mixed version (<= and > 1.4) in AddToStoxBiotic() (removing the prey table and other unused tables, as consistent link to the individual table is not provided by the XML schema.). 
+* Fixed bug causing stream = TRUE to fail on MacOS Monterey in readXmlFile()."
+
 # RstoxData v1.3.5 (2022-01-09)
 * Hiding the parameters VariableName and ConditionalVariableName when DefinitionMethod = "Table" in Translation().
 * Renamed CatchFractionCount to CatchFractionNumber and SampleCount to SampleNumber in StoxBiotic. CatchFractionCount was considered misleading, as this variable is often not a result of counting but rather an estimate from total and sampled weight.

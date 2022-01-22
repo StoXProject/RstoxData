@@ -622,6 +622,7 @@ std::string GetExt(const std::string& inputFileName)
 	return "";
 }
 
+
 // [[Rcpp::export]]
 Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue, bool verbose = false)
 {
@@ -689,7 +690,6 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 		data = new returnData(xsdObjects, NULL, verbose);
 	}
 
-
 #ifdef DEBUG
 	Rcpp::Rcout << "Start Process" << std::endl;
 #endif
@@ -703,18 +703,25 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 	}
 
 
-	Rcpp::List result = Rcpp::List::create();
-
+	
 	std::map<std::string, std::list<std::vector<std::string>* >* >* res = data->getReturnData();
-
+	
 	const char* finalXsd = data->getXsdUsed();
 
 	Rcpp::CharacterVector tbNames = Rcpp::as<Rcpp::List>(xsdObjects[finalXsd])["tableOrder"];
 
-	for(Rcpp::CharacterVector::iterator it = tbNames.begin(); it != tbNames.end(); ++it) {
+	Rcpp::List result(tbNames.length());
+	
+	
+	// for(Rcpp::CharacterVector::iterator it = tbNames.begin(); it != tbNames.end(); ++it) {
+	for(int i = 0; i != tbNames.length(); ++i) {
+		std::string its = Rcpp::as<std::string>(tbNames[i]);
+		//std::string itsrc = tbNames[i];
+		
 
-		std::string its(*it);
+		//std::string its(*it);
 		std::list<std::vector<std::string>* >* mylist = (*res)[its];
+		
 
 		// Create counts
 		unsigned maxRow = mylist->size();
@@ -724,6 +731,8 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 		else
 			maxCol = mylist->front()->size();
 
+		
+		
 #ifdef DEBUG
 		Rcpp::Rcout << *it
 		            << ": "
@@ -732,10 +741,13 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 			    << maxCol
 		            << std::endl;
 #endif
+		
 		// Create matrix
 		Rcpp::CharacterMatrix xy(maxRow, maxCol);
-		result[its] = xy;
-
+		
+		// Add the data:
+		result[i] = xy;
+		
 		// Iterate List
 		unsigned currentRow = 0;
 		for (std::list<std::vector<std::string>* >::iterator subit = mylist->begin(); subit != mylist->end(); ++subit) {
@@ -758,6 +770,10 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 	// Free up memory
 	//std::map<std::string, std::list<std::vector<std::string>* >* >().swap(*res);
 	delete res;
+	
+	// The table names:
+	result.attr("names") = tbNames;
+	
 
 	// Return results and xsd name
 	Rcpp::List rReturn = Rcpp::List::create(

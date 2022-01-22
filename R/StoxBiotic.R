@@ -505,31 +505,6 @@ AddToStoxBiotic <- function(
 
 
 
-
-checkDataSource <- function(BioticData) {
-	# Function to match the metadata against data source strings:
-	matchSource <- function(x, BioticData) {
-		matched <- startsWith(sapply(lapply(BioticData, "[[", "metadata"), "[[", "useXsd"), x)
-		output <- rep(NA, length(matched))
-		output[matched] <- x
-		return(output)
-	}
-	
-	# Detect the data source:
-	possibleDataSources <- c("nmd", "ices")
-	detectedDataSources <- sapply(possibleDataSources, matchSource, BioticData = BioticData, simplify = FALSE)
-	numberOfFormats <- sum(sapply(detectedDataSources, function(x) any(!is.na(x))))
-	#detectedDataSources <- apply(detectedDataSources, 1, min, na.rm = TRUE)
-	# Accept only BioticData from a single source:
-	if(numberOfFormats > 1) {
-		stop("The function AddToStoxBiotic can only be applied to BioticData where all files read are of the same data source (NMD or ICES)")
-	}
-	
-	return(detectedDataSources)
-}
-
-
-
 # This can be used later if TowDuration is needed:
 # TowDuration,Haul,"as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dT%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste0(stationstopdate, stationstoptime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","as.numeric(difftime(as.POSIXct(paste(stopdate.fishstation, stoptime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='GMT'), units = 'mins'))","Duration",
 # EffectiveTowDuration,Haul,TowDuration,TowDuration,TowDuration,TowDuration,TowDuration,
