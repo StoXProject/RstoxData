@@ -190,7 +190,13 @@
     <loc>/reference/backwardCompatibility.html</loc>
   </url>
   <url>
+    <loc>/reference/convertBioticFile.html</loc>
+  </url>
+  <url>
     <loc>/reference/convertToLandingData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/convertToLssData.html</loc>
   </url>
   <url>
     <loc>/reference/createOrderKey.html</loc>
