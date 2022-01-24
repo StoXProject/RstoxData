@@ -85,17 +85,17 @@ example <- system.file("testresources","biotic_v3_example.xml", package="RstoxDa
 
 #context("test-readXmlFile: Data text encoding")
 encParse <- readXmlFile(example, stream = F)
-expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+expect_true(encParse$mission$missiontypename[1] == "Pr\u00F8veb\u00E5t")
 encParse <- readXmlFile(example, stream = T)
-expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+expect_true(encParse$mission$missiontypename[1] == "Pr\u00F8veb\u00E5t")
 
 #context("test-readXmlFile: Path encoding")
-testing <- paste0(tempfile(pattern=""), "_bio_å_prøve.xml")
+testing <- paste0(tempfile(pattern=""), "_bio_\u00E5_pr\u00F8ve.xml")
 file.copy(example, testing)
 encParse <- readXmlFile(testing, stream = F)
-expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+expect_true(encParse$mission$missiontypename[1] == "Pr\u00F8veb\u00E5t")
 encParse <- readXmlFile(testing, stream = T)
-expect_true(encParse$mission$missiontypename[1] == "Prøvebåt")
+expect_true(encParse$mission$missiontypename[1] == "Pr\u00F8veb\u00E5t")
 unlink(testing)
 
 # ICES data
