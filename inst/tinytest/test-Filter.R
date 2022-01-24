@@ -91,10 +91,10 @@ filterExpression$`biotic_v3_example.xml`$catchsample <- c(
 )
 
 #context("test-Filter: Filter downward propagation with blank record tables in between")
+outPrup <- RstoxData:::filterData(inputData, filterExpression, propagateUpwards = TRUE)
 expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
 
 #context("test-Filter: Filter upward propagation (BioticData)")
-outPrup <- RstoxData:::filterData(inputData, filterExpression, propagateUpwards = TRUE)
 expect_equal(nrow(outPrup$biotic_v3_example.xml$fishstation), 1)
 
 
