@@ -87,7 +87,7 @@ inputData <- RstoxData:::ReadBiotic(filenames)
 
 filterExpression <- list()
 filterExpression$`biotic_v3_example.xml`$catchsample <- c(
-	'commonname %notin% c("torsk", "sei", "hyse", "lange", "lysing", "gråsteinbit", "kveite")'
+	'commonname %notin% c("torsk", "sei", "hyse", "lange", "lysing", "gr\u00E5steinbit", "kveite")'
 )
 
 #context("test-Filter: Filter downward propagation with blank record tables in between")
