@@ -3,7 +3,7 @@
 
 #context("test-StoxExport: DATRAS export")
 example <- system.file("testresources", "biotic_v3_example.xml", package="RstoxData")	
-data <- ReadBiotic(example)
+data <- RstoxData:::ReadBiotic(example)
 #
 data[[1]]$fishstation[, stationstartdate := stationstopdate]
 datras <- RstoxData::ICESDatras(data)
