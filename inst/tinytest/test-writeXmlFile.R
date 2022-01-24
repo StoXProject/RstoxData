@@ -58,7 +58,7 @@ example$prey$preyforeignobject <- NULL
 example$metadata <- backIn$metadata
 expect_equal(example, backIn)
 
-context("test convertBioticFile")
+#context("test convertBioticFile")
 example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
 tmp <- tempfile(fileext = "xml")
 convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.xsd")
