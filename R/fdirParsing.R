@@ -497,3 +497,213 @@ convertToLandingData <- function(lssLandings){
   
   return(output)
 }
+
+#' Convert landings
+#' @description 
+#'  Convert landings to format format provided by \code{\link[RstoxData]{readLssFile}}.
+#' @details 
+#'  When converting from lss:
+#'  All columns of 'lssLandings' are populated, except 'salgsdato' and 'versjonstidspunkt'.
+#'  All columns of \code{\link[RstoxData]{LandingData}} are converted, except 'DokumentFormulardato' and 'DokumentElektroniskDato'.
+#' @param LandingData \code{\link[RstoxData]{LandingData}} landings to convert
+#' @return converted landings. See \code{\link[RstoxData]{readLssFile}} for format
+#' @export
+convertToLssData <- function(LandingData){
+  
+  #name mapping between lss and landingerv2.xsd. Keep exactly like convertToLandingData
+  nameMap <- list("Dokumentnummer"="Dokumentnummer",
+                  "Dokumenttype (kode)"="Dokumenttype_Kode",
+                  "Dokumenttype"="Dokumenttype_Bokm\u00E5l",
+                  "Dokument versjonsnummer"="DokumentVersjonsnummer",
+                  "Dokument salgsdato"=NA,
+                  "Dokument versjonstidspunkt"=NA,
+                  "Salgslag ID"="SalgslagID",
+                  "Salgslag (kode)"="Salgslag_kode",
+                  "Salgslag"="Salgslag",
+                  "Mottakernasjonalitet (kode)"="Mottakernasjonalitet_kode",
+                  "Mottakernasjonalitet"="Mottakernasjonalitet_bokm\u00E5l",
+                  "Mottaksstasjon"="Mottaksstasjon",
+                  "Landingskommune (kode)"="Landingskommune_kode",
+                  "Landingskommune"="Landingskommune",
+                  "Landingsfylke (kode)"="Landingsfylke_kode",
+                  "Landingsfylke"="Landingsfylke",
+                  "Landingsnasjon (kode)"="Landingsnasjon_kode",
+                  "Landingsnasjon"="Landingsnasjon_bokm\u00E5l",
+                  "Produksjonsanlegg"="Produksjonsanlegg",
+                  "Produksjonskommune (kode)"="Produksjonskommune_kode",
+                  "Produksjonskommune"="Produksjonskommune",
+                  "Fiskerkommune (kode)"="Fiskerkommune_kode",
+                  "Fiskerkommune"="Fiskerkommune",
+                  "Fiskernasjonalitet (kode)"="Fiskernasjonalitet_kode",
+                  "Fiskernasjonalitet"="Fiskernasjonalitet_bokm\u00E5l",      
+                  "Fartoynavn"="Fart\u00F8ynavn",
+                  "Fartoy ID"="Fart\u00F8yID",           
+                  "Registreringsmerke (seddel)"="Registreringsmerke_seddel",
+                  "Radiokallesignal (seddel)"="Radiokallesignal_seddel",
+                  "Storste lengde"="St\u00F8rsteLengde",
+                  "Lengdegruppe (kode)"="Lengdegruppe_kode",
+                  "Lengdegruppe"="Lengdegruppe_bokm\u00E5l",
+                  "Bruttotonnasje 1969"="Bruttotonnasje1969",
+                  "Bruttotonnasje annen"="BruttotonnasjeAnnen",
+                  "Byggear"="Bygge\u00E5r",
+                  "Ombyggingsar"="Ombyggings\u00E5r",
+                  "Motorkraft"="Motorkraft",
+                  "Motorbyggear"="Motorbygge\u00E5r",   
+                  "Fartoy gjelder fra dato"="Fart\u00F8yGjelderFraDato",
+                  "Farto gjelder til dato"="Fart\u00F8yGjelderTilDato",
+                  "Fartotype (kode)"="Fart\u00F8ytype_kode",
+                  "Fartotype"="Fart\u00F8ytype_bokm\u00E5l",
+                  "Kvotefartoy reg.merke"="Kvotefart\u00F8yRegMerke",
+                  "Fartoykommune (kode)"="Fart\u00F8ykommune_kode",
+                  "Fartoykommune"="Fart\u00F8ykommune",
+                  "Fartoyfylke (kode)"="Fart\u00F8yfylke_kode",
+                  "Fartoyfylke"="Fart\u00F8yfylke",
+                  "Fartoynasjonalitet (kode)"="Fart\u00F8ynasjonalitet_kode",
+                  "Fartoynasjonalitet"="Fart\u00F8ynasjonalitet_bokm\u00E5l",
+                  "Mottakende farto reg.merke"="MottakendeFart\u00F8yRegMerke",
+                  "Mottakende farto rkal"="MottakendeFart\u00F8yRKAL",
+                  "Mottakende fartotype (kode)"="MottakendeFart\u00F8ytype_kode",
+                  "Mottakende fart.type"="MottakendeFart\u00F8ytype_bokm\u00E5l",
+                  "Mottakende fartoynasj. (kode)"="MottakendeFart\u00F8ynasj_kode",
+                  "Mottakende fart.nasj"="MottakendeFart\u00F8ynasj_bokm\u00E5l",
+                  "Fangstar"="Fangst\u00E5r",
+                  "Siste fangstdato"="SisteFangstdato" ,
+                  "Kvotetype (kode)"="Kvotetype_kode",
+                  "Kvotetype"="Kvotetype_bokm\u00E5l",
+                  "Redskap (kode)"="Redskap_kode",
+                  "Redskap"="Redskap_bokm\u00E5l",
+                  "Redskap - hovedgruppe (kode)"="HovedgruppeRedskap_kode",
+                  "Redskap - hovedgruppe"="HovedgruppeRedskap_bokm\u00E5l",
+                  "Fangstfelt (kode)"="Fangstfelt_kode",
+                  "Kyst/hav (kode)"="KystHav_kode",
+                  "Hovedomrade (kode)"="Hovedomr\u00E5de_kode",
+                  "Hovedomrade"="Hovedomr\u00E5de_bokm\u00E5l",
+                  "Lokasjon (kode)"="Lokasjon_kode",
+                  "Sone (kode)"="Sone_kode",
+                  "Sone"="Sone_bokm\u00E5l",
+                  "Omradegruppering"="Omr\u00E5degruppering_bokm\u00E5l",
+                  "Hovedomrade FAO (kode)"="Hovedomr\u00E5deFAO_kode",
+                  "Hovedomrade FAO"="Hovedomr\u00E5deFAO_bokm\u00E5l",
+                  "Nord/sor for 62 grader nord"="NordS\u00F8rFor62GraderNord",
+                  "Fangstdagbok (nummer)"="Fangstdagbok_nummer",
+                  "Fangstdagbok (turnummer)"="Fangstdagbok_turnummer",
+                  "Landingsdato"="Landingsdato",
+                  "Landingsklokkeslett"="Landingsklokkeslett",
+                  "Dellanding (signal)"="Dellanding_signal",
+                  "Neste mottaksstasjon"="NesteMottaksstasjon",
+                  "Forrige mottakstasjon"="ForrigeMottakstasjon",
+                  "Linjenummer"="Linjenummer",
+                  "Art - FDIR (kode)"="Art_kode",
+                  "Art - FDIR"="Art_bokm\u00E5l",
+                  "Art - gruppe (kode)"="ArtsgruppeHistorisk_kode",
+                  "Art - gruppe"="ArtsgruppeHistorisk_bokm\u00E5l",
+                  "Art - hovedgruppe (kode)"="HovedgruppeArt_kode",
+                  "Art - hovedgruppe"="HovedgruppeArt_bokm\u00E5l",
+                  "Art FAO (kode)"="ArtFAO_kode",
+                  "Art FAO"="ArtFAO_bokm\u00E5l",
+                  "Produkttilstand (kode)"="Produkttilstand_kode",
+                  "Produkttilstand"="Produkttilstand_bokm\u00E5l",
+                  "Konserveringsmate (kode)"="Konserveringsm\u00E5te_kode",
+                  "Konserveringsmate"="Konserveringsm\u00E5te_bokm\u00E5l",
+                  "Landingsmate (kode)"="Landingsm\u00E5te_kode",
+                  "Landingsmate"="Landingsm\u00E5te_bokm\u00E5l",
+                  "Kvalitet (kode)"="Kvalitet_kode",
+                  "Kvalitet"="Kvalitet_bokm\u00E5l",
+                  "Storrelsesgruppering (kode)"="St\u00F8rrelsesgruppering_kode",
+                  "Anvendelse (kode)"="Anvendelse_kode",
+                  "Anvendelse"="Anvendelse_bokm\u00E5l",
+                  "Anvendelse hovedgruppe (kode)"="HovedgruppeAnvendelse_kode",
+                  "Anvendelse hovedgruppe"="HovedgruppeAnvendelse_bokm\u00E5l",
+                  "Antall stykk"="AntallStykk",
+                  "Bruttovekt"="Bruttovekt",
+                  "Produktvekt"="Produktvekt",
+                  "Rundvekt"="Rundvekt")
+  
+  
+  names(nameMap)[26] <- "Fart\u00F8ynavn"
+  names(nameMap)[27] <- "Fart\u00F8y ID"
+  names(nameMap)[30] <- "St\u00F8rste lengde"
+  names(nameMap)[35] <- "Bygge\u00E5r"
+  names(nameMap)[36] <- "Ombyggings\u00E5r"
+  names(nameMap)[38] <- "Motorbygge\u00E5r"
+  names(nameMap)[39] <- "Fart\u00F8y gjelder fra dato"
+  names(nameMap)[40] <- "Fart\u00F8y gjelder til dato"
+  names(nameMap)[41] <- "Fart\u00F8ytype (kode)"
+  names(nameMap)[42] <- "Fart\u00F8ytype"
+  names(nameMap)[43] <- "Kvotefart\u00F8y reg.merke"
+  names(nameMap)[44] <- "Fart\u00F8ykommune (kode)"
+  names(nameMap)[45] <- "Fart\u00F8ykommune"
+  names(nameMap)[46] <- "Fart\u00F8yfylke (kode)"
+  names(nameMap)[47] <- "Fart\u00F8yfylke"
+  names(nameMap)[48] <- "Fart\u00F8ynasjonalitet (kode)"
+  names(nameMap)[49] <- "Fart\u00F8ynasjonalitet"
+  names(nameMap)[50] <- "Mottakende fart\u00F8y reg.merke"
+  names(nameMap)[51] <- "Mottakende fart\u00F8y rkal"
+  names(nameMap)[52] <- "Mottakende fart\u00F8ytype (kode)"
+  names(nameMap)[54] <- "Mottakende fart\u00F8ynasj. (kode)"
+  names(nameMap)[56] <- "Fangst\u00E5r"
+  names(nameMap)[66] <- "Hovedomr\u00E5de (kode)"
+  names(nameMap)[67] <- "Hovedomr\u00E5de"
+  names(nameMap)[71] <- "Omr\u00E5degruppering"
+  names(nameMap)[72] <- "Hovedomr\u00E5de FAO (kode)"
+  names(nameMap)[73] <- "Hovedomr\u00E5de FAO"
+  names(nameMap)[74] <- "Nord/s\u00F8r for 62 grader nord"
+  names(nameMap)[93] <- "Konserveringsm\u00E5te (kode)"
+  names(nameMap)[94] <- "Konserveringsm\u00E5te"
+  names(nameMap)[95] <- "Landingsm\u00E5te (kode)"
+  names(nameMap)[96] <- "Landingsm\u00E5te"
+  names(nameMap)[99] <- "St\u00F8rrelsesgruppering (kode)"
+  
+  stopifnot(is.LandingData(LandingData))
+  
+  flatlandings <- LandingData[[1]]$Seddellinje
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Salgslagdata)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Mottaker)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Produksjon)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Fangstdata)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Fisker)
+
+  #correcting for mistake in format spec (xsd). Nationality of vessel is repeated. Renameing by same convention as readXmlFile.
+  if (any(duplicated(names(LandingData[[1]][["Fart\u00F8y"]])))){
+    dups <- duplicated(names(LandingData[[1]][["Fart\u00F8y"]]))
+    names(LandingData[[1]][["Fart\u00F8y"]])[dups] <- paste(names(LandingData[[1]][["Fart\u00F8y"]])[dups], "Fart\u00F8y", sep=".")
+  }
+
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]][["Fart\u00F8y"]])
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]][["Mottakendefart\u00F8y"]])
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Kvote)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Redskap)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Dellanding)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Produkt)
+  flatlandings <- mergeByIntersect(flatlandings, LandingData[[1]]$Art)
+  
+  flatlandings$DokumentFormulardato <- NULL
+  flatlandings$DokumentElektroniskDato <- NULL
+  flatlandings[["Dokument salgsdato"]] <- NA
+  nameMap["Dokument salgsdato"] <- "Dokument salgsdato"
+  flatlandings[["Dokument versjonstidspunkt"]] <- NA
+  nameMap["Dokument versjonstidspunkt"] <- "Dokument versjonstidspunkt"
+  
+  flatlandings <- flatlandings[, .SD, .SDcols=unlist(nameMap)]
+  names(flatlandings) <- names(nameMap)
+  
+  #convert types
+  flatlandings[["Dokumenttype (kode)"]] <- as.character(flatlandings[["Dokumenttype (kode)"]])
+  flatlandings[["Dokument versjonsnummer"]] <- as.character(flatlandings[["Dokument versjonsnummer"]])
+  flatlandings[["Dokument salgsdato"]] <- as.character(flatlandings[["Dokument salgsdato"]])
+  flatlandings[["Dokument versjonstidspunkt"]] <- as.character(flatlandings[["Dokument versjonstidspunkt"]])
+  flatlandings[["Salgslag ID"]] <- as.character(flatlandings[["Salgslag ID"]])
+  flatlandings[["Landingskommune (kode)"]] <- as.character(flatlandings[["Landingskommune (kode)"]])
+  flatlandings[["Landingsfylke (kode)"]] <- as.character(flatlandings[["Landingsfylke (kode)"]])
+  flatlandings[["Fiskerkommune (kode)"]] <- as.character(flatlandings[["Fiskerkommune (kode)"]])
+  flatlandings[["Fart\u00F8ykommune (kode)"]] <- as.character(flatlandings[["Fart\u00F8ykommune (kode)"]])
+  flatlandings[["Fart\u00F8yfylke (kode)"]] <- as.character(flatlandings[["Fart\u00F8yfylke (kode)"]])
+  flatlandings[["Kyst/hav (kode)"]] <- as.character(flatlandings[["Kyst/hav (kode)"]])
+  flatlandings[["Siste fangstdato"]] <- as.POSIXct(flatlandings[["Siste fangstdato"]], format="%d.%m.%Y")
+  flatlandings[["Fangstdagbok (nummer)"]] <- as.character(flatlandings[["Fangstdagbok (nummer)"]])
+  flatlandings[["Fangstdagbok (turnummer)"]] <- as.character(flatlandings[["Fangstdagbok (turnummer)"]])
+  flatlandings[["Dellanding (signal)"]] <- as.character(flatlandings[["Dellanding (signal)"]])
+  data.table::setkey(flatlandings, NULL)
+  
+  return(flatlandings)
+}
