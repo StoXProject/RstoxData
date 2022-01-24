@@ -427,6 +427,7 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
       fWriteLandings(FileName, data, namespace, encoding) 
     }
     else{
+      warning("Fast file writing cannot be enabled. Falling back to slow mode.")
       writeXmlFile(FileName, data, RstoxData::xsdObjects$landingerv2.xsd, namespace, encoding)  
     }
   }
@@ -459,23 +460,14 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
   if (is.null(namespaces)){
     namespaces <- c()
     for (l in BioticData){
-      if (l$metadata$useXsd == "nmdbioticv1.1"){
-        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.1")
-      }
-      if (l$metadata$useXsd == "nmdbioticv1.2"){
-        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.2")
-      }
-      if (l$metadata$useXsd == "nmdbioticv1.3"){
-        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.3")
-      }
-      if (l$metadata$useXsd == "nmdbioticv1.4"){
-        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v1.4")
-      }
-      if (l$metadata$useXsd == "nmdbioticv3"){
-        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v3")
-      }
-      if (l$metadata$useXsd == "nmdbioticv3.1"){
-        namespaces <- c(namespaces, "http://www.imr.no/formats/nmdbiotic/v3.1")
+      
+      if (!is.null(l$metadata$useXsd)){
+        xsdObj <- xsdObjects[[paste(l$metadata$useXsd, "xsd", sep=".")]]
+        ns <- xsdObj$targetNamespace
+        if (is.na(ns)){
+          ns <- ""
+        }
+        namespaces <- c(namespaces, ns)
       }
       else{
         stop(paste("Does not recognize namespace for", l$metadata$useXsd, "Provide explicit namespace."))
@@ -500,22 +492,14 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
     data <- BioticData[[i]] 
     namespace <- namespaces[[i]]
     
-    if (namespace == "http://www.imr.no/formats/nmdbiotic/v3.1"){
-      xsdObject = RstoxData::xsdObjects$nmdbioticv3.1.xsd
+    xsdObject <- NULL
+    for (x in xsdObjects){
+      if (!is.na(x$targetNamespace) & x$targetNamespace == namespace){
+        xsdObject <- x
+      }
     }
-    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v3"){
-      xsdObject = RstoxData::xsdObjects$nmdbioticv3.xsd
-    }
-    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.1"){
-      xsdObject = RstoxData::xsdObjects$nmdbioticv1.1.xsd
-    }
-    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.2"){
-      xsdObject = RstoxData::xsdObjects$nmdbioticv1.2.xsd
-    }
-    else if (namespace == "http://www.imr.no/formats/nmdbiotic/v1.3"){
-      xsdObject = RstoxData::xsdObjects$nmdbioticv1.3.xsd
-    }
-    else{
+    
+    if (is.null(xsdObject)){
       stop(paste("Namespace", namespace, "not supported."))
     }
     
@@ -526,4 +510,40 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
     writeXmlFile(FileName, data, xsdObject, namespace, encoding)    
   }
 
+}
+
+#' Converts biotic
+#' @description 
+#'  Converts between compatible nmdbiotic versions
+#'  
+#' @details
+#'  Different versions of the nmdbiotic format are compatible and can be converted with this function
+#'  if they have the same major release number. So that v3.1 is compatible with v3.0, but not with version 1.4
+#'  
+#'  Compatibility is not enforced by this function, and conversion will be attempted without checking the version of 'source'
+#' @param sourceFile path to file that should be converted
+#' @param targetFile path that the converted files should be written to
+#' @param targetFormat name of xsdObject specifying the format of the target file. One of names(RstoxData::xsdObjects).
+#' @param overwrite if TRUE any existing file in 'targetFile' will be overwritten.
+#' @export
+convertBioticFile <- function(sourceFile, targetFile, targetFormat="nmdbioticv3.0.xsd", overwrite=F){
+  
+  if (!is.character(targetFormat) & !(targetFormat %in% names(RstoxData::xsdObjects))){
+    stop("'targetFormat must be one of those in names(RstoxData::xsdObjects).")
+  }
+  
+  targetFormat <- RstoxData::xsdObjects[[targetFormat]]
+  namespace=targetFormat$targetNamespace
+  
+  if (!file.exists(sourceFile)){
+    stop(paste("File", sourceFile, "does not exsist."))
+  }
+  
+  if (file.exists(targetFile) & !overwrite){
+    stop(paste("File", targetFile, "already exsists."))
+  }
+  
+  data <- readXmlFile(sourceFile)
+  writeXmlFile(targetFile, data, targetFormat, namespace = namespace)
+  
 }

@@ -47,7 +47,6 @@ tmp <- tempfile(fileext = "xml")
 RstoxData:::writeXmlFile(tmp, example, xsdObjects$nmdbioticv3.xsd, "http://www.imr.no/formats/nmdbiotic/v3")
 backIn <- readXmlFile(tmp)
 unlink(tmp)
-
 expect_true(sum(!is.na(example$fishstation$fishingbait))>0)
 expect_true(is.null(backIn$fishstation$fishingbait))
 
@@ -58,6 +57,28 @@ example$individual$rightclawheight <- NULL
 example$prey$preyforeignobject <- NULL
 example$metadata <- backIn$metadata
 expect_equal(example, backIn)
+
+#context("test convertBioticFile")
+example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
+tmp <- tempfile(fileext = "xml")
+convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.xsd")
+backIn <- readXmlFile(tmp)
+unlink(tmp)
+expect_equal(backIn$metadata$useXsd, "nmdbioticv3")
+expect_true(is.null(backIn$fishstation$fishingbait))
+expect_true(!is.null(example$fishstation$fishingbait))
+expect_true(all(backIn$fishstation$serialnumber == example$fishstation$serialnumber))
+
+example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
+tmp <- tempfile(fileext = "xml")
+convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.1.xsd")
+backIn <- readXmlFile(tmp)
+unlink(tmp)
+expect_equal(backIn$metadata$useXsd, "nmdbioticv3.1")
+expect_true(!is.null(backIn$fishstation$fishingbait))
+expect_true(!is.null(example$fishstation$fishingbait))
+expect_true(all(backIn$fishstation$serialnumber == example$fishstation$serialnumber))
+
 
 
 #context("test writing landinger v.2 fwrite")
