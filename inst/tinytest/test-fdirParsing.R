@@ -30,7 +30,7 @@ expect_true(RstoxData::is.LandingData(landings))
 expect_equal(sum(landings$ConvertedData$Produkt$Rundvekt), sum(data$Rundvekt))
 
 #context("Test convertToLssData")
-lss <- convertToLssData(landings)
+lss <- RstoxData:::convertToLssData(landings)
 lss <- lss[order(lss$Dokumentnummer),]
 data <- data[order(data$Dokumentnummer),]
 expect_true(all(is.na(lss$`Dokument salgsdato`)))
