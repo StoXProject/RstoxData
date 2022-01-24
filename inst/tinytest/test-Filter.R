@@ -4,7 +4,7 @@ options("mc.cores" = 2)
 # NMD Biotic
 filenames <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
 
-inputData <- ReadBiotic(filenames)
+inputData <- RstoxData:::ReadBiotic(filenames)
 
 # test a wrong expression
 filterExpression <- list()
@@ -60,7 +60,7 @@ expect_equal(all(outst$Individual$IndividualAge >= 10), TRUE)
 
 # Filter result consistency between level
 inputData1 <- RstoxData:::ReadBiotic(filenames)
-suppressWarnings(inputData2 <- RstoxData:::StoxBiotic(ReadBiotic(filenames)))
+suppressWarnings(inputData2 <- RstoxData:::StoxBiotic(RstoxData:::ReadBiotic(filenames)))
 
 filterExpression1 <- list()
 filterExpression1$`biotic_v3_example.xml`$fishstation <- c(
@@ -73,7 +73,7 @@ filterExpression2$Haul <- c(
 )
 
 suppressWarnings(out1 <- RstoxData:::StoxBiotic(RstoxData:::filterData(inputData1, filterExpression1)))
-out2 <- filterData(inputData2, filterExpression2)
+out2 <- RstoxData:::filterData(inputData2, filterExpression2)
 
 #context("test-Filter: Filter downward propagation")
 comparison <- all.equal(out1, out2)
@@ -90,15 +90,16 @@ filterExpression$`biotic_v3_example.xml`$catchsample <- c(
 	'commonname %notin% c("torsk", "sei", "hyse", "lange", "lysing", "gråsteinbit", "kveite")'
 )
 
-#context("test-Filter: Filter upward propagation (BioticData)")
-outPrup <- RstoxData:::filterData(inputData, filterExpression, propagateUpwards = TRUE)
-expect_equal(nrow(outPrup$`biotic_v3_example.xml`$fishstation), 1)
-
 #context("test-Filter: Filter downward propagation with blank record tables in between")
 expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
 
+#context("test-Filter: Filter upward propagation (BioticData)")
+outPrup <- RstoxData:::filterData(inputData, filterExpression, propagateUpwards = TRUE)
+expect_equal(nrow(outPrup$biotic_v3_example.xml$fishstation), 1)
+
+
 # Propagate upwards with StoxBiotic
-suppressWarnings(inputData <- RstoxData:::StoxBiotic(ReadBiotic(filenames)))
+suppressWarnings(inputData <- RstoxData:::StoxBiotic(RstoxData:::ReadBiotic(filenames)))
 
 filterExpression <- list()
 filterExpression$Sample <- c(
@@ -143,5 +144,5 @@ expect_true(nrow(filteredLprop$landing.xml$Fangstdata) < nrow(Landings$landing.x
 
 # StoxLanding
 StoxLanding <- RstoxData:::StoxLanding(Landings)
-filteredSL <- FilterStoxLanding(StoxLanding, filterExpressionSL)
+filteredSL <- RstoxData:::FilterStoxLanding(StoxLanding, filterExpressionSL)
 expect_equal(nrow(filteredSL$Landing), sum(StoxLanding$Landing$Area %in% c("37","08")))

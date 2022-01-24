@@ -1,7 +1,7 @@
 #context("test-sort")
 
 exampleFile <- system.file("testresources","biotic_2020821.zip", package="RstoxData")
-suppressWarnings(exampleData <- StoxBiotic(ReadBiotic(exampleFile)))
+suppressWarnings(exampleData <- RstoxData:::StoxBiotic(RstoxData:::ReadBiotic(exampleFile)))
 
 expecteFile <- system.file("testresources","biotic_2020821.rds", package="RstoxData")
 expectedData <- readRDS(expecteFile)
