@@ -1,4 +1,4 @@
-context("test-sort")
+#context("test-sort")
 
 exampleFile <- system.file("testresources","biotic_2020821.zip", package="RstoxData")
 exampleData <- StoxBiotic(ReadBiotic(exampleFile))

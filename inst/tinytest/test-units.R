@@ -1,4 +1,4 @@
-context("Test unit conversion")
+#context("Test unit conversion")
 
 symbol <- findUnit("mass", "kg")
 shortname <- findUnit("mass", shortname="kg")
@@ -14,22 +14,22 @@ expect_error(findUnit("mass", name="m"), "m is not a valid name for quantity: ma
 
 expect_error(findUnit("nonsense", name="m"), "nonsense is not a valid quantity.")
 
-m <- convertUnits(1, "length-km", "length-m")
+m <- RstoxData:::convertUnits(1, "length-km", "length-m")
 expect_equal(m,1000)
 
-m <- convertUnits(2.5, "mass-g", "mass-kt")
+m <- RstoxData:::convertUnits(2.5, "mass-g", "mass-kt")
 expect_equal(m,2.5e-9)
 
-expect_error(convertUnits(2.5, "length-nmi", "mass-kt"), "length-nmi and mass-kt are of different quantities.")
-expect_error(convertUnits(2.5, "kts", "mass-kt"), "kts not found in 'conversionTable'")
+expect_error(RstoxData:::convertUnits(2.5, "length-nmi", "mass-kt"), "length-nmi and mass-kt are of different quantities.")
+expect_error(RstoxData:::convertUnits(2.5, "kts", "mass-kt"), "kts not found in 'conversionTable'")
 
-m <- convertUnits(c(1,2), "length-km", "length-nmi")
+m <- RstoxData:::convertUnits(c(1,2), "length-km", "length-nmi")
 
 expect_equal(m,c(1000/1852, 2000/1852))
 
-m1 <- convertUnits(20, "fraction-percent", "fraction-decimal")
+m1 <- RstoxData:::convertUnits(20, "fraction-percent", "fraction-decimal")
 expect_equal(m1,.2)
-m2 <- convertUnits(.20, "fraction-decimal", "fraction-percent")
+m2 <- RstoxData:::convertUnits(.20, "fraction-decimal", "fraction-percent")
 expect_equal(m2,20)
 
 dt <- data.table::data.table(weight=c(1000,1200), var=c("v1","v2"))

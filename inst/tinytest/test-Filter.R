@@ -12,7 +12,7 @@ filterExpression$`biotic_v3_example.xml`$individual <- c(
 	'weight > 2'
 )
 
-context("test-Filter: Invalid column")
+#context("test-Filter: Invalid column")
 # Should be warning but can proceed)
 expect_warning(out <-filterData(inputData, filterExpression))
 
@@ -32,7 +32,7 @@ filterExpression$`biotic_v3_example.xml`$agedetermination <- c(
 # Should be OK
 out <-filterData(inputData, filterExpression)
 
-context("test-Filter: Filtering Biotic Data")
+#context("test-Filter: Filtering Biotic Data")
 # Should be TRUE
 expect_equal(any(out$`biotic_v3_example.xml`$individual$individualweight <= 2), FALSE)
 expect_equal(any(out$`biotic_v3_example.xml`$agedetermination$age >= 10), FALSE)
@@ -53,7 +53,7 @@ filterExpressionSt$Individual <- c(
 # Should be OK
 outst <-filterData(st, filterExpressionSt)
 
-context("test-Filter: Filtering StoxBiotic data")
+#context("test-Filter: Filtering StoxBiotic data")
 # Should be TRUE
 expect_equal(any(outst$Individual$IndividualAge < 10), FALSE)
 expect_equal(all(outst$Individual$IndividualAge >= 10), TRUE)
@@ -75,7 +75,7 @@ filterExpression2$Haul <- c(
 out1 <- StoxBiotic(filterData(inputData1, filterExpression1))
 out2 <- filterData(inputData2, filterExpression2)
 
-context("test-Filter: Filter downward propagation")
+#context("test-Filter: Filter downward propagation")
 comparison <- all.equal(out1, out2)
 
 # Should be one difference in the Station table
@@ -90,11 +90,11 @@ filterExpression$`biotic_v3_example.xml`$catchsample <- c(
 	'commonname %notin% c("torsk", "sei", "hyse", "lange", "lysing", "gråsteinbit", "kveite")'
 )
 
-context("test-Filter: Filter upward propagation (BioticData)")
+#context("test-Filter: Filter upward propagation (BioticData)")
 outPrup <- filterData(inputData, filterExpression, propagateUpwards = TRUE)
 expect_equal(nrow(outPrup$`biotic_v3_example.xml`$fishstation), 1)
 
-context("test-Filter: Filter downward propagation with blank record tables in between")
+#context("test-Filter: Filter downward propagation with blank record tables in between")
 expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
 
 # Propagate upwards with StoxBiotic
@@ -105,7 +105,7 @@ filterExpression$Sample <- c(
 	'SpeciesCategoryKey %like% "breiflabb|lyr"'
 )
 
-context("test-Filter: Filter downward + upward propagation (StoxBiotic)")
+#context("test-Filter: Filter downward + upward propagation (StoxBiotic)")
 outPrup <- filterData(inputData, filterExpression, propagateUpwards = TRUE)
 expect_equal(nrow(outPrup$SpeciesCategory), 2)
 expect_equal(nrow(outPrup$Sample), 2)
@@ -116,7 +116,7 @@ expect_equal(nrow(outPrup$Individual), 0)
 
 
 # Landing
-context("test-Filter: Landings")
+#context("test-Filter: Landings")
 landingfile <- system.file("testresources","landing.xml", package="RstoxData")
 Landings <- ReadLanding(landingfile)
 
@@ -127,7 +127,7 @@ filterExpressionL$`landing.xml`$Fangstdata <- c(
 filteredL <- FilterLanding(Landings, filterExpressionL)
 expect_equal(nrow(filteredL$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata[["Hovedomr\u00E5de_kode"]] %in% c("37", "08")))
 expect_equal(nrow(filteredL$landing.xml$Art), nrow(Landings$landing.xml$Art))
-expect_lt(nrow(filteredL$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
+expect_true(nrow(filteredL$landing.xml$Fangstdata) < nrow(Landings$landing.xml$Fangstdata))
 
 filterExpressionSL <- list()
 filterExpressionSL$Landing <- c(
@@ -136,8 +136,8 @@ filterExpressionSL$Landing <- c(
 
 filteredLprop <- FilterLanding(Landings, filterExpressionL, FilterUpwards = T)
 expect_equal(nrow(filteredLprop$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata[["Hovedomr\u00E5de_kode"]] %in% c("37", "08")))
-expect_lt(nrow(filteredLprop$landing.xml$Art), nrow(Landings$landing.xml$Art))
-expect_lt(nrow(filteredLprop$landing.xml$Fangstdata), nrow(Landings$landing.xml$Fangstdata))
+expect_true(nrow(filteredLprop$landing.xml$Art) < nrow(Landings$landing.xml$Art))
+expect_true(nrow(filteredLprop$landing.xml$Fangstdata) < nrow(Landings$landing.xml$Fangstdata))
 
 
 

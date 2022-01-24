@@ -1,6 +1,6 @@
-context("test-icesParsing")
+#context("test-icesParsing")
 
-context("parseInterCatch: normal run")
+#context("parseInterCatch: normal run")
 data <- parseInterCatch(system.file("testresources","intercatch_example.csv", package="RstoxData"))
 expect_equal(length(data),3)
 expect_equal(nrow(data$HI), 12)
