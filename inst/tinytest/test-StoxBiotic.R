@@ -7,12 +7,12 @@ example <- system.file("testresources","biotic3.1_example.xml", package="RstoxDa
 
 #context("test-StoxBiotic: using DOM biotic v3.1")
 defaultParseBiotic <- readXmlFile(example, stream = F)
-sb1 <- StoxBiotic(list(defaultParseBiotic))
+suppressWarnings(sb1 <- StoxBiotic(list(defaultParseBiotic)))
 expect_equal(nrow(sb1$Haul), 2)
 
 #context("test-StoxBiotic: using stream parse biotic v3.1")
 streamParseBiotic <- readXmlFile(example, stream = T)
-sb2 <- StoxBiotic(list(streamParseBiotic))
+suppressWarnings(sb2 <- StoxBiotic(list(streamParseBiotic)))
 expect_equal(nrow(sb2$Haul), 2)
 
 #context("test-StoxBiotic: all.equal")
@@ -23,12 +23,12 @@ example <- system.file("testresources","biotic_v3_example.xml", package="RstoxDa
 
 #context("test-StoxBiotic: using DOM biotic v3")
 defaultParseBiotic <- readXmlFile(example, stream = F)
-sb1 <- StoxBiotic(list(defaultParseBiotic))
+suppressWarnings(sb1 <- StoxBiotic(list(defaultParseBiotic)))
 expect_equal(nrow(sb1$Haul), 2)
 
 #context("test-StoxBiotic: using stream parse biotic v3.1")
 streamParseBiotic <- readXmlFile(example, stream = T)
-sb2 <- StoxBiotic(list(streamParseBiotic))
+suppressWarnings(sb2 <- StoxBiotic(list(streamParseBiotic)))
 expect_equal(nrow(sb2$Haul), 2)
 
 #context("test-StoxBiotic: all.equal")
@@ -72,6 +72,6 @@ expect_true(all.equal(icesDataA, icesDataB))
 #context("Test repeating catchpartnumbers")
 example <- system.file("testresources","repeatingcp.xml", package="RstoxData")
 biotic <- ReadBiotic(example)
-sb <- StoxBiotic(biotic)
+suppressWarnings(sb <- StoxBiotic(biotic))
 expect_equal(nrow(biotic$repeatingcp.xml$catchsample), nrow(sb$Sample))
 

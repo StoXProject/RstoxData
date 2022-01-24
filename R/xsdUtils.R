@@ -65,7 +65,7 @@ processXSD <- function(doc, path = NULL) {
 
 	# Get the default namespace
 	defNS <- names(xml_ns(doc))[[grep("XMLSchema", as.list(xml_ns(doc)))]]
-
+  
 	if(length(defNS) > 0)
 		defNS <- paste0(defNS[[1]], ":")
 	else
@@ -81,14 +81,14 @@ processXSD <- function(doc, path = NULL) {
 	}
 
 	rootInfo <- getNameType(xml_find_all(doc, paste0("/", defNS, "schema/", defNS, "element"))[[1]])
-
+  
 	r_e <- new.env()
 	r_e$flat <- list()
 	r_e$flatAttr <- list()
 
 	# start the recursive search
 	getRecNameType(rootInfo, recEnv = r_e)
-
+	
 	return(list(flat = r_e$flat, flatAttr = r_e$flatAttr, rootInfo = rootInfo, doc = doc))
 
 }
@@ -231,7 +231,14 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 	xsdObject[["tableHeaders"]] <- r_e$tableHeaders;
 	xsdObject[["prefixLens"]] <- prefixLens;
 	xsdObject[["levelDims"]] <- levelDims;
+	if ("targetNamespace" %in% names(xml_attrs(xsdDoc))){
+	  xsdObject[["targetNamespace"]] <- xml_attrs(xsdDoc)[["targetNamespace"]]	  
+	}
+	else{
+	  xsdObject[["targetNamespace"]] <- NA
+	}
 
+	
 	return(xsdObject)
 }
 
@@ -288,6 +295,7 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	# Detect namespace prefix
 	pfx <- unlist(regmatches(tmpText, regexec("xmlns:(\\w+)=", tmpText)))[2]
+	
 	if(is.na(pfx) || pfx %in% c("xsd", "xsi")) {
 		pfx <- NULL
 		prefix1 <- ""

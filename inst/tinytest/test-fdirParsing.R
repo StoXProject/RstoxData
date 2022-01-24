@@ -2,6 +2,7 @@
 
 #context("readLssFile: normal run")
 data <- readLssFile(system.file("testresources","landings_trimmed_2018.lss", package="RstoxData"))
+data[["Fart\u00F8ykommune (kode)"]] <- "5444" #error in test file landings_trimmed_2018.lss
 expect_true(data.table::is.data.table(data))
 expect_true("Bruttovekt" %in% names(data))
 expect_true("Bruttovekt" %in% names(data))
@@ -28,7 +29,19 @@ landings <- convertToLandingData(data)
 expect_true(RstoxData::is.LandingData(landings))
 expect_equal(sum(landings$ConvertedData$Produkt$Rundvekt), sum(data$Rundvekt))
 
-#context("readErsFile: normal run")
+context("Test convertToLssData")
+lss <- convertToLssData(landings)
+lss <- lss[order(lss$Dokumentnummer),]
+data <- data[order(data$Dokumentnummer),]
+expect_true(all(is.na(lss$`Dokument salgsdato`)))
+expect_true(all(is.na(lss$`Dokument versjonstidspunkt`)))
+# put in columns not converted
+lss$`Dokument salgsdato` <- data$`Dokument salgsdato`
+lss$`Dokument versjonstidspunkt` <- data$`Dokument versjonstidspunkt`
+
+expect_true(all.equal(lss, data))
+
+context("readErsFile: normal run")
 data <- readErsFile(system.file("testresources","logbooks_trimmed_2015.psv", package="RstoxData"))
 expect_true(data.table::is.data.table(data))
 expect_true("RC" %in% names(data))

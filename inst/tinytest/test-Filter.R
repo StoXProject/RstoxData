@@ -43,7 +43,7 @@ expect_equal(all(out$`biotic_v3_example.xml`$agedetermination$serialnumber != c(
 
 
 ## StoxBiotic
-st <- StoxBiotic(inputData)
+suppressWarnings(st <- StoxBiotic(inputData))
 
 filterExpressionSt <- list()
 filterExpressionSt$Individual <- c(
@@ -60,7 +60,7 @@ expect_equal(all(outst$Individual$IndividualAge >= 10), TRUE)
 
 # Filter result consistency between level
 inputData1 <- ReadBiotic(filenames)
-inputData2 <- StoxBiotic(ReadBiotic(filenames))
+suppressWarnings(inputData2 <- StoxBiotic(ReadBiotic(filenames)))
 
 filterExpression1 <- list()
 filterExpression1$`biotic_v3_example.xml`$fishstation <- c(
@@ -72,7 +72,7 @@ filterExpression2$Haul <- c(
 	"HaulKey %notin% c(99483)"
 )
 
-out1 <- StoxBiotic(filterData(inputData1, filterExpression1))
+suppressWarnings(out1 <- StoxBiotic(filterData(inputData1, filterExpression1)))
 out2 <- filterData(inputData2, filterExpression2)
 
 #context("test-Filter: Filter downward propagation")
@@ -98,7 +98,7 @@ expect_equal(nrow(outPrup$`biotic_v3_example.xml`$fishstation), 1)
 expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
 
 # Propagate upwards with StoxBiotic
-inputData <- StoxBiotic(ReadBiotic(filenames))
+suppressWarnings(inputData <- StoxBiotic(ReadBiotic(filenames)))
 
 filterExpression <- list()
 filterExpression$Sample <- c(
