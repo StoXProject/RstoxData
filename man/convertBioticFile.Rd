@@ -7,7 +7,7 @@
 convertBioticFile(
   sourceFile,
   targetFile,
-  targetFormat = "nmdbioticv3.0.xsd",
+  targetFormat = "nmdbioticv3.xsd",
   overwrite = F
 )
 }

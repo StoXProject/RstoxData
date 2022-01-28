@@ -3,8 +3,10 @@ options("mc.cores" = 2)
 
 # NMD Biotic
 filenames <- system.file("testresources","biotic_v3_example.xml", package="RstoxData")
+filenames2missions <- system.file("testresources","biotic_v3_example_two_missions.xml", package="RstoxData")
 
 inputData <- RstoxData:::ReadBiotic(filenames)
+inputData2missions <- RstoxData:::ReadBiotic(filenames2missions)
 
 # test a wrong expression
 filterExpression <- list()
@@ -96,6 +98,27 @@ expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
 
 #context("test-Filter: Filter upward propagation (BioticData)")
 expect_equal(nrow(outPrup$biotic_v3_example.xml$fishstation), 1)
+
+
+# check filtering propogating to agedetermination, when prey is present
+filterExpression <- list()
+filterExpression$biotic_v3_example_two_missions.xml$mission <- c(
+  'missiontype %in% "10"'
+)
+agedetPre <- nrow(inputData2missions$biotic_v3_example_two_missions.xml$agedetermination)
+agedetPreM11 <- nrow(inputData2missions$biotic_v3_example_two_missions.xml$agedetermination[inputData2missions$biotic_v3_example_two_missions.xml$agedetermination$missiontype=="10"])
+outPrup <- RstoxData:::filterData(inputData2missions, filterExpression)
+expect_equal(nrow(outPrup$biotic_v3_example_two_missions.xml$agedetermination), agedetPre - agedetPreM11)
+
+
+# remove prey and try again
+inputData2missions$biotic_v3_example_two_missions.xml$prey <- inputData2missions$biotic_v3_example_two_missions.xml$prey[0,]
+agedetPre <- nrow(inputData2missions$biotic_v3_example_two_missions.xml$agedetermination)
+agedetPreM11 <- nrow(inputData2missions$biotic_v3_example_two_missions.xml$agedetermination[inputData2missions$biotic_v3_example_two_missions.xml$agedetermination$missiontype=="10"])
+outPrup <- RstoxData:::filterData(inputData2missions, filterExpression)
+expect_equal(nrow(outPrup$biotic_v3_example_two_missions.xml$agedetermination), agedetPre - agedetPreM11)
+
+
 
 
 # Propagate upwards with StoxBiotic

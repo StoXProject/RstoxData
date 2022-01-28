@@ -62,11 +62,52 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		} else {
 			# 3. propagate down
 			if(propDown) {
+			  
 				start <- which(names(y) == tableName)
 				range <- c(start:length(names(y)))
 				# Don't propage if it's the only table
 				if(length(range) > 1) {
 					for(parent in head(range, -1)) {
+					  
+					  #
+					  # This treats the parent - child relationship as indicated by the order 
+					  # of the tables on 'y'.
+					  # This is not correct for all supported formats. For instance, it will
+					  # may treat agedetermination as a child of prey for NMDbiotic, while they are really
+					  # both children of individual. Since it deletes from child what was deleted from parent
+					  # it will in this case not delete ages from individuals, unless prey where deleted as well.
+					  # It does (much) not help to skip empty prey-tables, as some data sets may contain prey tables
+					  # for just a few individuals. I encountered this when trying to filter an entire year-file
+					  # on missiontype, removing only a few agedeterminations.
+					  #
+					  # If all supported formats repeats keys for all decedents, it is in fact unecessary to check
+					  # level by level what should be removed. For example, if all levels below station has columns
+					  # corresponding to the key of station. One can remove all catchsamples from those station,
+					  # and move directly to removing individuals, without keeping track of which catchsamples where removed.
+					  #
+					  # If those conditions are met we can filter stations and have it propogate to both
+					  # prey and agedetermination, without knowing that the tree has branched.
+					  # 
+					  # We would however still have a problem with filters specified below the branching.
+					  # If a filter on prey is specified, it would propogate to agedetermination, even if
+					  # that is not below prey in the hierarchy.
+					  #
+					  # Somehow either keys neeeds to be explicitly tracked (instead of inferring from the intersect of names)
+					  # or the branching of the tree needs to be specified.
+					  #
+					  # Either can be fetched from the xsdObject:
+					  # xsdObj <- RstoxData::xsdObjects[[paste(y$metadata$useXsd, "xsd", sep=".")]]
+					  #
+					  # The tree structure is provided by:
+					  # xsdObj$treeStruct
+					  #
+					  # A bit less intuitively, the keys for each level is provided by the first n columns,
+					  # where n is specified for each level in:
+					  # xsdObj$prefixLens
+					  #
+					  #
+					  
+					  
 						# Sometimes we need to hop (some) empty tables that were originally empty (e.g., NMD's prey)
 						goUp <- 0
 						while(nrow(y[[parent - goUp]]) == 0 && parent - goUp > 1) {
