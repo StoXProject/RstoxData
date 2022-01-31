@@ -20,7 +20,6 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	`%notequal%` <- function(x, table) is.na(x) | x %notin% table
 	
 	
-
 	sanitizeFilter <- function(filters) {
 		# Detect one or more "system" followed by 0 or one "2" and 0 or more spaces and then one or more parenthesis start:
 		usesSystem <- grepl("system+2? *\\(+", filters)
@@ -44,69 +43,70 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		names(out) <- names(x)
 		return(out)
 	}
-
-	applyFilter <- function(tableName, x, y, propDown, propUp) {
+	
+	applyFilter <- function(tableName, filter, data, propDown, propUp) {
+		
 		ret <- list()
-
-		filts <- x[[tableName]]
-
-		if(!nrow( y[[tableName]])) {
+		
+		filts <- filter[[tableName]]
+		
+		if(!nrow( data[[tableName]])) {
 			warning("StoX: Empty table ", tableName)
 			return(ret)
 		}
 		
 		# Run the filter:
-		test <- try(ret[[tableName]] <- y[[tableName]][eval(filts),], silent = TRUE)
+		test <- try(ret[[tableName]] <- data[[tableName]][eval(filts),], silent = TRUE)
 		if(class(test)[1] == "try-error") {
 			warning("StoX: Apply filter error:\n", test[1])
 		} else {
 			# 3. propagate down
 			if(propDown) {
-				start <- which(names(y) == tableName)
-				range <- c(start:length(names(y)))
+				start <- which(names(data) == tableName)
+				range <- c(start:length(names(data)))
 				# Don't propage if it's the only table
 				if(length(range) > 1) {
 					for(parent in head(range, -1)) {
 						# Sometimes we need to hop (some) empty tables that were originally empty (e.g., NMD's prey)
 						goUp <- 0
-						while(nrow(y[[parent - goUp]]) == 0 && parent - goUp > 1) {
+						while(nrow(data[[parent - goUp]]) == 0 && parent - goUp > 1) {
 							goUp <- goUp + 1
 						}
 						# Find similar columns (assume those are keys)
-						key <- intersect(names(y[[parent + 1]]), names(y[[parent - goUp]]))
+						key <- intersect(names(data[[parent + 1]]), names(data[[parent - goUp]]))
 						if(length(key) > 0) {
 							# Find the not deleted keys after filtering
-							deleted <- data.table::fsetdiff(unique(y[[parent - goUp]][, ..key]), unique(ret[[names(y)[parent - goUp]]][, ..key]))
+							deleted <- data.table::fsetdiff(unique(data[[parent - goUp]][, ..key]), unique(ret[[names(data)[parent - goUp]]][, ..key]))
 							# Propagate to child
-							ret[[names(y)[parent+1]]] <- y[[parent+1]][!deleted, on = names(deleted)]
+							ret[[names(data)[parent+1]]] <- data[[parent+1]][!deleted, on = names(deleted)]
 						}
 					}
 				}
 			}
 			# 4. propagate up
 			if(propUp) {
-				start <- which(names(y) == tableName)
+				start <- which(names(data) == tableName)
 				range <- c(1:start)
 				# Don't propage if it's the only table
 				if(length(range) > 1) {
 					for(parent in head(rev(range), -1)) {
 						# Sometimes we need to hop (some) empty tables that were originally empty (e.g., NMD's prey)
 						goDown <- 0
-						while(nrow(y[[parent + goDown]]) == 0 && parent + goDown <= length(y)) {
+						while(nrow(data[[parent + goDown]]) == 0 && parent + goDown <= length(data)) {
 							goDown <- goDown + 1
 						}
 						# Find similar columns (assume those are keys)
-						key <- intersect(names(y[[parent - 1]]), names(y[[parent + goDown]]))
+						key <- intersect(names(data[[parent - 1]]), names(data[[parent + goDown]]))
 						if(length(key) > 0) {
 							### # Find the not deleted keys after filtering
-							### deleted <- fsetdiff(unique(y[[parent + goDown]][, ..key]), unique(ret[[names(y)[parent + goDown]]][, ..key]))
+							### deleted <- fsetdiff(unique(data[[parent + goDown]][, ..key]), unique(ret[[names(data)[parent + goDown]]][, ..key]))
 							### # Propagate to parent
-							### ret[[names(y)[parent-1]]] <- y[[parent-1]][!deleted, on = names(deleted)]
+							### ret[[names(data)[parent-1]]] <- data[[parent-1]][!deleted, on = names(deleted)]
 							
 							# Find the not deleted keys after filtering
-							toKeep <- fintersect(unique(y[[parent + goDown]][, ..key]), unique(ret[[names(y)[parent + goDown]]][, ..key]))
+							toKeep <- fintersect(unique(data[[parent + goDown]][, ..key]), unique(ret[[names(data)[parent + goDown]]][, ..key]))
 							# Propagate to parent
-							ret[[names(y)[parent-1]]] <- y[[parent-1]][toKeep, on = names(toKeep)]
+							ret[[names(data)[parent-1]]] <- data[[parent-1]][toKeep, on = names(toKeep)]
 							
 						}
 					}
@@ -116,17 +116,23 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		return(ret)
 	}
 
-	applyFilterWrap <- function(fileName, x, y, propDown, propUp) {
+	applyFilterWrap <- function(fileName, filter, data, propDown, propUp) {
+		
 		# Do per file filtering
-		merged <- y[[fileName]]
-		for (tName in intersect(names(merged), names(x[[fileName]]))) {
-			out <- applyFilter(tName, x[[fileName]], merged, propDown, propUp)
+		merged <- data[[fileName]]
+		
+		if(!all(names(filter[[fileName]]) %in% names(merged))) {
+			warning("StoX: The filter specifies tables that do not exist in the data. These filters are not used!!!!: ", paste(setdiff(names(filter[[fileName]]), names(merged)), collapse = ", "), ".")
+		}
+		
+		for (tName in intersect(names(merged), names(filter[[fileName]]))) {
+			out <- applyFilter(tName, filter[[fileName]], merged, propDown, propUp)
 			if(!length(out)) {
 				warning("StoX: Filter on data from file \"", fileName, "\" returned empty table \"", tName, "\"")
 			}
 			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
 		}
-
+		
 		return(merged)
 	}
 
@@ -169,6 +175,11 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	# 3. Apply filters
 	if(level == 1) {
 		merged <- inputData
+		
+		if(!all(names(pFilters) %in% names(merged))) {
+			warning("StoX: The filter specifies tables that do not exist in the data. These filters are not used!!!!: ", paste(setdiff(names(pFilters), names(merged)), collapse = ", "), ".")
+		}
+		
 		for (tName in intersect(names(merged), names(pFilters))) {
 			out <- applyFilter(tName, pFilters, merged, propagateDownwards, propagateUpwards)
 			merged <- replace(merged, intersect(names(out), names(merged)), out[intersect(names(out), names(merged))])
@@ -269,6 +280,27 @@ FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpward
 }
 
 
+#' Filter LandingData
+#'
+#' Filters \code{\link{LandingData}}.
+#' 
+#' @param LandingData  Input \code{\link{LandingData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards = FALSE) {
+	filterData(
+		LandingData, 
+		filterExpression = FilterExpression, 
+		propagateDownwards = TRUE, 
+		propagateUpwards = FilterUpwards
+	)
+}
+
 #' Filter StoxBiotic data
 #'
 #' Filters \code{\link{StoxBioticData}}.
@@ -334,11 +366,12 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression = list()) {
   return(StoxLandingData)
 }
 
-#' Filter LandingData
+
+#' Filter ICESBiotic data
 #'
-#' Filters \code{\link{LandingData}}.
+#' Filters \code{\link{ICESBioticData}}.
 #' 
-#' @param LandingData  Input \code{\link{LandingData}} data.
+#' @param ICESBioticData  Input \code{\link{ICESBioticData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
@@ -346,11 +379,64 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression = list()) {
 #'
 #' @export
 #' 
-FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards = FALSE) {
-  filterData(
-    LandingData, 
-    filterExpression = FilterExpression, 
-    propagateDownwards = TRUE, 
-    propagateUpwards = FilterUpwards
-  )
+FilterICESBiotic <- function(ICESBioticData, FilterExpression = list(), FilterUpwards = FALSE) {
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	#FilterExpression <- expandFilterExpressionList(FilterExpression)
+	
+	filterData(
+		ICESBioticData, 
+		filterExpression = FilterExpression, 
+		propagateDownwards = TRUE, 
+		propagateUpwards = FilterUpwards
+	)
 }
+
+#' Filter ICESAcoustic data
+#'
+#' Filters \code{\link{ICESAcousticData}}.
+#' 
+#' @param ICESAcousticData  Input \code{\link{ICESAcousticData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterICESAcoustic <- function(ICESAcousticData, FilterExpression = list(), FilterUpwards = FALSE) {
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	#FilterExpression <- expandFilterExpressionList(FilterExpression)
+	
+	filterData(
+		ICESAcousticData, 
+		filterExpression = FilterExpression, 
+		propagateDownwards = TRUE, 
+		propagateUpwards = FilterUpwards
+	)
+}
+
+#' Filter ICESDatras data
+#'
+#' Filters \code{\link{ICESDatrasData}}.
+#' 
+#' @param ICESDatrasData  Input \code{\link{ICESDatrasData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterICESDatras <- function(ICESDatrasData, FilterExpression = list()) {
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	#FilterExpression <- expandFilterExpressionList(FilterExpression)
+	
+	ICESDatrasData <- filterData(
+		ICESDatrasData, 
+		filterExpression = FilterExpression, 
+		propagateDownwards = TRUE, 
+		propagateUpwards = FALSE
+	)
+	
+	return(ICESDatrasData)
+}
+

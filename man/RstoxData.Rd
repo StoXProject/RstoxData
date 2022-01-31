@@ -20,13 +20,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ibrahim Umar \email{ibrahim.umar@hi.no}
+\strong{Maintainer}: Edvin Fuglebakk \email{edvin.fuglebakk@hi.no}
 
 Authors:
 \itemize{
+  \item Ibrahim Umar
   \item Sindre Vatnehol
   \item Arne Johannes Holmin
-  \item Edvin Fuglebakk
   \item Espen Johnsen
 }
 
