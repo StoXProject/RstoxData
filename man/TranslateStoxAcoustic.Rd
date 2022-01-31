@@ -9,7 +9,7 @@ TranslateStoxAcoustic(StoxAcousticData, Translation, PreserveClass = TRUE)
 \arguments{
 \item{StoxAcousticData}{An input of \link{ModelData} object}
 
-\item{Translation}{The process from which to get the \code{\link{Translation}} definition.}
+\item{Translation}{The \code{\link{Translation}} process data.}
 
 \item{PreserveClass}{Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (\code{PreserveClass} = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using \code{PreserveClass} = FALSE.}
 }
