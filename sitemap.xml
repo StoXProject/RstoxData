@@ -52,6 +52,15 @@
     <loc>/reference/FilterBiotic.html</loc>
   </url>
   <url>
+    <loc>/reference/FilterICESAcoustic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FilterICESBiotic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FilterICESDatras.html</loc>
+  </url>
+  <url>
     <loc>/reference/FilterLanding.html</loc>
   </url>
   <url>
@@ -152,6 +161,9 @@
   </url>
   <url>
     <loc>/reference/TranslateICESBiotic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/TranslateICESDatras.html</loc>
   </url>
   <url>
     <loc>/reference/TranslateLanding.html</loc>
