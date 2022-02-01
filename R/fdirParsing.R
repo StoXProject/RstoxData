@@ -1,3 +1,4 @@
+
 #' Parses landings (sales notes)
 #' @description
 #'  Parses sales notes data from the Norwegian Directorate of Fisheries (FDIR) on the LSS format
@@ -180,12 +181,12 @@ readLssFile <- function(file, encoding="Latin-1", guessMax = 100000, strict=T){
       
     db <- data.table::fread(file, sep="|", header = T, colClasses = typ, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), encoding = encoding)
     names(db) <- sel
-    db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`, format='%d.%m.%Y')
+    db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`, format='%d.%m.%Y', tz="CET")
   }
   else{
     db <- data.table::fread(file, sep="|", header = T, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), encoding = encoding, keepLeadingZeros=T)
     if ("Siste fangstdato" %in% names(db)){
-      db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`, format='%d.%m.%Y')
+      db$`Siste fangstdato` <- as.POSIXct(db$`Siste fangstdato`, format='%d.%m.%Y', tz="CET")
     }
   }
   
@@ -699,7 +700,7 @@ convertToLssData <- function(LandingData){
   flatlandings[["Fart\u00F8ykommune (kode)"]] <- as.character(flatlandings[["Fart\u00F8ykommune (kode)"]])
   flatlandings[["Fart\u00F8yfylke (kode)"]] <- as.character(flatlandings[["Fart\u00F8yfylke (kode)"]])
   flatlandings[["Kyst/hav (kode)"]] <- as.character(flatlandings[["Kyst/hav (kode)"]])
-  flatlandings[["Siste fangstdato"]] <- as.POSIXct(flatlandings[["Siste fangstdato"]], format="%d.%m.%Y")
+  flatlandings[["Siste fangstdato"]] <- as.POSIXct(flatlandings[["Siste fangstdato"]], format="%d.%m.%Y", tz="CET")
   flatlandings[["Fangstdagbok (nummer)"]] <- as.character(flatlandings[["Fangstdagbok (nummer)"]])
   flatlandings[["Fangstdagbok (turnummer)"]] <- as.character(flatlandings[["Fangstdagbok (turnummer)"]])
   flatlandings[["Dellanding (signal)"]] <- as.character(flatlandings[["Dellanding (signal)"]])
