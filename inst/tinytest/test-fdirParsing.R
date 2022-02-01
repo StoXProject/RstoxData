@@ -23,6 +23,7 @@ expect_warning(wh <- RstoxData:::readLssFile(system.file("testresources","landin
 expect_equal(nrow(data), nrow(wh))
 expect_equal(ncol(data), ncol(wh))
 expect_true(all(names(data) == names(wh))) #make sure names are the same even if they are not in the data file
+expect_equal(check_tzones(wh$`Siste fangstdato`), "CET")
 
 #context("Test convertLandings")
 landings <- RstoxData:::convertToLandingData(data)
@@ -35,6 +36,7 @@ lss <- lss[order(lss$Dokumentnummer),]
 data <- data[order(data$Dokumentnummer),]
 expect_true(all(is.na(lss$`Dokument salgsdato`)))
 expect_true(all(is.na(lss$`Dokument versjonstidspunkt`)))
+expect_equal(check_tzones(lss$`Siste fangstdato`), "CET")
 # put in columns not converted
 lss$`Dokument salgsdato` <- data$`Dokument salgsdato`
 lss$`Dokument versjonstidspunkt` <- data$`Dokument versjonstidspunkt`
