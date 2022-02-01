@@ -131,8 +131,12 @@ unlink(tmp2)
 #context("Test public functions Biotic Single file")
 tmp <- tempfile(fileext = ".xml")
 example <- RstoxData::ReadBiotic(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
+example$biotic3.1_example.xml$catchsample$catchcomment <- "2\u00C5\u008cEBROSMESLE"
 RstoxData:::WriteBiotic(example, tmp)
 backIn <- RstoxData::ReadBiotic(tmp)
+expect_true(all(backIn[[1]]$catchsample$catchcomment == "2\u00C5\u008cEBROSMESLE"))
+expect_equal(example$biotic3.1_example.xml$catchsample$commonname[example$biotic3.1_example.xml$catchsample$catchsampleid==1],
+backIn[[1]]$catchsample$commonname[backIn[[1]]$catchsample$catchsampleid==1])
 names(backIn) <- names(example)
 backIn$biotic3.1_example.xml$metadata$file <- example$biotic3.1_example.xml$metadata$file
 expect_equal(example, backIn)

@@ -27,13 +27,13 @@ openTag <- function(stream, tagname, attributes=NULL, indent=""){
     }
   }
   tagstring <- paste0(tagstring, ">")
-  writeLines(tagstring, con=stream)
+  writeLines(tagstring, con=stream, useBytes = T)
 }
 
 #' @noRd
 closeTag <- function(stream, tagname, indent=""){
   tagstring <- paste0(indent, "</",tagname, ">")
-  writeLines(tagstring, con=stream)
+  writeLines(tagstring, con=stream, useBytes = T)
 }
 
 #' @noRd
@@ -44,7 +44,7 @@ writeSimpleTags <- function(stream, tags, indent=""){
       string <- paste0(string, "<",n,">",tags[[n]][[1]],"</",n,">")
     }
   }
-  writeLines(paste0(indent, string), con=stream)
+  writeLines(paste0(indent, string), con=stream, useBytes = T)
 }
 
 
@@ -79,21 +79,25 @@ writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", na
   
   # get keys
   keys <- names(leveldata)[1:xsdObject$prefixLens[[level]]]
+  attribs <- keys
+  if (!is.null(parentKeys)){
+    attribs <- attribs[!(attribs %in% names(parentKeys))]
+  }
   
   #stopifnot(!any(duplicated(Reduce(paste, data[[level]][,keys, with=F]))))
   #stopifnot(all(names(parentKeys) %in% keys))
   
   # write opening tag and attributes
   for (i in 1:nrow(leveldata)){
-    openTag(stream, level, leveldata[i,keys,with=F], indent)
+    openTag(stream, level, leveldata[i,.SD, .SDcols=attribs], indent)
     
     # write simple element tags
     simpletags <- xsdObject$tableHeaders[[level]][!(xsdObject$tableHeaders[[level]] %in% keys)]
-    writeSimpleTags(stream, leveldata[i,simpletags,with=F], paste0(indent, "\t"))
+    writeSimpleTags(stream, leveldata[i, .SD, .SDcols=simpletags], paste0(indent, "\t"))
     
     # write complex element tags
     for (ch in children){
-      writeLevel(stream, data, ch, leveldata[i,keys,with=F], xsdObject, paste0(indent, "\t"))
+      writeLevel(stream, data, ch, leveldata[i, .SD, .SDcols=keys], xsdObject, paste0(indent, "\t"))
     }
     
     # write closing tag
@@ -102,9 +106,14 @@ writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", na
   
 }
 
-#' converts everything to character before XML writing
+#' converts everything to UTF-8 character before XML writing
 #' @noRd
 typeConvert <- function(dataTables, xsdObject){
+  
+  conv <- function(x){
+    return(enc2utf8(x))
+  }
+  
   for (n in names(xsdObject$tableTypes)){
     if(n %in% names(dataTables)){
       if (nrow(dataTables[[n]])>0){
@@ -122,13 +131,13 @@ typeConvert <- function(dataTables, xsdObject){
           else if (is.integer(dataTables[[n]][[name]]) & xsdType == "xs:long"){
             stopifnot(all(is.na(dataTables[[n]][[name]]) | dataTables[[n]][[name]] >= -9223372036854775808))
             stopifnot(all(is.na(dataTables[[n]][[name]]) | dataTables[[n]][[name]] <= 9223372036854775807))
-            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+            dataTables[[n]][[name]] <- conv(as.character(dataTables[[n]][[name]]))
           }
           else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:string"){
-            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+            dataTables[[n]][[name]] <- conv(as.character(dataTables[[n]][[name]]))
           }
           else if (is.logical(dataTables[[n]][[name]]) & xsdType == "xs:string"){
-            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+            dataTables[[n]][[name]] <- conv(as.character(dataTables[[n]][[name]]))
           }
           else if (is.logical(dataTables[[n]][[name]]) & xsdType == "xs:integer"){
             dataTables[[n]][[name]] <- as.character(as.integer(dataTables[[n]][[name]]))
@@ -176,7 +185,7 @@ typeConvert <- function(dataTables, xsdObject){
       }
       else{
         for (coln in names(dataTables[[n]])){
-          dataTables[[n]][[coln]] <- as.character(dataTables[[n]][[coln]])
+          dataTables[[n]][[coln]] <- conv(as.character(dataTables[[n]][[coln]]))
         }
       } 
     }
@@ -268,11 +277,15 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   # (including the relative ordering of complex and simple elements)
   # consider adding information about key structure in xsdObjects
   
+  if (encoding != "UTF-8"){
+    stop(paste("Encoding", encoding, "is not supported."))
+  }
+  
   dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
   dataTables <- setKeysDataTables(dataTables, xsdObject)
   
-  stream = file(fileName, open="w", encoding=encoding)
+  stream = file(fileName, open="w", encoding="native.enc")
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
   writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)    
     close(stream)

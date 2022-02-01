@@ -1,6 +1,7 @@
 # RstoxData
 
 ![R-CMD-check](https://github.com/StoXProject/RstoxData/workflows/R-CMD-check/badge.svg)
+[![Codecov test coverage](https://codecov.io/gh/StoxProject/RstoxData/branch/master/graph/badge.svg)](https://codecov.io/gh/StoxProject/RstoxData?branch=master)
 
 ## Introduction
 
