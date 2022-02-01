@@ -1,7 +1,21 @@
+# RstoxData v1.5.5 (2022-01-31)
+* Added the functions FilterICESAcoustic(), FilterICESBiotic(), FilterICESDatras() and TranslateICESDatras().
+* Changed the output of ICESBiotic(), ICESDatras() and ICESAcoustic() to combine tables from the different files in the same way that StoxBiotic() and StoxAcoustic() does. This also affects the name of the output of WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), which is no longer named by the input file to the Read* function.
+* Added warning when a filter species a table that does not exist in the data.
+* Fixed bug where log-distances of duplicated LogKey (sometimes occurring when times are on minutes instead of seconds resolution) were not properly removed in all tables.
+* Removed unwanted and in some cases erroneous hard coded values in ICESDatras(), as listed in the following table:
+	* Gear: Changed from "GOV" to the NMDBiotic/fishstation variable gear
+	* DoorType: Changed from "P" to the NMDBiotic/fishstation variable trawldoortype
+	* DoorSurface: Changed from 4 to the NMDBiotic/fishstation variable trawldoorarea = 4.5,
+	* DoorWgt: Changed from 1075 to the NMDBiotic/fishstation variable trawldoorweight = 1075
+	* KiteDim: Changed from 0.8 to NA_real_, as there is no relevant information in NMDBiotic
+	* lngtCode: Changed from interpreting herring/sprat and crustatians to using RstoxData:::getLengthCodeICES()
+	* Removed all filtering by species. This should rather be done in FilterBiotic() or rather FilterICESDatras()
+
 # RstoxData v1.5.2 (2022-01-22)
-"Added warnings for when (catch)producttype != 1, (sample)producttype != 1, (individual)producttype != 1, or lengthmeasurement != 'E'. 
+* Added warnings for when (catch)producttype != 1, (sample)producttype != 1, (individual)producttype != 1, or lengthmeasurement != 'E'. 
 * Added support for NMDBiotic files of mixed version (<= and > 1.4) in AddToStoxBiotic() (removing the prey table and other unused tables, as consistent link to the individual table is not provided by the XML schema.). 
-* Fixed bug causing stream = TRUE to fail on MacOS Monterey in readXmlFile()."
+* Fixed bug causing stream = TRUE to fail on MacOS Monterey in readXmlFile().
 
 # RstoxData v1.3.5 (2022-01-09)
 * Hiding the parameters VariableName and ConditionalVariableName when DefinitionMethod = "Table" in Translation().

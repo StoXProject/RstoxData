@@ -102,6 +102,29 @@ stoxFunctionAttributes <- list(
 	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
+	
+	
+	FilterICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBioticData", 
+		functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
+	FilterICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBAcousticData", 
+		functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
+	FilterICESDatras  = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData", 
+		functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
 	# Convert AcousticData to StoxAcousticData:
 	MergeStoxAcoustic = list(
 	    functionType = "modelData", 
@@ -330,7 +353,14 @@ stoxFunctionAttributes <- list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESBioticData"
+	),
+	
+	TranslateICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData"
 	)
+	
 	
 )
 

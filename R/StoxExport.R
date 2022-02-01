@@ -10,10 +10,19 @@
 #' @export
 ICESAcoustic <- function(AcousticData){
 	
+	# Run for each file:
 	ICESAcousticData <- lapply(
 		AcousticData, 
 		AcousticDataToICESAcousticOne
 	)
+	
+	# Rbind accross files:
+	ICESAcousticData <- rbindlist_StoxFormat(ICESAcousticData)
+	
+	# Accept only one file:
+	#if(length(AcousticData) != 1) {
+	#	stop("Only AcousticData from exactly 1 file is accepted by ICESAcoustic")
+	#}
 	
 	return(ICESAcousticData)
 }
@@ -143,10 +152,12 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 #' 
 WriteICESAcoustic <- function(ICESAcousticData){
 	
-	WriteICESAcousticData <- lapply(
-		ICESAcousticData, 
-		WriteICESAcousticOne
-	)
+	#WriteICESAcousticData <- lapply(
+	#	ICESAcousticData, 
+	#	WriteICESAcousticOne
+	#)
+	
+	WriteICESAcousticData <- WriteICESAcousticOne(ICESAcousticData)
 	
 	return(WriteICESAcousticData)
 }
@@ -289,6 +300,9 @@ ICESBiotic <- function(
 		Organisation = Organisation,
 		AllowRemoveSpecies = AllowRemoveSpecies
 	)
+	
+	# Rbind accross files:
+	ICESBioticData <- rbindlist_StoxFormat(ICESBioticData)
 	
 	return(ICESBioticData)
 } 
@@ -653,10 +667,12 @@ changeClassOfNonNA <- function(name, classes, data) {
 #' @export
 WriteICESBiotic <- function(ICESBioticData){
 	
-	WriteICESBioticData <- lapply(
-		ICESBioticData, 
-		WriteICESBioticOne
-	)
+	#WriteICESBioticData <- lapply(
+	#	ICESBioticData, 
+	#	WriteICESBioticOne
+	#)
+	
+	WriteICESBioticData <- WriteICESBioticOne(ICESBioticData)
 	
 	return(WriteICESBioticData)
 }
@@ -754,6 +770,7 @@ ICESDatras <- function(
 	BioticData
 ) {
 
+	# Run for each file:
 	ICESDatrasData <- lapply(
   		BioticData, 
   		ICESDatrasOne
@@ -761,6 +778,9 @@ ICESDatras <- function(
 
 	# Remove empty data (from invavlid files, non NMDBiotic >= 3)
 	ICESDatrasData <- ICESDatrasData[lengths(ICESDatrasData) > 0]
+	
+	# Rbind accross files:
+	ICESDatrasData <- rbindlist_StoxFormat(ICESDatrasData)
 	
 	return(ICESDatrasData)
 }
@@ -786,17 +806,17 @@ ICESDatrasOne <- function(
 		"Quarter" = getQuarter(stationstartdate),
 		"Country" = getTSCountryByIOC(nation),
 		"Ship" = getICESShipCode(platformname),
-		"Gear" = "GOV",
+		"Gear" = gear, # Changed from "GOV" on 2022-01-27
 		"SweepLngt" = getGOVSweepByEquipment(gear),
 		"GearEx" = getGearEx(getGOVSweepByEquipment(gear), startyear, serialnumber, bottomdepthstart),
-		"DoorType" = "P",
+		"DoorType" = trawldoortype, # Changed from "P" on 2022-01-27
 		"StNo" = serialnumber,
 		"HaulNo" = station,
 		"Year" = getYear(stationstartdate),
 		"Month" = getMonth(stationstartdate),
 		"Day" = getDay(stationstartdate),
 		"TimeShot" = getTimeShot(stationstarttime),
-		"DepthStratum" = NA,
+		"DepthStratum" = NA_character_,
 		"HaulDur" = as.numeric(getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime)),
 		"DayNight" = getDayNight(stationstartdate, stationstarttime, latitudestart, longitudestart),
 		"ShootLat" = roundDrop0(latitudestart, digits = 4), 
@@ -806,49 +826,49 @@ ICESDatrasOne <- function(
 		"StatRec" = getICESrect(latitudestart, longitudestart),
 		"Depth" = roundDrop0(bottomdepthstart),
 		"HaulVal" = getHaulVal(gearcondition, samplequality),
-		"HydroStNo" = NA,
-		"StdSpecRecCode" = 1,
-		"BycSpecRecCode" = 1,
-		"DataType" = "R",
+		"HydroStNo" = NA_character_,
+		"StdSpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=88.
+		"BycSpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=89.
+		"DataType" = "R", # "Data by haul", see http://vocab.ices.dk/?ref=9.
 		"Netopening"= roundDrop0(verticaltrawlopening, digits = 1),
-		"Rigging" = NA,
-		"Tickler" = NA,
+		"Rigging" = NA_character_,
+		"Tickler" = NA_integer_,
 		"Distance" = roundDrop0(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
 		"Warplngt" = roundDrop0(wirelength),
-		"Warpdia" = NA,
-		"WarpDen" = NA,
-		"DoorSurface" = 4.5,
-		"DoorWgt" = 1075,
-		"DoorSpread" = ifelse(!is.na(trawldoorspread), roundDrop0(trawldoorspread, digits = 1), NA),
-		"WingSpread" = NA,
-		"Buoyancy" = NA,
-		"KiteDim" = 0.8,
-		"WgtGroundRope" = NA,
-		"TowDir" = ifelse(!is.na(direction), roundDrop0(direction), NA),
+		"Warpdia" = NA_real_,
+		"WarpDen" = NA_real_,
+		"DoorSurface" = trawldoorarea, # Changed from 4.5 on 2022-01-27. See https://kvalitet.hi.no/docs/pub/DOK04173.pdf.
+		"DoorWgt" = trawldoorweight, # Changed from 1075 on 2022-01-27. See https://kvalitet.hi.no/docs/pub/DOK04173.pdf. 
+		"DoorSpread" = ifelse(!is.na(trawldoorspread), roundDrop0(trawldoorspread, digits = 1), NA_real_),
+		"WingSpread" = NA_real_,
+		"Buoyancy" = NA_real_,
+		"KiteDim" = NA_real_, # Changed from 0.8 on 2022-01-27.
+		"WgtGroundRope" = NA_real_,
+		"TowDir" = ifelse(!is.na(direction), roundDrop0(direction), NA_real_),
 		"GroundSpeed" = roundDrop0(gearflow, digits = 1),
-		"SpeedWater" = NA,
-		"SurCurDir" = NA,
-		"SurCurSpeed" = NA,
-		"BotCurDir" = NA,
-		"BotCurSpeed" = NA,
-		"WindDir" = NA,
-		"WindSpeed" = NA,
-		"SwellDir" = NA,
-		"SwellHeight" = NA,
-		"SurTemp" = NA,
-		"BotTemp" = NA,
-		"SurSal" = NA,
-		"BotSal" = NA,
-		"ThermoCline" = NA,
-		"ThClineDepth" = NA,
-		"CodendMesh" = NA ,
-		"SecchiDepth" = NA,
-		"Turbidity" = NA,
-		"TidePhase" = NA,
-		"TideSpeed" = NA,
-		"PelSampType" = NA,
-		"MinTrawlDepth" = NA,
-		"MaxTrawlDepth" = NA
+		"SpeedWater" = NA_real_,
+		"SurCurDir" = NA_real_,
+		"SurCurSpeed" = NA_real_,
+		"BotCurDir" = NA_real_,
+		"BotCurSpeed" = NA_real_,
+		"WindDir" = NA_real_,
+		"WindSpeed" = NA_real_,
+		"SwellDir" = NA_real_,
+		"SwellHeight" = NA_real_,
+		"SurTemp" = NA_real_,
+		"BotTemp" = NA_real_,
+		"SurSal" = NA_real_,
+		"BotSal" = NA_real_,
+		"ThermoCline" = NA_character_,
+		"ThClineDepth" = NA_real_,
+		"CodendMesh" = NA_real_ ,
+		"SecchiDepth" = NA_real_,
+		"Turbidity" = NA_real_,
+		"TidePhase" = NA_real_,
+		"TideSpeed" = NA_real_,
+		"PelSampType" = NA_character_,
+		"MinTrawlDepth" = NA_real_,
+		"MaxTrawlDepth" = NA_real_
 	)]
 	
 	HHraw <- data.table::copy(finalHH[, c(
@@ -894,19 +914,6 @@ ICESDatrasOne <- function(
 	
 	mergedHL[, SpecVal := getSpecVal(HaulVal, catchcount, lengthsamplecount, catchweight)]
 	
-	# Get herring or sprat
-	mergedHL[,`:=`( isHerringOrSprat = ifelse(aphia %in% c("126417", "126425"), TRUE, FALSE),
-					isCrustacean = ifelse(aphia %in% c("107275", "107276", "107369", "107253", "107703", "107704", "107350", "107254", "107205", "140712", "140687", "140658"), TRUE, FALSE))]
-	
-	# Calculate lngtCode
-	mergedHL[,lngtCode := "1"]
-	mergedHL[is.na(sampletype), lngtCode := NA]
-	mergedHL[isCrustacean == TRUE, lngtCode := "."]
-	mergedHL[isHerringOrSprat == TRUE, lngtCode := "0"]
-	
-	# lenInterval, and reportInMM
-	mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", 5, 1), reportInMM = ifelse(lngtCode %ni% c("1", NA), TRUE, FALSE))]
-	mergedHL[is.na(lenInterval), lenInterval := 1]
 	
 	# catCatchWgt & subWeight
 	mergedHL[!is.na(catchweight), catCatchWgt := ceiling(catchweight * 1000)]
@@ -918,11 +925,28 @@ ICESDatrasOne <- function(
 	# Merge with individual
 	mergedHL <- merge(mergedHL, BioticDataOne$individual, by = intersect(names(mergedHL), names(BioticDataOne$individual)), all.x = TRUE)
 	
+	# # The followinng calculation of lngtCode interprets species, likely due to information about length reso# lution sitting in the individual table of NMDBiotic, and not the catchsample which is the table being trea# ted here. Otherwise the function getLengthCodeICES() would be a natural choise.
+	# # Get herring or sprat
+	# mergedHL[,`:=`( isHerringOrSprat = ifelse(aphia %in% c("126417", "126425"), TRUE, FALSE),
+	# 				isCrustacean = ifelse(aphia %in% c("107275", "107276", "107369", "107253", "107703", "107704", "107350", "107254", "107205", "140712", "140687", "140658"), TRUE, FALSE))]
+	# 
+	# # Calculate lngtCode
+	# mergedHL[,lngtCode := "1"]
+	# mergedHL[is.na(sampletype), lngtCode := NA]
+	# mergedHL[isCrustacean == TRUE, lngtCode := "."]
+	# mergedHL[isHerringOrSprat == TRUE, lngtCode := "0"]
+	mergedHL[, lngtCode := getLengthCodeICES(lengthresolution)]
+	
+	# lenInterval, and reportInMM
+	mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", 5, 1), reportInMM = ifelse(lngtCode %ni% c("1", NA_real_), TRUE, FALSE))]
+	mergedHL[is.na(lenInterval), lenInterval := 1]
+	
+	
 	# Get count
 	mergedHL[, N := sum(!is.na(specimenid)), by = groupHL]
 	
 	# For the record with empty individual data
-	mergedHL[N == 0, `:=`(lngtClass = as.integer(NA), sex = as.character(NA))]
+	mergedHL[N == 0, `:=`(lngtClass = NA_integer_, sex = NA_character_)]
 	
 	# Get Individual length
 	mergedHL[, length := length * 100]
@@ -934,7 +958,7 @@ ICESDatrasOne <- function(
 	mergedHL[reportInMM == TRUE, length := length * 10]
 	
 	# Get sex
-	mergedHL[, sex := ifelse(is.na(sex), as.character(NA), ifelse(sex == "1", "F", "M"))]
+	mergedHL[, sex := ifelse(is.na(sex), NA_character_, ifelse(sex == "1", "F", "M"))]
 	
 	# Get lngtClass
 	for(interval in unique(mergedHL$lenInterval)) {
@@ -967,7 +991,7 @@ ICESDatrasOne <- function(
 		"StNo" = serialnumber,
 		"HaulNo" = HaulNo,
 		"Year" = startyear,
-		"SpecCodeType" = "W",
+		"SpecCodeType" = "W", # "W" means that aphia is used for SpecCode.
 		"SpecCode" = aphia,
 		"SpecVal" = SpecVal,
 		"Sex" = sex,
@@ -980,7 +1004,7 @@ ICESDatrasOne <- function(
 		"LngtCode" = lngtCode,
 		"LngtClass" = lngtClass,
 		"HLNoAtLngt" = roundDrop0(lsCountTot, 2),
-		"DevStage" = NA,
+		"DevStage" = NA_character_,
 		"LenMeasType" = convLenMeasType(lengthmeasurement)
 	)]
 	)
@@ -1018,25 +1042,25 @@ ICESDatrasOne <- function(
 			"StNo" = serialnumber,
 			"HaulNo" = HaulNo,
 			"Year" = startyear,
-			"SpecCodeType" = "W",
+			"SpecCodeType" = "W", # "W" means that aphia is used for SpecCode (http://vocab.ices.dk/?ref=96).
 			"SpecCode" = aphia,
-			"AreaType" = "0",
+			"AreaType" = "0", # "0" means that StatRec is used for AreaCode (http://vocab.ices.dk/?ref=10).
 			"AreaCode" = StatRec,
 			"LngtCode" = lngtCode,
 			"LngtClass" = lngtClass,
 			"Sex" = sex,
 			"Maturity" = maturity,
-			"PlusGr" = as.character(NA),
-			"AgeRings" = ifelse(!is.na(age), age, NA),
+			"PlusGr" = NA_character_,
+			"AgeRings" = ifelse(!is.na(age), age, NA_real_),
 			"CANoAtLngt" = nInd,
-			"IndWgt" = ifelse(!is.na(meanW), roundDrop0(meanW * 1000, 1), NA),
-			"MaturityScale" = "M6",
+			"IndWgt" = ifelse(!is.na(meanW), roundDrop0(meanW * 1000, 1), NA_real_),
+			"MaturityScale" = "M6", # See getDATRASMaturity() which is made for MaturityScale M6. See also http://vocab.ices.dk/?ref=1481.
 			"FishID" = specimenid,
 			"GenSamp" = ifelse(!is.na(tissuesample), "Y", "N"),
 			"StomSamp" = ifelse(!is.na(stomach), "Y", "N"),
 			"AgeSource" = convAgeSource(agingstructure),
-			"AgePrepMet" = NA,
-			"OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
+			"AgePrepMet" = NA_character_,
+			"OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA_character_),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
 			"ParSamp" = ifelse(!is.na(parasite), "Y", "N")
 		)]
 	)
@@ -1115,64 +1139,64 @@ ICESDatrasOne <- function(
 	# throw out ca records for Invalid hauls
 	ca <- ca[!ca$StNo %in% hh$StNo[hh$HaulVal=='I'],]
 	
-	##########################################
-	## Removing some benthos - this won't be needed in the future
-	## keep 11725 138139 138482 138483 140600 140621 140624 140625 141443 141444 141449 153083 153131-- these are cephaolopods
-	## required benthos: 107205
-	hl <- hl[!hl$SpecCode %in% c(230,558,830,883,1302,1839,100635,100706,100930,103929,106048,106087,106204,106733,106791,
-								 106854,106928,107044,107218,107230,107240,107273,107292,107318,107330,107346,107397,107398,107551,
-								 107616,107643,111374,111597,111604,116986,117302,117809,117815,117890,123117,123867,123920,123970,
-								 123987,124319,124418,124913,124929,124934,125128,125131,125134,129196,129229,130464,130867,132072,
-								 132480,135144,135302,137704,137732,138223,138239,138760,138899,139004,139488,140299,140627,141753,
-								 144129,150642,178639,181228,23986719494,21263,100817,100982,106738,107160,107232,107277,107322,
-								 107323,107327,107387,107531,107552,107564,107649,107651,111367,123080,123083,123084,123776,123813,
-								 124043,124154,124160,124287,124535,125166,125333,128517,129840,138802,138878,138920,140467,140717,
-								 143755,145541,145546,145548,532031,589677,1762,123082,149),]
-	
-	ca <- ca[!ca$SpecCode %in% c(230,558,830,883,1302,1839,100635,100706,100930,103929,106048,106087,106204,106733,106791,
-								 106854,106928,107044,107218,107230,107240,107273,107292,107318,107330,107346,107397,107398,107551,
-								 107616,107643,111374,111597,111604,116986,117302,117809,117815,117890,123117,123867,123920,123970,
-								 123987,124319,124418,124913,124929,124934,125128,125131,125134,129196,129229,130464,130867,132072,
-								 132480,135144,135302,137704,137732,138223,138239,138760,138899,139004,139488,140299,140627,141753,
-								 144129,150642,178639,181228,23986719494,21263,100817,100982,106738,107160,107232,107277,107322,
-								 107323,107327,107387,107531,107552,107564,107649,107651,111367,123080,123083,123084,123776,123813,
-								 124043,124154,124160,124287,124535,125166,125333,128517,129840,138802,138878,138920,140467,140717,
-								 143755,145541,145546,145548,532031,589677,1762,123082,149),]
-	
-	#more benthods 10216 = skate egg case
-	hl <- hl[!hl$SpecCode %in% c(443,938,1131,1292,1337,1360,19494,22988,100751,100757,100790,101054,103484,104062,
-								 106122,106669,107011,107052,107148,107239,107388,107563,110690,110911,110956,111411,117136,
-								 117258,123260,123276,123321,123335,123574,123593 ,123851,123922,123985,124085,125158,125269,
-								 128506,130467,130987,131779,134591,137683,141872,146142 ,149864,445590,510534,105,175,927,1107,
-								 1135,1267,100793),]
-	hl <- hl[!hl$SpecCode %in% c(105,175,927,1107,1135,1267,100793,103443,103692,106057,106835,106903,107558,110908,111361,
-								 117940,122348,123160,123426,124257,125027,125284,131495,135294,135301,135306,138992,140528,140687,
-								 167882,178527,239867,291396,106763,137656,117225,100653,125125,100698,131774,134366,123386,117228,
-								 117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
-								 146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
-	
-	ca <- ca[!ca$SpecCode %in% c(443,938,1131,1292,1337,1360,19494,22988,100751,100757,100790,101054,103484,104062,
-								 106122,106669,107011,107052,107148,107239,107388,107563,110690,110911,110956,111411,117136,
-								 117258,123260,123276,123321,123335,123574,123593 ,123851,123922,123985,124085,125158,125269,
-								 128506,130467,130987,131779,134591,137683,141872,146142 ,149864,445590,510534,105,175,927,1107,
-								 1135,1267,100793),]
-	ca <- ca[!ca$SpecCode %in% c(105,175,927,1107,1135,1267,100793,103443,103692,106057,106835,106903,107558,110908,111361,
-								 117940,122348,123160,123426,124257,125027,125284,131495,135294,135301,135306,138992,140528,140687,
-								 167882,178527,239867,291396,106763,137656,117225,100653,125125,100698,131774,134366,123386,117228,
-								 117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
-								 146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
-	
-	hl <- hl[!hl$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
-	ca <- ca[!ca$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
-	
-	## IU: Filter out additional benthos:
-	benthosSpecCodes <- c(104,956,966,1128,1296,1367,1608,11707,100782,100839,100854,103439,103732,104040,105865,106041,106673,106702,106789,106834,107152,
-						  107205,107264,110749,110916,110993,111152,111355,111365,117093,117195,118445,122626,123204,123255,123613,124147,124151,124324,124670,
-						  128490,128503,129563,130057,134691,136025,137710,138018,138068,138477,138631,138749,138938,140166,140173,140480,140625,141904,141929,
-						  149854,152997,532035,816800)
-	
-	hl <- hl[!hl$SpecCode %in% benthosSpecCodes,]
-	ca <- ca[!ca$SpecCode %in% benthosSpecCodes,]
+	### ##########################################
+	### ## Removing some benthos - this won't be needed in the future
+	### ## keep 11725 138139 138482 138483 140600 140621 140624 140625 141443 141444 141449 153083 153131-- these are cephaolopods
+	### ## required benthos: 107205
+	### hl <- hl[!hl$SpecCode %in% c(230,558,830,883,1302,1839,100635,100706,100930,103929,106048,106087,106204,106733,106791,
+	### 							 106854,106928,107044,107218,107230,107240,107273,107292,107318,107330,107346,107397,107398,107551,
+	### 							 107616,107643,111374,111597,111604,116986,117302,117809,117815,117890,123117,123867,123920,123970,
+	### 							 123987,124319,124418,124913,124929,124934,125128,125131,125134,129196,129229,130464,130867,132072,
+	### 							 132480,135144,135302,137704,137732,138223,138239,138760,138899,139004,139488,140299,140627,141753,
+	### 							 144129,150642,178639,181228,23986719494,21263,100817,100982,106738,107160,107232,107277,107322,
+	### 							 107323,107327,107387,107531,107552,107564,107649,107651,111367,123080,123083,123084,123776,123813,
+	### 							 124043,124154,124160,124287,124535,125166,125333,128517,129840,138802,138878,138920,140467,140717,
+	### 							 143755,145541,145546,145548,532031,589677,1762,123082,149),]
+	### 
+	### ca <- ca[!ca$SpecCode %in% c(230,558,830,883,1302,1839,100635,100706,100930,103929,106048,106087,106204,106733,106791,
+	### 							 106854,106928,107044,107218,107230,107240,107273,107292,107318,107330,107346,107397,107398,107551,
+	### 							 107616,107643,111374,111597,111604,116986,117302,117809,117815,117890,123117,123867,123920,123970,
+	### 							 123987,124319,124418,124913,124929,124934,125128,125131,125134,129196,129229,130464,130867,132072,
+	### 							 132480,135144,135302,137704,137732,138223,138239,138760,138899,139004,139488,140299,140627,141753,
+	### 							 144129,150642,178639,181228,23986719494,21263,100817,100982,106738,107160,107232,107277,107322,
+	### 							 107323,107327,107387,107531,107552,107564,107649,107651,111367,123080,123083,123084,123776,123813,
+	### 							 124043,124154,124160,124287,124535,125166,125333,128517,129840,138802,138878,138920,140467,140717,
+	### 							 143755,145541,145546,145548,532031,589677,1762,123082,149),]
+	### 
+	### #more benthods 10216 = skate egg case
+	### hl <- hl[!hl$SpecCode %in% c(443,938,1131,1292,1337,1360,19494,22988,100751,100757,100790,101054,103484,104062,
+	### 							 106122,106669,107011,107052,107148,107239,107388,107563,110690,110911,110956,111411,117136,
+	### 							 117258,123260,123276,123321,123335,123574,123593 ,123851,123922,123985,124085,125158,125269,
+	### 							 128506,130467,130987,131779,134591,137683,141872,146142 ,149864,445590,510534,105,175,927,1107,
+	### 							 1135,1267,100793),]
+	### hl <- hl[!hl$SpecCode %in% c(105,175,927,1107,1135,1267,100793,103443,103692,106057,106835,106903,107558,110908,111361,
+	### 							 117940,122348,123160,123426,124257,125027,125284,131495,135294,135301,135306,138992,140528,140687,
+	### 							 167882,178527,239867,291396,106763,137656,117225,100653,125125,100698,131774,134366,123386,117228,
+	### 							 117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
+	### 							 146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
+	### 
+	### ca <- ca[!ca$SpecCode %in% c(443,938,1131,1292,1337,1360,19494,22988,100751,100757,100790,101054,103484,104062,
+	### 							 106122,106669,107011,107052,107148,107239,107388,107563,110690,110911,110956,111411,117136,
+	### 							 117258,123260,123276,123321,123335,123574,123593 ,123851,123922,123985,124085,125158,125269,
+	### 							 128506,130467,130987,131779,134591,137683,141872,146142 ,149864,445590,510534,105,175,927,1107,
+	### 							 1135,1267,100793),]
+	### ca <- ca[!ca$SpecCode %in% c(105,175,927,1107,1135,1267,100793,103443,103692,106057,106835,106903,107558,110908,111361,
+	### 							 117940,122348,123160,123426,124257,125027,125284,131495,135294,135301,135306,138992,140528,140687,
+	### 							 167882,178527,239867,291396,106763,137656,117225,100653,125125,100698,131774,134366,123386,117228,
+	### 							 117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
+	### 							 146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
+	### 
+	### hl <- hl[!hl$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
+	### ca <- ca[!ca$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
+	### 
+	### ## IU: Filter out additional benthos:
+	### benthosSpecCodes <- c(104,956,966,1128,1296,1367,1608,11707,100782,100839,100854,103439,103732,104040,105865,106041,106673,106702,106789,106834,107152,
+	### 					  107205,107264,110749,110916,110993,111152,111355,111365,117093,117195,118445,122626,123204,123255,123613,124147,124151,124324,124670,
+	### 					  128490,128503,129563,130057,134691,136025,137710,138018,138068,138477,138631,138749,138938,140166,140173,140480,140625,141904,141929,
+	### 					  149854,152997,532035,816800)
+	### 
+	### hl <- hl[!hl$SpecCode %in% benthosSpecCodes,]
+	### ca <- ca[!ca$SpecCode %in% benthosSpecCodes,]
 	
 	
 	## WARN #3:
@@ -1227,11 +1251,13 @@ ICESDatrasOne <- function(
 #' @export
 WriteICESDatras <- function(ICESDatrasData){
 	
-	WriteICESDatrasData <- lapply(
-		ICESDatrasData, 
-		WriteICESDatrasOne, 
-		na = "-9"
-	)
+	#WriteICESDatrasData <- lapply(
+	#	ICESDatrasData, 
+	#	WriteICESDatrasOne, 
+	#	na = "-9"
+	#)
+	
+	WriteICESDatrasData <- WriteICESDatrasOne(ICESDatrasData, na = "-9")
 	
 	return(WriteICESDatrasData)
 }

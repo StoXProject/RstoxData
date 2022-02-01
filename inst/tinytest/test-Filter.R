@@ -115,7 +115,6 @@ expect_equal(nrow(outPrup$Station), 1)
 expect_equal(nrow(outPrup$Individual), 0)
 
 
-
 # Landing
 #context("test-Filter: Landings")
 landingfile <- system.file("testresources","landing.xml", package="RstoxData")

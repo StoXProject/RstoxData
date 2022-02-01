@@ -212,6 +212,7 @@ insertcdata <- function(dataTables, xsdObject){
     if (ncol(dataTables[[dt]]) > 0 && dt != "metadata"){
       ns <- names(dataTables[[dt]])
       ns <- ns[xsdObject$prefixLens[[dt]]:length(ns)]
+      
       for (coln in ns){
         if ("character" %in% class(dataTables[[dt]][[coln]])){
           #reserved characters
@@ -270,7 +271,6 @@ insertcdata <- function(dataTables, xsdObject){
 writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="UTF-8", xmlStandard="1.0"){
   
   # Notes for development:
-  # consider adding namespace name to xsdObjects
   # consider adding XML version to xsdObjects
   # consider adding information about which columns are attributes / elements in xsdObjects
   # consider adding ordering information about all elements in xsdObjects
@@ -539,9 +539,9 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
 #' @param targetFormat name of xsdObject specifying the format of the target file. One of names(RstoxData::xsdObjects).
 #' @param overwrite if TRUE any existing file in 'targetFile' will be overwritten.
 #' @export
-convertBioticFile <- function(sourceFile, targetFile, targetFormat="nmdbioticv3.0.xsd", overwrite=F){
+convertBioticFile <- function(sourceFile, targetFile, targetFormat="nmdbioticv3.xsd", overwrite=F){
   
-  if (!is.character(targetFormat) & !(targetFormat %in% names(RstoxData::xsdObjects))){
+  if (!is.character(targetFormat) | !(targetFormat %in% names(RstoxData::xsdObjects))){
     stop("'targetFormat must be one of those in names(RstoxData::xsdObjects).")
   }
   

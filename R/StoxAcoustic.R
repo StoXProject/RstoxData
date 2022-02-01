@@ -116,14 +116,19 @@ StoxAcousticOne <- function(data_list) {
 		data_list$NASC[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
 		
 		
-		
 		if(any(duplicated(data_list$Log[,c('LogKey')]))) {
 			originalNrow <- nrow(data_list$Log)
-			data_list$Log <- subset(data_list$Log, !duplicated(LogKey))
-			newNrow <- nrow(data_list$Log)
+			# Indentify bad (duplicated) LogKey:
+			duplicatedLogKey <- data_list$Log[, LogKey[duplicated(LogKey)]]
+			newNrow <- originalNrow - length(duplicatedLogKey)
 			
-			warning("StoX: The data with CruiseKey ", data_list$Log$CruiseKey[1], " have non-unique LogKey (defined as time in StoxAcoustic). Check whether the input data have time where seconds has been set to 00. This may cause non-unique LogKey for high spatial resolution (e.g., 0.1 nautical miles). The rows with duplicated LogKey will be removed! (number of rows reduced from ", originalNrow, " to ", newNrow, ")")
-			data_list$Log <- subset(data_list$Log, !duplicated(LogKey))
+			data_list$Log <- subset(data_list$Log, !LogKey %in% duplicatedLogKey)
+			data_list$Beam <- subset(data_list$Beam, !LogKey %in% duplicatedLogKey)
+			data_list$AcousticCategory <- subset(data_list$AcousticCategory, !LogKey %in% duplicatedLogKey)
+			data_list$ChannelReference <- subset(data_list$ChannelReference, !LogKey %in% duplicatedLogKey)
+			data_list$NASC <- subset(data_list$NASC, !LogKey %in% duplicatedLogKey)
+			
+			warning("StoX: The data with CruiseKey ", data_list$Log$CruiseKey[1], " have non-unique LogKey (defined as time in StoxAcoustic). Check whether the input data have time where seconds has been set to 00. This may cause non-unique LogKey for high spatial resolution (e.g., 0.1 nautical miles). The following with duplicated LogKeys will be removed from Log, Beam, AcousticCategory, ChannelReference and NASC!:\n\t", paste(duplicatedLogKey, collapse = ", "))
 		}
 		
 		
@@ -221,7 +226,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		# See note 2020-04-29:
 		tmp2 <- data_list$Beam[,c('LogKey','BeamKey', 'upper_integrator_depth')]
-		data_list$Log <- merge(data_list$Log,tmp2,by='LogKey')
+		data_list$Log <- merge(data_list$Log,tmp2,by='LogKey', all.x = TRUE)
 		
 		data_list$Log[, EDSU := paste(data_list$Cruise$CruiseKey, LogKey, sep='/')]
 		
@@ -288,11 +293,6 @@ StoxAcousticOne <- function(data_list) {
 		names(data_list$NASC)[names(data_list$NASC)=='sa'] <- 'NASC'
 		# This should not be a number but an ID, thus character:
 		data_list$NASC$Channel <- as.character(data_list$NASC$ch)
-		
-		
-		
-		
-		
 		
 		
 		#################################################################
