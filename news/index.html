@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.7</span>
       </span>
     </div>
 
@@ -47,6 +47,16 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.5.7" id="rstoxdata-v157-2022-01-31">RstoxData v1.5.7 (2022-01-31)<a class="anchor" aria-label="anchor" href="#rstoxdata-v157-2022-01-31"></a></h2>
+<ul><li>Postponed ICESDatras_New().</li>
+<li>Changed the process data Translation from a table with columns VariableName, Value, NewValue, ConditionalVariableName, ConditionalValueColumn, to a table of the variable to translate in the first column; the column NewValue giving the values to translate to in the second column; followed by zero or more conditional variables. This supports multiple conditional variables, but restricts to translating only one variable at the time (although the old table i still supported, but cannot be generated in the GUI).</li>
+<li>Added support for NAs and other values in the same Translation process data.</li>
+<li>Added support for specifying a function as a string in Translation process data, usefull e.g. for setting fish larger than som value to mature.</li>
+<li>Renamed ConditionalVariableName to ConditionalVariableNames and ConditionalValueColumn to ConditionalValueColumns, as multiple values are now supported.</li>
+<li>Fixed bug in ICESDatras() occurring when there were rows with the same aphia and species, but with missing sex.</li>
+<li>Accepting NAs in convAgeSource().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.5" id="rstoxdata-v155-2022-01-31">RstoxData v1.5.5 (2022-01-31)<a class="anchor" aria-label="anchor" href="#rstoxdata-v155-2022-01-31"></a></h2>
 <ul><li>Added the functions FilterICESAcoustic(), FilterICESBiotic(), FilterICESDatras() and TranslateICESDatras().</li>
@@ -476,7 +486,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Edvin Fuglebakk, Espen Johnsen, Norwegian Institute of Marine Research.</p>
+  <p></p><p>Developed by Edvin Fuglebakk, Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Espen Johnsen, Norwegian Institute of Marine Research.</p>
 </div>
 
 <div class="pkgdown">

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.7</span>
       </span>
     </div>
 
@@ -62,8 +62,8 @@
   ValueColumn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
   NewValueColumn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
   Conditional <span class="op">=</span> <span class="cn">FALSE</span>,
-  ConditionalVariableName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  ConditionalValueColumn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
+  ConditionalVariableNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
+  ConditionalValueColumns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
   FileName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -77,17 +77,17 @@
 <dt>DefinitionMethod</dt>
 <dd><p>Character: A string naming the method to use, one of "Table" for defining the <code>Table</code>, and "ResourceFile" for reading the table from the file given by <code>FileName</code>.</p></dd>
 <dt>TranslationTable</dt>
-<dd><p>A table of the columns <code>VariableName</code>, representing the variable to translate; <code>Value</code>, giving the values to translate; and <code>NewValue</code>, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate <code>DefineTranslation</code> &amp; Translate process to translate NAs.</p></dd>
+<dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as functions of the variable specified by the column bame, e.g. function(IndividualMaturity) IndividualMaturity %in% c("juvenile", "immature") in the first column, and function(IndividualTotalLength) IndividualTotalLength &gt; 10 in the conditional column IndividualTotalLength.</p></dd>
 <dt>VariableName</dt>
 <dd><p>An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same <code><a href="Translation.html">Translation</a></code>, a column named "VariableName" must be inclcuded in <code>TranslationTable</code> (possibly read from the <code>FileName</code>) AND <code>VariableName</code> must be an empty string (blank field in the GUI).</p></dd>
 <dt>ValueColumn, NewValueColumn</dt>
 <dd><p>The name of the columns of <code>TranslationTable</code> representing the current values and the values to translate to, respectively.</p></dd>
 <dt>Conditional</dt>
-<dd><p>Logical: If TRUE the columns <code>ConditionalVariableName</code> and <code>ConditionalValue</code> are expected in the <code>TranslationTable</code>. These define a variable interacting with the <code>VariableName</code> and <code>Value</code>, so that <code>VariableName</code> is changed from <code>Value</code> to <code>NewValue</code> only when <code>ConditionalVariableName</code> has the value given by <code>ConditionalValue</code>. Note that <code>ConditionalVariableName</code> must exist in the same table as <code>VariableName</code>.</p></dd>
-<dt>ConditionalVariableName</dt>
-<dd><p>Similar to <code>VariableName</code>, but naming the conditional variable.</p></dd>
-<dt>ConditionalValueColumn</dt>
-<dd><p>The name of the column of <code>TranslationTable</code> representing the conditional values.</p></dd>
+<dd><p>Logical: If TRUE the columns <code>ConditionalVariableNames</code> and <code>ConditionalValue</code> are expected in the <code>TranslationTable</code>. These define a variable interacting with the <code>VariableName</code> and <code>Value</code>, so that <code>VariableName</code> is changed from <code>Value</code> to <code>NewValue</code> only when <code>ConditionalVariableNames</code> has the value given by <code>ConditionalValue</code>. Note that <code>ConditionalVariableNames</code> must exist in the same table as <code>VariableName</code>.</p></dd>
+<dt>ConditionalVariableNames</dt>
+<dd><p>Similar to <code>VariableName</code>, but naming the conditional variables.</p></dd>
+<dt>ConditionalValueColumns</dt>
+<dd><p>The name of the columns of <code>TranslationTable</code> representing the conditional values.</p></dd>
 <dt>FileName</dt>
 <dd><p>The csv file holding a table with the three variables listed for <code>TranslationTable</code>, and possibly the two listed for <code>Conditional</code>.</p></dd>
 </dl></div>
@@ -108,7 +108,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Edvin Fuglebakk, Espen Johnsen, Norwegian Institute of Marine Research.</p>
+  <p></p><p>Developed by Edvin Fuglebakk, Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Espen Johnsen, Norwegian Institute of Marine Research.</p>
 </div>
 
 <div class="pkgdown">
