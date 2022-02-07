@@ -13,8 +13,8 @@ DefineTranslation(
   ValueColumn = character(),
   NewValueColumn = character(),
   Conditional = FALSE,
-  ConditionalVariableName = character(),
-  ConditionalValueColumn = character(),
+  ConditionalVariableNames = character(),
+  ConditionalValueColumns = character(),
   FileName = character()
 )
 }
@@ -25,17 +25,17 @@ DefineTranslation(
 
 \item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{Table}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
 
-\item{TranslationTable}{A table of the columns \code{VariableName}, representing the variable to translate; \code{Value}, giving the values to translate; and \code{NewValue}, giving the values to translate to. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). In the current version NAs cannot be mixed with non-NAs in the Value column. Please use a separate \code{\link{DefineTranslation}} & Translate process to translate NAs.}
+\item{TranslationTable}{A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as functions of the variable specified by the column bame, e.g. function(IndividualMaturity) IndividualMaturity \%in\% c("juvenile", "immature") in the first column, and function(IndividualTotalLength) IndividualTotalLength > 10 in the conditional column IndividualTotalLength.}
 
 \item{VariableName}{An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same \code{\link{Translation}}, a column named "VariableName" must be inclcuded in \code{TranslationTable} (possibly read from the \code{FileName}) AND \code{VariableName} must be an empty string (blank field in the GUI).}
 
 \item{ValueColumn, NewValueColumn}{The name of the columns of \code{TranslationTable} representing the current values and the values to translate to, respectively.}
 
-\item{Conditional}{Logical: If TRUE the columns \code{ConditionalVariableName} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableName} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableName} must exist in the same table as \code{VariableName}.}
+\item{Conditional}{Logical: If TRUE the columns \code{ConditionalVariableNames} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableNames} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableNames} must exist in the same table as \code{VariableName}.}
 
-\item{ConditionalVariableName}{Similar to \code{VariableName}, but naming the conditional variable.}
+\item{ConditionalVariableNames}{Similar to \code{VariableName}, but naming the conditional variables.}
 
-\item{ConditionalValueColumn}{The name of the column of \code{TranslationTable} representing the conditional values.}
+\item{ConditionalValueColumns}{The name of the columns of \code{TranslationTable} representing the conditional values.}
 
 \item{FileName}{The csv file holding a table with the three variables listed for \code{TranslationTable}, and possibly the two listed for \code{Conditional}.}
 }

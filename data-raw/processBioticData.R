@@ -411,3 +411,6 @@ stoxBioticObject$convertTable <- data.table::fread("stox-biotic-final-phase.csv"
 
 use_data(stoxBioticObject, overwrite = TRUE)
 
+setwd("..")
+setwd("..")
+

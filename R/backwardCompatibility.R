@@ -151,6 +151,20 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "Translation",
 			newParameterName = "TranslationTable"
+		), 
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ConditionalVariableName",
+			newParameterName = "ConditionalVariableNames"
+		), 
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ConditionalValueColumn",
+			newParameterName = "ConditionalValueColumns"
 		)
 	),  
 	
@@ -170,6 +184,48 @@ backwardCompatibility <- list(
 			parameterName = "DefinitionMethod", 
 			value = "TranslationTable", 
 			newValue = "Table"
+		), 
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "VariableName",
+			value = list(), # Empty value was allowed in 3.3.0, implying that VariableName was given in the file to read, but will no longer be allowed.
+			newValue = function(projectDescriptionOne) {
+				projectDescriptionOne$processData$Translation[[1]]$VariableName
+			}
+		), 
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ConditionalVariableNames",
+			value = list(), # Empty value was allowed in 3.3.0, implying that VariableName was given in the file to read, but will no longer be allowed.
+			newValue = function(projectDescriptionOne) {
+				# Has been renamed from ConditionalVariableName to ConditionalVariableNames first:
+				projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableNames
+			}
+		), 
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "VariableName",
+			value = "VariableName", # Add the value if not given or if given as per erroneous BWC in 1.2.17.
+			newValue = function(projectDescriptionOne) {
+				projectDescriptionOne$processData$Translation[[1]]$VariableName
+			}
+		), 
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "ConditionalVariableNames",
+			value = "ConditionalVariableName", # Add the value if not given or if given as per erroneous BWC in 1.2.17.
+			newValue = function(projectDescriptionOne) {
+				# Has been renamed from ConditionalVariableName to ConditionalVariableNames first:
+				projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableNames
+			}
 		)
 	), 
 	
@@ -180,6 +236,50 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			processDataName = "StoxBioticTranslation",
 			newProcessDataName = "Translation"
+		)
+	), 
+	
+	reshapeProcessData = list(
+		list(
+			changeVersion = "1.5.7", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			processDataName = "Translation",
+			newProcessData = function(processData) {
+				
+				values <- unique(unlist(lapply(processData$Translation, "[[", "Value")))
+				
+				if(length(values) > 1 ) {
+					warning("StoX: The existing Translation process data containis multiple unique values in the Value column. This cannot be converted to the new form of the Translation process data, where only one variable can be defined for translation (but multiple conditional variables), and where the variable names in the data are used as column names in the Translation process data. StoX should still be able to apply the translation, but making changes may break the process or loose the translation infomation.")
+				}
+				else {
+					conditional <- "ConditionalVariableName" %in% names(processData$Translation[[1]])
+					if(conditional) {
+						processData$Translation <- lapply(
+							processData$Translation, 
+							function(x) {
+								names(x)[names(x) == "Value"] <- x$VariableName
+								x$VariableName <- NULL
+								names(x)[names(x) == "ConditionalValue"] <- x$ConditionalVariableName
+								x$ConditionalVariableName <- NULL
+								return(x)
+							}
+						)
+					}
+					else {
+						processData$Translation <- lapply(
+							processData$Translation, 
+							function(x) {
+								names(x)[names(x) == "Value"] <- x$VariableName
+								x$VariableName <- NULL
+								return(x)
+							}
+						)
+					}
+				}	
+			
+			return(processData)	
+			}
 		)
 	)
 	
