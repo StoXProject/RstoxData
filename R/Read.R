@@ -298,7 +298,7 @@ getLengthCodeICES <- function(lengthresolution) {
 	LengthCode <- lengthResolutionTable$LengthCode[match(lengthresolution, lengthResolutionTable$lengthresolution)]
 	nonValid <- !is.na(lengthresolution) & is.na(LengthCode)
 	if(any(nonValid)) {
-		warning("The following lengthresolution do not match any of the LengthCode defined by http://vocab.ices.dk/?ref=1486: ", paste(unique(lengthresolution[nonValid]), collapse = ", "), ". The following table shows the valid lengthresolution:\n",  paste(names(lengthResolutionTable), collapse = "\t"), "\n", paste(lengthResolutionTable[, do.call(paste, c(.SD, list(sep = "\t")))], collapse = "\n"))
+		warning("StoX: The following lengthresolution do not match any of the LengthCode defined by http://vocab.ices.dk/?ref=1486: ", paste(unique(lengthresolution[nonValid]), collapse = ", "), ". The following table shows the valid lengthresolution:\n",  paste(names(lengthResolutionTable), collapse = "\t"), "\n", paste(lengthResolutionTable[, do.call(paste, c(.SD, list(sep = "\t")))], collapse = "\n"))
 	}
 	return(LengthCode)
 }

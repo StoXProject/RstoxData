@@ -1,3 +1,12 @@
+# RstoxData v1.5.7 (2022-01-31)
+* Postponed ICESDatras_New().
+* Changed the process data Translation from a table with columns VariableName, Value, NewValue, ConditionalVariableName, ConditionalValueColumn, to a table of the variable to translate in the first column; the column NewValue giving the values to translate to in the second column; followed by zero or more conditional variables. This supports multiple conditional variables, but restricts to translating only one variable at the time (although the old table i still supported, but cannot be generated in the GUI). 
+* Added support for NAs and other values in the same Translation process data.
+* Added support for specifying a function as a string in Translation process data, usefull e.g. for setting fish larger than som value to mature.
+* Renamed ConditionalVariableName to ConditionalVariableNames and ConditionalValueColumn to ConditionalValueColumns, as multiple values are now supported.
+* Fixed bug in ICESDatras() occurring when there were rows with the same aphia and species, but with missing sex.
+* Accepting NAs in convAgeSource().
+
 # RstoxData v1.5.5 (2022-01-31)
 * Added the functions FilterICESAcoustic(), FilterICESBiotic(), FilterICESDatras() and TranslateICESDatras().
 * Changed the output of ICESBiotic(), ICESDatras() and ICESAcoustic() to combine tables from the different files in the same way that StoxBiotic() and StoxAcoustic() does. This also affects the name of the output of WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), which is no longer named by the input file to the Read* function.

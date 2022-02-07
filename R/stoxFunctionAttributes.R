@@ -159,7 +159,9 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "Translation", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			FileName = "filePath"
+			FileName = "filePath", 
+			ConditionalVariableNames = "conditionalVariableNames", 
+			ConditionalValueColumns = "conditionalValueColumns"
 		), 
 		functionArgumentHierarchy = list(
 			DefinitionMethod = list(
@@ -182,7 +184,6 @@ stoxFunctionAttributes <- list(
 			), 
 			# These two are joined with AND, and must both be fulfilled:
 			VariableName = list(
-				DefinitionMethod = "ResourceFile", 
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
@@ -196,13 +197,12 @@ stoxFunctionAttributes <- list(
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
-			ConditionalVariableName = list(
-				DefinitionMethod = "ResourceFile", 
+			ConditionalVariableNames = list(
 				Conditional = TRUE, 
 				UseProcessData = FALSE
 			), 
 			# These two are joined with AND, and must both be fulfilled:
-			ConditionalValueColumn = list(
+			ConditionalValueColumns = list(
 				DefinitionMethod = "ResourceFile", 
 				Conditional = TRUE, 
 				UseProcessData = FALSE
@@ -576,25 +576,30 @@ processPropertyFormats <- list(
 	translationTable = list(
 		class = "table", 
 		title = "Translate columns of StoX data", 
-		columnNames = function(Conditional) {
+		columnNames = function(VariableName, Conditional, ConditionalVariableNames = NULL) {
+			if(!length(VariableName)) {
+				stop("VariableName must be set.")
+			}
 			columnNames <- c(
-				"VariableName", 
-				"Value", 
+				VariableName, 
 				"NewValue"
 			)
 			# Add a conditional variable:
 			if(Conditional) {
+				if(!length(ConditionalVariableNames)) {
+					stop("ConditionalVariableNames must be set when Conditional = TRUE.")
+				}
+				
 				columnNames <- c(
-					"ConditionalVariableName", 
-					"ConditionalValue", 
-					columnNames
+					columnNames, 
+					ConditionalVariableNames
 				)
 			}
 			
 			return(columnNames)
 		}, 
-		variableTypes = function(Conditional) {
-			rep("character", 3 + 2 * as.numeric(Conditional))
+		variableTypes = function(VariableName, Conditional, ConditionalVariableNames = NULL) {
+			rep("character", 2 + as.numeric(Conditional) * length(ConditionalVariableNames))
 		}
 		#columnNames = c(
 		#	"VariableName", 
@@ -606,6 +611,16 @@ processPropertyFormats <- list(
 		#	"character",
 		#	"character"
 		#)
+	), 
+	conditionalVariableNames = list(
+		class = "vector", 
+		title = "One or more conditional variables to translate by.", 
+		variableTypes = "character"
+	), 
+	conditionalValueColumns = list(
+		class = "vector", 
+		title = "The column name in the input file of one or more conditional variables to translate by.", 
+		variableTypes = "character"
 	), 
 	
 	

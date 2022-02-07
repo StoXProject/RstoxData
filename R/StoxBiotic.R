@@ -238,7 +238,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
 		data$Catch <- unique(data$Catch, by = byVars)
 	  } 
     else {
-	    warning("Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
+	    warning("StoX: Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
 	    return(NULL)
     }
     
