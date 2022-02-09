@@ -1,3 +1,55 @@
+#' @export
+oldToNewTranslationList <- function(translationList) {
+	
+	# Reshape only old Translation:
+	if(length(translationList) && all(c("VariableName", "Value", "NewValue") %in% names(translationList[[1]]))) {
+		
+		values <- unique(unlist(lapply(translationList, "[[", "VariableName")))
+		
+		if(length(values) > 1 ) {
+			warning("StoX: The existing Translation process data containis multiple unique values in the Value column. This cannot be converted to the new form of the Translation process data, where only one variable can be defined for translation (but multiple conditional variables), and where the variable names in the data are used as column names in the Translation process data. StoX should still be able to apply the translation, but making changes may break the process or loose the translation infomation.")
+		}
+		else {
+			conditional <- "ConditionalVariableName" %in% names(translationList[[1]])
+			if(conditional) {
+				translationList <- lapply(
+					translationList, 
+					function(x) {
+						# We only treat one row at the time, so we do not need to extract the first element of x$VariableName:
+						out <- list(
+							# Use the Value as the first column and ConditionalValue as the last, and add the VariableName and ConditionalVariableName afterwards: 
+							x$Value, 
+							NewValue = x$NewValue, 
+							x$ConditionalValue
+						)
+						names(out) <- c(x$VariableName, "NewValue", x$ConditionalVariableName)
+						
+						return(out)
+					}
+				)
+			}
+			else {
+				translationList <- lapply(
+					translationList, 
+					function(x) {
+						# We only treat one row at the time, so we do not need to extract the first element of x$VariableName:
+						out <- list(
+							# Use the Value as the first column, and add the VariableName afterwards: 
+							x$Value, 
+							NewValue = x$NewValue
+						)
+						names(out) <- c(x$VariableName, "NewValue")
+						
+						return(out)
+					}
+				)
+			}
+		}
+	}
+	
+	return(translationList)	
+}
+
 #' Backward compabitibility actions:
 #' @export
 backwardCompatibility <- list(
@@ -190,7 +242,10 @@ backwardCompatibility <- list(
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
 			parameterName = "VariableName",
-			value = list(), # Empty value was allowed in 3.3.0, implying that VariableName was given in the file to read, but will no longer be allowed.
+			value = list(
+				list(), 
+				"VariableName"
+			), # Empty value was allowed in 3.3.0, implying that VariableName was given in the file to read, but will no longer be allowed.
 			newValue = function(projectDescriptionOne) {
 				projectDescriptionOne$processData$Translation[[1]]$VariableName
 			}
@@ -200,31 +255,34 @@ backwardCompatibility <- list(
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
 			parameterName = "ConditionalVariableNames",
-			value = list(), # Empty value was allowed in 3.3.0, implying that VariableName was given in the file to read, but will no longer be allowed.
+			# Multiple values must be given in a list!!! Also if only :
+			value = list(
+				list(), 
+				"ConditionalVariableName"
+			), # Empty value was allowed in 3.3.0, implying that ConditionalVariableNames was given in the file to read, but will no longer be allowed.
 			newValue = function(projectDescriptionOne) {
-				# Has been renamed from ConditionalVariableName to ConditionalVariableNames first:
-				projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableNames
+				if(projectDescriptionOne$functionParameters$Conditional) {
+					# Has not yet been renamed from ConditionalVariableName to ConditionalVariableNames as per the order defiend in RstoxFramework::getRstoxFrameworkDefinitions("backwardCompatibilityActionNames"):
+					projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableName
+				}
+				else {
+					list()
+				}
 			}
-		), 
+		)
+	), 
+	
+	reshapeParameter = list(
 		list(
 			changeVersion = "1.5.7", 
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
-			parameterName = "VariableName",
-			value = "VariableName", # Add the value if not given or if given as per erroneous BWC in 1.2.17.
+			parameterName = "TranslationTable",
 			newValue = function(projectDescriptionOne) {
-				projectDescriptionOne$processData$Translation[[1]]$VariableName
-			}
-		), 
-		list(
-			changeVersion = "1.5.7", 
-			functionName = "DefineTranslation", 
-			modelName = "baseline", 
-			parameterName = "ConditionalVariableNames",
-			value = "ConditionalVariableName", # Add the value if not given or if given as per erroneous BWC in 1.2.17.
-			newValue = function(projectDescriptionOne) {
-				# Has been renamed from ConditionalVariableName to ConditionalVariableNames first:
-				projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableNames
+				# Return the reshaped parameter:
+				projectDescriptionOne$functionParameters$TranslationTable <- RstoxData::oldToNewTranslationList(projectDescriptionOne$functionParameters$TranslationTable)
+				# Return the projectDescriptionOne:
+				return(projectDescriptionOne)
 			}
 		)
 	), 
@@ -245,40 +303,10 @@ backwardCompatibility <- list(
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
 			processDataName = "Translation",
-			newProcessData = function(processData) {
-				
-				values <- unique(unlist(lapply(processData$Translation, "[[", "Value")))
-				
-				if(length(values) > 1 ) {
-					warning("StoX: The existing Translation process data containis multiple unique values in the Value column. This cannot be converted to the new form of the Translation process data, where only one variable can be defined for translation (but multiple conditional variables), and where the variable names in the data are used as column names in the Translation process data. StoX should still be able to apply the translation, but making changes may break the process or loose the translation infomation.")
-				}
-				else {
-					conditional <- "ConditionalVariableName" %in% names(processData$Translation[[1]])
-					if(conditional) {
-						processData$Translation <- lapply(
-							processData$Translation, 
-							function(x) {
-								names(x)[names(x) == "Value"] <- x$VariableName
-								x$VariableName <- NULL
-								names(x)[names(x) == "ConditionalValue"] <- x$ConditionalVariableName
-								x$ConditionalVariableName <- NULL
-								return(x)
-							}
-						)
-					}
-					else {
-						processData$Translation <- lapply(
-							processData$Translation, 
-							function(x) {
-								names(x)[names(x) == "Value"] <- x$VariableName
-								x$VariableName <- NULL
-								return(x)
-							}
-						)
-					}
-				}	
-			
-			return(processData)	
+			newProcessData = function(projectDescriptionOne) {
+				projectDescriptionOne$processData$Translation <- RstoxData::oldToNewTranslationList(projectDescriptionOne$processData$Translation)
+				# Return the processData:
+				return(projectDescriptionOne)
 			}
 		)
 	)
