@@ -183,6 +183,35 @@ readVariableTranslation <- function(FileName, VariableName, ValueColumn, NewValu
 }
 
 
+
+oldToNewTranslationOne <- function(x) {
+	# Detect whether the translation is conditional:
+	conditional <- "ConditionalVariableName" %in% names(x)
+	if(conditional) {
+		# We only treat one row at the time, so we do not need to extract the first element of x$VariableName:
+		out <- data.table::data.table(
+			# Use the Value as the first column and ConditionalValue as the last, and add the VariableName and ConditionalVariableName afterwards: 
+			x$Value, 
+			NewValue = x$NewValue, 
+			x$ConditionalValue
+		)
+		names(out) <- c(x$VariableName, "NewValue", x$ConditionalVariableName)
+	}
+	else {
+		# We only treat one row at the time, so we do not need to extract the first element of x$VariableName:
+		out <- data.table::data.table(
+			# Use the Value as the first column, and add the VariableName afterwards: 
+			x$Value, 
+			NewValue = x$NewValue
+		)
+		names(out) <- c(x$VariableName, "NewValue")
+	}
+	
+	return(out)
+}
+
+
+
 # Function to convert variables given a conversion table:
 translateVariables <- function(data, Translation, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
 	
@@ -192,7 +221,7 @@ translateVariables <- function(data, Translation, translate.keys = FALSE, Preser
 	# Check whether the old required columns are present in the translation table, and transform to the new form:
 	oldRequiredColumns <- getRstoxDataDefinitions("TranslationOldRequiredColumns")
 	if(all(oldRequiredColumns %in% names(translationList[[1]]))) {
-		translationList <- lapply(translationList, function(x) {data.table::setnames(x, "Value", x$VariableName[1]); x[, VariableName := NULL]; x})
+		translationList <- lapply(translationList, oldToNewTranslationOne)
 	}
 	
 	# Warn if there are columns in the translation that are not present in the data. Check only the first translation, as all translations have the same columns in the new form, and in the old form (that is used by StoxBiotic()) this check is not as important:
