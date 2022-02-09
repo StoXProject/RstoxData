@@ -1,3 +1,7 @@
+#' Function to convert from the VarialbeName-Value-NewValue translation form to the foor where variable names are column names.
+#' 
+#' @param translationList A list of lists of each row of the Translation table, as read in using RstoxFramework:::readProjectDescription(). 
+#' 
 #' @export
 oldToNewTranslationList <- function(translationList) {
 	
