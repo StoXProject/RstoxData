@@ -108,7 +108,6 @@ jobs:
         run: |
           sudo apt-get install -y libcurl4-openssl-dev
           sudo apt-get install -y libudunits2-dev
-          sudo aptitude install libgdal-dev
         shell: bash
       
       - name: Install CRANdependencies
