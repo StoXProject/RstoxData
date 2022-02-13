@@ -140,8 +140,10 @@ void processNode(pugi::xml_node& node, const std::vector<const char*>& parentPre
 	levelCtrs[root] = levelCtrs[root] + 1;
 }
 
+// nativeIsUTF8 conveys whether the native encoding in R is UTF8.
+// it is lets us deal with cases when R native encoding is different from the system default (on windows)
 // [[Rcpp::export]]
-Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride = R_NilValue, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding = R_NilValue, bool verbose = false)
+Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<Rcpp::CharacterVector> xsdOverride = R_NilValue, Rcpp::Nullable<Rcpp::CharacterVector> xmlEncoding = R_NilValue, bool verbose = false, bool nativeIsUTF8 = false)
 {
 
 	pugi::xml_document doc;
@@ -154,14 +156,20 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 
 	//pugi::xml_parse_result result = doc.load_buffer_inplace_own(&buffer[0], buffer.size());
 
-	// Read file (in Windows use UTF-8 to UTF-16 conversion)
+	// Read file (in Windows use system default or UTF-8 to UTF-16 conversion)
 #ifndef _WIN32
         std::string filePath(inputFile[0]);
 #else
         std::string filePath1(inputFile[0]);
         std::wstring filePath;
         filePath.resize(filePath1.size());
-        int newSize = MultiByteToWideChar(CP_ACP, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());
+        int newSize;
+        if (nativeIsUTF8){
+          newSize = MultiByteToWideChar(CP_UTF8, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());  
+        }
+        else{
+          newSize = MultiByteToWideChar(CP_ACP, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());  
+        }
         filePath.resize(newSize);
 #endif
   
