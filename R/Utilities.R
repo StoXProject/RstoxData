@@ -587,6 +587,11 @@ findVariablesMathcinigVocabulary <- function(vocabulary, data) {
 		c("id", "value"), 
 		c("Value", "NewValue")
 	)
+	# Clean the table of irrelevant columns:
+	vocabulary <- vocabulary[, c("VariableName", "Value", "NewValue")]
+	
+	# Remove rows with VariableName not found in the data, which has VariableName = NA:
+	vocabulary <- subset(vocabulary, !is.na(VariableName))
 	
 	return(vocabulary)
 }

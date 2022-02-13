@@ -6,17 +6,12 @@
 			{
 				"type": "object",
 				"properties": {
-					"VariableName": { "type": ["number","string","boolean"] },
-					"Value": { "type": ["number","string","boolean"] },
-					"NewValue": { "type": ["number","string","boolean"] }, 
-					"ConditionalVariableName": { "type": ["number","string","boolean"] },
-					"ConditionalValue": { "type": ["number","string","boolean"] }
+					"NewValue": { "type": ["number","string","boolean"] }
 				},
 				"required": [
-					"VariableName", 
-					"Value", 
 					"NewValue"
-				]
+				],
+				"additionalProperties": true
 			}
 		]
 	}

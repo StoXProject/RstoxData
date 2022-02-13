@@ -8,4 +8,4 @@ src/symbols.rds
 .RData
 .DS_Store
 docs/*
-
+.Rproj
