@@ -30,6 +30,10 @@
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
 
+  if (endsWith(xmlFilePath, ".zip") & !stream){
+    stop("Zip files can only be read in streaming mode")
+  }
+  
 	# To UTf-8
 	toUTF8 <- function(srcvec) {
 		Encoding(srcvec) <- "UTF-8"

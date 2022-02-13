@@ -34,9 +34,15 @@ paths <- unzip(zipfile, exdir = utf8offensiveFiles)
 filepaths <- list.files(utf8offensiveFiles, full.names = T)
 for (f in filepaths){
   if (f != zipfile){
-    contentDom <- RstoxData::readXmlFile(f, stream = F)
-    contentStream <- RstoxData::readXmlFile(f, stream = T)
-    expect_true(length(all.equal(contentStream, contentDom))<=1)
+    
+    if (grepl(".zip", f)){
+      contentStream <- RstoxData::readXmlFile(f, stream = T)
+    }
+    else{
+      contentDom <- RstoxData::readXmlFile(f, stream = F)
+      contentStream <- RstoxData::readXmlFile(f, stream = T)
+      expect_true(length(all.equal(contentStream, contentDom))<=2) 
+    }
   }
 }
 #remove extracted files
