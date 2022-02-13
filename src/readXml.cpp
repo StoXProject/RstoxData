@@ -161,7 +161,7 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
         std::string filePath1(inputFile[0]);
         std::wstring filePath;
         filePath.resize(filePath1.size());
-        int newSize = MultiByteToWideChar(CP_UTF8, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());
+        int newSize = MultiByteToWideChar(CP_ACP, 0, filePath1.c_str(), filePath1.length(), const_cast<wchar_t *>(filePath.c_str()), filePath1.length());
         filePath.resize(newSize);
 #endif
   

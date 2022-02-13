@@ -663,7 +663,7 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 #else
 		std::wstring filePath;
 		filePath.resize(inputFileName.size());
-		int newSize = MultiByteToWideChar(CP_UTF8, 0, inputFileName.c_str(), inputFileName.length(), const_cast<wchar_t *>(filePath.c_str()), inputFileName.length());
+		int newSize = MultiByteToWideChar(CP_ACP, 0, inputFileName.c_str(), inputFileName.length(), const_cast<wchar_t *>(filePath.c_str()), inputFileName.length());
 		filePath.resize(newSize);
 		istream = new XML::FileInputStream(filePath.c_str());
 #endif
