@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - nonutfPathTest
   pull_request:
     branches:
       - master
