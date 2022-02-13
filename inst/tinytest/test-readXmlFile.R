@@ -27,6 +27,15 @@ expect_equal(nrow(dd$Seddellinje), 20)
 #context("Test readXmlFile malformed xml")
 expect_error(RstoxData:::readXmlFile(example_malformed, stream = F))
 
+#non utf8-path
+utf8offensiveFiles <- system.file("testresources","utf8offensive", package="RstoxData")
+filepaths <- list.files(utf8offensiveFiles, full.names = T)
+for (f in filepaths){
+  contentDom <- RstoxData::readXmlFile(f, stream = F)
+  contentStream <- RstoxData::readXmlFile(f, stream = T)
+  expect_true(length(all.equal(contentStream, contentDom))<=1)
+}
+
 
 #context("test-readXmlFile: DOM parse NMD Biotic v3.1")
 defaultParseBiotic <- RstoxData:::readXmlFile(example, stream = F)
