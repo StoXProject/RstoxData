@@ -29,11 +29,21 @@ expect_error(RstoxData:::readXmlFile(example_malformed, stream = F))
 
 #non utf8-path
 utf8offensiveFiles <- system.file("testresources","utf8offensive", package="RstoxData")
+zipfile <- system.file("testresources","utf8offensive", "files.zip", package="RstoxData")
+paths <- unzip(zipfile, exdir = utf8offensiveFiles)
 filepaths <- list.files(utf8offensiveFiles, full.names = T)
 for (f in filepaths){
-  contentDom <- RstoxData::readXmlFile(f, stream = F)
-  contentStream <- RstoxData::readXmlFile(f, stream = T)
-  expect_true(length(all.equal(contentStream, contentDom))<=1)
+  if (f != zipfile){
+    contentDom <- RstoxData::readXmlFile(f, stream = F)
+    contentStream <- RstoxData::readXmlFile(f, stream = T)
+    expect_true(length(all.equal(contentStream, contentDom))<=1)
+  }
+}
+#remove extracted files
+for (f in filepaths){
+  if (f != zipfile){
+    unlink(f)
+  }
 }
 
 
