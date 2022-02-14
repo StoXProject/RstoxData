@@ -878,3 +878,13 @@ createEmptyDataTable <- function(names, classes = NULL) {
 
 
 
+sanitizeExpression <- function(x) {
+	# Detect one or more "system" followed by 0 or one "2" and 0 or more spaces and then one or more parenthesis start:
+	usesSystem <- grepl("system+2? *\\(+", x)
+	if(any(usesSystem)) {
+		stop("The following expression applies a call to the operating system, and may contain harmful code (please do not try to hack using StoX): ", x)
+	}
+}
+
+
+

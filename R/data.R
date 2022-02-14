@@ -166,9 +166,9 @@ NULL
 
 ##################################################
 ##################################################
-#' StoX data types of the RstoxData package
+#' Model data used by RstoxData
 #' 
-#' StoX data types are the data types used to transfer data and information between processes in a StoX estimation model.
+#' The model data of a StoX model are the data generated during the model run based on input data and user settings and resources given in the project description (project.json file). Model data are transient and only exists from a process has been run until the project is closed.
 #' 
 #' @details
 #' This RstoxData package produces the following StoX data types:
@@ -190,9 +190,14 @@ NULL
 #' }
 #' 
 #' @param BioticData \code{\link{BioticData}}.
-#' @param StoxBioticData \code{\link{StoxBioticData}}.
 #' @param AcousticData \code{\link{AcousticData}}.
+#' @param LandingData \code{\link{LandingData}}.
+#' @param StoxBioticData \code{\link{StoxBioticData}}.
 #' @param StoxAcousticData \code{\link{StoxAcousticData}}.
+#' @param StoxLandingData \code{\link{StoxLandingData}}.
+#' @param ICESBioticData \code{\link{ICESBioticData}}.
+#' @param ICESAcousticData \code{\link{ICESAcousticData}}.
+#' @param ICESDatrasData \code{\link{ICESDatrasData}}.
 #'
 #' @seealso \href{https://github.com/StoXProject/RstoxBase}{RstoxBase} and \href{https://github.com/StoXProject/RstoxFDA}{RstoxFDA} for a list of all StoX data types produced by the other official StoX function packages.
 #' 
@@ -203,14 +208,11 @@ NULL
 
 ##################################################
 ##################################################
-#' Process data used in estimation models in StoX
+#' Process data used by RstoxData
 #' 
-#' The process data of the RstoxData package. 
+#' The process data of a StoX model are data that are saved to the project description (project.json file), which in the case of RstoxData is only the \code{\link{Translation}} data type. 
 #' 
-#' @details
-#' \itemize{
-#' \item{\code{\link{Translation}}}
-#' }
+#' @param Translation \code{\link{Translation}}.
 #' 
 #' @name ProcessData
 #' 

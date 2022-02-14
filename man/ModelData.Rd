@@ -2,18 +2,28 @@
 % Please edit documentation in R/data.R
 \name{ModelData}
 \alias{ModelData}
-\title{StoX data types of the RstoxData package}
+\title{Model data used by RstoxData}
 \arguments{
 \item{BioticData}{\code{\link{BioticData}}.}
 
-\item{StoxBioticData}{\code{\link{StoxBioticData}}.}
-
 \item{AcousticData}{\code{\link{AcousticData}}.}
 
+\item{LandingData}{\code{\link{LandingData}}.}
+
+\item{StoxBioticData}{\code{\link{StoxBioticData}}.}
+
 \item{StoxAcousticData}{\code{\link{StoxAcousticData}}.}
+
+\item{StoxLandingData}{\code{\link{StoxLandingData}}.}
+
+\item{ICESBioticData}{\code{\link{ICESBioticData}}.}
+
+\item{ICESAcousticData}{\code{\link{ICESAcousticData}}.}
+
+\item{ICESDatrasData}{\code{\link{ICESDatrasData}}.}
 }
 \description{
-StoX data types are the data types used to transfer data and information between processes in a StoX estimation model.
+The model data of a StoX model are the data generated during the model run based on input data and user settings and resources given in the project description (project.json file). Model data are transient and only exists from a process has been run until the project is closed.
 }
 \details{
 This RstoxData package produces the following StoX data types:

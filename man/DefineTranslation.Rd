@@ -25,7 +25,7 @@ DefineTranslation(
 
 \item{DefinitionMethod}{Character: A string naming the method to use, one of "Table" for defining the \code{Table}, and "ResourceFile" for reading the table from the file given by \code{FileName}.}
 
-\item{TranslationTable}{A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as functions of the variable specified by the column bame, e.g. function(IndividualMaturity) IndividualMaturity \%in\% c("juvenile", "immature") in the first column, and function(IndividualTotalLength) IndividualTotalLength > 10 in the conditional column IndividualTotalLength.}
+\item{TranslationTable}{A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions or functions of the variable specified by the column name. See details.}
 
 \item{VariableName}{An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same \code{\link{Translation}}, a column named "VariableName" must be inclcuded in \code{TranslationTable} (possibly read from the \code{FileName}) AND \code{VariableName} must be an empty string (blank field in the GUI).}
 
@@ -44,6 +44,11 @@ A \code{\link{Translation}} object.
 }
 \description{
 This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
+}
+\details{
+The columns of the \code{TranslationnTable} (excecpt the NewValue column) can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "\%in\%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength > 10". When the \code{TranslationnTable} is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength > 10). 
+
+E.g., to set all inidividuals with missing IndividualMaturity as "Adult" if longer than 10 cm, use "function(IndividualMaturity) is.na(IndividualMaturity)" in the first column named "IndividualMaturity", "Adult" in the "NewValue" column, and "function(IndividualTotalLength) IndividualTotalLength > 10" in the third (conditional) column named "IndividualTotalLength".
 }
 \seealso{
 \code{\link{TranslateStoxBiotic}}, \code{\link{TranslateStoxAcoustic}}, \code{\link{TranslateBiotic}}, \code{\link{TranslateAcoustic}}, \code{\link{TranslateStoxLanding}}, \code{\link{TranslateLanding}}, \code{\link{TranslateICESBiotic}} and \code{\link{TranslateICESAcoustic}} for applying the translation.
