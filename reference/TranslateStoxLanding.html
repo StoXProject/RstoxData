@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.9</span>
       </span>
     </div>
 
@@ -53,15 +53,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">TranslateStoxLanding</span><span class="op">(</span><span class="va">StoxLandingData</span>, <span class="va">Translation</span>, PreserveClass <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">TranslateStoxLanding</span><span class="op">(</span>
+  <span class="va">StoxLandingData</span>,
+  TranslationDefinition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FunctionParameter"</span>, <span class="st">"FunctionInput"</span><span class="op">)</span>,
+  TranslationTable <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="op">)</span>,
+  VariableName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
+  Conditional <span class="op">=</span> <span class="cn">FALSE</span>,
+  ConditionalVariableNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">Translation</span>,
+  PreserveClass <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>StoxLandingData</dt>
-<dd><p>An input of <a href="ModelData.html">ModelData</a> object</p></dd>
+<dd><p><code><a href="StoxLandingData.html">StoxLandingData</a></code>.</p></dd>
+<dt>TranslationDefinition</dt>
+<dd><p>The method to use for defining the Translation, one of <code>FunctionParameter</code> to define the Translation on the fly in this function using the <code>TranslationTable</code>, or <code>FunctionInput</code> to import Translation process data from a previously run process using the function <code>DefineTranslation</code>.</p></dd>
+<dt>TranslationTable</dt>
+<dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions or functions of the variable specified by the column name. See details.</p></dd>
+<dt>VariableName</dt>
+<dd><p>An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same <code><a href="Translation.html">Translation</a></code>, a column named "VariableName" must be inclcuded in <code>TranslationTable</code> (possibly read from the <code>FileName</code>) AND <code>VariableName</code> must be an empty string (blank field in the GUI).</p></dd>
+<dt>Conditional</dt>
+<dd><p>Logical: If TRUE the columns <code>ConditionalVariableNames</code> and <code>ConditionalValue</code> are expected in the <code>TranslationTable</code>. These define a variable interacting with the <code>VariableName</code> and <code>Value</code>, so that <code>VariableName</code> is changed from <code>Value</code> to <code>NewValue</code> only when <code>ConditionalVariableNames</code> has the value given by <code>ConditionalValue</code>. Note that <code>ConditionalVariableNames</code> must exist in the same table as <code>VariableName</code>.</p></dd>
+<dt>ConditionalVariableNames</dt>
+<dd><p>Similar to <code>VariableName</code>, but naming the conditional variables.</p></dd>
 <dt>Translation</dt>
-<dd><p>The <code><a href="Translation.html">Translation</a></code> process data.</p></dd>
+<dd><p><code><a href="Translation.html">Translation</a></code>.</p></dd>
 <dt>PreserveClass</dt>
 <dd><p>Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (<code>PreserveClass</code> = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using <code>PreserveClass</code> = FALSE.</p></dd>
 </dl></div>

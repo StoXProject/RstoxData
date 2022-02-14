@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.9</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@
 <dt>DefinitionMethod</dt>
 <dd><p>Character: A string naming the method to use, one of "Table" for defining the <code>Table</code>, and "ResourceFile" for reading the table from the file given by <code>FileName</code>.</p></dd>
 <dt>TranslationTable</dt>
-<dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as functions of the variable specified by the column bame, e.g. function(IndividualMaturity) IndividualMaturity %in% c("juvenile", "immature") in the first column, and function(IndividualTotalLength) IndividualTotalLength &gt; 10 in the conditional column IndividualTotalLength.</p></dd>
+<dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions or functions of the variable specified by the column name. See details.</p></dd>
 <dt>VariableName</dt>
 <dd><p>An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same <code><a href="Translation.html">Translation</a></code>, a column named "VariableName" must be inclcuded in <code>TranslationTable</code> (possibly read from the <code>FileName</code>) AND <code>VariableName</code> must be an empty string (blank field in the GUI).</p></dd>
 <dt>ValueColumn, NewValueColumn</dt>
@@ -94,6 +94,11 @@
     <div id="value">
     <h2>Value</h2>
     <p>A <code><a href="Translation.html">Translation</a></code> object.</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>The columns of the <code>TranslationnTable</code> (excecpt the NewValue column) can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "%in%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength &gt; 10". When the <code>TranslationnTable</code> is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength &gt; 10).</p>
+<p>E.g., to set all inidividuals with missing IndividualMaturity as "Adult" if longer than 10 cm, use "function(IndividualMaturity) is.na(IndividualMaturity)" in the first column named "IndividualMaturity", "Adult" in the "NewValue" column, and "function(IndividualTotalLength) IndividualTotalLength &gt; 10" in the third (conditional) column named "IndividualTotalLength".</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
