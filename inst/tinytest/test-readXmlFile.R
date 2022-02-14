@@ -32,16 +32,21 @@ utf8offensiveFiles <- system.file("testresources","utf8offensive", package="Rsto
 zipfile <- system.file("testresources","utf8offensive", "files.zip", package="RstoxData")
 paths <- unzip(zipfile, exdir = utf8offensiveFiles)
 filepaths <- list.files(utf8offensiveFiles, full.names = T)
+#
+# zipfile contains only two files. One zipped (within zip), one flat.
+# These are both the same data, hence the check on number of fishstations below.
+#
 for (f in filepaths){
   if (f != zipfile){
-    
     if (grepl(".zip", f)){
       contentStream <- RstoxData::readXmlFile(f, stream = T)
+      expect_equal(nrow(contentStream$fishstation), 2)
     }
     else{
       contentDom <- RstoxData::readXmlFile(f, stream = F)
       contentStream <- RstoxData::readXmlFile(f, stream = T)
-      expect_true(length(all.equal(contentStream, contentDom))<=2) 
+      expect_true(length(all.equal(contentStream, contentDom))<=1) 
+      expect_equal(nrow(contentStream$fishstation), 2)
     }
   }
 }

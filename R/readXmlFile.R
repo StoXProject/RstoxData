@@ -232,13 +232,15 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	}
 	
 	# Invoke C++ xml reading
-	xmlFilePath <- enc2native(xmlFilePath)
+	# convert path to native to ensure correct handling (typically on windows)
+	#
+	xmlFilePathNative <- enc2native(xmlFilePath)
 	if(stream) {
-		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
+		res <- readXmlCppStream(xmlFilePathNative, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
 	} else {
-		res <- readXmlCpp(xmlFilePath, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
+		res <- readXmlCpp(xmlFilePathNative, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
 	}
-	xmlFilePath <- enc2utf8(xmlFilePath)
+	
 
 	result <- res[["result"]]
 	xsd <- res[["xsd"]]
