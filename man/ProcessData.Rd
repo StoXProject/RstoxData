@@ -2,14 +2,12 @@
 % Please edit documentation in R/data.R
 \name{ProcessData}
 \alias{ProcessData}
-\title{Process data used in estimation models in StoX}
+\title{Process data used by RstoxData}
+\arguments{
+\item{Translation}{\code{\link{Translation}}.}
+}
 \description{
-The process data of the RstoxData package.
-}
-\details{
-\itemize{
-\item{\code{\link{Translation}}}
-}
+The process data of a StoX model are data that are saved to the project description (project.json file), which in the case of RstoxData is only the \code{\link{Translation}} data type.
 }
 \seealso{
 \code{\link{ModelData}} for model data types and \code{\link{DataTypes}} for all data types produced by \code{\link{RstoxData}}.

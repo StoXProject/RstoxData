@@ -93,6 +93,69 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "ConditionalVariableName", 
 			parameterValue = "ConditionalVariableName"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateBiotic", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateAcoustic", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateLanding", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateStoxBiotic", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateStoxAcoustic", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateStoxLanding", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateICESAcoustic", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateICESBiotic", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.9", 
+			functionName = "TranslateICESDatras", 
+			modelName = "baseline", 
+			parameterName = "TranslationDefinition", 
+			parameterValue = "FunctionInput"
 		)
 	), 
 	

@@ -4,12 +4,31 @@
 \alias{TranslateICESBiotic}
 \title{Translate ICESBioticData}
 \usage{
-TranslateICESBiotic(ICESBioticData, Translation, PreserveClass = TRUE)
+TranslateICESBiotic(
+  ICESBioticData,
+  TranslationDefinition = c("FunctionParameter", "FunctionInput"),
+  TranslationTable = data.table::data.table(),
+  VariableName = character(),
+  Conditional = FALSE,
+  ConditionalVariableNames = character(),
+  Translation,
+  PreserveClass = TRUE
+)
 }
 \arguments{
-\item{ICESBioticData}{An input of \link{ModelData} object}
+\item{ICESBioticData}{\code{\link{ICESBioticData}}.}
 
-\item{Translation}{The \code{\link{Translation}} process data.}
+\item{TranslationDefinition}{The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import Translation process data from a previously run process using the function \code{DefineTranslation}.}
+
+\item{TranslationTable}{A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions or functions of the variable specified by the column name. See details.}
+
+\item{VariableName}{An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same \code{\link{Translation}}, a column named "VariableName" must be inclcuded in \code{TranslationTable} (possibly read from the \code{FileName}) AND \code{VariableName} must be an empty string (blank field in the GUI).}
+
+\item{Conditional}{Logical: If TRUE the columns \code{ConditionalVariableNames} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableNames} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableNames} must exist in the same table as \code{VariableName}.}
+
+\item{ConditionalVariableNames}{Similar to \code{VariableName}, but naming the conditional variables.}
+
+\item{Translation}{\code{\link{Translation}}.}
 
 \item{PreserveClass}{Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (\code{PreserveClass} = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using \code{PreserveClass} = FALSE.}
 }
