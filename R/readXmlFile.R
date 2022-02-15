@@ -30,6 +30,10 @@
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
 
+  if (endsWith(xmlFilePath, ".zip") & !stream){
+    stop("Zip files can only be read in streaming mode")
+  }
+  
 	# To UTf-8
 	toUTF8 <- function(srcvec) {
 		Encoding(srcvec) <- "UTF-8"
@@ -228,11 +232,15 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	}
 	
 	# Invoke C++ xml reading
+	# convert path to native to ensure correct handling (typically on windows)
+	#
+	xmlFilePathNative <- enc2native(xmlFilePath)
 	if(stream) {
-		res <- readXmlCppStream(xmlFilePath, xsdObjects, useXsd, found[["encoding"]], verbose)
+		res <- readXmlCppStream(xmlFilePathNative, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
 	} else {
-		res <- readXmlCpp(xmlFilePath, xsdObjects, useXsd, found[["encoding"]], verbose)
+		res <- readXmlCpp(xmlFilePathNative, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
 	}
+	
 
 	result <- res[["result"]]
 	xsd <- res[["xsd"]]

@@ -622,9 +622,10 @@ std::string GetExt(const std::string& inputFileName)
 	return "";
 }
 
-
+// nativeIsUTF8 conveys whether the native encoding in R is UTF8.
+// it is lets us deal with cases when R native encoding is different from the system default (on windows)
 // [[Rcpp::export]]
-Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue, bool verbose = false)
+Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rcpp::Nullable<std::string> xsdOverride = R_NilValue, Rcpp::Nullable<std::string> xmlEncoding = R_NilValue, bool verbose = false, bool nativeIsUTF8 = false)
 {
 
 	std::string inputFileName(inputFile[0]);
@@ -663,7 +664,14 @@ Rcpp::List readXmlCppStream(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjec
 #else
 		std::wstring filePath;
 		filePath.resize(inputFileName.size());
-		int newSize = MultiByteToWideChar(CP_UTF8, 0, inputFileName.c_str(), inputFileName.length(), const_cast<wchar_t *>(filePath.c_str()), inputFileName.length());
+		int newSize;
+		if (nativeIsUTF8){
+		  newSize = MultiByteToWideChar(CP_UTF8, 0, inputFileName.c_str(), inputFileName.length(), const_cast<wchar_t *>(filePath.c_str()), inputFileName.length());
+		}
+		else{
+		  newSize = MultiByteToWideChar(CP_ACP, 0, inputFileName.c_str(), inputFileName.length(), const_cast<wchar_t *>(filePath.c_str()), inputFileName.length());
+		}
+		
 		filePath.resize(newSize);
 		istream = new XML::FileInputStream(filePath.c_str());
 #endif
