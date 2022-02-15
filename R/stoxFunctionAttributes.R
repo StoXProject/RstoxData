@@ -153,6 +153,55 @@ stoxFunctionAttributes <- list(
 		)
 	),
 	
+	
+	AddToStoxBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticData", 
+		functionParameterFormat = list(
+			VariableNames = "variableNames_AddToStoxBiotic"
+		)
+	), 
+	
+	CompensateEffectiveTowDistanceForFishingDepthCount = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticData"
+	),
+	
+	ICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESAcousticData"
+	), 
+	ICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBioticData"
+	), 
+	ICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData"
+	),
+	
+	WriteICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "report", 
+		functionOutputDataType = "WriteICESAcousticData"
+	), 
+	WriteICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "report", 
+		functionOutputDataType = "WriteICESBioticData"
+	), 
+	WriteICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "report", 
+		functionOutputDataType = "WriteICESDatrasData"
+	),
+	
+	# Translation:
 	DefineTranslation = list(
 		functionType = "processData", 
 		functionCategory = "baseline", 
@@ -210,158 +259,296 @@ stoxFunctionAttributes <- list(
 		)
 	),
 	
-	TranslateStoxBiotic = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticData"
-	),
-	
-	#ConvertStoxBiotic = list(
-	#	functionType = "modelData", 
-	#	functionCategory = "baseline", 
-	#	functionOutputDataType = "StoxBioticData",
-	#	functionParameterFormat = list(
-	#		#TargetVariable = "variable_StoxBioticData", 
-	#		GruopingVariables = "variables_StoxBioticData", 
-	#		Conversion = "conversionTable_StoxBioticData"
-	#	)
-	#),
-	
-	AddToStoxBiotic = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticData", 
-		functionParameterFormat = list(
-			VariableNames = "variableNames_AddToStoxBiotic"
-		)
-	), 
-	
-	CompensateEffectiveTowDistanceForFishingDepthCount = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "StoxBioticData"
-	),
-	
-	TranslateStoxAcoustic = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "StoxAcousticData"
-	),
-	
-	#ConvertStoxAcoustic = list(
-	#	functionType = "modelData", 
-	#	functionCategory = "baseline", 
-	#	functionOutputDataType = "StoxAcousticData",
-	#	functionParameterFormat = list(
-	#		#TargetVariable = "variable_StoxAcousticData", 
-	#		GruopingVariables = "variables_StoxAcousticData", 
-	#		Conversion = "conversionTable_StoxAcousticData"
-	#	)
-	#),
-	
-	
-	
+	# Translate raw data:
 	TranslateBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "BioticData"
+		functionOutputDataType = "BioticData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	),
-	
-	#ConvertBiotic = list(
-	#	functionType = "modelData", 
-	#	functionCategory = "baseline", 
-	#	functionOutputDataType = "BioticData",
-	#	functionParameterFormat = list(
-	#		#TargetVariable = "variable_BioticData", 
-	#		GruopingVariables = "variables_BioticData", 
-	#		Conversion = "conversionTable_BioticData"
-	#	)
-	#),
-	
 	
 	TranslateAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "AcousticData"
-	),
-	
-	#ConvertAcoustic = list(
-	#	functionType = "modelData", 
-	#	functionCategory = "baseline", 
-	#	functionOutputDataType = "AcousticData",
-	#	functionParameterFormat = list(
-	#		#TargetVariable = "variable_AcousticData", 
-	#		GruopingVariables = "variables_AcousticData", 
-	#		Conversion = "conversionTable_AcousticData"
-	#	)
-	#),
-	
-	TranslateStoxLanding = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "StoxLandingData"
+		functionOutputDataType = "AcousticData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter" 
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	),
 	
 	TranslateLanding = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "LandingData"
+		functionOutputDataType = "LandingData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter" 
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	),
 	
-	
-	
-	ICESAcoustic = list(
+	# Translate StoX data:
+	TranslateStoxBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESAcousticData"
-	), 
-	ICESBiotic = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "ICESBioticData"
-	), 
-	ICESDatras = list(
-		functionType = "modelData", 
-		functionCategory = "baseline", 
-		functionOutputDataType = "ICESDatrasData"
+		functionOutputDataType = "StoxBioticData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	),
 	
-	WriteICESAcoustic = list(
+	TranslateStoxAcoustic = list(
 		functionType = "modelData", 
-		functionCategory = "report", 
-		functionOutputDataType = "WriteICESAcousticData"
-	), 
-	WriteICESBiotic = list(
-		functionType = "modelData", 
-		functionCategory = "report", 
-		functionOutputDataType = "WriteICESBioticData"
-	), 
-	WriteICESDatras = list(
-		functionType = "modelData", 
-		functionCategory = "report", 
-		functionOutputDataType = "WriteICESDatrasData"
-	), 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxAcousticData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
+	),
 	
+	TranslateStoxLanding = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxLandingData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
+	),
 	
+	# Translate ICES data:
 	TranslateICESAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESAcousticData"
+		functionOutputDataType = "ICESAcousticData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	),
 	
 	TranslateICESBiotic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESBioticData"
+		functionOutputDataType = "ICESBioticData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	),
 	
 	TranslateICESDatras = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESDatrasData"
+		functionOutputDataType = "ICESDatrasData", 
+		functionParameterFormat = list(
+			TranslationTable = "translationTable", 
+			ConditionalVariableNames = "conditionalVariableNames"
+		), 
+		functionArgumentHierarchy = list(
+			Translation = list(
+				TranslationDefinition = "FunctionInput"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			TranslationTable = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			Conditional = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			VariableName = list(
+				TranslationDefinition = "FunctionParameter"
+			), 
+			# These two are joined with AND, and must both be fulfilled:
+			ConditionalVariableNames = list(
+				TranslationDefinition = "FunctionParameter",
+				Conditional = TRUE
+			)
+		)
 	)
-	
-	
 )
 
 
@@ -578,7 +765,8 @@ processPropertyFormats <- list(
 		title = "Translate columns of StoX data", 
 		columnNames = function(VariableName, Conditional, ConditionalVariableNames = NULL) {
 			if(!length(VariableName)) {
-				stop("VariableName must be set.")
+				warning("StoX: VariableName must be set to apply the TranslationTable in the StoX GUI.")
+				return(NULL)
 			}
 			columnNames <- c(
 				VariableName, 
@@ -587,7 +775,8 @@ processPropertyFormats <- list(
 			# Add a conditional variable:
 			if(Conditional) {
 				if(!length(ConditionalVariableNames)) {
-					stop("ConditionalVariableNames must be set when Conditional = TRUE.")
+					warning("StoX: ConditionalVariableNames must be set when Conditional = TRUE to apply the TranslationTable in the StoX GUI.")
+					return(NULL)
 				}
 				
 				columnNames <- c(
@@ -623,72 +812,6 @@ processPropertyFormats <- list(
 		variableTypes = "character"
 	), 
 	
-	
-	variable_StoxBioticData = list(
-		class = "single", 
-		title = "Select a StoxBioticData variable.", 
-		variableTypes = "character", 
-		possibleValues = function(StoxBioticData) {
-			sort(unique(unlist(lapply(StoxBioticData, names))))
-		}
-	), 
-	variable_StoxAcousticData = list(
-		class = "single", 
-		title = "Select a StoxAcousticData variable.", 
-		variableTypes = "character", 
-		possibleValues = function(StoxAcousticData) {
-			sort(unique(unlist(lapply(StoxAcousticData, names))))
-		}
-	), 
-	variable_BioticData = list(
-		class = "single", 
-		title = "Select a BioticData variable.", 
-		variableTypes = "character", 
-		possibleValues = function(BioticData) {
-			sort(unique(unlist(lapply(BioticData, names))))
-		}
-	), 
-	variable_AcousticData = list(
-		class = "single", 
-		title = "Select an AcousticData variable.", 
-		variableTypes = "character", 
-		possibleValues = function(AcousticData) {
-			sort(unique(unlist(lapply(AcousticData, names))))
-		}
-	), 
-	
-	variables_StoxBioticData = list(
-		class = "vector", 
-		title = "Select StoxBioticData variables.", 
-		variableTypes = "character", 
-		possibleValues = function(StoxBioticData) {
-			sort(unique(unlist(lapply(StoxBioticData, names))))
-		}
-	), 
-	variables_StoxAcousticData = list(
-		class = "vector", 
-		title = "Select StoxAcousticData variables.", 
-		variableTypes = "character", 
-		possibleValues = function(StoxAcousticData) {
-			sort(unique(unlist(lapply(StoxAcousticData, names))))
-		}
-	), 
-	variables_BioticData = list(
-		class = "vector", 
-		title = "Select BioticData variables.", 
-		variableTypes = "character", 
-		possibleValues = function(BioticData) {
-			sort(unique(unlist(lapply(BioticData, names))))
-		}
-	), 
-	variables_AcousticData = list(
-		class = "vector", 
-		title = "Select AcousticData variables.", 
-		variableTypes = "character", 
-		possibleValues = function(AcousticData) {
-			sort(unique(unlist(lapply(AcousticData, names))))
-		}
-	), 
 	
 	#conversionTable_StoxBioticData = getConversionTableFormat("StoxBiotic"),
 	#

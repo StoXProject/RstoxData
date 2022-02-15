@@ -58,13 +58,17 @@ RedefineStoxBiotic <- function(
 #' 
 #' @inheritParams general_arguments
 #' @param DefinitionMethod  Character: A string naming the method to use, one of "Table" for defining the \code{Table}, and "ResourceFile" for reading the table from the file given by \code{FileName}.
-#' @param TranslationTable A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as functions of the variable specified by the column bame, e.g. function(IndividualMaturity) IndividualMaturity \%in\% c("juvenile", "immature") in the first column, and function(IndividualTotalLength) IndividualTotalLength > 10 in the conditional column IndividualTotalLength.
+#' @param TranslationTable A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions or functions of the variable specified by the column name. See details. 
 #' @param VariableName An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same \code{\link{Translation}}, a column named "VariableName" must be inclcuded in \code{TranslationTable} (possibly read from the \code{FileName}) AND \code{VariableName} must be an empty string (blank field in the GUI).
 #' @param ValueColumn,NewValueColumn The name of the columns of \code{TranslationTable} representing the current values and the values to translate to, respectively.
 #' @param Conditional Logical: If TRUE the columns \code{ConditionalVariableNames} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableNames} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableNames} must exist in the same table as \code{VariableName}. 
 #' @param ConditionalVariableNames Similar to \code{VariableName}, but naming the conditional variables.
 #' @param ConditionalValueColumns The name of the columns of \code{TranslationTable} representing the conditional values.
 #' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}, and possibly the two listed for \code{Conditional}.
+#' 
+#' @details The columns of the \code{TranslationnTable} (excecpt the NewValue column) can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "\%in\%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength > 10". When the \code{TranslationnTable} is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength > 10). 
+#' 
+#' E.g., to set all inidividuals with missing IndividualMaturity as "Adult" if longer than 10 cm, use "function(IndividualMaturity) is.na(IndividualMaturity)" in the first column named "IndividualMaturity", "Adult" in the "NewValue" column, and "function(IndividualTotalLength) IndividualTotalLength > 10" in the third (conditional) column named "IndividualTotalLength".
 #' 
 #' @return
 #' A \code{\link{Translation}} object.
@@ -132,6 +136,9 @@ DefineTranslation <- function(
 	}
 	
 	Translation <- Translation[, ..relevantColumns]
+	
+	# Sanitize the table:
+	sanitizeExpression(Translation)
 	
 	return(Translation)
 }
@@ -213,8 +220,30 @@ oldToNewTranslationOne <- function(x) {
 
 
 # Function to convert variables given a conversion table:
-translateVariables <- function(data, Translation, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
+translateVariables <- function(
+	data, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	Translation, 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	translate.keys = FALSE, 
+	PreserveClass = TRUE, 
+	warnMissingTranslation = FALSE
+) {
 	
+	# Get the Translation:
+	TranslationDefinition <- match.arg(TranslationDefinition)
+	if(TranslationDefinition == "FunctionParameter") {
+		Translation <- TranslationTable
+		# Sanitize the table:
+		sanitizeExpression(Translation)
+	}
+	
+	if(!nrow(Translation)) {
+		return(NULL)
+	}
 	# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
 	translationList <- split(Translation, seq_len(nrow(Translation)))
 	
@@ -424,7 +453,13 @@ mathcVariable <- function(variableName, translationList, table) {
 	}
 	# Otherwise check whether the table column is in the evaluated string:
 	else {
-		table[[variableName]] %in% eval(parse(text = deparse(translationList[[variableName]])))
+		vector <- eval(parse(text = deparse(translationList[[variableName]])))
+		if(!is.list(vector)  &&  is.vector(vector)  &&  length(dim(vector)) < 2) {
+			table[[variableName]] %in% vector
+		}
+		else {
+			stop("Expressions given in the TranslationTable can either be functions given as strings, og expressions which when evaluated result in a one dimensional non-list vectors.")
+		}
 	}
 }
 
@@ -510,8 +545,10 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' 
 #' This function translates one or more columns of \code{\link{StoxBioticData}} to new values given by the input \code{Translation}.
 #' 
-#' @param StoxBioticData An input of \link{ModelData} object
-#' @param Translation The \code{\link{Translation}} process data.
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
+#' @param TranslationDefinition The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import Translation process data from a previously run process using the function \code{DefineTranslation}.
 #' @param PreserveClass Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (\code{PreserveClass} = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using \code{PreserveClass} = FALSE.
 #' 
 #' @return
@@ -521,6 +558,11 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' 
 TranslateStoxBiotic <- function(
 	StoxBioticData, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
 	Translation,  
 	PreserveClass = TRUE
 ) {
@@ -531,7 +573,12 @@ TranslateStoxBiotic <- function(
 	# Translate StoxBioticData:
 	translateVariables(
 		data = StoxBioticDataCopy, 
-		Translation = Translation,
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -540,85 +587,14 @@ TranslateStoxBiotic <- function(
 
 
 ##################################################
-#' Convert StoxBioticData
-#' 
-#' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @param StoxBioticData An input of \link{ModelData} object
-#' @param TargetVariable The variable to modify.
-#' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
-#' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
-#' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{StoxBioticData}} object.
-#' 
-#' @export
-#' 
-ConvertStoxBiotic <- function(
-	StoxBioticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	
-	# Convert StoxBioticData:
-	ConvertData(
-		StoxData = StoxBioticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-ConvertStoxBioticOld <- function(
-	StoxBioticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert StoxBioticData:
-	ConvertData(
-		StoxData = StoxBioticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertStoxBioticFree <- function(
-	StoxBioticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert StoxBioticData:
-	ConvertData(
-		StoxData = StoxBioticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-
-##################################################
 #' Translate StoxAcousticData
 #' 
 #' This function translates one or more columns of \code{\link{StoxAcousticData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param StoxAcousticData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{StoxAcousticData}} object.
@@ -627,7 +603,12 @@ ConvertStoxBioticFree <- function(
 #' 
 TranslateStoxAcoustic <- function(
 	StoxAcousticData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -635,6 +616,11 @@ TranslateStoxAcoustic <- function(
 	
 	translateVariables(
 		data = StoxAcousticDataCopy, 
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
@@ -644,81 +630,14 @@ TranslateStoxAcoustic <- function(
 
 
 ##################################################
-#' Convert StoxAcousticData
-#' 
-#' This function converts one or more columns of \code{\link{StoxAcousticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @inheritParams ConvertStoxBiotic
-#' @param StoxAcousticData An input of \link{ModelData} object
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{StoxAcousticData}} object.
-#' 
-#' @export
-#' 
-ConvertStoxAcoustic <- function(
-	StoxAcousticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert StoxAcousticData:
-	ConvertData(
-		StoxData = StoxAcousticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertStoxAcousticOld <- function(
-	StoxAcousticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert StoxAcousticData:
-	ConvertData(
-		StoxData = StoxAcousticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-
-ConvertStoxAcousticFree <- function(
-	StoxAcousticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert StoxAcousticData:
-	ConvertData(
-		StoxData = StoxAcousticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-##################################################
 #' Translate BioticData
 #' 
 #' This function translates one or more columns of \code{\link{BioticData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param BioticData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{BioticData}} object.
@@ -727,7 +646,12 @@ ConvertStoxAcousticFree <- function(
 #' 
 TranslateBiotic <- function(
 	BioticData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -735,7 +659,12 @@ TranslateBiotic <- function(
 	
 	translateVariables(
 		data = BioticDataCopy, 
-		Translation = Translation, 
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -744,79 +673,14 @@ TranslateBiotic <- function(
 
 
 ##################################################
-#' Convert BioticData
-#' 
-#' This function converts one or more columns of \code{\link{BioticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @inheritParams ConvertStoxBiotic
-#' @param BioticData An input of \link{ModelData} object
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{BioticData}} object.
-#' 
-#' @export
-#' 
-ConvertBiotic <- function(
-	BioticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert BioticData:
-	ConvertData(
-		StoxData = BioticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertBioticOld <- function(
-	BioticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert BioticData:
-	ConvertData(
-		StoxData = BioticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertBioticFree <- function(
-	BioticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert BioticData:
-	ConvertData(
-		StoxData = BioticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-##################################################
 #' Translate AcousticData
 #' 
 #' This function translates one or more columns of \code{\link{AcousticData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param AcousticData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{AcousticData}} object.
@@ -825,7 +689,12 @@ ConvertBioticFree <- function(
 #' 
 TranslateAcoustic <- function(
 	AcousticData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -833,7 +702,12 @@ TranslateAcoustic <- function(
 	
 	translateVariables(
 		data = AcousticDataCopy, 
-		Translation = Translation, 
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -842,78 +716,14 @@ TranslateAcoustic <- function(
 
 
 ##################################################
-#' Convert AcousticData
-#' 
-#' This function converts one or more columns of \code{\link{AcousticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @inheritParams ConvertStoxBiotic
-#' @param AcousticData An input of \link{ModelData} object
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{AcousticData}} object.
-#' 
-#' @export
-#' 
-ConvertAcoustic <- function(
-	AcousticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(), 
-	Conversion = data.table::data.table()
-) {
-	# Convert AcousticData:
-	ConvertData(
-		StoxData = AcousticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-ConvertAcousticOld <- function(
-	AcousticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert AcousticData:
-	ConvertData(
-		StoxData = AcousticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-ConvertAcousticFree <- function(
-	AcousticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert AcousticData:
-	ConvertData(
-		StoxData = AcousticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-
-##################################################
 #' Translate StoxLandingData
 #' 
 #' This function translates one or more columns of \code{\link{StoxLandingData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param StoxLandingData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{StoxLandingData}} object.
@@ -922,7 +732,12 @@ ConvertAcousticFree <- function(
 #' 
 TranslateStoxLanding <- function(
 	StoxLandingData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -930,7 +745,12 @@ TranslateStoxLanding <- function(
 	
 	translateVariables(
 		data = StoxLandingDataCopy, 
-		Translation = Translation, 
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -943,8 +763,10 @@ TranslateStoxLanding <- function(
 #' 
 #' This function translates one or more columns of \code{\link{LandingData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param LandingData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{LandingData}} object.
@@ -953,7 +775,12 @@ TranslateStoxLanding <- function(
 #' 
 TranslateLanding <- function(
 	LandingData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -961,7 +788,12 @@ TranslateLanding <- function(
 	
 	translateVariables(
 		data = LandingDataCopy, 
-		Translation = Translation, 
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -978,8 +810,10 @@ TranslateLanding <- function(
 #' 
 #' This function translates one or more columns of \code{\link{ICESBioticData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param ICESBioticData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{ICESBioticData}} object.
@@ -988,7 +822,12 @@ TranslateLanding <- function(
 #' 
 TranslateICESBiotic <- function(
 	ICESBioticData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -996,7 +835,12 @@ TranslateICESBiotic <- function(
 	
 	translateVariables(
 		data = ICESBioticDataCopy, 
-		Translation = Translation, 
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -1009,8 +853,10 @@ TranslateICESBiotic <- function(
 #' 
 #' This function translates one or more columns of \code{\link{ICESAcousticData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param ICESAcousticData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{ICESAcousticData}} object.
@@ -1019,7 +865,12 @@ TranslateICESBiotic <- function(
 #' 
 TranslateICESAcoustic <- function(
 	ICESAcousticData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -1027,7 +878,12 @@ TranslateICESAcoustic <- function(
 	
 	translateVariables(
 		data = ICESAcousticDataCopy, 
-		Translation = Translation,
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -1040,8 +896,10 @@ TranslateICESAcoustic <- function(
 #' 
 #' This function translates one or more columns of \code{\link{ICESDatrasData}} to new values given by the input \code{Translation}.
 #' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
 #' @inheritParams TranslateStoxBiotic
-#' @param ICESDatrasData An input of \link{ModelData} object
 #' 
 #' @return
 #' A \code{\link{ICESDatrasData}} object.
@@ -1050,7 +908,12 @@ TranslateICESAcoustic <- function(
 #' 
 TranslateICESDatras <- function(
 	ICESDatrasData, 
-	Translation, 
+	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+	TranslationTable = data.table::data.table(), 
+	VariableName = character(),
+	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	ConditionalVariableNames = character(),
+	Translation,  
 	PreserveClass = TRUE
 ) {
 	# Make a copy, as we are translating by reference:
@@ -1058,7 +921,12 @@ TranslateICESDatras <- function(
 	
 	translateVariables(
 		data = ICESDatrasDataCopy, 
-		Translation = Translation,
+		TranslationDefinition = TranslationDefinition, 
+		TranslationTable = TranslationTable, 
+		VariableName = VariableName,
+		Conditional = Conditional,
+		ConditionalVariableNames = ConditionalVariableNames,
+		Translation = Translation,  
 		PreserveClass = PreserveClass
 	)
 	
@@ -1396,3 +1264,278 @@ getUniqueTargetAndSource <- function(data) {
 	
 	return(output)
 }
+
+
+
+##################################################
+#' Convert StoxBioticData
+#' 
+#' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @param StoxBioticData An input of \link{ModelData} object
+#' @param TargetVariable The variable to modify.
+#' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
+#' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
+#' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{StoxBioticData}} object.
+#' 
+#' @export
+#' 
+ConvertStoxBiotic <- function(
+	StoxBioticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	
+	# Convert StoxBioticData:
+	ConvertData(
+		StoxData = StoxBioticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+ConvertStoxBioticOld <- function(
+	StoxBioticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert StoxBioticData:
+	ConvertData(
+		StoxData = StoxBioticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertStoxBioticFree <- function(
+	StoxBioticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert StoxBioticData:
+	ConvertData(
+		StoxData = StoxBioticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+##################################################
+#' Convert StoxAcousticData
+#' 
+#' This function converts one or more columns of \code{\link{StoxAcousticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @inheritParams ConvertStoxBiotic
+#' @param StoxAcousticData An input of \link{ModelData} object
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{StoxAcousticData}} object.
+#' 
+#' @export
+#' 
+ConvertStoxAcoustic <- function(
+	StoxAcousticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert StoxAcousticData:
+	ConvertData(
+		StoxData = StoxAcousticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertStoxAcousticOld <- function(
+	StoxAcousticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert StoxAcousticData:
+	ConvertData(
+		StoxData = StoxAcousticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+
+ConvertStoxAcousticFree <- function(
+	StoxAcousticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert StoxAcousticData:
+	ConvertData(
+		StoxData = StoxAcousticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+##################################################
+#' Convert BioticData
+#' 
+#' This function converts one or more columns of \code{\link{BioticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @inheritParams ConvertStoxBiotic
+#' @param BioticData An input of \link{ModelData} object
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{BioticData}} object.
+#' 
+#' @export
+#' 
+ConvertBiotic <- function(
+	BioticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert BioticData:
+	ConvertData(
+		StoxData = BioticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertBioticOld <- function(
+	BioticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert BioticData:
+	ConvertData(
+		StoxData = BioticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+
+ConvertBioticFree <- function(
+	BioticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert BioticData:
+	ConvertData(
+		StoxData = BioticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+##################################################
+#' Convert AcousticData
+#' 
+#' This function converts one or more columns of \code{\link{AcousticData}} by the function given by \code{ConversionFunction}.
+#' 
+#' @inheritParams ConvertStoxBiotic
+#' @param AcousticData An input of \link{ModelData} object
+#' 
+#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
+#' 
+#' @return
+#' A \code{\link{AcousticData}} object.
+#' 
+#' @export
+#' 
+ConvertAcoustic <- function(
+	AcousticData, 
+	TargetVariable = character(), 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(), 
+	Conversion = data.table::data.table()
+) {
+	# Convert AcousticData:
+	ConvertData(
+		StoxData = AcousticData, 
+		TargetVariable = TargetVariable, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+ConvertAcousticOld <- function(
+	AcousticData, 
+	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
+	GruopingVariables = character(),  
+	Conversion = data.table::data.table()
+) {
+	# Convert AcousticData:
+	ConvertData(
+		StoxData = AcousticData, 
+		ConversionFunction = ConversionFunction,
+		GruopingVariables = GruopingVariables,
+		Conversion = Conversion
+	)
+}
+
+
+ConvertAcousticFree <- function(
+	AcousticData, 
+	TargetVariable = character(),  
+	Conversion = character()
+) {
+	# Convert AcousticData:
+	ConvertData(
+		StoxData = AcousticData, 
+		TargetVariable = TargetVariable,
+		Conversion = Conversion
+	)
+}
+
+
+
+
+

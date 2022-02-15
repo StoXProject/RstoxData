@@ -40,15 +40,15 @@ exampleDir <- system.file("testresources","", package="RstoxData")
 
 for(item in icesFiles) {
 	#context(paste("test-StoxBiotic: ICES biotic data", item, "to StoxBiotic: DOM"))
-        icesDataA <- RstoxData:::StoxBiotic(list(RstoxData:::readXmlFile(paste0(exampleDir, "/", item), stream = F)))
+    icesDataA <- RstoxData:::StoxBiotic(list(RstoxData:::readXmlFile(paste0(exampleDir, "/", item), stream = F)))
 	expect_equal(nrow(icesDataA$Individual), 4)
 
 	#context(paste("test-StoxBiotic: ICES biotic data", item, "to StoxBiotic: Stream"))
-        icesDataB <- RstoxData:::StoxBiotic(list(RstoxData:::readXmlFile(paste0(exampleDir, "/", item), stream = T)))
+    icesDataB <- RstoxData:::StoxBiotic(list(RstoxData:::readXmlFile(paste0(exampleDir, "/", item), stream = T)))
 	expect_equal(nrow(icesDataB$Individual), 4)
 
 	#context(paste("test-StoxBiotic: ICES biotic data", item, "to StoxBiotic DOM == stream"))
-        expect_true(all.equal(icesDataA, icesDataB))
+    expect_true(all.equal(icesDataA, icesDataB))
 }
 
 ## ICES Biotic (missing individual)

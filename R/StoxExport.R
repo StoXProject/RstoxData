@@ -70,6 +70,7 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 		
 		translateVariables(
 			data = ICESAcousticDataOne[tablesToKeep], 
+			TranslationDefinition = "FunctionInput",
 			Translation = vocabulary, 
 			translate.keys = TRUE, 
 			warnMissingTranslation = FALSE
@@ -378,6 +379,7 @@ BioticData_ICESToICESBioticOne <- function(BioticData_ICESOne) {
 		
 		translateVariables(
 			data = BioticDataOne[tablesToTranslate], 
+			TranslationDefinition = "FunctionInput",
 			Translation = vocabulary, 
 			translate.keys = TRUE, 
 			warnMissingTranslation = FALSE

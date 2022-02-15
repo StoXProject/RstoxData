@@ -130,6 +130,7 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     		
     		translateVariables(
     			data = data[tablesToTranslate], 
+    			TranslationDefinition = "FunctionInput",
     			Translation = vocabulary, 
     			translate.keys = TRUE
     		)

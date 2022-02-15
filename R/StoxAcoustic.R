@@ -587,6 +587,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		translateVariables(
 			data = data_list[tablesToReturn], 
+			TranslationDefinition = "FunctionInput",
 			Translation = vocabulary, 
 			translate.keys = TRUE
 		)

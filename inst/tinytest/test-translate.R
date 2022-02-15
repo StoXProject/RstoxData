@@ -12,7 +12,7 @@ Translation_SpeciesCategory <- RstoxData::DefineTranslation(
 	TranslationTable = TranslationTable_SpeciesCategory, 
 	VariableName = "SpeciesCategory"
 )
-exampleDataTranslated_SpeciesCategory <- RstoxData::TranslateStoxBiotic(StoxBioticData = exampleData, Translation = Translation_SpeciesCategory)
+exampleDataTranslated_SpeciesCategory <- RstoxData::TranslateStoxBiotic(StoxBioticData = exampleData, TranslationDefinition = "FunctionInput", Translation = Translation_SpeciesCategory)
 
 expect_equal(which(exampleDataTranslated_SpeciesCategory$SpeciesCategory$SpeciesCategory == "HER"), c(1, 11))
 
@@ -29,6 +29,6 @@ Translation_IndividualSex <- RstoxData::DefineTranslation(
 	Conditional = TRUE, 
 	ConditionalVariableNames = "IndividualTotalLength"
 )
-exampleDataTranslated_IndividualSex <- RstoxData::TranslateStoxBiotic(StoxBioticData = exampleData, Translation = Translation_IndividualSex)
+exampleDataTranslated_IndividualSex <- RstoxData::TranslateStoxBiotic(StoxBioticData = exampleData, TranslationDefinition = "FunctionInput",  Translation = Translation_IndividualSex)
 
 expect_equal(sum(exampleDataTranslated_IndividualSex$Individual$IndividualSex == "M", na.rm = TRUE), 135)
