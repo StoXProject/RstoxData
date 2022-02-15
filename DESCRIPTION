@@ -3,10 +3,6 @@ Version: 1.5.9
 Date: 2022-02-14
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
-  person(given = "Edvin", 
-    family = "Fuglebakk", 
-    role = c("cre", "aut"), 
-    email = "edvin.fuglebakk@hi.no"), 
   person(given = "Ibrahim", 
     family = "Umar", 
     role = "aut"), 
@@ -16,6 +12,10 @@ Authors@R: c(
   person(given = "Arne Johannes", 
     family = "Holmin", 
     role = "aut"), 
+  person(given = "Edvin", 
+    family = "Fuglebakk", 
+    role = c("cre", "aut"), 
+    email = "edvin.fuglebakk@hi.no"), 
   person(given = "Espen", 
     family = "Johnsen", 
     role = "aut"), 
