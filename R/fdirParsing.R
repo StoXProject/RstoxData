@@ -454,12 +454,19 @@ convertToLandingData <- function(lssLandings){
   ConvertedData <- list()
   # divide into different tables
   for (n in names(xsdObject$tableHeaders)){
-    if (length(xsdObject$tableHeaders)>0){
+    if (length(xsdObject$tableHeaders[[n]])>0){
       ConvertedData[[n]] <- lssLandings[,.SD, .SDcols=xsdObject$tableHeaders[[n]]]
     }
     else{
       ConvertedData[[n]] <- data.table::data.table()
     }
+  }
+  
+  # Deal with duplicated column the same way as readXmlFile
+  if (any(duplicated(names(ConvertedData[["Fart\u00F8y"]])))){
+    tabnames <- names(ConvertedData[["Fart\u00F8y"]])
+    tabnames[duplicated(tabnames)] <- paste(tabnames[duplicated(tabnames)], "Fart\u00F8y", sep=".")
+    names(ConvertedData[["Fart\u00F8y"]]) <- tabnames
   }
   
   # set data types as in xsdObj
