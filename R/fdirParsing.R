@@ -477,7 +477,7 @@ convertToLandingData <- function(lssLandings){
         t <- xsdObject$tableTypes[[n]][i]
         if (t == "xs:string"){
           if (class(ConvertedData[[n]][[i]])!="character"){
-            browser()
+            stop("Handle type for ", names(ConvertedData[[n]])[i])
           }
           stopifnot(class(ConvertedData[[n]][[i]])=="character")
         }
@@ -485,7 +485,7 @@ convertToLandingData <- function(lssLandings){
           ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
         }
         else if (t == "xs:integer"){
-          ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
+          ConvertedData[[n]][[i]] <- as.integer(ConvertedData[[n]][[i]])
         }
         else if (t == "xs:long"){
           ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
