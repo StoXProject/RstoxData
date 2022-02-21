@@ -166,7 +166,7 @@ readLssFile <- function(file, encoding="Latin-1", guessMax = 100000, strict=T){
   names(spec_land)[99] <- "St\u00F8rrelsesgruppering (kode)"
   
   sel <- names(spec_land)
-  typ <- unlist(spec_land)
+  typ <- unlist(spec_land, use.names = F)
   
   if (strict){
     headers <- names(data.table::fread(file, sep="|", colClasses = c("character"), header = T, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), nrows = 1, encoding = encoding, showProgress=F))
@@ -477,7 +477,7 @@ convertToLandingData <- function(lssLandings){
         t <- xsdObject$tableTypes[[n]][i]
         if (t == "xs:string"){
           if (class(ConvertedData[[n]][[i]])!="character"){
-            stop("Handle type for ", names(ConvertedData[[n]])[i])
+            stop("Handle type for ", names(ConvertedData[[n]])[i], " (", class(ConvertedData[[n]][[i]]), ")")
           }
           stopifnot(class(ConvertedData[[n]][[i]])=="character")
         }
