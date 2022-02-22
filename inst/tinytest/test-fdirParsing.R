@@ -27,8 +27,11 @@ expect_equal(check_tzones(wh$`Siste fangstdato`), "CET")
 
 #context("Test convertLandings")
 landings <- RstoxData:::convertToLandingData(data)
+expect_true(all(landings$ConvertedData[["Fart\u00F8y"]][["Fart\u00F8ynasjonalitet_kode.Fart\u00F8y"]] == landings$ConvertedData[["Fart\u00F8y"]][["Fart\u00F8ynasjonalitet_kode"]]))
 expect_true(RstoxData::is.LandingData(landings))
 expect_equal(sum(landings$ConvertedData$Produkt$Rundvekt), sum(data$Rundvekt))
+sl <- StoxLanding(landings)
+expect_true(RstoxData::is.StoxLandingData(sl))
 
 #context("Test convertToLssData")
 lss <- RstoxData:::convertToLssData(landings)

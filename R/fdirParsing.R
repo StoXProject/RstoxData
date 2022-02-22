@@ -166,7 +166,7 @@ readLssFile <- function(file, encoding="Latin-1", guessMax = 100000, strict=T){
   names(spec_land)[99] <- "St\u00F8rrelsesgruppering (kode)"
   
   sel <- names(spec_land)
-  typ <- unlist(spec_land)
+  typ <- unlist(spec_land, use.names = F)
   
   if (strict){
     headers <- names(data.table::fread(file, sep="|", colClasses = c("character"), header = T, dec=",", strip.white=TRUE, na.strings=c("", "na", "NA"), nrows = 1, encoding = encoding, showProgress=F))
@@ -454,12 +454,19 @@ convertToLandingData <- function(lssLandings){
   ConvertedData <- list()
   # divide into different tables
   for (n in names(xsdObject$tableHeaders)){
-    if (length(xsdObject$tableHeaders)>0){
+    if (length(xsdObject$tableHeaders[[n]])>0){
       ConvertedData[[n]] <- lssLandings[,.SD, .SDcols=xsdObject$tableHeaders[[n]]]
     }
     else{
       ConvertedData[[n]] <- data.table::data.table()
     }
+  }
+  
+  # Deal with duplicated column the same way as readXmlFile
+  if (any(duplicated(names(ConvertedData[["Fart\u00F8y"]])))){
+    tabnames <- names(ConvertedData[["Fart\u00F8y"]])
+    tabnames[duplicated(tabnames)] <- paste(tabnames[duplicated(tabnames)], "Fart\u00F8y", sep=".")
+    names(ConvertedData[["Fart\u00F8y"]]) <- tabnames
   }
   
   # set data types as in xsdObj
@@ -470,7 +477,7 @@ convertToLandingData <- function(lssLandings){
         t <- xsdObject$tableTypes[[n]][i]
         if (t == "xs:string"){
           if (class(ConvertedData[[n]][[i]])!="character"){
-            browser()
+            stop("Handle type for ", names(ConvertedData[[n]])[i], " (", class(ConvertedData[[n]][[i]]), ")")
           }
           stopifnot(class(ConvertedData[[n]][[i]])=="character")
         }
@@ -478,7 +485,7 @@ convertToLandingData <- function(lssLandings){
           ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
         }
         else if (t == "xs:integer"){
-          ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
+          ConvertedData[[n]][[i]] <- as.integer(ConvertedData[[n]][[i]])
         }
         else if (t == "xs:long"){
           ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
