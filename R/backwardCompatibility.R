@@ -60,6 +60,13 @@ backwardCompatibility <- list(
 	
 	addParameter = list(
 		list(
+			changeVersion = "1.1.5", 
+			functionName = "DefineTranslation", 
+			modelName = "baseline", 
+			parameterName = "Conditional", 
+			parameterValue = FALSE
+		), 
+		list(
 			changeVersion = "1.2.11", 
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
@@ -328,7 +335,7 @@ backwardCompatibility <- list(
 				"ConditionalVariableName"
 			), # Empty value was allowed in 3.3.0, implying that ConditionalVariableNames was given in the file to read, but will no longer be allowed.
 			newValue = function(projectDescriptionOne) {
-				if(projectDescriptionOne$functionParameters$Conditional) {
+				if(isTRUE(projectDescriptionOne$functionParameters$Conditional)) {
 					# Has not yet been renamed from ConditionalVariableName to ConditionalVariableNames as per the order defiend in RstoxFramework::getRstoxFrameworkDefinitions("backwardCompatibilityActionNames"):
 					projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableName
 				}

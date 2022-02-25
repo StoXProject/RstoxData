@@ -636,15 +636,6 @@ translateSimple <- function(x, old, new) {
 	return(x)
 }
 
-# Copy of the function in RstoxFramework. Move this to RstoxData?:
-firstClass <- function(x) {
-	out <- class(x)[1]
-	if(out == "double") {
-		out <- "numeric"
-	}
-	return(out)
-}
-
 
 changeClassOfNonNA <- function(name, classes, data) {
 	if(name %in% names(data) && name %in% names(classes) && firstClass(data[[name]]) != classes[[name]]) {

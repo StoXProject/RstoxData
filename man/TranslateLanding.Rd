@@ -18,7 +18,7 @@ TranslateLanding(
 \arguments{
 \item{LandingData}{\code{\link{LandingData}}.}
 
-\item{TranslationDefinition}{The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import Translation process data from a previously run process using the function \code{DefineTranslation}.}
+\item{TranslationDefinition}{The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import \code{\link{Translation}} process data from a previously run process using the function \code{\link{DefineTranslation}}. When reading the translation from a file \code{FunctionInput} must be used.}
 
 \item{TranslationTable}{A table of the variable to translate in the first column; the column \code{NewValue} giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions or functions of the variable specified by the column name. See details.}
 
