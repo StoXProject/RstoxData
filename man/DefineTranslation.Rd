@@ -37,7 +37,7 @@ DefineTranslation(
 
 \item{ConditionalValueColumns}{The name of the columns of \code{TranslationTable} representing the conditional values.}
 
-\item{FileName}{The csv file holding a table with the three variables listed for \code{TranslationTable}, and possibly the two listed for \code{Conditional}.}
+\item{FileName}{The csv file holding a table with the \code{TranslationTable}. Required columns are given by \code{ValueColumn} and \code{NewValueColumn}, and, in the case that Conditional == TRUE, \code{ConditionalValueColumns}.}
 }
 \value{
 A \code{\link{Translation}} object.

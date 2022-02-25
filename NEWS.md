@@ -1,3 +1,8 @@
+# RstoxData v1.5.10  (2022-02-25)
+* Relaxed the warning for translation columns not present in the data to accept if all are not present (unaffected table).
+* Moved application of setRstoxPrecisionLevel() from each StoX function to RstoxFramework::runProcess().
+* Added SpatialPolygonsDataFrame and matrix to setRstoxPrecisionLevel().
+
 # RstoxData v1.5.9 (2022-02-14)
 * Added the parameters TranslationDefinition, TranslationTable, VariableName, Conditional and ConditionalVariableNames to all Translate functions, specifically TranslateAcoustic(), TranslateBiotic(), TranslateICESAcoustic(), TranslateICESBiotic(), TranslateICESDatras(), TranslateLanding(), TranslateStoxAcoustic(), TranslateStoxBiotic() and TranslateStoxLanding(). This allows for specifying the Translation as a table in the Translate function, without the need for DefineTranslation(). DefineTranslation() can still be used, and must be used if reading the Translation from a file.
 * Added sanitizer for DefineTranlation(), as the Translation process data is evaluated in Translate functions.

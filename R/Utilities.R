@@ -341,19 +341,27 @@ setRstoxPrecisionLevel <- function(x) {
 	digits <- getRstoxDataDefinitions("digits")
 	signifDigits <- getRstoxDataDefinitions("signifDigits")
 	
-	# If a data.table run setPrecisionLevelOneDT() directly:
+	# If a data.table run roundSignifDT() directly:
 	if(data.table::is.data.table(x)) {
-		setPrecisionLevelOneDT(x, digits = digits, signifDigits = signifDigits)
+		roundSignifDT(x, digits = digits, signifDigits = signifDigits)
+	}
+	else if(firstClass(x) == "SpatialPolygonsDataFrame") {
+		
 	}
 	# If a list of data tables, loop through the list and set precision:
 	else if(is.list(x)) {
 		for(tableName in names(x)) {
-			setPrecisionLevelOneDT(x[[tableName]], digits = digits, signifDigits = signifDigits)
+			if(data.table::is.data.table(x[[tableName]])) {
+				roundSignifDT(x[[tableName]], digits = digits, signifDigits = signifDigits)
+			}
+			else if(firstClass(x[[tableName]]) == "SpatialPolygonsDataFrame") {
+				roundSignifSPDF(x[[tableName]], digits = digits, signifDigits = signifDigits)
+			}
 		}
 	}
 }
 # Function setting the precision of one data table:
-setPrecisionLevelOneDT <- function(DT, digits, signifDigits) {
+roundSignifDT <- function(DT, digits, signifDigits) {
 	if(NROW(DT)) {
 		# Detect numeric columns and round off to the specified number of digits:
 		atNumeric <- sapply(DT, is.numeric)
@@ -368,6 +376,31 @@ setPrecisionLevelOneDT <- function(DT, digits, signifDigits) {
 	}
 }
 
+# Function setting the precision of one data table:
+roundSignifSPDF <- function(SPDF, digits, signifDigits) {
+	if(length(SPDF)) {
+		# Detect numeric columns and round off to the specified number of digits:
+		numberOfMultiPolygons <- length(SPDF)
+		for(multiPolygonIndex in seq_len((numberOfMultiPolygons))) {
+			numberOfPolygons <- length(SPDF@polygons[[multiPolygonIndex]]@Polygons)
+			for(polygonIndex in seq_len((numberOfPolygons))) {
+				SPDF@polygons[[multiPolygonIndex]]@Polygons[[polygonIndex]]@coords <- roundSignifMatrix(SPDF@polygons[[multiPolygonIndex]]@Polygons[[polygonIndex]]@coords, digits = digits, signifDigits = signifDigits)
+			
+			}
+		}
+	}
+}
+
+roundSignifMatrix <- function(x, digits = 12, signifDigits = NULL) {
+	if(length(x)) {
+		for(columnIndex in seq_len(ncol(x))) {
+			x[, columnIndex] <- roundSignif(x[, columnIndex], digits = digits, signifDigits = signifDigits)
+		}
+	}
+	
+	return(x)
+}
+
 
 roundSignif <- function(x, digits = 12, signifDigits = NULL) {
 	if(length(signifDigits)) {
@@ -379,6 +412,21 @@ roundSignif <- function(x, digits = 12, signifDigits = NULL) {
 	out <- round(x, digits)
 	return(out)
 }
+
+
+#' Get the first element returned by class(), and translate "double" to "numeric". 
+#'
+#' @param x An R object.
+#'
+#' @export
+firstClass <- function(x) {
+	out <- class(x)[1]
+	if(out == "double") {
+		out <- "numeric"
+	}
+	return(out)
+}
+
 
 ## Stolen from https://stackoverflow.com/questions/47190693/count-the-number-of-integer-digits:
 #n_int_digits = function(x) {
@@ -647,7 +695,7 @@ setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
 	if(length(by)) {
 		orderKeys <- paste0(by, "OrderedAfterSplitting")
 		
-		# Create keys which are converted to ranks, splitting first and then treatnig individual elemens as numbers if possible:
+		# Create keys which are converted to ranks, splitting first and then treating individual elements as numbers if possible:
 		dataOne[, (orderKeys) := lapply(.SD, createOrderKey), .SDcols = by]
 		
 		# Order the rows:

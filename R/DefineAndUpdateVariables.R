@@ -64,7 +64,7 @@ RedefineStoxBiotic <- function(
 #' @param Conditional Logical: If TRUE the columns \code{ConditionalVariableNames} and \code{ConditionalValue} are expected in the \code{TranslationTable}. These define a variable interacting with the \code{VariableName} and \code{Value}, so that \code{VariableName} is changed from \code{Value} to \code{NewValue} only when \code{ConditionalVariableNames} has the value given by \code{ConditionalValue}. Note that \code{ConditionalVariableNames} must exist in the same table as \code{VariableName}. 
 #' @param ConditionalVariableNames Similar to \code{VariableName}, but naming the conditional variables.
 #' @param ConditionalValueColumns The name of the columns of \code{TranslationTable} representing the conditional values.
-#' @param FileName The csv file holding a table with the three variables listed for \code{TranslationTable}, and possibly the two listed for \code{Conditional}.
+#' @param FileName The csv file holding a table with the \code{TranslationTable}. Required columns are given by \code{ValueColumn} and \code{NewValueColumn}, and, in the case that Conditional == TRUE, \code{ConditionalValueColumns}.
 #' 
 #' @details The columns of the \code{TranslationnTable} (excecpt the NewValue column) can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "\%in\%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength > 10". When the \code{TranslationnTable} is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength > 10). 
 #' 
@@ -254,18 +254,18 @@ translateVariables <- function(
 	}
 	
 	# Warn if there are columns in the translation that are not present in the data. Check only the first translation, as all translations have the same columns in the new form, and in the old form (that is used by StoxBiotic()) this check is not as important:
-	notPresent <- setdiff(
-		setdiff(names(translationList[[1]]), "NewValue"), 
-		unique(unlist(lapply(data, names)))
-	)
-	allPresent <- unlist(lapply(
+	someButNotAllPresentOneTable <- function(table, translationList) {
+		translationNames <- setdiff(names(translationList[[1]]), "NewValue")
+		any(translationNames %in% names(table)) && !all(translationNames %in% names(table))
+	}
+	someButNotAllPresent <- unlist(lapply(
 		data, 
-		function(table, translationList) all(setdiff(names(translationList[[1]]), "NewValue") %in% names(table)), 
+		someButNotAllPresentOneTable, 
 		translationList =  translationList
 	))
 	
-	if(!any(allPresent)) {
-		warning("StoX: There are columns in the Translation that are not present in the data.")
+	if(any(someButNotAllPresent)) {
+		warning("StoX: The following tables contain some but not all of the variables of the Translation:", paste0(names(data)[someButNotAllPresent]))
 	}
 		
 	# Run the conversion for each table of the data:
@@ -548,7 +548,7 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' @inheritParams DefineTranslation
 #' @inheritParams ModelData
 #' @inheritParams ProcessData
-#' @param TranslationDefinition The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import Translation process data from a previously run process using the function \code{DefineTranslation}.
+#' @param TranslationDefinition The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import \code{\link{Translation}} process data from a previously run process using the function \code{\link{DefineTranslation}}. When reading the translation from a file \code{FunctionInput} must be used. 
 #' @param PreserveClass Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (\code{PreserveClass} = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using \code{PreserveClass} = FALSE.
 #' 
 #' @return

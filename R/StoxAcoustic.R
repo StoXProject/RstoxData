@@ -28,7 +28,7 @@ StoxAcoustic <- function(AcousticData){
     orderRowsByKeys(StoxAcousticData)
     
     # Ensure that the numeric values are rounded to the defined number of digits:
- 	setRstoxPrecisionLevel(StoxAcousticData)
+ 	#setRstoxPrecisionLevel(StoxAcousticData)
 
  	return(StoxAcousticData)
 }
