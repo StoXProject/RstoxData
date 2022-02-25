@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.10</span>
       </span>
     </div>
 
@@ -70,7 +70,7 @@
     <dl><dt>StoxLandingData</dt>
 <dd><p><code><a href="StoxLandingData.html">StoxLandingData</a></code>.</p></dd>
 <dt>TranslationDefinition</dt>
-<dd><p>The method to use for defining the Translation, one of <code>FunctionParameter</code> to define the Translation on the fly in this function using the <code>TranslationTable</code>, or <code>FunctionInput</code> to import Translation process data from a previously run process using the function <code>DefineTranslation</code>.</p></dd>
+<dd><p>The method to use for defining the Translation, one of <code>FunctionParameter</code> to define the Translation on the fly in this function using the <code>TranslationTable</code>, or <code>FunctionInput</code> to import <code><a href="Translation.html">Translation</a></code> process data from a previously run process using the function <code><a href="DefineTranslation.html">DefineTranslation</a></code>. When reading the translation from a file <code>FunctionInput</code> must be used.</p></dd>
 <dt>TranslationTable</dt>
 <dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions or functions of the variable specified by the column name. See details.</p></dd>
 <dt>VariableName</dt>
