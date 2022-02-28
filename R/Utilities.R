@@ -376,7 +376,14 @@ roundSignifDT <- function(DT, digits, signifDigits) {
 	}
 }
 
-# Function setting the precision of one data table:
+#' Function setting the precision of one data table:
+#' 
+#' @param SPDF A SpatialPolygonsDataFrame object.
+#' @param digits The number of digits to round off to. See also \code{signifDigits}.
+#' @param signifDigits The number of significant digits, used when numbers are low to guarantee precision.
+#'
+#' @export
+#' 
 roundSignifSPDF <- function(SPDF, digits, signifDigits) {
 	if(length(SPDF)) {
 		# Detect numeric columns and round off to the specified number of digits:
