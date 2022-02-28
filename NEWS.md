@@ -1,3 +1,11 @@
+# RstoxData v1.5.11  (2022-02-28)
+* Increased sisgnificant digits of small numbers foomo 6 to 12.
+
+# RstoxData v1.5.10  (2022-02-25)
+* Relaxed the warning for translation columns not present in the data to accept if all are not present (unaffected table).
+* Moved application of setRstoxPrecisionLevel() from each StoX function to RstoxFramework::runProcess().
+* Added SpatialPolygonsDataFrame and matrix to setRstoxPrecisionLevel().
+
 # RstoxData v1.5.10  (2022-02-25)
 * Relaxed the warning for translation columns not present in the data to accept if all are not present (unaffected table).
 * Moved application of setRstoxPrecisionLevel() from each StoX function to RstoxFramework::runProcess().

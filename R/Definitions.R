@@ -14,7 +14,7 @@ initiateRstoxData <- function(){
 	
 	# Define the number of digits (12) and the number of significant digits (6, used if values are very low) used by the Rstox packages:
 	digits <- 12
-	signifDigits <- 6
+	signifDigits <- 12
 	
 	# Define the time zone used by Stox formats:
 	StoxTimeZone <- "UTC"
