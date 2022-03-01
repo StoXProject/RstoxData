@@ -760,7 +760,7 @@ createOrderKey <- function(x, split = "/") {
 	}
 	
 	# Split the vector by the 'split' parameter:
-	splitted <- strsplit(x, split)
+	splitted <- strsplit(x, split, fixed = TRUE)
 	
 	# Check that all have the same number of elements, that is the same number of splits:
 	if(!all(lengths(splitted) == length(splitted[[1]]))) {
@@ -850,12 +850,12 @@ createOrderKeyNewWithoutError <- function(x, split = "/") {
 	
 	# Split the vector by the 'split' parameter:
 	if(length(split) == 1) {
-		splitted <- strsplit(x, split)
+		splitted <- strsplit(x, split, fixed = TRUE)
 	}
 	else if(length(split) > 1) {
-		splitted <- strsplit(x, split[1])
+		splitted <- strsplit(x, split[1], fixed = TRUE)
 		for(ind in seq(2, length(split))) {
-			splitted <- lapply(splitted, function(x) unlist(strsplit(x, split[ind])))
+			splitted <- lapply(splitted, function(x) unlist(strsplit(x, split[ind], fixed = TRUE)))
 		}
 	}
 	else {

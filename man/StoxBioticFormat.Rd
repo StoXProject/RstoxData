@@ -73,7 +73,7 @@ SampleNumber \tab Size of the sample for individual measurements \tab None \tab 
 IndividualKey \tab Key of the Individual level \tab None \tab Character \tab  \cr        
 Individual \tab Unique Individual identifier \tab None \tab Character \tab  \cr           
 IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \cr
-IndividualTotalLength \tab Total length (from snoute to end of fin) \tab cm \tab Numeric \tab 14.5 \cr
+IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \cr
 LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \cr     
 WeightMeasurement \tab \tab None \tab Character \tab  \cr    
 IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \cr        
