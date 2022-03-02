@@ -483,12 +483,13 @@ StoxAcousticOne <- function(data_list) {
 		
 		names(data_list$Log)[names(data_list$Log)=='Longitude'] <- 'Longitude'
 		names(data_list$Log)[names(data_list$Log)=='Latitude'] <- 'Latitude'
-		names(data_list$Log)[names(data_list$Log)=='LongitudeStop'] <- 'Longitude2'
-		names(data_list$Log)[names(data_list$Log)=='LatitudeStop'] <- 'Latitude2'
+		#names(data_list$Log)[names(data_list$Log)=='LongitudeStop'] <- 'Longitude2'
+		#names(data_list$Log)[names(data_list$Log)=='LatitudeStop'] <- 'Latitude2'
 		#names(data_list$Log)[names(data_list$Log)=='BottomDepth'] <- 'BottomDepth'
 		names(data_list$Log)[names(data_list$Log)=='Distance'] <- 'Log'
 		names(data_list$Log)[names(data_list$Log)=='Time'] <- 'DateTime'
 		names(data_list$Log)[names(data_list$Log)=='Origin'] <- 'LogOrigin'
+		names(data_list$Log)[names(data_list$Log)=='Origin2'] <- 'LogOrigin2'
 		
 		names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthUpper'] <- 'MinChannelRange'
 		names(data_list$NASC)[names(data_list$NASC)=='ChannelDepthLower'] <- 'MaxChannelRange'
@@ -498,14 +499,16 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log<-merge(data_list$Log,data_list$Beam[,c('PingAxisInterval','LogKey')], all.x = TRUE)
 		names(data_list$Log)[names(data_list$Log)=='PingAxisInterval'] <- 'LogDistance'
 		
-		# The LogOrigin2 should be NA until it gets incorporated in the ICESAcoustic format:
-		#data_list$Log$LogOrigin2 <- "end"
-		data_list$Log$LogOrigin2 <- NA_character_
+		### # The LogOrigin2 should be NA until it gets incorporated in the ICESAcoustic format:
+		### #data_list$Log$LogOrigin2 <- "end"
+		### data_list$Log$LogOrigin2 <- NA_character_
+		
+		# Duration is still not given, as there is only one time:
 		data_list$Log$LogDuration <- NA_real_
 		
-		####Bugfiks since StopLat and lon do not exist yet
-		data_list$Log$Longitude2 <- NA_real_
-		data_list$Log$Latitude2 <- NA_real_
+		### ####Bugfiks since StopLat and lon do not exist yet
+		### data_list$Log$Longitude2 <- NA_real_
+		### data_list$Log$Latitude2 <- NA_real_
 		
 		# Convert to POSIX.ct:
 		data_list$Log[, DateTime := as.POSIXct_ICESAcoustic(DateTime)]
@@ -519,7 +522,7 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log <- unique(data_list$Log)
 		data_list$Beam <- unique(data_list$Beam)
 		
-		
+	
 		# Interpret the LogOrigin and LogOrigin2 as "start", "middle" or "end":
 		interpretLogOrigin <- function(x) {
 			if(!is.na(x[1])) {
