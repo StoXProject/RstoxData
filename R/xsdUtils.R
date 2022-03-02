@@ -213,11 +213,19 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 					# Exclude obvious types
 					if (tp[it] == "IDREF" || tp[it] == "IDREFType" || tp[it] == "ID") {
 						bla <- "xs:string"
-					} else {
+					} 
+					# Position in float:
+					else if(tp[it] %in% c("longitude", "latitude", "nonZeroFloat")) {
+						bla <- "xsd:float"
+					}
+					else {
 						# Try the recursive search
 						bla <- traceType(hd[it])
 					}
-					if(is.null(bla[1]) || is.na(bla[1])) stop("Error in determining types!")
+					
+					if(is.null(bla[1]) || is.na(bla[1])) {
+						stop("Error in determining types!")
+					}
 					r_e$tableTypes[[nm]][it] <- bla[1]
 				}
 			}

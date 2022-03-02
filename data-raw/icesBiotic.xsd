@@ -28,7 +28,7 @@
       <xsd:element name="SpeciesCode" type="SpeciesCode" maxOccurs="1"/>
       <xsd:element name="SpeciesValidity" type="SpeciesValidity" maxOccurs="1"/>
       <xsd:element name="Sex" type="Sex" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="LengthCode" type="LengthCode"  maxOccurs="1"/>
+      <xsd:element name="LengthCode" type="LengthCode" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="LengthType" type="LengthType" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="StockCode" type="StockCode" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="WeightUnit" type="WeightUnit" minOccurs="0" maxOccurs="1"/>
@@ -62,10 +62,10 @@
       <xsd:element name="StartTime" type="ISO8601DateFullTimeType"/>
       <xsd:element name="Duration" type="int" />
       <xsd:element name="Validity" type="IDREFType" />
-      <xsd:element name="StartLatitude" type="coordinateFloat"/>
-      <xsd:element name="StartLongitude" type="coordinateFloat"/>
-      <xsd:element name="StopLatitude" type="coordinateFloat" minOccurs="0" nillable="true"/>
-      <xsd:element name="StopLongitude" type="coordinateFloat" minOccurs="0" nillable="true"/>
+      <xsd:element name="StartLatitude" type="latitude"/>
+      <xsd:element name="StartLongitude" type="longitude"/>
+      <xsd:element name="StopLatitude" type="latitude" minOccurs="0" nillable="true"/>
+      <xsd:element name="StopLongitude" type="longitude" minOccurs="0" nillable="true"/>
       <xsd:element name="StatisticalRectangle" type="IDREFType" minOccurs="0" nillable="true"/>
       <xsd:element name="MinTrawlDepth" type="float" />
       <xsd:element name="MaxTrawlDepth" type="float" minOccurs="0" nillable="true"/>
@@ -296,7 +296,7 @@
 
   <xsd:complexType name="LengthCode">
     <xsd:sequence>
-      <xsd:element name="Code" type="LengthCodeVocabulary" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:element name="Code" type="LengthCodeVocabulary" minOccurs="0" maxOccurs="unbounded" nillable="true" />
     </xsd:sequence>
   </xsd:complexType>
 
@@ -337,7 +337,8 @@
       <xsd:element name="IndividualSex" type="IDREFType"  minOccurs="0" nillable="true"/>
       <xsd:element name="IndividualMaturity" type="IDREFType"  minOccurs="0" nillable="true"/>
       <xsd:element name="MaturityScale" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="IndividualAge" type="float" minOccurs="0" nillable="true"/>
+      <xsd:element name="IndividualAge" type="int" minOccurs="0" nillable="true"/>
+      <xsd:element name="IndividualGrowthRings" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="AgePlusGroup" type="IDREFType"  minOccurs="0" nillable="true"/>
       <xsd:element name="AgeSource" type="IDREFType"  minOccurs="0" nillable="true"/>
       <xsd:element name="GeneticSamplingFlag" type="IDREFType"  minOccurs="0" nillable="true"/>

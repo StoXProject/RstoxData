@@ -28,7 +28,7 @@ data$ICES_Acoustic_1.xml$Survey$Code <- data$ICES_Acoustic_1.xml$Survey$Code[1]
 data$ICES_Acoustic_1.xml$Data$SaCategory <- "MAC"
 ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
 ICESAcousticCSV2 <- RstoxData::WriteICESAcoustic(ICESAcoustic2)
-expect_equal(dim(ICESAcousticCSV2), c(19, 25))
+expect_equal(dim(ICESAcousticCSV2), c(19, 28))
 
 #context("test-StoxExport: ICES acoustic export #2")
 example <- system.file("testresources", "ICES_Acoustic_2.xml", package="RstoxData")
@@ -38,5 +38,5 @@ data$ICES_Acoustic_2.xml$Survey$Code <- data$ICES_Acoustic_2.xml$Survey$Code[1]
 
 ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
 ICESAcousticCSV2 <- RstoxData::WriteICESAcoustic(ICESAcoustic2)
-expect_equal(dim(ICESAcousticCSV2), c(23, 25))
+expect_equal(dim(ICESAcousticCSV2), c(23, 28))
 
