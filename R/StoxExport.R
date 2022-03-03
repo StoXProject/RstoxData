@@ -547,6 +547,7 @@ BioticData_NMDToICESBioticOne <- function(
 		#MaturityScale = "M6",
 		MaturityScale = NA_character_,
 		IndividualAge = age,
+		IndividualGrowthRings = NA_integer_,
 		AgePlusGroup = NA_character_,
 		#AgeSource = "Otolith",
 		# Do not interpret agingstructure, as this should be the responsibility of the user:
