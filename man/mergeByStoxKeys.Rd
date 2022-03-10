@@ -4,7 +4,15 @@
 \alias{mergeByStoxKeys}
 \title{Merge two data tables by StoX keys}
 \usage{
-mergeByStoxKeys(x, y, StoxDataType, toMergeFromY = NULL, replace = FALSE, ...)
+mergeByStoxKeys(
+  x,
+  y,
+  StoxDataType,
+  toMergeFromY = NULL,
+  replace = FALSE,
+  unique = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x, y}{Data tables of class \code{\link[data.table]{data.table}}.}
@@ -18,6 +26,8 @@ merged. Default to \code{NULL}.}
 
 \item{replace}{Whether to replace the variables in the target.
 Default to \code{FALSE}.}
+
+\item{unique}{Logical: If TRUE (default) make the tables unique after merging.}
 
 \item{...}{Extra parameters that will be passed into \code{\link[data.table]{merge}}.}
 }
