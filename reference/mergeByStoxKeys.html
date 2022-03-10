@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.15</span>
       </span>
     </div>
 
@@ -53,7 +53,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mergeByStoxKeys</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">StoxDataType</span>, toMergeFromY <span class="op">=</span> <span class="cn">NULL</span>, replace <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mergeByStoxKeys</span><span class="op">(</span>
+  <span class="va">x</span>,
+  <span class="va">y</span>,
+  <span class="va">StoxDataType</span>,
+  toMergeFromY <span class="op">=</span> <span class="cn">NULL</span>,
+  replace <span class="op">=</span> <span class="cn">FALSE</span>,
+  unique <span class="op">=</span> <span class="cn">TRUE</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -70,6 +78,8 @@ merged. Default to <code>NULL</code>.</p></dd>
 <dt>replace</dt>
 <dd><p>Whether to replace the variables in the target.
 Default to <code>FALSE</code>.</p></dd>
+<dt>unique</dt>
+<dd><p>Logical: If TRUE (default) make the tables unique after merging.</p></dd>
 <dt>...</dt>
 <dd><p>Extra parameters that will be passed into <code><a href="https://Rdatatable.gitlab.io/data.table/reference/merge.html" class="external-link">merge</a></code>.</p></dd>
 </dl></div>
