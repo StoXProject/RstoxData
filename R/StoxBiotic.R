@@ -358,6 +358,10 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
 	convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
     convertLen <- stoxBioticObject$convertLen[[datatype]]
     convertWt <- stoxBioticObject$convertWt[[datatype]]
+    getCatchFractionWeight <- stoxBioticObject$getCatchFractionWeight[[datatype]]
+    getSampleWeight <- stoxBioticObject$getSampleWeight[[datatype]]
+    getIndividualRoundWeight <- stoxBioticObject$getIndividualRoundWeight[[datatype]]
+    getIndividualTotalLength <- stoxBioticObject$getIndividualTotalLength[[datatype]]
     
     # Try to stop data.table warnings (https://github.com/Rdatatable/data.table/issues/2988)
     .. <- function (x, env = parent.frame()) {
@@ -384,7 +388,8 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     			y = data[[borrowVariables[[ind]]$source]], 
     			StoxDataType = "StoxBiotic", 
     			toMergeFromY = borrowVariables[[ind]]$variable, 
-    			all.x = TRUE
+    			all.x = TRUE, 
+    			sort = FALSE
     		)
     	}
     }

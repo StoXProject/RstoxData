@@ -119,19 +119,87 @@ getComplexMap <- function(NMDBioticFormat, keysForComplexMaps) {
 	return(complexMaps)
 }
 
+convertLenRes_NMDBiotic <- function(x) {
+	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
+	names(z) <- seq_len(12)
+	return(z[x])
+}
 
+getCatchFractionWeight_NMDBiotic3 <- function(catchweight, catchproducttype, catchcategory) {
+	hasInvalid <- !catchproducttype %in% 1 & !is.na(catchweight)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(catchcategory[hasInvalid])
+		invalid <- setdiff(unique(catchproducttype), 1)
+		warning("StoX: There are catchproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) CatchFractionWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(catchproducttype %in% 1, catchweight, NA_real_)
+}
+getCatchFractionWeight_NMDBiotic1 <- function(weight, producttype, species) {
+	hasInvalid <- !producttype %in% 1 & !is.na(weight)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(species[hasInvalid])
+		invalid <- setdiff(unique(producttype), 1)
+		warning("StoX: There are producttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) CatchFractionWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(producttype %in% 1, weight, NA_real_)
+}
 
+getSampleWeight_NMDBiotic3 <- function(lengthsampleweight, sampleproducttype, catchcategory) {
+	hasInvalid <- !sampleproducttype %in% 1 & !is.na(lengthsampleweight)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(catchcategory[hasInvalid])
+		invalid <- setdiff(unique(sampleproducttype), 1)
+		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) SampleWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)
+}
+getSampleWeight_NMDBiotic1 <- function(lengthsampleweight, sampleproducttype, species) {
+	hasInvalid <- !sampleproducttype %in% 1 & !is.na(lengthsampleweight)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(species[hasInvalid])
+		invalid <- setdiff(unique(sampleproducttype), 1)
+		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) SampleWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)
+}
 
+getIndividualRoundWeight_NMDBiotic3 <- function(individualweight, individualproducttype, catchcategory) {
+	hasInvalid <- !individualproducttype %in% 1 & !is.na(individualweight)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(catchcategory[hasInvalid])
+		invalid <- setdiff(unique(individualproducttype), 1)
+		warning("StoX: There are individualproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualRoundWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(individualproducttype %in% 1, individualweight * 1000, NA_real_)
+}
+getIndividualRoundWeight_NMDBiotic1 <- function(weight.individual, producttype.individual, species) {
+	hasInvalid <- !producttype.individual %in% 1 & !is.na(weight.individual)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(species[hasInvalid])
+		invalid <- setdiff(unique(producttype.individual), 1)
+		warning("StoX: There are producttype.individual that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualRoundWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(producttype.individual %in% 1, weight.individual * 1000, NA_real_)
+}
 
-
-
-
-
-
-
-
-
-
+getIndividualTotalLength_NMDBiotic3 <- function(length, lengthmeasurement, catchcategory) {
+	hasInvalid <- !lengthmeasurement %in% 'E' & !is.na(length)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(catchcategory[hasInvalid])
+		invalid <- setdiff(unique(lengthmeasurement), 'E')
+		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualTotalLength in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(lengthmeasurement %in% 'E', length * 100, NA_real_)
+}
+getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, species) {
+	hasInvalid <- !lengthmeasurement %in% 'E' & !is.na(length)
+	if(any(hasInvalid)) {
+		affectedSpecies <- unique(species[hasInvalid])
+		invalid <- setdiff(unique(lengthmeasurement), 'E')
+		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualTotalLength in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+	}
+	ifelse(lengthmeasurement %in% 'E', length * 100, NA_real_)
+}
 
 
 
@@ -165,13 +233,14 @@ stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- getComplexMap(
 )
 
 ## Length conversion
-stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- function(x) {
-	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
-	names(z) <- seq_len(12)
-	return(z[x])
-}
+stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- convertLenRes_NMDBiotic
 stoxBioticObject$convertLen[["nmdbioticv3.1"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3.1"]] <- NULL
+stoxBioticObject$getCatchFractionWeight[["nmdbioticv3.1"]] <- getCatchFractionWeight_NMDBiotic3
+stoxBioticObject$getSampleWeight[["nmdbioticv3.1"]] <- getSampleWeight_NMDBiotic3
+stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3.1"]] <- getIndividualRoundWeight_NMDBiotic3
+stoxBioticObject$getIndividualTotalLength[["nmdbioticv3.1"]] <- getIndividualTotalLength_NMDBiotic3
+
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]] <- function(distance, fishingdepthcount) {
 #	fishingdepthcount[is.na(fishingdepthcount)] <-  1
@@ -181,6 +250,17 @@ stoxBioticObject$convertWt[["nmdbioticv3.1"]] <- NULL
 stoxBioticObject$borrowVariables[["nmdbioticv3.1"]] <- list(
 	list(
 		variable = "lengthmeasurement", 
+		source = "Sample", 
+		target = "Individual"
+	), 
+	# Species must be borrowed in two steps, SpeciesCategory -> Sample and Sample -> Individual, to preserve uniqueness:
+	list(
+		variable = "catchcategory", 
+		source = "SpeciesCategory", 
+		target = "Sample"
+	), 
+	list(
+		variable = "catchcategory", 
 		source = "Sample", 
 		target = "Individual"
 	)
@@ -198,6 +278,7 @@ stoxBioticObject$borrowVariables[["nmdbioticv3.1"]] <- list(
 	#	target = "Individual"
 	#)
 )
+
 
 
 ##### NMDBioticv3 #####
@@ -224,22 +305,17 @@ stoxBioticObject$complexMaps[["nmdbioticv3"]] <- getComplexMap(
 )
 
 ## Length conversion
-stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- function(x) {
-	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
-	names(z) <- seq_len(12)
-	return(z[x])
-}
+stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- convertLenRes_NMDBiotic
 stoxBioticObject$convertLen[["nmdbioticv3"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3"]] <- NULL
+stoxBioticObject$getCatchFractionWeight[["nmdbioticv3"]] <- getCatchFractionWeight_NMDBiotic3
+stoxBioticObject$getSampleWeight[["nmdbioticv3"]] <- getSampleWeight_NMDBiotic3
+stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3"]] <- getIndividualRoundWeight_NMDBiotic3
+stoxBioticObject$getIndividualTotalLength[["nmdbioticv3"]] <- getIndividualTotalLength_NMDBiotic3
+
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]]
-stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- list(
-	list(
-		variable = "lengthmeasurement", 
-		source = "Sample", 
-		target = "Individual"
-	)
-	
+stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- stoxBioticObject$borrowVariables[["nmdbioticv3.1"]]
 	# This (copying c("stationstopdate", "stationstoptime", "stationstartdate", "stationstarttime")) was used when trying to implement TowDuration, which was later abandoned:
 	#, 
 	#list(
@@ -253,7 +329,8 @@ stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- list(
 	#	source = "SubIndividual", 
 	#	target = "Individual"
 	#)
-)
+#)
+
 
 
 ##### NMDBioticv1.4 #####
@@ -279,11 +356,7 @@ stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- getComplexMap(
 )
 
 ## Length conversion
-stoxBioticObject$convertLenRes[["nmdbioticv1.4"]] <- function(x) {
-	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
-	names(z) <- seq_len(12)
-	return(z[x])
-}
+stoxBioticObject$convertLenRes[["nmdbioticv1.4"]] <- convertLenRes_NMDBiotic
 stoxBioticObject$convertLen[["nmdbioticv1.4"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv1.4"]] <- NULL
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
@@ -293,13 +366,28 @@ stoxBioticObject$convertWt[["nmdbioticv1.4"]] <- NULL
 #	}
 #	return(distance)
 #}
+stoxBioticObject$getCatchFractionWeight[["nmdbioticv1.4"]] <- getCatchFractionWeight_NMDBiotic1
+stoxBioticObject$getSampleWeight[["nmdbioticv1.4"]] <- getSampleWeight_NMDBiotic1
+stoxBioticObject$getIndividualRoundWeight[["nmdbioticv1.4"]] <- getIndividualRoundWeight_NMDBiotic1
+stoxBioticObject$getIndividualTotalLength[["nmdbioticv1.4"]] <- getIndividualTotalLength_NMDBiotic1
+
 stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 	list(
 		variable = "lengthmeasurement", 
 		source = "Sample", 
 		target = "Individual"
+	), 
+	# Species must be borrowed in two steps, SpeciesCategory -> Sample and Sample -> Individual, to preserve uniqueness:
+	list(
+		variable = "species", 
+		source = "SpeciesCategory", 
+		target = "Sample"
+	), 
+	list(
+		variable = "species", 
+		source = "Sample", 
+		target = "Individual"
 	)
-	
 	# This (copying c("stationstopdate", "stationstoptime", "stationstartdate", "stationstarttime")) was used when trying to implement TowDuration, which was later abandoned:#, 
 	#list(
 	#	variable = c("stopdate.fishstation", "stoptime", "startdate.fishstation", "starttime"), 
@@ -313,6 +401,8 @@ stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 	#	target = "Individual"
 	#)
 )
+
+
 
 
 ##### NMDBioticv1.1 #####
@@ -332,6 +422,11 @@ stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- getComplexMap(
 stoxBioticObject$convertLenRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertLenRes[["nmdbioticv1.4"]]
 stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
 stoxBioticObject$convertWt[["nmdbioticv1.1"]] <- stoxBioticObject$convertWt[["nmdbioticv1.4"]]
+stoxBioticObject$getCatchFractionWeight[["nmdbioticv1.1"]] <- getCatchFractionWeight_NMDBiotic1
+stoxBioticObject$getSampleWeight[["nmdbioticv1.1"]] <- getSampleWeight_NMDBiotic1
+stoxBioticObject$getIndividualRoundWeight[["nmdbioticv1.1"]] <- getIndividualRoundWeight_NMDBiotic1
+stoxBioticObject$getIndividualTotalLength[["nmdbioticv1.1"]] <- getIndividualTotalLength_NMDBiotic1
+
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.1"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.4"]]
 stoxBioticObject$borrowVariables[["nmdbioticv1.1"]] <- stoxBioticObject$borrowVariables[["nmdbioticv1.4"]]

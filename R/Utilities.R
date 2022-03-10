@@ -112,13 +112,14 @@ mergeByIntersect <- function(x, y, ..., msg = FALSE) {
 #' 			merged. Default to \code{NULL}.
 #' @param replace Whether to replace the variables in the target.
 #' 			Default to \code{FALSE}.
+#' @param unique Logical: If TRUE (default) make the tables unique after merging.
 #' @param ... Extra parameters that will be passed into \code{\link[data.table]{merge}}.
 #'
 #' @return A merged data table.
 #'
 #' @export
 #' 
-mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = FALSE, ...) {
+mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = FALSE, unique = TRUE, ...) {
 	# Get the keys:
 	#keys_x <- getKeys(x)
 	#keys_y <- getKeys(y)
@@ -150,11 +151,17 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 	if(length(toMergeFromY)) {
 		y <- y[, c(keys, toMergeFromY), with = FALSE]
 		# Then merge:
-		merge(x, y, by = keys, ...)
+		x <- merge(x, y, by = keys, ...)
 	}
 	else {
 		x
 	}
+	
+	if(unique) {
+		x <- unique(x)
+	}
+	
+	return(x)
 }
 
 #getKeys <- function(x, keystring = "Key", ignore.case = FALSE) {
