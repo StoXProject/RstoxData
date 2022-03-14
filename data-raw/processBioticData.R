@@ -202,6 +202,15 @@ getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, speci
 }
 
 
+getBottomDepth_NMDBiotic <- function(bottomdepthstart, bottomdepthstop) {
+	hasInvalid <- is.na(bottomdepthstart) | is.na(bottomdepthstop)
+	if(any(hasInvalid)) {
+		warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. At least one of these are missing (NA) in ", sum(hasInvalid), " out of ", length(hasInvalid), " stations. RedefineStoxBiotic can be used to define the BottomDepth as e.g. bottomdepthstart in the case that this is present.")
+	}
+	ifelse(hasInvalid, NA_real_, (bottomdepthstart + bottomdepthstop) / 2)
+}
+
+
 
 
 
@@ -240,6 +249,7 @@ stoxBioticObject$getCatchFractionWeight[["nmdbioticv3.1"]] <- getCatchFractionWe
 stoxBioticObject$getSampleWeight[["nmdbioticv3.1"]] <- getSampleWeight_NMDBiotic3
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3.1"]] <- getIndividualRoundWeight_NMDBiotic3
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv3.1"]] <- getIndividualTotalLength_NMDBiotic3
+stoxBioticObject$getBottomDepth[["nmdbioticv3.1"]] <- getBottomDepth_NMDBiotic
 
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]] <- function(distance, fishingdepthcount) {
@@ -312,6 +322,7 @@ stoxBioticObject$getCatchFractionWeight[["nmdbioticv3"]] <- getCatchFractionWeig
 stoxBioticObject$getSampleWeight[["nmdbioticv3"]] <- getSampleWeight_NMDBiotic3
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3"]] <- getIndividualRoundWeight_NMDBiotic3
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv3"]] <- getIndividualTotalLength_NMDBiotic3
+stoxBioticObject$getBottomDepth[["nmdbioticv3"]] <- getBottomDepth_NMDBiotic
 
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]]
@@ -370,6 +381,7 @@ stoxBioticObject$getCatchFractionWeight[["nmdbioticv1.4"]] <- getCatchFractionWe
 stoxBioticObject$getSampleWeight[["nmdbioticv1.4"]] <- getSampleWeight_NMDBiotic1
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv1.4"]] <- getIndividualRoundWeight_NMDBiotic1
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv1.4"]] <- getIndividualTotalLength_NMDBiotic1
+stoxBioticObject$getBottomDepth[["nmdbioticv1.4"]] <- getBottomDepth_NMDBiotic
 
 stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 	list(
@@ -426,6 +438,7 @@ stoxBioticObject$getCatchFractionWeight[["nmdbioticv1.1"]] <- getCatchFractionWe
 stoxBioticObject$getSampleWeight[["nmdbioticv1.1"]] <- getSampleWeight_NMDBiotic1
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv1.1"]] <- getIndividualRoundWeight_NMDBiotic1
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv1.1"]] <- getIndividualTotalLength_NMDBiotic1
+stoxBioticObject$getBottomDepth[["nmdbioticv1.1"]] <- getBottomDepth_NMDBiotic
 
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.1"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.4"]]

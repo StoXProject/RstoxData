@@ -9,7 +9,7 @@ CatchPlatform,Station,catchplatform,catchplatform,platform,platform,Platform,,ch
 DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='UTC')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='UTC')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='UTC')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='UTC')","as.POSIXct(StartTime, tz='UTC')",,POSIXct
 Latitude,Station,latitudestart,latitudestart,latitudestart,latitudestart,StartLatitude,,numeric
 Longitude,Station,longitudestart,longitudestart,longitudestart,longitudestart,StartLongitude,,numeric
-BottomDepth,Station,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,(bottomdepthstart + bottomdepthstop)/2,BottomDepth,,numeric
+BottomDepth,Station,"getBottomDepth(bottomdepthstart, bottomdepthstop)","getBottomDepth(bottomdepthstart, bottomdepthstop)","getBottomDepth(bottomdepthstart, bottomdepthstop)","getBottomDepth(bottomdepthstart, bottomdepthstop)",BottomDepth,,numeric
 CruiseKey,Haul,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,Haul,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 HaulKey,Haul,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character

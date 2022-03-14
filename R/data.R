@@ -97,7 +97,7 @@ NULL
 #' DateTime \tab UTC time at start of the station \tab ISO 8601 format with milliseconds \tab Character \tab 2020-09-09T01:02:03.456Z \cr
 #' Longitude \tab Longitude at start of the station \tab Decimal degrees \tab Numeric \tab 62.5 \cr
 #' Latitude \tab Latitude at start of the station \tab Decimal degrees \tab Numeric \tab 5.1 \cr
-#' BottomDepth \tab Bottom depth at start of the station \tab m \tab Numeric \tab 123 \cr
+#' BottomDepth \tab BottomDepth at the station, given directly in ICESBitoic and calculated as the average of bottom depth at start and end of the station in NMDBiotic \tab m \tab Numeric \tab 123.2 \cr
 #' }
 #' 
 #' 
