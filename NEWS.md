@@ -1,3 +1,9 @@
+# RstoxData v1.5.16  (2022-03-14)
+* Added warning when at least one of bottomdepthstart and bottomdepthstop are missing, so that BottomDepth is NA.
+
+# RstoxData v1.5.15  (2022-03-10)
+* Included more informative warning when e.g. product types are not the required value in StoxBiotic().
+
 # RstoxData v1.5.13  (2022-03-02)
 * Updated to the new ICESAcoustic and ICESBiotic format (released March 2022).
 
