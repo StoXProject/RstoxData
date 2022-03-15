@@ -88,16 +88,6 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
-      - name: Hack .Platform$pkgType to mac.binary for Mac to support Homebrew builds that can be installed in the days following an R release
-        if: runner.os == 'macOS'
-        run: |
-          platform <- .Platform
-          platform$pkgType <- "mac.binary"
-          unlockBinding(".Platform", .BaseNamespaceEnv)
-          assign(".Platform", platform, envir = .BaseNamespaceEnv)
-          lockBinding(".Platform", .BaseNamespaceEnv)
-        shell: Rscript {0}
-
       - name: Install dependencies
         if: runner.os != 'Linux'
         run: |
@@ -125,6 +115,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("git2r")
           remotes::install_cran("drat")
+          remotes::install_cran("sessioninfo")
         shell: Rscript {0}
         
       - name: Session info
