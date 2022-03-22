@@ -4,7 +4,12 @@
 \alias{AddToStoxBiotic}
 \title{Add variables to StoxBioticData from BioticData}
 \usage{
-AddToStoxBiotic(StoxBioticData, BioticData, VariableNames = character())
+AddToStoxBiotic(
+  StoxBioticData,
+  BioticData,
+  VariableNames = character(),
+  AddToLowestTable = FALSE
+)
 }
 \arguments{
 \item{StoxBioticData}{\code{\link{StoxBioticData}}.}
@@ -12,6 +17,10 @@ AddToStoxBiotic(StoxBioticData, BioticData, VariableNames = character())
 \item{BioticData}{\code{\link{BioticData}}.}
 
 \item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
+
+\item{AddToLowestTable}{Logical: If TRUE, place variables in the lowest possible table in StoxBioticData. In NMDBiotic and ICESBiotic there are tables that are split into two tables in StoxBioticData. These are fishstation -> Station/Haul (where the first table is the highest and the second is the lowest in the \code{\link[=generalSamplingHierarhcy]{General sampling hierarchy}}) and catchsample -> SpeciesCategory/Sample for NMDBiotic, and Haul -> Station/Haul and Catch -> SpeciesCategory/Sample for NMDBiotic. If AddToLowestTable = TRUE all variables from fishstation are placed in the table Haul, and similar for the other tables listed above.
+
+from tables that are split into two tables in StoxBiotic}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.

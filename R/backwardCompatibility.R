@@ -163,6 +163,13 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "TranslationDefinition", 
 			parameterValue = "FunctionInput"
+		), 
+		list(
+			changeVersion = "1.5.17", 
+			functionName = "AddToStoxBiotic", 
+			modelName = "baseline", 
+			parameterName = "AddToLowestTable", 
+			parameterValue = FALSE
 		)
 	), 
 	

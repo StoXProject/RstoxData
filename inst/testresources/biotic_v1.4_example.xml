@@ -1,0 +1,3674 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mission missiontype="4" year="2017" platform="4174" missionnumber="2" missiontypename="Forskningsfartøy" callsignal="LMEL" platformname="G.O.Sars" xmlns="http://www.imr.no/formats/nmdbiotic/v1.4">
+    <cruise>2017102</cruise>
+    <startdate>07/02/2017</startdate>
+    <stopdate>25/03/2017</stopdate>
+    <purpose>Mengdemåling av bunnfisk, med hovedforkus på torsk og hyse. Gjennomføres med to norske fartøy, samt et russisk fartøy. Data brukes i bestandsberegning (AFWG). Prøvetaking for NIFES og innsamling av snøkrabbe..2017-RED-014: Kalibrering av ekkolodd etter verkstedsopphold</purpose>
+    <fishstation serialno="70006">
+        <nation>58</nation>
+        <platform>4174</platform>
+        <station>6</station>
+        <startdate>09/02/2017</startdate>
+        <starttime>05:27:35</starttime>
+        <stopdate>09/02/2017</stopdate>
+        <stoptime>05:50:11</stoptime>
+        <stationtype>2</stationtype>
+        <latitudestart>70.8225</latitudestart>
+        <longitudestart>20.541666666666668</longitudestart>
+        <latitudeend>70.82966666666667</latitudeend>
+        <longitudeend>20.479666666666667</longitudeend>
+        <system>2</system>
+        <area>4</area>
+        <location>10</location>
+        <bottomdepthstart>227.110001</bottomdepthstart>
+        <bottomdepthstop>216.820007</bottomdepthstop>
+        <fishingdepthmax>228.21</fishingdepthmax>
+        <fishingdepthmin>215.66</fishingdepthmin>
+        <gearno>1617</gearno>
+        <gear>3271</gear>
+        <gearcount>1</gearcount>
+        <direction>294.0</direction>
+        <gearspeed>3.452097345</gearspeed>
+        <startlog>7450.71289</startlog>
+        <stoplog>7452.01318</stoplog>
+        <distance>1.30029</distance>
+        <gearcondition>1</gearcondition>
+        <trawlquality>1</trawlquality>
+        <trawlopening>4.88</trawlopening>
+        <doorspread>50.0</doorspread>
+        <wirelength>543</wirelength>
+        <dataquality>2</dataquality>
+    </fishstation>
+    <fishstation serialno="70007">
+        <nation>58</nation>
+        <platform>4174</platform>
+        <station>6</station>
+        <startdate>09/02/2017</startdate>
+        <starttime>19:57:58</starttime>
+        <stopdate>09/02/2017</stopdate>
+        <stoptime>20:12:58</stoptime>
+        <latitudestart>72.4934</latitudestart>
+        <longitudestart>17.388778333333335</longitudestart>
+        <latitudeend>72.48313333333333</latitudeend>
+        <longitudeend>17.41195</longitudeend>
+        <system>2</system>
+        <area>12</area>
+        <location>08</location>
+        <bottomdepthstart>349.230011</bottomdepthstart>
+        <bottomdepthstop>348.410004</bottomdepthstop>
+        <fishingdepthmax>351.99</fishingdepthmax>
+        <fishingdepthmin>344.85</fishingdepthmin>
+        <gearno>1623</gearno>
+        <gear>3271</gear>
+        <gearcount>1</gearcount>
+        <direction>152.0</direction>
+        <gearspeed>3.00392</gearspeed>
+        <startlog>7578.3999</startlog>
+        <stoplog>7579.15088</stoplog>
+        <distance>0.75098</distance>
+        <gearcondition>1</gearcondition>
+        <trawlquality>1</trawlquality>
+        <trawlopening>3.67</trawlopening>
+        <doorspread>51.0</doorspread>
+        <wirelength>796</wirelength>
+        <dataquality>2</dataquality>
+        <comment>GPS fart - ingen speed sensor</comment>
+        <catchsample species="160806" samplenumber="1" noname="skater" aphia="10216">
+            <sampletype>50</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <count>1</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+        </catchsample>
+        <catchsample species="162064" samplenumber="1" noname="vassild" aphia="126715">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>2.875</weight>
+            <count>13</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>2.875</lengthsampleweight>
+            <lengthsamplecount>13</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.39</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.315</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.35</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.345</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.26</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.305</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.26</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164712" samplenumber="1" noname="torsk" aphia="126436">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>14.8</weight>
+            <count>8</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>14.8</lengthsampleweight>
+            <lengthsamplecount>8</lengthsamplecount>
+            <specimensamplecount>5</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <stomach>2</stomach>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>1.53</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.59</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <liverweight>0.023</liverweight>
+                <agedetermination no="1">
+                    <age>5</age>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.89</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.485</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.004</gonadweight>
+                <liverweight>0.018</liverweight>
+                <agedetermination no="1">
+                    <age>5</age>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>1.775</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.6</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.011</gonadweight>
+                <liverweight>0.02</liverweight>
+                <agedetermination no="1">
+                    <age>7</age>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>4.35</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.82</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.03</gonadweight>
+                <liverweight>0.174</liverweight>
+                <agedetermination no="1">
+                    <age>9</age>
+                    <spawningage>7</spawningage>
+                    <spawningzones>2</spawningzones>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <weight>1.225</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.53</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <liverweight>0.045</liverweight>
+                <agedetermination no="1">
+                    <age>6</age>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.62</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.64</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.6</length>
+            </individual>
+            <prey fishno="1" partno="1" species="161722">
+                <digestion>3</digestion>
+                <totalcount>1</totalcount>
+                <weightresolution>3</weightresolution>
+                <totalweight>0.034935</totalweight>
+                <interval>3</interval>
+                <lengthmeasurement>E</lengthmeasurement>
+                <preylength length="0.19">
+                    <count>1</count>
+                </preylength>
+            </prey>
+            <prey fishno="5" partno="1" species="69459">
+                <digestion>2</digestion>
+                <totalcount>1</totalcount>
+                <weightresolution>3</weightresolution>
+                <totalweight>0.000962</totalweight>
+                <interval>3</interval>
+                <lengthmeasurement>E</lengthmeasurement>
+                <preylength length="0.01">
+                    <count>1</count>
+                </preylength>
+            </prey>
+            <prey fishno="4" partno="1" species="96967">
+                <digestion>3</digestion>
+                <weightresolution>3</weightresolution>
+                <totalweight>0.014392</totalweight>
+            </prey>
+            <prey fishno="2" partno="1">
+                <totalweight>0.0</totalweight>
+            </prey>
+            <prey fishno="3" partno="1">
+                <totalweight>0.0</totalweight>
+            </prey>
+            <prey fishno="6" partno="1">
+                <totalweight>0.0</totalweight>
+            </prey>
+        </catchsample>
+        <catchsample species="164727" samplenumber="1" noname="sei" aphia="126441">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>3.88</weight>
+            <count>6</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>3.88</lengthsampleweight>
+            <lengthsamplecount>6</lengthsamplecount>
+            <specimensamplecount>6</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>1.04</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.48</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <agedetermination no="1">
+                    <age>5</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.78</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.465</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <agedetermination no="1">
+                    <age>5</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>0.785</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.46</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <agedetermination no="1">
+                    <age>5</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>0.565</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.42</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <agedetermination no="1">
+                    <age>4</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <weight>0.405</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.375</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <agedetermination no="1">
+                    <age>4</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <weight>0.375</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.35</length>
+                <sex>2</sex>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+        </catchsample>
+        <catchsample species="164740" samplenumber="1" noname="brosme" aphia="126447">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.145</weight>
+            <count>5</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.145</lengthsampleweight>
+            <lengthsamplecount>5</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.085</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.09</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164744" samplenumber="1" noname="hyse" aphia="126437">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>16.52</weight>
+            <count>14</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>16.52</lengthsampleweight>
+            <lengthsamplecount>14</lengthsamplecount>
+            <specimensamplecount>4</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>1.76</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.57</length>
+                <sex>2</sex>
+                <stage>2</stage>
+                <gonadweight>0.03</gonadweight>
+                <liverweight>0.098</liverweight>
+                <agedetermination no="1">
+                    <age>7</age>
+                    <spawningage>6</spawningage>
+                    <spawningzones>1</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.945</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.46</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <liverweight>0.049</liverweight>
+                <agedetermination no="1">
+                    <age>4</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>1.575</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.54</length>
+                <sex>2</sex>
+                <stage>2</stage>
+                <gonadweight>0.026</gonadweight>
+                <liverweight>0.103</liverweight>
+                <agedetermination no="1">
+                    <age>6</age>
+                    <spawningage>5</spawningage>
+                    <spawningzones>1</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>0.025</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+                <agedetermination no="1">
+                    <age>1</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.455</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.51</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.53</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.56</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.5</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164756" samplenumber="1" noname="øyepål" aphia="126444">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.284</weight>
+            <count>27</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.284</lengthsampleweight>
+            <lengthsamplecount>27</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.095</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.12</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.095</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.12</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.09</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.1</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.1</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.1</length>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.1</length>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164772" samplenumber="1" noname="sølvtorsk" aphia="126435">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.108</weight>
+            <count>5</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.108</lengthsampleweight>
+            <lengthsamplecount>5</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.095</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164774" samplenumber="1" noname="kolmule" aphia="126439">
+            <sampletype>23</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>28.33</weight>
+            <count>488</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>5.804</lengthsampleweight>
+            <lengthsamplecount>100</lengthsamplecount>
+            <specimensamplecount>100</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>0.059</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>2</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.049</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>1</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>0.056</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>6</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>0.055</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>6</stomachfillfield>
+                <liver>3</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>2</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <weight>0.045</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>3</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>2</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <weight>0.064</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>1</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <weight>0.055</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>2</stomachfillfield>
+                <liver>3</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>2</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <weight>0.052</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>1</stomachfillfield>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <weight>0.061</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <stomachfillfield>2</stomachfillfield>
+                <liver>3</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <weight>0.063</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>3</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>2</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>2</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <weight>0.052</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>3</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <weight>0.045</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>1</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <weight>0.063</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>1</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <weight>0.049</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <weight>0.044</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <weight>0.078</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <weight>0.059</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <weight>0.061</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <weight>0.08</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.255</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <weight>0.1</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.275</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <weight>0.047</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <weight>0.066</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+                <sex>1</sex>
+                <specialstage>1</specialstage>
+                <liver>3</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <weight>0.052</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>1</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <weight>0.078</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <weight>0.052</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="28">
+                <producttype>1</producttype>
+                <weight>0.048</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>2</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="29">
+                <producttype>1</producttype>
+                <weight>0.041</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.2</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="30">
+                <producttype>1</producttype>
+                <weight>0.05</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+                <sex>2</sex>
+                <specialstage>1</specialstage>
+                <liver>2</liver>
+                <liverparasite>2</liverparasite>
+                <swollengills>1</swollengills>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                </agedetermination>
+            </individual>
+            <individual specimenno="31">
+                <producttype>1</producttype>
+                <weight>0.052</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="32">
+                <producttype>1</producttype>
+                <weight>0.076</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+            <individual specimenno="33">
+                <producttype>1</producttype>
+                <weight>0.083</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+            <individual specimenno="34">
+                <producttype>1</producttype>
+                <weight>0.057</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="35">
+                <producttype>1</producttype>
+                <weight>0.167</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.31</length>
+            </individual>
+            <individual specimenno="36">
+                <producttype>1</producttype>
+                <weight>0.064</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="37">
+                <producttype>1</producttype>
+                <weight>0.073</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="38">
+                <producttype>1</producttype>
+                <weight>0.065</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="39">
+                <producttype>1</producttype>
+                <weight>0.048</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="40">
+                <producttype>1</producttype>
+                <weight>0.06</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="41">
+                <producttype>1</producttype>
+                <weight>0.066</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="42">
+                <producttype>1</producttype>
+                <weight>0.054</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="43">
+                <producttype>1</producttype>
+                <weight>0.065</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="44">
+                <producttype>1</producttype>
+                <weight>0.033</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="45">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="46">
+                <producttype>1</producttype>
+                <weight>0.069</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="47">
+                <producttype>1</producttype>
+                <weight>0.073</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="48">
+                <producttype>1</producttype>
+                <weight>0.072</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+            <individual specimenno="49">
+                <producttype>1</producttype>
+                <weight>0.054</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="50">
+                <producttype>1</producttype>
+                <weight>0.055</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="51">
+                <producttype>1</producttype>
+                <weight>0.063</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="52">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="53">
+                <producttype>1</producttype>
+                <weight>0.045</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="54">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="55">
+                <producttype>1</producttype>
+                <weight>0.046</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="56">
+                <producttype>1</producttype>
+                <weight>0.062</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="57">
+                <producttype>1</producttype>
+                <weight>0.053</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="58">
+                <producttype>1</producttype>
+                <weight>0.056</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="59">
+                <producttype>1</producttype>
+                <weight>0.043</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="60">
+                <producttype>1</producttype>
+                <weight>0.087</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+            <individual specimenno="61">
+                <producttype>1</producttype>
+                <weight>0.083</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.26</length>
+            </individual>
+            <individual specimenno="62">
+                <producttype>1</producttype>
+                <weight>0.048</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="63">
+                <producttype>1</producttype>
+                <weight>0.043</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="64">
+                <producttype>1</producttype>
+                <weight>0.063</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="65">
+                <producttype>1</producttype>
+                <weight>0.047</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="66">
+                <producttype>1</producttype>
+                <weight>0.05</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="67">
+                <producttype>1</producttype>
+                <weight>0.065</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="68">
+                <producttype>1</producttype>
+                <weight>0.056</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="69">
+                <producttype>1</producttype>
+                <weight>0.054</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="70">
+                <producttype>1</producttype>
+                <weight>0.072</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="71">
+                <producttype>1</producttype>
+                <weight>0.057</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="72">
+                <producttype>1</producttype>
+                <weight>0.057</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="73">
+                <producttype>1</producttype>
+                <weight>0.073</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="74">
+                <producttype>1</producttype>
+                <weight>0.034</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="75">
+                <producttype>1</producttype>
+                <weight>0.054</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="76">
+                <producttype>1</producttype>
+                <weight>0.057</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="77">
+                <producttype>1</producttype>
+                <weight>0.076</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="78">
+                <producttype>1</producttype>
+                <weight>0.053</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="79">
+                <producttype>1</producttype>
+                <weight>0.063</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="80">
+                <producttype>1</producttype>
+                <weight>0.052</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="81">
+                <producttype>1</producttype>
+                <weight>0.056</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="82">
+                <producttype>1</producttype>
+                <weight>0.046</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="83">
+                <producttype>1</producttype>
+                <weight>0.033</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="84">
+                <producttype>1</producttype>
+                <weight>0.054</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="85">
+                <producttype>1</producttype>
+                <weight>0.04</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="86">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="87">
+                <producttype>1</producttype>
+                <weight>0.041</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="88">
+                <producttype>1</producttype>
+                <weight>0.029</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="89">
+                <producttype>1</producttype>
+                <weight>0.054</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="90">
+                <producttype>1</producttype>
+                <weight>0.055</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="91">
+                <producttype>1</producttype>
+                <weight>0.04</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="92">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="93">
+                <producttype>1</producttype>
+                <weight>0.05</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="94">
+                <producttype>1</producttype>
+                <weight>0.065</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="95">
+                <producttype>1</producttype>
+                <weight>0.048</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="96">
+                <producttype>1</producttype>
+                <weight>0.064</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.23</length>
+            </individual>
+            <individual specimenno="97">
+                <producttype>1</producttype>
+                <weight>0.059</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="98">
+                <producttype>1</producttype>
+                <weight>0.051</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="99">
+                <producttype>1</producttype>
+                <weight>0.062</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="100">
+                <producttype>1</producttype>
+                <weight>0.078</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166705" samplenumber="1" noname="uerslekten" aphia="126175">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.028</weight>
+            <count>6</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.028</lengthsampleweight>
+            <lengthsamplecount>6</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.09</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.075</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.07</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166756" samplenumber="1" noname="snabeluer" aphia="127254">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>3.08</weight>
+            <count>7</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>3.08</lengthsampleweight>
+            <lengthsamplecount>7</lengthsamplecount>
+            <specimensamplecount>5</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>0.68</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.38</length>
+                <sex>1</sex>
+                <stage>2</stage>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.765</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.385</length>
+                <sex>1</sex>
+                <stage>2</stage>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>0.35</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.315</length>
+                <sex>2</sex>
+                <stage>1</stage>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>0.07</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <weight>0.023</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.12</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.35</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.375</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166779" samplenumber="1" noname="lusuer" aphia="127255">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>3.84</weight>
+            <count>34</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>3.84</lengthsampleweight>
+            <lengthsamplecount>34</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.2</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.185</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.255</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.135</length>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.2</length>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.2</length>
+            </individual>
+            <individual specimenno="28">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="29">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="30">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="31">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="32">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="33">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="34">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166781" samplenumber="1" noname="vanlig uer" aphia="151324">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>1.54</weight>
+            <count>2</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>1.54</lengthsampleweight>
+            <lengthsamplecount>2</lengthsamplecount>
+            <specimensamplecount>2</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>1.18</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.445</length>
+                <sex>1</sex>
+                <stage>2</stage>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.4</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.295</length>
+                <sex>1</sex>
+                <stage>2</stage>
+            </individual>
+        </catchsample>
+        <catchsample species="167208" samplenumber="1" noname="krokulke" aphia="127193">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.086</weight>
+            <count>22</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.086</lengthsampleweight>
+            <lengthsamplecount>22</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.05</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.045</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.06</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.055</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.06</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.06</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.07</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.075</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.07</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.07</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.075</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.06</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.075</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.055</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.065</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.06</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.07</length>
+            </individual>
+        </catchsample>
+        <catchsample species="172877" samplenumber="1" noname="gapeflyndre" aphia="127137">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.017</weight>
+            <count>3</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.017</lengthsampleweight>
+            <lengthsamplecount>3</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.08</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.09</length>
+            </individual>
+        </catchsample>
+        <catchsample species="46861" samplenumber="1" noname="svamper" aphia="558">
+            <sampletype>90</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>1375.0</weight>
+            <count>270</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+        </catchsample>
+        <catchsample species="564149" samplenumber="1" noname="kloskate" aphia="105865">
+            <sampletype>34</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.675</weight>
+            <count>1</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.675</lengthsampleweight>
+            <lengthsamplecount>1</lengthsamplecount>
+            <specimensamplecount>1</specimensamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+                <sex>2</sex>
+            </individual>
+        </catchsample>
+        <catchsample species="631144" samplenumber="1" noname="vanlig ålebrosme" aphia="274100">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.04</weight>
+            <count>5</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.04</lengthsampleweight>
+            <lengthsamplecount>5</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.135</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.085</length>
+            </individual>
+        </catchsample>
+        <catchsample species="96967" samplenumber="1" noname="dypvannsreke" aphia="107649">
+            <sampletype>90</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>5.92</weight>
+            <count>569</count>
+        </catchsample>
+    </fishstation>
+    <fishstation serialno="70008">
+        <nation>58</nation>
+        <platform>4174</platform>
+        <station>8</station>
+        <startdate>09/02/2017</startdate>
+        <starttime>23:29:15</starttime>
+        <stopdate>09/02/2017</stopdate>
+        <stoptime>23:44:27</stoptime>
+        <latitudestart>72.44744833333333</latitudestart>
+        <longitudestart>16.16547</longitudestart>
+        <latitudeend>72.43802166666667</latitudeend>
+        <longitudeend>16.134663333333332</longitudeend>
+        <system>2</system>
+        <area>12</area>
+        <location>07</location>
+        <bottomdepthstart>403.630005</bottomdepthstart>
+        <bottomdepthstop>403.880005</bottomdepthstop>
+        <fishingdepthmax>409.61</fishingdepthmax>
+        <fishingdepthmin>401.69</fishingdepthmin>
+        <gearno>1623</gearno>
+        <gear>3271</gear>
+        <gearcount>1</gearcount>
+        <direction>223.0</direction>
+        <gearspeed>3.151342105</gearspeed>
+        <startlog>7604.84082</startlog>
+        <stoplog>7605.63916</stoplog>
+        <distance>0.79834</distance>
+        <gearcondition>1</gearcondition>
+        <trawlquality>1</trawlquality>
+        <trawlopening>4.06</trawlopening>
+        <doorspread>51.0</doorspread>
+        <wirelength>911</wirelength>
+        <dataquality>2</dataquality>
+        <comment>brukte gps speed .speedsensor ute</comment>
+        <catchsample species="162064" samplenumber="1" noname="vassild" aphia="126715">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>2.86</weight>
+            <count>13</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>2.86</lengthsampleweight>
+            <lengthsamplecount>13</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.38</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.265</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.36</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.31</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.345</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.37</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.315</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.26</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.25</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.355</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.28</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164712" samplenumber="1" noname="torsk" aphia="126436">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>7.18</weight>
+            <count>3</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>7.18</lengthsampleweight>
+            <lengthsamplecount>3</lengthsamplecount>
+            <specimensamplecount>3</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <stomach>2</stomach>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>2.91</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.66</length>
+                <sex>1</sex>
+                <stage>2</stage>
+                <gonadweight>0.17</gonadweight>
+                <liverweight>0.317</liverweight>
+                <agedetermination no="1">
+                    <age>7</age>
+                    <spawningage>6</spawningage>
+                    <spawningzones>1</spawningzones>
+                    <readability>6</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>1.66</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.56</length>
+                <sex>2</sex>
+                <stage>2</stage>
+                <gonadweight>0.127</gonadweight>
+                <liverweight>0.129</liverweight>
+                <agedetermination no="1">
+                    <age>6</age>
+                    <spawningage>6</spawningage>
+                    <spawningzones>0</spawningzones>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>2.98</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.74</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <liverweight>0.049</liverweight>
+                <agedetermination no="1">
+                    <age>8</age>
+                    <spawningage>6</spawningage>
+                    <spawningzones>2</spawningzones>
+                    <readability>1</readability>
+                    <otolithtype>5</otolithtype>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <prey fishno="3" partno="1" species="161105">
+                <digestion>4</digestion>
+                <weightresolution>3</weightresolution>
+                <totalweight>0.006841</totalweight>
+            </prey>
+            <prey fishno="1" partno="1">
+                <totalweight>0.0</totalweight>
+            </prey>
+            <prey fishno="2" partno="1">
+                <totalweight>0.0</totalweight>
+            </prey>
+        </catchsample>
+        <catchsample species="164727" samplenumber="1" noname="sei" aphia="126441">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.62</weight>
+            <count>1</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.62</lengthsampleweight>
+            <lengthsamplecount>1</lengthsamplecount>
+            <specimensamplecount>1</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>0.62</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.41</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <gonadweight>0.001</gonadweight>
+                <agedetermination no="1">
+                    <age>5</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+        </catchsample>
+        <catchsample species="164740" samplenumber="1" noname="brosme" aphia="126447">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>1.135</weight>
+            <count>1</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>1.135</lengthsampleweight>
+            <lengthsamplecount>1</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.48</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164744" samplenumber="1" noname="hyse" aphia="126437">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>55.56</weight>
+            <count>75</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>55.56</lengthsampleweight>
+            <lengthsamplecount>75</lengthsamplecount>
+            <specimensamplecount>10</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>0.945</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.48</length>
+                <sex>1</sex>
+                <stage>2</stage>
+                <gonadweight>0.031</gonadweight>
+                <liverweight>0.062</liverweight>
+                <agedetermination no="1">
+                    <age>7</age>
+                    <spawningage>5</spawningage>
+                    <spawningzones>2</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>2.41</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.62</length>
+                <sex>1</sex>
+                <stage>3</stage>
+                <gonadweight>0.096</gonadweight>
+                <liverweight>0.188</liverweight>
+                <agedetermination no="1">
+                    <age>6</age>
+                    <spawningage>5</spawningage>
+                    <spawningzones>1</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>1.46</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+                <sex>2</sex>
+                <stage>2</stage>
+                <gonadweight>0.037</gonadweight>
+                <liverweight>0.053</liverweight>
+                <agedetermination no="1">
+                    <age>7</age>
+                    <spawningage>6</spawningage>
+                    <spawningzones>1</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>3.05</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.67</length>
+                <sex>1</sex>
+                <stage>2</stage>
+                <gonadweight>0.101</gonadweight>
+                <liverweight>0.148</liverweight>
+                <agedetermination no="1">
+                    <age>7</age>
+                    <spawningage>6</spawningage>
+                    <spawningzones>1</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <weight>0.8</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.425</length>
+                <sex>2</sex>
+                <stage>1</stage>
+                <gonadweight>0.001</gonadweight>
+                <liverweight>0.021</liverweight>
+                <agedetermination no="1">
+                    <age>4</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <weight>1.37</weight>
+                <lengthunit>3</lengthunit>
+                <length>0.52</length>
+                <sex>2</sex>
+                <stage>2</stage>
+                <gonadweight>0.043</gonadweight>
+                <liverweight>0.063</liverweight>
+                <agedetermination no="1">
+                    <age>6</age>
+                    <spawningage>4</spawningage>
+                    <spawningzones>2</spawningzones>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <weight>0.38</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.34</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <gonadweight>0.002</gonadweight>
+                <liverweight>0.011</liverweight>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <weight>0.027</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+                <agedetermination no="1">
+                    <age>1</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <weight>0.024</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+                <agedetermination no="1">
+                    <age>1</age>
+                    <readability>1</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <weight>0.132</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+                <sex>1</sex>
+                <stage>1</stage>
+                <agedetermination no="1">
+                    <age>3</age>
+                    <readability>5</readability>
+                    <otolithedge>4</otolithedge>
+                </agedetermination>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.63</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.56</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.62</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.58</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.54</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.62</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.53</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.58</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.51</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.58</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.59</length>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.54</length>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.59</length>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.52</length>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.59</length>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.65</length>
+            </individual>
+            <individual specimenno="28">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.55</length>
+            </individual>
+            <individual specimenno="29">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.59</length>
+            </individual>
+            <individual specimenno="30">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.67</length>
+            </individual>
+            <individual specimenno="31">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.61</length>
+            </individual>
+            <individual specimenno="32">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.52</length>
+            </individual>
+            <individual specimenno="33">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.475</length>
+            </individual>
+            <individual specimenno="34">
+                <producttype>1</producttype>
+                <lengthunit>3</lengthunit>
+                <length>0.51</length>
+            </individual>
+            <individual specimenno="35">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="36">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="37">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="38">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="39">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="40">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="41">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="42">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="43">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="44">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="45">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="46">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="47">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="48">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="49">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="50">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="51">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="52">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="53">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="54">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="55">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="56">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="57">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="58">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="59">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="60">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+            <individual specimenno="61">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="62">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+            <individual specimenno="63">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="64">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="65">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="66">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="67">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="68">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="69">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="70">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="71">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="72">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="73">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="74">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="75">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164756" samplenumber="1" noname="øyepål" aphia="126444">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>1.44</weight>
+            <count>67</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.64</lengthsampleweight>
+            <lengthsamplecount>30</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.12</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.13</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.165</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.13</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.17</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.15</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.12</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.105</length>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="28">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.13</length>
+            </individual>
+            <individual specimenno="29">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="30">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164772" samplenumber="1" noname="sølvtorsk" aphia="126435">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.27</weight>
+            <count>13</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.27</lengthsampleweight>
+            <lengthsamplecount>13</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.125</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.135</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.11</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.13</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+        </catchsample>
+        <catchsample species="164774" samplenumber="1" noname="kolmule" aphia="126439">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>15.2</weight>
+            <count>240</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>1.9</lengthsampleweight>
+            <lengthsamplecount>30</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.235</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.27</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.245</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.25</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.26</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.2</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.18</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.205</length>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.195</length>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.22</length>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.21</length>
+            </individual>
+            <individual specimenno="28">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.225</length>
+            </individual>
+            <individual specimenno="29">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.215</length>
+            </individual>
+            <individual specimenno="30">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.2</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166756" samplenumber="1" noname="snabeluer" aphia="127254">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>28.56</weight>
+            <count>41</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>28.56</lengthsampleweight>
+            <lengthsamplecount>41</lengthsamplecount>
+            <specimensamplecount>6</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>0.82</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.415</length>
+                <sex>1</sex>
+                <stage>3</stage>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <weight>0.93</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+                <sex>1</sex>
+                <stage>3</stage>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <weight>0.53</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.34</length>
+                <sex>2</sex>
+                <stage>1</stage>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <weight>0.81</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.38</length>
+                <sex>1</sex>
+                <stage>3</stage>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <weight>0.5</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.33</length>
+                <sex>2</sex>
+                <stage>1</stage>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <weight>0.97</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.4</length>
+                <sex>1</sex>
+                <stage>3</stage>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.325</length>
+            </individual>
+            <individual specimenno="8">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.4</length>
+            </individual>
+            <individual specimenno="9">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.39</length>
+            </individual>
+            <individual specimenno="10">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.315</length>
+            </individual>
+            <individual specimenno="11">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.33</length>
+            </individual>
+            <individual specimenno="12">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.34</length>
+            </individual>
+            <individual specimenno="13">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.355</length>
+            </individual>
+            <individual specimenno="14">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.365</length>
+            </individual>
+            <individual specimenno="15">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.39</length>
+            </individual>
+            <individual specimenno="16">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.4</length>
+            </individual>
+            <individual specimenno="17">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+            </individual>
+            <individual specimenno="18">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.37</length>
+            </individual>
+            <individual specimenno="19">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+            </individual>
+            <individual specimenno="20">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.385</length>
+            </individual>
+            <individual specimenno="21">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.415</length>
+            </individual>
+            <individual specimenno="22">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.345</length>
+            </individual>
+            <individual specimenno="23">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.4</length>
+            </individual>
+            <individual specimenno="24">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.355</length>
+            </individual>
+            <individual specimenno="25">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+            </individual>
+            <individual specimenno="26">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+            </individual>
+            <individual specimenno="27">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.375</length>
+            </individual>
+            <individual specimenno="28">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.385</length>
+            </individual>
+            <individual specimenno="29">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+            </individual>
+            <individual specimenno="30">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.415</length>
+            </individual>
+            <individual specimenno="31">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.395</length>
+            </individual>
+            <individual specimenno="32">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.36</length>
+            </individual>
+            <individual specimenno="33">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.4</length>
+            </individual>
+            <individual specimenno="34">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.36</length>
+            </individual>
+            <individual specimenno="35">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.345</length>
+            </individual>
+            <individual specimenno="36">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.375</length>
+            </individual>
+            <individual specimenno="37">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.385</length>
+            </individual>
+            <individual specimenno="38">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.33</length>
+            </individual>
+            <individual specimenno="39">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.405</length>
+            </individual>
+            <individual specimenno="40">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.385</length>
+            </individual>
+            <individual specimenno="41">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.39</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166779" samplenumber="1" noname="lusuer" aphia="127255">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.76</weight>
+            <count>3</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.76</lengthsampleweight>
+            <lengthsamplecount>3</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.295</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.175</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.27</length>
+            </individual>
+        </catchsample>
+        <catchsample species="166781" samplenumber="1" noname="vanlig uer" aphia="151324">
+            <sampletype>21</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>1.63</weight>
+            <count>1</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>1.63</lengthsampleweight>
+            <lengthsamplecount>1</lengthsamplecount>
+            <specimensamplecount>1</specimensamplecount>
+            <agingstructure>2</agingstructure>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <weight>1.63</weight>
+                <lengthunit>2</lengthunit>
+                <length>0.5</length>
+                <sex>1</sex>
+                <stage>3</stage>
+            </individual>
+        </catchsample>
+        <catchsample species="167208" samplenumber="1" noname="krokulke" aphia="127193">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.015</weight>
+            <count>2</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.015</lengthsampleweight>
+            <lengthsamplecount>2</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.075</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.08</length>
+            </individual>
+        </catchsample>
+        <catchsample species="172877" samplenumber="1" noname="gapeflyndre" aphia="127137">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>1.19</weight>
+            <count>7</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>1.19</lengthsampleweight>
+            <lengthsamplecount>7</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.3</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.345</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.19</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.265</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.24</length>
+            </individual>
+            <individual specimenno="6">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.31</length>
+            </individual>
+            <individual specimenno="7">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.16</length>
+            </individual>
+        </catchsample>
+        <catchsample species="631144" samplenumber="1" noname="vanlig ålebrosme" aphia="274100">
+            <sampletype>10</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.07</weight>
+            <count>5</count>
+            <sampleproducttype>1</sampleproducttype>
+            <lengthmeasurement>E</lengthmeasurement>
+            <lengthsampleweight>0.07</lengthsampleweight>
+            <lengthsamplecount>5</lengthsamplecount>
+            <individual specimenno="1">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+            <individual specimenno="2">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.115</length>
+            </individual>
+            <individual specimenno="3">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.145</length>
+            </individual>
+            <individual specimenno="4">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.155</length>
+            </individual>
+            <individual specimenno="5">
+                <producttype>1</producttype>
+                <lengthunit>2</lengthunit>
+                <length>0.14</length>
+            </individual>
+        </catchsample>
+        <catchsample species="96967" samplenumber="1" noname="dypvannsreke" aphia="107649">
+            <sampletype>90</sampletype>
+            <conservation>1</conservation>
+            <producttype>1</producttype>
+            <weight>0.89</weight>
+            <count>107</count>
+        </catchsample>
+    </fishstation>
+</mission>

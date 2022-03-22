@@ -49,7 +49,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 		# There can be duplicate names between two tables, see that we fix them by adding appropriate suffix before merging
 		duplicates <- intersect(setdiff(names(data[[prev]]), vars), setdiff(names(data[[curr]]), vars))
 		for(ddpl in duplicates) {
-			message(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
+			#message(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
 			setnames(data[[curr]], ddpl, paste0(ddpl, ".", curr))
 		}
 		
@@ -505,7 +505,7 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 		duplicatedKeys <- duplicated(StoxData[[tableName]], by = presentKeys)
 		# Remove the rows with duplicated keys:
 		if(any(duplicatedKeys)) {
-			# Get the rows with equall keys, and indicate this in a copy of the data, and write to a tempfile:
+			# Get the rows with equal keys, and indicate this in a copy of the data, and write to a tempfile:
 			allDuplicated <- duplicated(StoxData[[tableName]], by = presentKeys) | duplicated(StoxData[[tableName]], by = presentKeys, fromLast = TRUE)
 			dupData <- data.table::copy(StoxData[[tableName]])
 			dupData[, duplicated := ..allDuplicated]
@@ -530,6 +530,7 @@ AddToStoxData <- function(
 	StoxData, 
 	RawData, 
 	VariableNames = character(), 
+	AddToLowestTable = FALSE, 
 	NumberOfCores = 1L, 
 	StoxDataFormat = c("Biotic", "Acoustic")
 ) {
@@ -543,8 +544,15 @@ AddToStoxData <- function(
 	checkDataSource(RawData)
 	
 	# If from NMDBiotic <= 1.4, skip all non-relevant tables (as e.g. the prey table does not contain the keys necessary to merge with individual, thus resulting in different columns than data from NMDBiotic >= 3):
+	invalidTables1.4 <- c("missionlog", "prey", "preylength", "copepodedevstage", "tag")
+	
 	for(RawDataName in names(RawData)) {
-		if(RawData[[RawDataName]]$metadata$useXsd %in% c("nmdbioticv1.1", "nmdbioticv1.4")) {
+		namesInInvalidTables <- unlist(lapply(RawData[[RawDataName]][invalidTables1.4], names))
+		validTables1.4 <- setdiff(names(RawData[[RawDataName]]), invalidTables1.4)
+		namesInValidTables <- unlist(lapply(RawData[[RawDataName]][validTables1.4], names))
+		invalidRawNames <- setdiff(namesInInvalidTables, namesInValidTables)
+		if(RawData[[RawDataName]]$metadata$useXsd %in% c("nmdbioticv1.1", "nmdbioticv1.4") && any(VariableNames %in% invalidRawNames)) {
+			warning("StoX: Cannot add variables from the tables ", paste(invalidTables1.4, collapse = ", "), " from NMDBiotic 1.1 and 1.4 due to lack of keys for these tables.")
 			RawData[[RawDataName]] <- subset(RawData[[RawDataName]], ! names(RawData[[RawDataName]]) %in% c("missionlog", "prey", "preylength", "copepodedevstage", "tag"))
 		}
 	}
@@ -552,7 +560,11 @@ AddToStoxData <- function(
 	# Convert from BioticData to the general sampling hierarchy:
 	StoxDataFormat <- match.arg(StoxDataFormat)
 	if(StoxDataFormat == "Biotic") {
-		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(RawData, NumberOfCores = NumberOfCores)
+		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(
+			RawData, 
+			NumberOfCores = NumberOfCores, 
+			AddToLowestTable = AddToLowestTable
+		)
 		
 		allNames <- unlist(lapply(GeneralSamplingHierarchy, names))
 		if(any(VariableNames %in% allNames)) {
@@ -591,9 +603,13 @@ AddToStoxData <- function(
 }
 
 mergeAndOverwriteDataTable <- function(x, y, ...) {
+	# Do not merge if y is empty:
+	if(!length(y)) {
+		return(x)
+	}
 	# Overwrite any non-keys already present in the StoxData
 	toKeep <- !names(x) %in% names(y) | endsWith(names(x), "Key")
-	merge(x[, ..toKeep], y, ...)
+	mergeByIntersect(x[, ..toKeep], y, ...)
 }
 
 
@@ -747,6 +763,9 @@ createOrderKey <- function(x, split = "/") {
 	}
 	firstNonNA <- x[1]
 	if(is.na(firstNonNA)) {
+		if(all(is.na(x))) {
+			return(x)
+		}
 		firstNonNA <- x[min(which(!is.na(x)))]
 	}
 	# If the first element is coercable to numierc, try converting the entire vector to numeric, and check that no NAs were generated:

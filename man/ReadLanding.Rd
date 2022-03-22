@@ -4,7 +4,7 @@
 \alias{ReadLanding}
 \title{Read landing XML files}
 \usage{
-ReadLanding(FileNames)
+ReadLanding(FileNames = character())
 }
 \arguments{
 \item{FileNames}{The paths of the landing files.}
