@@ -92,11 +92,11 @@ getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
 }
 
 
-getComplexMap <- function(NMDBioticFormat, keysForComplexMaps) {
+readComplexMap <- function(NMDBioticFormat, keysForComplexMaps, lowestTable = FALSE) {
 	
 	# Read complex maps, and add Keys and variables from individual and agedetermination:
 	NMDBioticFormat.csv <- paste0(NMDBioticFormat, ".csv")
-	file <- paste0("stox-translate-", NMDBioticFormat.csv)
+	file <- paste0("stox-translate-", if(lowestTable) "lowestTable-", NMDBioticFormat.csv)
 	
 	complexMaps <- rbind(
 		data.table::fread(file), 
@@ -236,10 +236,19 @@ stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- list(
 stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- getComplexMap(
+stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3.1", 
-	keysForComplexMaps = keysForComplexMaps
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = FALSE
 )
+stoxBioticObject$complexMaps_lowestTable[["nmdbioticv3.1"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv3.1", 
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = TRUE
+)
+
+
+
 
 ## Length conversion
 stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- convertLenRes_NMDBiotic
@@ -309,9 +318,15 @@ stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
 stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual")) 
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv3"]] <- getComplexMap(
+stoxBioticObject$complexMaps[["nmdbioticv3"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3", 
-	keysForComplexMaps = keysForComplexMaps
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = FALSE
+)
+stoxBioticObject$complexMaps_lowestTable[["nmdbioticv3"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv3", 
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = TRUE
 )
 
 ## Length conversion
@@ -361,9 +376,15 @@ stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- list(
 stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- getComplexMap(
+stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.4", 
-	keysForComplexMaps = keysForComplexMaps
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = FALSE
+)
+stoxBioticObject$complexMaps_lowestTable[["nmdbioticv1.4"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv1.4", 
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = TRUE
 )
 
 ## Length conversion
@@ -425,9 +446,15 @@ stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- stoxBioticObject$tableKeyLis
 stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- stoxBioticObject$tableMapList[["nmdbioticv1.4"]]
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
-stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- getComplexMap(
+stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.1", 
-	keysForComplexMaps = keysForComplexMaps
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = FALSE
+)
+stoxBioticObject$complexMaps_lowestTable[["nmdbioticv1.1"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv1.1", 
+	keysForComplexMaps = keysForComplexMaps, 
+	lowestTable = TRUE
 )
 
 ## Length conversion
@@ -463,6 +490,7 @@ stoxBioticObject$tableKeyList[["icesBiotic"]] <- list(
                 )
 stoxBioticObject$tableMapList[["icesBiotic"]] <- list(list("Cruise", "Cruise"), list("Biology", "Individual"))
 stoxBioticObject$complexMaps[["icesBiotic"]] <- fread("stox-translate-icesBiotic.csv", stringsAsFactors=FALSE)
+stoxBioticObject$complexMaps_lowestTable[["icesBiotic"]] <- fread("stox-translate-lowestTable-icesBiotic.csv", stringsAsFactors=FALSE)
 
 ## Length Res conversion
 stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(resName) {

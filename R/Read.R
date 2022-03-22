@@ -17,7 +17,7 @@
 #' 
 #' @export
 #' 
-ReadBiotic <- function(FileNames) {
+ReadBiotic <- function(FileNames = character()) {
 	
 	# Read BioticData possibly on several cores:
 	BioticData <- lapplyOnCores(
@@ -56,7 +56,7 @@ ReadBiotic <- function(FileNames) {
 #' 
 #' @export
 #' 
-ReadAcoustic <- function(FileNames) {
+ReadAcoustic <- function(FileNames = character()) {
 	
 	# Read AcousticData possibly on several cores:
 	AcousticData <- lapplyOnCores(
@@ -99,7 +99,7 @@ ReadAcoustic <- function(FileNames) {
 #' 
 #' @export
 #' 
-ReadLanding <- function(FileNames) {
+ReadLanding <- function(FileNames = character()) {
   
   # Read LandingData possibly on several cores:
   LandingData <- lapplyOnCores(

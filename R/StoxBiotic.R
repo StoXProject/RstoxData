@@ -36,13 +36,19 @@ StoxBiotic <- function(BioticData) {
 # Function to convert each element (representing input files) a BioticData object to the general sampling hierarchy:
 BioticData2GeneralSamplingHierarchy <- function(
 	BioticData, 
-	NumberOfCores = 1L
+	NumberOfCores = 1L, 
+	AddToLowestTable = FALSE
 ) {
-    # Run the first phase possibly on several cores:
+	
+	# Make a copy, since we are modifying things by reference:
+	BioticDataCopy <- data.table::copy(BioticData)
+    
+	# Run the first phase possibly on several cores:
 	lapplyOnCores(
-		BioticData, 
+		BioticDataCopy, 
 		FUN = StoxBiotic_firstPhase, 
-		NumberOfCores = NumberOfCores
+		NumberOfCores = NumberOfCores,
+		AddToLowestTable = AddToLowestTable
 	)
 }
 
@@ -78,7 +84,7 @@ rbindlist_StoxFormat <- function(x) {
 
 # Function to convert the data read from one type of biotic data into the general sampling hierarchy for biotic data defined by StoX:
 #' @importFrom data.table .N setindexv
-firstPhase <- function(data, datatype, stoxBioticObject) {
+firstPhase <- function(data, datatype, stoxBioticObject, AddToLowestTable = FALSE) {
     
 	# Getting data for the datatype
     tableKey <- stoxBioticObject$tableKeyList[[datatype]]
@@ -264,7 +270,12 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     }
     
     # 4. "COMPLEX" mapping
-    complexMap <- stoxBioticObject$complexMaps[[datatype]]
+    complexMap <- getComplexMap(
+    	datatype = datatype, 
+    	stoxBioticObject = stoxBioticObject, 
+    	AddToLowestTable = AddToLowestTable
+    )
+    
     # Get the different origin tables, and loop through these:
     levels <- unlist(unique(complexMap[, "level"]))
     for(origin in levels) {
@@ -297,6 +308,16 @@ firstPhase <- function(data, datatype, stoxBioticObject) {
     return(firstPhaseTables)
     
 }
+
+getComplexMap <- function(datatype, stoxBioticObject, AddToLowestTable = FALSE) {
+	if(AddToLowestTable) {
+		stoxBioticObject$complexMaps_lowestTable[[datatype]]
+	}
+	else {
+		stoxBioticObject$complexMaps[[datatype]]
+	}
+}
+
 
 
 # Function for merging the appropriate Catch row with the corresponding Biology record
@@ -334,7 +355,7 @@ specialMerge <- function(catchRowIndex, Catch, byVars) {
 }
 
 # Function to get the StoxBiotic on one file:
-StoxBiotic_firstPhase <- function(BioticData) {
+StoxBiotic_firstPhase <- function(BioticData, AddToLowestTable = FALSE) {
     # Get data type: 
 	datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
 	
@@ -343,7 +364,7 @@ StoxBiotic_firstPhase <- function(BioticData) {
     }
     
     # Do first phase
-    first <- firstPhase(BioticData, datatype, stoxBioticObject)
+    first <- firstPhase(BioticData, datatype, stoxBioticObject, AddToLowestTable = AddToLowestTable)
     # Add the metadata:
     first$metadata <- BioticData$metadata
     
@@ -491,6 +512,9 @@ MergeStoxBiotic <- function(
 #'
 #' @inheritParams ModelData
 #' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
+#' @param AddToLowestTable Logical: If TRUE, place variables in the lowest possible table in StoxBioticData. In NMDBiotic and ICESBiotic there are tables that are split into two tables in StoxBioticData. These are fishstation -> Station/Haul (where the first table is the highest and the second is the lowest in the \code{\link[=generalSamplingHierarhcy]{General sampling hierarchy}}) and catchsample -> SpeciesCategory/Sample for NMDBiotic, and Haul -> Station/Haul and Catch -> SpeciesCategory/Sample for NMDBiotic. If AddToLowestTable = TRUE all variables from fishstation are placed in the table Haul, and similar for the other tables listed above.
+#' 
+#' from tables that are split into two tables in StoxBiotic 
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -499,15 +523,25 @@ MergeStoxBiotic <- function(
 AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
-	VariableNames = character()
+	VariableNames = character(), 
+	AddToLowestTable = FALSE
 ) {
-	AddToStoxData(
+	StoxBioticData <- AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 
 		VariableNames = VariableNames, 
+		AddToLowestTable = AddToLowestTable, 
 		NumberOfCores = 1L, 
 		StoxDataFormat = "Biotic"
 	)
+	
+	# Remove rows of duplicated keys:
+	StoxBioticData <- removeRowsOfDuplicatedKeys(
+		StoxData = StoxBioticData, 
+		stoxDataFormat = "Biotic"
+	)
+	
+	return(StoxBioticData)
 }
 
 
