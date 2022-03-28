@@ -130,7 +130,7 @@ getCatchFractionWeight_NMDBiotic3 <- function(catchweight, catchproducttype, cat
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(catchcategory[hasInvalid])
 		invalid <- setdiff(unique(catchproducttype), 1)
-		warning("StoX: There are catchproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) CatchFractionWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are catchproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing catchweight, leading to one or more missing (NA) CatchFractionWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(catchproducttype %in% 1, catchweight, NA_real_)
 }
@@ -139,7 +139,7 @@ getCatchFractionWeight_NMDBiotic1 <- function(weight, producttype, species) {
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(species[hasInvalid])
 		invalid <- setdiff(unique(producttype), 1)
-		warning("StoX: There are producttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) CatchFractionWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are producttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing weight (in the catchsample table), leading to one or more missing (NA) CatchFractionWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(producttype %in% 1, weight, NA_real_)
 }
@@ -149,7 +149,7 @@ getSampleWeight_NMDBiotic3 <- function(lengthsampleweight, sampleproducttype, ca
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(catchcategory[hasInvalid])
 		invalid <- setdiff(unique(sampleproducttype), 1)
-		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) SampleWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing lengthsampleweight, leading to one or more missing (NA) SampleWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)
 }
@@ -158,7 +158,7 @@ getSampleWeight_NMDBiotic1 <- function(lengthsampleweight, sampleproducttype, sp
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(species[hasInvalid])
 		invalid <- setdiff(unique(sampleproducttype), 1)
-		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) SampleWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing lengthsampleweight, leading to one or more missing (NA) SampleWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)
 }
@@ -168,7 +168,7 @@ getIndividualRoundWeight_NMDBiotic3 <- function(individualweight, individualprod
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(catchcategory[hasInvalid])
 		invalid <- setdiff(unique(individualproducttype), 1)
-		warning("StoX: There are individualproducttype that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualRoundWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are individualproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing individualweight, leading to one or more missing (NA) IndividualRoundWeight in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(individualproducttype %in% 1, individualweight * 1000, NA_real_)
 }
@@ -177,7 +177,7 @@ getIndividualRoundWeight_NMDBiotic1 <- function(weight.individual, producttype.i
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(species[hasInvalid])
 		invalid <- setdiff(unique(producttype.individual), 1)
-		warning("StoX: There are producttype.individual that are not 1 (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualRoundWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are producttype.individual that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing weight (in the individual table), leading to one or more missing (NA) IndividualRoundWeight in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(producttype.individual %in% 1, weight.individual * 1000, NA_real_)
 }
@@ -187,7 +187,7 @@ getIndividualTotalLength_NMDBiotic3 <- function(length, lengthmeasurement, catch
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(catchcategory[hasInvalid])
 		invalid <- setdiff(unique(lengthmeasurement), 'E')
-		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualTotalLength in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length, leading to one or more missing (NA) IndividualTotalLength in StoxBiotic() for the following catchcategory: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(lengthmeasurement %in% 'E', length * 100, NA_real_)
 }
@@ -196,7 +196,7 @@ getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, speci
 	if(any(hasInvalid)) {
 		affectedSpecies <- unique(species[hasInvalid])
 		invalid <- setdiff(unique(lengthmeasurement), 'E')
-		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), leading to one or more missing (NA) IndividualTotalLength in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
+		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length, leading to one or more missing (NA) IndividualTotalLength in StoxBiotic() for the following species: ", paste(affectedSpecies, collapse = ", "), ".")
 	}
 	ifelse(lengthmeasurement %in% 'E', length * 100, NA_real_)
 }
