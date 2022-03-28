@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.17</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.18</span>
       </span>
     </div>
 
@@ -47,6 +47,10 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.5.18" id="rstoxdata-v1518-2022-03-29">RstoxData v1.5.18 (2022-03-29)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1518-2022-03-29"></a></h2>
+<ul><li>Improved warnings when catchproducttype, sampleproducttype, individualproducttype or lengthmeasurement does not have the appropriate value.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.17" id="rstoxdata-v1517-2022-03-22">RstoxData v1.5.17 (2022-03-22)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1517-2022-03-22"></a></h2>
 <ul><li>Added the parameter AddToLowestTable in AddToStoxBiotic(), which can be used for adding variables from tables in NMDBiotic or ICESBiotic that are split into two tables in StoxBiotic (fishstation and catchsample in NMDBiotic and Haul and Catch in ICESBiotic). When these tables are split into two tables StoX decides which variable should be placed in each table. E.g., geographical position is placed in the Station table of StoxBiotic, which implies that only the first position of several hauls that comprise one Station is kept. If one needs all positions, AddToLowestTable can be set to TRUE so that the positions are placed in the Haul table instead of the Station table of StoxBiotic.</li>
