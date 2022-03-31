@@ -101,7 +101,8 @@ readComplexMap <- function(NMDBioticFormat, keysForComplexMaps, lowestTable = FA
 	complexMaps <- rbind(
 		data.table::fread(file), 
 		getIndividualComplexMap("individual", NMDBioticFormat), 
-		getIndividualComplexMap("agedetermination", NMDBioticFormat)
+		getIndividualComplexMap("agedetermination", NMDBioticFormat), 
+		getIndividualComplexMap("tag", NMDBioticFormat)
 	)
 	if(any(duplicated(complexMaps$variable))) {
 		complexMaps[duplicated(variable), variable := paste(variable, level, sep = ".")]
