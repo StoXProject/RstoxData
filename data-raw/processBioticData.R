@@ -273,7 +273,7 @@ stoxBioticObject$borrowVariables[["nmdbioticv3.1"]] <- list(
 		source = "Sample", 
 		target = "Individual"
 	), 
-	# Species must be borrowed in two steps, SpeciesCategory -> Sample and Sample -> Individual, to preserve uniqueness:
+	# Borrow species in order to merge in age-data to Individuals. Species must be borrowed in two steps, SpeciesCategory -> Sample and Sample -> Individual, to preserve uniqueness:
 	list(
 		variable = "catchcategory", 
 		source = "SpeciesCategory", 
@@ -411,7 +411,7 @@ stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 		source = "Sample", 
 		target = "Individual"
 	), 
-	# Species must be borrowed in two steps, SpeciesCategory -> Sample and Sample -> Individual, to preserve uniqueness:
+	# Borrow species in order to merge in age-data to Individuals. Species must be borrowed in two steps, SpeciesCategory -> Sample and Sample -> Individual, to preserve uniqueness:
 	list(
 		variable = "species", 
 		source = "SpeciesCategory", 

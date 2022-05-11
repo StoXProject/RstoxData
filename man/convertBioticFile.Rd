@@ -8,7 +8,7 @@ convertBioticFile(
   sourceFile,
   targetFile,
   targetFormat = "nmdbioticv3.xsd",
-  overwrite = F
+  overwrite = FALSE
 )
 }
 \arguments{

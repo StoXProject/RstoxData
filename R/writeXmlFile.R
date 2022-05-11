@@ -17,7 +17,7 @@ writeXmlDeclaration <- function(stream, version, encoding, standalone){
 openTag <- function(stream, tagname, attributes=NULL, indent=""){
   
   tagstring <- paste0(indent, "<",tagname)
-  if (!is.null(attributes)){
+  if (length(attributes)){
     #stopifnot(nrow(attributes)==1)
     
     for (n in names(attributes)){
@@ -48,63 +48,59 @@ writeSimpleTags <- function(stream, tags, indent=""){
 }
 
 
-#' @noRd
-writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent="", namespace=""){
+writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent = "", namespace = "", keepEmptyLevels = FALSE){
   
-  # handle root
-  if (level == xsdObject$root){
-    #stopifnot(is.null(parentKeys))
-    openTag(stream, level, data.table::data.table(xmlns=namespace), indent)
-    for (sub in xsdObject$treeStruct[[level]]){
-      writeLevel(stream, data, sub, NULL, xsdObject, paste0(indent, "\t"))
-    }
-    closeTag(stream, level, indent)
-    return()
-  }
-  
-  # handle non root
+  # Get the data to write:
   leveldata <- data[[level]]
-  if (!is.null(parentKeys)){
-    #stopifnot(all(names(parentKeys) %in% names(leveldata)))
-    #filter <- apply(leveldata[names(leveldata) %in% names(parentKeys)], 1, function(x){paste(x, collapse=" ")}) == apply(parentKeys, 1, function(x){paste(x, collapse=" ")})
-    #leveldata <- leveldata[filter, ]
-    leveldata <- leveldata[as.list(parentKeys), nomatch = NULL]
-    
-  }
-  if (nrow(leveldata) == 0){
-    return()
+  if (NROW(leveldata) && length(parentKeys)){
+    leveldata <- leveldata[as.list(parentKeys), on = names(parentKeys), nomatch = NULL]
   }
   
+  # Identify children:
   children <- xsdObject$treeStruct[[level]]
   
   # get keys
-  keys <- names(leveldata)[1:xsdObject$prefixLens[[level]]]
-  attribs <- keys
+  keys <- names(leveldata)[seq_len(xsdObject$prefixLens[[level]])]
+  attribsNames <- keys
   if (!is.null(parentKeys)){
-    attribs <- attribs[!(attribs %in% names(parentKeys))]
+    attribsNames <- attribsNames[!(attribsNames %in% names(parentKeys))]
   }
   
-  #stopifnot(!any(duplicated(Reduce(paste, data[[level]][,keys, with=F]))))
-  #stopifnot(all(names(parentKeys) %in% keys))
-  
+  if(level == xsdObject$root) {
+    rootAttribs <- c(xmlns = namespace)
+  }
+  else {
+    rootAttribs <- NULL
+  }
   # write opening tag and attributes
-  for (i in 1:nrow(leveldata)){
-    openTag(stream, level, leveldata[i,.SD, .SDcols=attribs], indent)
-    
-    # write simple element tags
-    simpletags <- xsdObject$tableHeaders[[level]][!(xsdObject$tableHeaders[[level]] %in% keys)]
-    writeSimpleTags(stream, leveldata[i, .SD, .SDcols=simpletags], paste0(indent, "\t"))
-    
-    # write complex element tags
-    for (ch in children){
-      writeLevel(stream, data, ch, leveldata[i, .SD, .SDcols=keys], xsdObject, paste0(indent, "\t"))
+  if(NROW(leveldata)) {
+    for (i in seq_len(nrow(leveldata))){
+      openTag(stream, level, c(leveldata[i,.SD, .SDcols = attribsNames], rootAttribs), indent)
+      
+      # write simple element tags
+      simpletags <- xsdObject$tableHeaders[[level]][!(xsdObject$tableHeaders[[level]] %in% keys)]
+      writeSimpleTags(stream, leveldata[i, .SD, .SDcols = simpletags], paste0(indent, "\t"))
+      
+      # write complex element tags
+      for (ch in children){
+        writeLevel(stream, data, ch, leveldata[i, .SD, .SDcols = keys], xsdObject, paste0(indent, "\t"), keepEmptyLevels = keepEmptyLevels)
+      }
+      
+      # write closing tag
+      closeTag(stream, level, indent)
     }
-    
-    # write closing tag
+  }
+  else if(keepEmptyLevels || length(rootAttribs)){
+    openTag(stream, level, rootAttribs, indent)
+    for (sub in xsdObject$treeStruct[[level]]){
+      writeLevel(stream, data, sub, NULL, xsdObject, paste0(indent, "\t"), keepEmptyLevels = keepEmptyLevels)
+    }
     closeTag(stream, level, indent)
+    #return()
   }
   
 }
+
 
 #' converts everything to UTF-8 character before XML writing
 #' @noRd
@@ -155,6 +151,9 @@ typeConvert <- function(dataTables, xsdObject){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
           else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:decimal"){
+            dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
+          }
+          else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:double"){
             dataTables[[n]][[name]] <- as.character(dataTables[[n]][[name]])
           }
           else if (is.numeric(dataTables[[n]][[name]]) & xsdType == "xs:integer"){
@@ -268,7 +267,7 @@ insertcdata <- function(dataTables, xsdObject){
 #' @param encoding specifices the encoding (charset)
 #' @param xmlStandard specifies the xml version used
 #' @noRd
-writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="UTF-8", xmlStandard="1.0"){
+writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="UTF-8", xmlStandard="1.0", keepEmptyLevels = FALSE){
   
   # Notes for development:
   # consider adding XML version to xsdObjects
@@ -287,7 +286,7 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   
   stream = file(fileName, open="w", encoding="native.enc")
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
-  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace)    
+  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace, keepEmptyLevels = keepEmptyLevels)    
     close(stream)
   
 }
@@ -386,7 +385,7 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
 #'  Write landing data as XML file(s).
 #' @details
 #'  \code{\link[RstoxData]{LandingData}} may contain several data sets.
-#'  In that case the parameters 'FileNames' and 'namespaces' must be procided for each
+#'  In that case the parameters 'FileNames' and 'namespaces' must be provided for each
 #'  in the order they appear in 'LandingData'.
 #' @param LandingData \code{\link[RstoxData]{LandingData}} data to write.
 #' @param FileNames paths to files that should be written to
@@ -403,7 +402,7 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
   #
   # set default namespace if not specified
   #
-  if (is.null(namespaces)){
+  if (!length(namespaces)){
     namespaces <- c()
     for (l in LandingData){
       if (l$metadata$useXsd == "landingerv2"){
@@ -452,7 +451,7 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
 #'  Write biotic data as XML file(s).
 #' @details
 #'  \code{\link[RstoxData]{BioticData}} may contain several data sets.
-#'  In that case the parameters 'FileNames' and 'namespaces' must be procided for each
+#'  In that case the parameters 'FileNames' and 'namespaces' must be provided for each
 #'  in the order they appear in 'BioticData'.
 #' @details 
 #'  Supports writing to namespaces:
@@ -467,14 +466,40 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
 #' @param encoding encoding to use for writing files
 #' @param overwrite whether to overwrite any existing file(s)
 #' @noRd
-WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8", overwrite=F){
+WriteBiotic <- function(BioticData, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
+  WriteBioticOrAcoustic(Data = BioticData, DataType = "BioticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
+}
+
+
+
+#' Write Acoustic
+#' @description 
+#'  Write acoustic data as XML file(s).
+#' @details
+#'  \code{\link[RstoxData]{AcousticData}} may contain several data sets.
+#'  In that case the parameters 'FileNames' and 'namespaces' must be provided for each
+#'  in the order they appear in 'AcousticData'.
+#' @details 
+#'  Supports writing to namespaces:
+#'   http://www.imr.no/formats/nmdechosounder/v1
+#' @param AcousticData \code{\link[RstoxData]{AcousticData}} data to write.
+#' @inheritParams WriteBiotic
+#' @noRd
+WriteAcoustic <- function(AcousticData, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
+  WriteBioticOrAcoustic(Data = AcousticData, DataType = "AcousticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
+}
+  
+
+
+# Common funtion for biotic and acoustic data:
+WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
   
   # set default namespace if not specified
-  if (is.null(namespaces)){
+  if (!length(namespaces)){
     namespaces <- c()
-    for (l in BioticData){
+    for (l in Data){
       
-      if (!is.null(l$metadata$useXsd)){
+      if (length(l$metadata$useXsd)){
         xsdObj <- xsdObjects[[paste(l$metadata$useXsd, "xsd", sep=".")]]
         ns <- xsdObj$targetNamespace
         if (is.na(ns)){
@@ -488,21 +513,23 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
     }
   }
   
-  if (!length(BioticData) == length(FileNames)){
-    stop("Provide exactly one file name and one namespace for each data set in 'LandingData'")
+  if (!length(Data) == length(FileNames)){
+    stop("Provide exactly one file name for each data set in the ", DataType)
   }
-  if (!length(BioticData) == length(namespaces)){
-    stop("Provide exactly one file name and one namespace for each data set in 'LandingData'")
+  if (!length(Data) == length(namespaces)){
+    stop("Provide exactly one namespace for each data set in the ", DataType)
   }
   
+  
+  Data <- createBioticOrAcousticData(data = Data, namespace = namespaces) 
   
   #
   # write files
   #
-  for (i in 1:length(BioticData)){
+  for (i in 1:length(Data)){
     
     FileName <- FileNames[[i]]
-    data <- BioticData[[i]] 
+    thisData <- Data[[i]] 
     namespace <- namespaces[[i]]
     
     xsdObject <- NULL
@@ -512,7 +539,7 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
       }
     }
     
-    if (is.null(xsdObject)){
+    if (!length(xsdObject)){
       stop(paste("Namespace", namespace, "not supported."))
     }
     
@@ -520,10 +547,14 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
       stop(paste("File", FileName, "already exists."))
     }
     
-    writeXmlFile(FileName, data, xsdObject, namespace, encoding)    
+    print('namespace == "http://www.imr.no/formats/nmdechosounder/v1"')
+    print(namespace == "http://www.imr.no/formats/nmdechosounder/v1")
+    writeXmlFile(FileName, thisData, xsdObject, namespace, encoding, keepEmptyLevels = namespace == "http://www.imr.no/formats/nmdechosounder/v1")    
   }
-
+  
 }
+
+
 
 #' Converts biotic
 #' @description 
@@ -539,13 +570,13 @@ WriteBiotic <- function(BioticData, FileNames, namespaces=NULL, encoding="UTF-8"
 #' @param targetFormat name of xsdObject specifying the format of the target file. One of names(RstoxData::xsdObjects).
 #' @param overwrite if TRUE any existing file in 'targetFile' will be overwritten.
 #' @export
-convertBioticFile <- function(sourceFile, targetFile, targetFormat="nmdbioticv3.xsd", overwrite=F){
+convertBioticFile <- function(sourceFile, targetFile, targetFormat = "nmdbioticv3.xsd", overwrite = FALSE){
   
-  if (!is.character(targetFormat) | !(targetFormat %in% names(RstoxData::xsdObjects))){
+  if (!is.character(targetFormat) | !(targetFormat %in% names(xsdObjects))){
     stop("'targetFormat must be one of those in names(RstoxData::xsdObjects).")
   }
   
-  targetFormat <- RstoxData::xsdObjects[[targetFormat]]
+  targetFormat <- xsdObjects[[targetFormat]]
   namespace=targetFormat$targetNamespace
   
   if (!file.exists(sourceFile)){
@@ -560,3 +591,137 @@ convertBioticFile <- function(sourceFile, targetFile, targetFormat="nmdbioticv3.
   writeXmlFile(targetFile, data, targetFormat, namespace = namespace)
   
 }
+
+
+
+
+
+
+
+
+
+
+
+# Functions to create BioticData:
+createBioticOrAcousticData <- function(data = list(), namespace = character()) {
+  data <- mapply(
+    createBioticOrAcousticDataOne, 
+    dataOne = data, 
+    namespace = namespace, 
+    SIMPLIFY = FALSE
+  )
+  
+  return(data)
+}
+createBioticOrAcousticDataOne <- function(dataOne = list(), namespace = character()) {
+  namespace <- getNamespace(namespace)
+  
+  tableNames <- names(xsdObjects[[namespace$xsd]]$tableHeaders)
+  
+  dataOne <- lapply(
+    tableNames, 
+    createOneTable, 
+    data = dataOne, 
+    namespace = namespace
+  )
+  names(dataOne) <- tableNames
+  
+  return(dataOne)
+}
+createOneTable <- function(tableName, data, namespace) {
+  
+  data <- data[[tableName]]
+  
+  tableHeadersOne <- xsdObjects[[namespace$xsd]]$tableHeaders[[tableName]]
+  prefixLensOne <- xsdObjects[[namespace$xsd]]$prefixLens[[tableName]]
+  
+  # Get class:
+  tableTypesOne <- xsdObjects[[namespace$xsd]]$tableTypes[[tableName]]
+  type_class_table <- data.table::data.table(
+    type = c("xs:date", "xs:decimal", "xs:double", "xs:integer", "xs:string", "xs:time"), 
+    class = c("character", "numeric", "numeric", "integer", "character", "character")
+  )
+  tableClassesOne <- match(
+    tableTypesOne, 
+    type_class_table$type, 
+  )
+  tableClassesOne <- type_class_table[tableClassesOne, class]
+  
+  # Create NAs:
+  emptyListOfTableHeaders <- as.list(rep(NA, length(tableHeadersOne)))
+  names(emptyListOfTableHeaders) <- tableHeadersOne
+  
+  # Set class:
+  emptyListOfTableHeaders <- mapply(
+    function(x, newClass) do.call(paste0("as.", newClass), list(x)),  
+    x = emptyListOfTableHeaders, 
+    newClass = tableClassesOne, 
+    SIMPLIFY = FALSE
+  )
+  
+  if(!all(tableHeadersOne[seq_len(prefixLensOne)] %in% names(data))) {
+    data <- data.table::as.data.table(emptyListOfTableHeaders)[0, ]
+    return(data)
+  }
+  
+  # Replace with the data:
+  validNames <- intersect(names(data), tableHeadersOne)
+  #data <- data[validNames]
+  data <- data[, validNames, with = FALSE]
+  
+  emptyListOfTableHeaders[names(data)] <- data
+  
+  data <- data.table::as.data.table(
+    emptyListOfTableHeaders
+  )
+  
+  data <- unique(data)
+  
+  return(data)
+}
+
+# Functions to treat xml namespaces:
+getNamespace <- function(format, element = character()) {
+  
+  # Get a table of all possiblew namespaces:
+  namespaceTable <- namespaceTable()
+  
+  # If starting with "http" assume that 'format' given as an explicit namespace:
+  if(startsWith(tolower(format), "http")) {
+    atNamespace <- which(namespaceTable$namespace == format)
+  }
+  # If ending with "xsd" assume that 'format' is the name in the xsdObjects:
+  else if(endsWith(tolower(format), "xsd")) {
+    atNamespace <- which(namespaceTable$xsd == format)
+  }
+  else {
+    atNamespace <- which(namespaceTable$format == format)
+  }
+  
+  if(length(atNamespace)) {
+    output <- namespaceTable[atNamespace, ]
+  }
+  else {
+    warning("The format/xsd/namespace not recognized. Implemented namespaces are ", paste(namespaceTable()$namespaces, collapse = ", "), ".")
+    output <- data.table::data.table(
+      format = NA, 
+      xsd = NA, 
+      namespace = NA
+    )
+  }
+  
+  if(length(element) && element %in% names(output)) {
+    output <- output[[element]]
+  }
+  
+  return(output)
+}
+namespaceTable <- function() {
+  data.table::data.table(
+    format = sub(".xsd", "", names(xsdObjects), fixed = TRUE), 
+    xsd = names(xsdObjects), 
+    namespace = unlist(lapply(xsdObjects, "[[", "targetNamespace"))
+  )
+}
+
+

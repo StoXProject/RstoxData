@@ -1,3 +1,10 @@
+# RstoxData v1.6.1  (2022-05-12)
+
+* Fixed bug in DateTime in StoxBioticData, where milliseconds were pasted twice if present in the input data. 
+* Fixed bug reported in https://jira.imr.no/browse/STOX-544, occurring when splitting catchsample into SpeciesCategory and Sample, by unique() in firstPhase(). 
+* Added exported function match_arg(). Modified writeXmlFile.R and added WriteAcoustic().
+
+
 # RstoxData v1.5.18  (2022-03-29)
 * Improved warnings when catchproducttype, sampleproducttype, individualproducttype or lengthmeasurement does not have the appropriate value.
 

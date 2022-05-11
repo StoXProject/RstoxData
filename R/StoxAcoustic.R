@@ -109,11 +109,20 @@ StoxAcousticOne <- function(data_list) {
 		#################################################################
 		#         Add Keys                                              #
 		#################################################################
-		data_list$Log[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$Beam[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$AcousticCategory[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$ChannelReference[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$NASC[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+		#data_list$Log[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+		#data_list$Beam[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+		#data_list$AcousticCategory[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+		#data_list$ChannelReference[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+		#data_list$NASC[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
+		data_list$Log[, LogKey := createISO8601TimeString(start_time)]
+		data_list$Beam[, LogKey := createISO8601TimeString(start_time)]
+		data_list$AcousticCategory[, LogKey := createISO8601TimeString(start_time)]
+		data_list$ChannelReference[, LogKey := createISO8601TimeString(start_time)]
+		data_list$NASC[, LogKey := createISO8601TimeString(start_time)]
+		
+		
+		
+		
 		
 		
 		if(any(duplicated(data_list$Log[,c('LogKey')]))) {
@@ -315,7 +324,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		#Fiks upper integration depth for pelagic
 		#Denne maa Dobbelsjekkes
-		data_list$NASC[(data_list$NASC$MinChannelRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$MinChannelRange<-data_list$NASC[(data_list$NASC$MinChannelRange<data_list$NASC$upper_integrator_depth)&(data_list$NASC$ChannelReferenceKey=='P'),]$upper_integrator_depth
+		data_list$NASC[(data_list$NASC$MinChannelRange < data_list$NASC$upper_integrator_depth) & (data_list$NASC$ChannelReferenceKey == 'P'),]$MinChannelRange <- data_list$NASC[(data_list$NASC$MinChannelRange < data_list$NASC$upper_integrator_depth) & (data_list$NASC$ChannelReferenceKey == 'P'),]$upper_integrator_depth
 		
 		
 		
