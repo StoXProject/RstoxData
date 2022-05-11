@@ -292,6 +292,8 @@ firstPhase <- function(data, datatype, stoxBioticObject, AddToLowestTable = FALS
             if(!is.null(firstPhaseTables[[dest]])) stop("Error")
             # Copy the columns:
             firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
+            # Uniquify, as splitting a table may produce dupicates, e.g. for multiple samples of the same species:
+            firstPhaseTables[[dest]] <- unique(firstPhaseTables[[dest]])
         }
     }
     
@@ -366,8 +368,9 @@ StoxBiotic_firstPhase <- function(BioticData, AddToLowestTable = FALSE) {
     }
     
     # Do first phase
-    first <- firstPhase(BioticData, datatype, stoxBioticObject, AddToLowestTable = AddToLowestTable)
-    # Add the metadata:
+	first <- firstPhase(BioticData, datatype, stoxBioticObject, AddToLowestTable = AddToLowestTable)
+    
+	# Add the metadata:
     first$metadata <- BioticData$metadata
     
     return(first)
@@ -394,7 +397,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
         get(x, envir = parent.env(env))
     }
     
-    columns <- c("variable", "level", datatype, "class")
+	columns <- c("variable", "level", datatype, "class")
     if(!datatype %in% names(stoxBioticObject$convertTable)) {
     	stop("The input format ", datatype, " is not yet supprted in RstoxData (")
     }
