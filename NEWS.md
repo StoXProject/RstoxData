@@ -1,9 +1,35 @@
-# RstoxData v1.6.2  (2022-05-12)
-
+# RstoxData v1.6.2  (2022-05-13)
 * Replaced the logical AddToLowestTable by the string SplitTableAllocation in AddToStoxBiotic(), allowing for allocating variables to either the default, highest or lowest table when splitting tables StoxBiotic.
+* Removed hard coded values for the following variables on ICESDatras() (variable name -> new value): 
+	
+	+ Table HH
+	*Country -> nation
+	*Ship -> platformname
+	*SweepLngt -> NA
+	*GearEx -> NA
+	*DayNight -> NA
+	*StatRec -> area + location (concatenation)
+	*HaulVal -> NA
+	*Distance -> distance (in meters)
+	*GroundSpeed -> vesselspeed
+
+	+ Table HL
+	*SpecVal -> NA
+	*LenMeasType -> lengthmeasurement
+	
+	+ Table CA
+	*Maturity -> NA
+	*MaturityScale -> NA
+	*AgeSource -> agingstructure
+	*OtGrading -> readability (only if agingstructure is 2)
+	*PlusGr -> NA
+
+* Removed hard coded values for the following variables on ICESBiotic(): 
+	*Platform -> platformname
+	*Validity -> NA
+	*StatisticalRectangle -> area + location
 
 # RstoxData v1.6.1  (2022-05-12)
-
 * Fixed bug in DateTime in StoxBioticData, where milliseconds were pasted twice if present in the input data. 
 * Fixed bug reported in https://jira.imr.no/browse/STOX-544, occurring when splitting catchsample into SpeciesCategory and Sample, by unique() in firstPhase(). 
 * Added exported function match_arg(). Modified writeXmlFile.R and added WriteAcoustic().
