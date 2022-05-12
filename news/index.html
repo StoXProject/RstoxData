@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.2</span>
       </span>
     </div>
 
@@ -47,6 +47,17 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.6.2" id="rstoxdata-v162-2022-05-13">RstoxData v1.6.2 (2022-05-13)<a class="anchor" aria-label="anchor" href="#rstoxdata-v162-2022-05-13"></a></h2>
+<ul><li><p>Replaced the logical AddToLowestTable by the string SplitTableAllocation in AddToStoxBiotic(), allowing for allocating variables to either the default, highest or lowest table when splitting tables StoxBiotic.</p></li>
+<li>
+<p>Removed hard coded values for the following variables on ICESDatras() (variable name -&gt; new value):</p>
+<ul><li><p>Table HH <em>Country -&gt; nation </em>Ship -&gt; platformname <em>SweepLngt -&gt; NA </em>GearEx -&gt; NA <em>DayNight -&gt; NA </em>StatRec -&gt; area + location (concatenation) <em>HaulVal -&gt; NA </em>Distance -&gt; distance (in meters) *GroundSpeed -&gt; vesselspeed</p></li>
+<li><p>Table HL <em>SpecVal -&gt; NA </em>LenMeasType -&gt; lengthmeasurement</p></li>
+<li><p>Table CA <em>Maturity -&gt; NA </em>MaturityScale -&gt; NA <em>AgeSource -&gt; agingstructure </em>OtGrading -&gt; readability (only if agingstructure is 2) *PlusGr -&gt; NA</p></li>
+</ul></li>
+<li><p>Removed hard coded values for the following variables on ICESBiotic(): <em>Platform -&gt; platformname </em>Validity -&gt; NA *StatisticalRectangle -&gt; area + location</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.1" id="rstoxdata-v161-2022-05-12">RstoxData v1.6.1 (2022-05-12)<a class="anchor" aria-label="anchor" href="#rstoxdata-v161-2022-05-12"></a></h2>
 <ul><li>Fixed bug in DateTime in StoxBioticData, where milliseconds were pasted twice if present in the input data.</li>
