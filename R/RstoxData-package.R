@@ -22,14 +22,14 @@ utils::globalVariables(c(
 	 "ReplaceBy", "SaCategory", "Scaling", "Ship", "SpecVal", "SpeciesCategoryNumber",
 	 "SpeciesCategoryWeight", "SpeciesCode", "StatRec", "SubsampleWeight", "SubsampledNumber",
 	 "Survey", "SweepLngt", "Time", "TransducerOrientation", "VariableName", "WeightMeasurement",
-	 "age", "agingstructure", "ap", "aphia", "as.formula", "bottomdepthstart", "bottomdepthstop",
-	 "catCatchWgt", "catchcount", "catchpartnumber", "catchproducttype", "catchweight", "cc",
-	 "cruise", "cw", "direction", "distance", "fishingdepthcount", "fishingdepthmax",
-	 "fishingdepthmin", "freq", "g", "gear", "gearcondition", "gearflow", "hv",
+	 "age", "agingstructure", "ap", "aphia", "area", "as.formula", "bottomdepthstart",
+	 "bottomdepthstop", "catCatchWgt", "catchcount", "catchpartnumber", "catchproducttype",
+	 "catchweight", "cc", "cruise", "cw", "direction", "distance", "fishingdepthcount",
+	 "fishingdepthmax", "fishingdepthmin", "freq", "g", "gear", "gearcondition", "gearflow", "hv",
 	 "inapplicableFormats", "individualweight", "isCrustacean", "isHerringOrSprat", "isPelagic",
 	 "iskey", "latitudeend", "latitudestart", "lenInterval", "lengthCode", "lengthmeasurement",
 	 "lengthresolution", "lengthsamplecount", "lengthsampleweight", "level", "lngtClass",
-	 "lngtCode", "logstart", "longitudeend", "longitudestart", "lsCountTot", "lsc",
+	 "lngtCode", "location", "logstart", "longitudeend", "longitudestart", "lsCountTot", "lsc",
 	 "maturationstage", "maturity", "maxFishID", "meanW", "missionstartdate", "missionstopdate",
 	 "ms", "nInd", "nWithWeight", "nation", "noMeas", "parasite", "platformname",
 	 "preferredagereading", "readability", "reportInMM", "reportingUnit", "res", "rowIndex", "s",
@@ -38,8 +38,8 @@ utils::globalVariables(c(
 	 "stationstarttime", "stationstopdate", "stationstoptime", "stomach", "stoxBioticObject",
 	 "subFactor", "subWeight", "suffixes", "sweeplength", "target", "tissuesample", "totWeight",
 	 "totalNo", "transceiver", "trawldoorarea", "trawldoorspread", "trawldoortype",
-	 "trawldoorweight", "verticaltrawlopening", "winddirection", "windspeed", "wingspread",
-	 "wiredensity", "wirediameter", "wirelength", "xsdObjects"))
+	 "trawldoorweight", "verticaltrawlopening", "vesselspeed", "winddirection", "windspeed",
+	 "wingspread", "wiredensity", "wirediameter", "wirelength", "xsdObjects"))
 
 .onLoad <- function(libname, pkgname) {
 	# Initiate the RstoxData environment:

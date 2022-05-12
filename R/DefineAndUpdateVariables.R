@@ -278,7 +278,7 @@ translateVariables <- function(
 	))
 	
 	if(any(someButNotAllPresent)) {
-		warning("StoX: The following tables contain some but not all of the variables of the Translation:", paste0(names(data)[someButNotAllPresent]))
+		warning("StoX: The following tables contain some but not all of the variables of the Translation: ", paste0(names(data)[someButNotAllPresent], collapse = ", "))
 	}
 		
 	# Run the conversion for each table of the data:

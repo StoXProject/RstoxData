@@ -170,6 +170,13 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "AddToLowestTable", 
 			parameterValue = FALSE
+		), 
+		list(
+			changeVersion = "1.6.1", 
+			functionName = "AddToStoxBiotic", 
+			modelName = "baseline", 
+			parameterName = "SplitTableAllocation", 
+			parameterValue = "Default"
 		)
 	), 
 	
@@ -267,6 +274,12 @@ backwardCompatibility <- list(
 			functionName = "TranslateStoxBiotic", 
 			modelName = "baseline", 
 			parameterName = "TranslationDefinition"
+		), 
+		list(
+			changeVersion = "1.6.1", 
+			functionName = "AddToStoxBiotic", 
+			modelName = "baseline", 
+			parameterName = "AddToLowestTable"
 		)
 	),  
 	

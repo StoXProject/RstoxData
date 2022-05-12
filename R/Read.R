@@ -150,52 +150,52 @@ getQuarter <- function(stationstartdate) {
 	return(floor((as.numeric(x) - 1) / 3 + 1))
 }
 
-# Get maturity indicator for a species
-getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
-	
-	temp <-  as.data.table(cbind(q=quarter, ap=aphia, sp=specialstage, ms=maturationstage, res=NA))
-	
-	temp[, `:=`(sp = as.numeric(sp), ms = as.numeric(ms), res = as.numeric(res) )]
-	
-	temp[, isPelagic := ifelse(ap %in% c("126417", "126421", "126425", "126426", "127023"), TRUE, FALSE)]
-	
-	temp[!is.na(sp) & isPelagic == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
-	temp[!is.na(sp) & isPelagic == FALSE, res := 60 + sp]
-	
-	temp[is.na(sp) & !is.na(ms), res := ifelse(ms == 5 & q == "3", NA, 60 + ms)]
-	
-	return(temp$res)
-}
+## Get maturity indicator for a species
+#getDATRASMaturity <- function(quarter, aphia, specialstage, maturationstage) {
+#	
+#	temp <-  as.data.table(cbind(q=quarter, ap=aphia, sp=specialstage, ms=maturationstage, res=NA))
+#	
+#	temp[, `:=`(sp = as.numeric(sp), ms = as.numeric(ms), res = as.numeric(res) )]
+#	
+#	temp[, isPelagic := ifelse(ap %in% c("126417", "126421", "126425", "126426", "127023"), TRUE, FALSE)]
+#	
+#	temp[!is.na(sp) & isPelagic == TRUE,  res := ifelse(sp <= 2, 61, ifelse(sp <= 5, 62, 60 + sp - 3))]
+#	temp[!is.na(sp) & isPelagic == FALSE, res := 60 + sp]
+#	
+#	temp[is.na(sp) & !is.na(ms), res := ifelse(ms == 5 & q == "3", NA, 60 + ms)]
+#	
+#	return(temp$res)
+#}
 
-# Convert gear number to sweep length
-getGOVSweepByEquipment <- function(gear) {
-	cnvTbl <- c("3120" = NA,
-				"3190" = 60,
-				"3191" = 60,
-				"3192" = 60,
-				"3193" = 110,
-				"3194" = 110,
-				"3195" = 110,
-				"3196" = 60,
-				"3197" = 110,
-				"3198" = 60,
-				"3199" = 60)
-	
-	x <- cnvTbl[as.character(gear)]
-	x[is.null(x)] <- NA
-	return(x)
-}
+## Convert gear number to sweep length
+#getGOVSweepByEquipment <- function(gear) {
+#	cnvTbl <- c("3120" = NA,
+#				"3190" = 60,
+#				"3191" = 60,
+#				"3192" = 60,
+#				"3193" = 110,
+#				"3194" = 110,
+#				"3195" = 110,
+#				"3196" = 60,
+#				"3197" = 110,
+#				"3198" = 60,
+#				"3199" = 60)
+#	
+#	x <- cnvTbl[as.character(gear)]
+#	x[is.null(x)] <- NA
+#	return(x)
+#}
 
-# Get Haul validity
-getHaulVal <- function(gearcondition, samplequality) {
-	temp <-  data.table::data.table(g = gearcondition, s = samplequality)
-	temp[, res := "I"]
-	temp[(is.na(g) | g %in% c("1", "2")) &
-		 	(is.na(s) | s %in% c("0", "1")), res := "V"]
-	
-	return(temp$res)
-}
-
+# # Get Haul validity
+# getHaulVal <- function(gearcondition, samplequality) {
+# 	temp <-  data.table::data.table(g = gearcondition, s = samplequality)
+# 	temp[, res := "I"]
+# 	temp[(is.na(g) | g %in% c("1", "2")) &
+# 		 	(is.na(s) | s %in% c("0", "1")), res := "V"]
+# 	
+# 	return(temp$res)
+# }
+# 
 # Set gearcondition == 1 & samplequality == 1 to "V", and all other to NA:
 getHaulValiditySimple <- function(gearcondition, samplequality) {
 	Validity <- rep(NA_character_, length(gearcondition))
@@ -207,7 +207,7 @@ getHaulValiditySimple <- function(gearcondition, samplequality) {
 
 # Generate ICES rectangle from a coordinate
 # Stolen from: https://github.com/cran/mapplots/blob/master/R/ices.rect.R
-getICESrect <- function(lat, lng){
+getICESrect_old <- function(lat, lng){
 	x <- floor(lng+60)+1000
 	y <- floor(lat*2)-71+100
 	num1<- substr(y,2,3)
@@ -215,6 +215,11 @@ getICESrect <- function(lat, lng){
 	num2 <- substr(x,4,4)
 	paste(num1,lett,num2,sep='')
 }
+
+getICESrect <- function(area, location){
+	paste0(area, location)
+}
+
 
 # Get distance in meters between two coordinates
 getDistanceMeter <- function(lat1, lon1, lat2, lon2) {
@@ -239,54 +244,54 @@ getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, sta
 	return(diffMins)
 }
 
-# Get ICES ship data
-#' @importFrom xml2 xml_ns_strip xml_find_all xml_text
-getICESShipCode <- function(platformname) {
-	
-	construct <- function(shipName) {
-		# We have to remove "."," " and use uppercase
-		shipName <- toupper(gsub("[[:space:][:punct:]]", "", shipName))
-
-		# Replace the nordic character with AA
-		shipName <- gsub("\u00C5", "AA", shipName)
-
-		data <- tryCatch(
-			{
-				read_xml("https://vocab.ices.dk/services/pox/GetCodeList/SHIPC")
-			},
-			error = function(e){return(NA)}
-		)
-
-		# Can't download from ICES
-		if (is.na(data))
-			return(NA)
-
-		xml_ns_strip(data)
-		nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"",
-					shipName, "\") and contains(Deprecated, \"false\")]/*[self::Key or self::Modified]"))
-
-		# Ship not found
-		if (length(nodes) < 1) {
-			return(NA)
-		}
-
-		# Get the latest matching ship code
-		xx <- xml_text(nodes)
-		yy <- as.data.frame(list(code = xx[seq(xx) %% 2 == 1], date = xx[seq(xx) %% 2 == 0]), stringsAsFactors = FALSE)
-		shipCode <- head(yy[order(as.Date(yy$date), decreasing = TRUE), "code"], 1)
-
-		return(shipCode)
-	}
-	
-	nm <- unique(platformname)
-	y <- unlist(lapply(nm, construct))
-	names(y) <- nm
-	
-	x <- y[as.character(platformname)]
-	x[is.null(x)] <- NA
-	
-	return(x)
-}
+## Get ICES ship data
+##' @importFrom xml2 xml_ns_strip xml_find_all xml_text
+#getICESShipCode <- function(platformname) {
+#	
+#	construct <- function(shipName) {
+#		# We have to remove "."," " and use uppercase
+#		shipName <- toupper(gsub("[[:space:][:punct:]]", "", shipName))
+#
+#		# Replace the nordic character with AA
+#		shipName <- gsub("\u00C5", "AA", shipName)
+#
+#		data <- tryCatch(
+#			{
+#				read_xml("https://vocab.ices.dk/services/pox/GetCodeList/SHIPC")
+#			},
+#			error = function(e){return(NA)}
+#		)
+#
+#		# Can't download from ICES
+#		if (is.na(data))
+#			return(NA)
+#
+#		xml_ns_strip(data)
+#		nodes <- xml_find_all(data, paste0("//Code[contains(translate(Description[normalize-space()],'abcdefghijklmnopqrstuvwxyz. ','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), \"",
+#					shipName, "\") and contains(Deprecated, \"false\")]/*[self::Key or self::Modified]"))
+#
+#		# Ship not found
+#		if (length(nodes) < 1) {
+#			return(NA)
+#		}
+#
+#		# Get the latest matching ship code
+#		xx <- xml_text(nodes)
+#		yy <- as.data.frame(list(code = xx[seq(xx) %% 2 == 1], date = xx[seq(xx) %% 2 == 0]), stringsAsFactors = FALSE)
+#		shipCode <- head(yy[order(as.Date(yy$date), decreasing = TRUE), "code"], 1)
+#
+#		return(shipCode)
+#	}
+#	
+#	nm <- unique(platformname)
+#	y <- unlist(lapply(nm, construct))
+#	names(y) <- nm
+#	
+#	x <- y[as.character(platformname)]
+#	x[is.null(x)] <- NA
+#	
+#	return(x)
+#}
 
 
 
