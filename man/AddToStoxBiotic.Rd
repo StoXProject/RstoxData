@@ -8,7 +8,7 @@ AddToStoxBiotic(
   StoxBioticData,
   BioticData,
   VariableNames = character(),
-  AddToLowestTable = FALSE
+  SplitTableAllocation = c("Default", "Lowest", "Highest")
 )
 }
 \arguments{
@@ -18,13 +18,20 @@ AddToStoxBiotic(
 
 \item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
 
-\item{AddToLowestTable}{Logical: If TRUE, place variables in the lowest possible table in StoxBioticData. In NMDBiotic and ICESBiotic there are tables that are split into two tables in StoxBioticData. These are fishstation -> Station/Haul (where the first table is the highest and the second is the lowest in the \code{\link[=generalSamplingHierarhcy]{General sampling hierarchy}}) and catchsample -> SpeciesCategory/Sample for NMDBiotic, and Haul -> Station/Haul and Catch -> SpeciesCategory/Sample for NMDBiotic. If AddToLowestTable = TRUE all variables from fishstation are placed in the table Haul, and similar for the other tables listed above.
-
-from tables that are split into two tables in StoxBiotic}
+\item{SplitTableAllocation}{A string indicating how to split tables of the BioticData into tables of the StoxBiotic format. See Details.}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.
 }
 \description{
 Add variables to StoxBioticData from BioticData
+}
+\details{
+The default \code{SplitTableAllocation} allocates variables to the StoxBiotic tables according to the mapping defined in \cr\cr
+\code{RstoxData::stoxBioticObject$complexMaps}. \cr\cr
+When \code{SplitTableAllocation} is "Lowest" or "Highest" variables are allocated to the lowest or highest table, respectively, as defined in \cr\cr
+\code{RstoxData::stoxBioticObject$complexMaps_lowestTable} \cr\cr
+and \cr\cr
+\code{RstoxData::stoxBioticObject$complexMaps_highestTable}, \cr\cr
+respectively. In NMDBiotic the tables that are split are fishstation -> Station/Haul (where the first table is the highest and the second is the lowest in the \code{\link[=generalSamplingHierarhcy]{General sampling hierarchy}}) and catchsample -> SpeciesCategory/Sample. In ICESBiotic the tables that are split are Haul -> Station/Haul and Catch -> SpeciesCategory/Sample for NMDBiotic.
 }

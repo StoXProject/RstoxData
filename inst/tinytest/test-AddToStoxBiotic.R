@@ -9,13 +9,15 @@ testOneFormat <- function(formatFile, variablesToAdd) {
 		StoxBioticData = s, 
 		BioticData = b, 
 		VariableNames = unlist(variablesToAdd), 
-		AddToLowestTable = FALSE
+		#AddToLowestTable = FALSE
+		SplitTableAllocation = "Default"
 	)
 	aLowest <- RstoxData::AddToStoxBiotic(
 		StoxBioticData = s, 
 		BioticData = b, 
 		VariableNames = unlist(variablesToAdd), 
-		AddToLowestTable = TRUE
+		#AddToLowestTable = TRUE
+		SplitTableAllocation = "Lowest"
 	)
 	
 	valid0 <- all(unlist(mapply("%in%", variablesToAdd[names(variablesToAdd)], lapply(a[names(variablesToAdd)], names))))

@@ -92,11 +92,27 @@ getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
 }
 
 
-readComplexMap <- function(NMDBioticFormat, keysForComplexMaps, lowestTable = FALSE) {
+readComplexMap <- function(
+	NMDBioticFormat, 
+	keysForComplexMaps, 
+	#lowestTable = FALSE
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
+) {
 	
 	# Read complex maps, and add Keys and variables from individual and agedetermination:
 	NMDBioticFormat.csv <- paste0(NMDBioticFormat, ".csv")
-	file <- paste0("stox-translate-", if(lowestTable) "lowestTable-", NMDBioticFormat.csv)
+	
+	# Read the appropriate mapping file:
+	SplitTableAllocation <- match.arg(SplitTableAllocation)
+	if(SplitTableAllocation == "Default") {
+		file <- paste0("stox-translate-", NMDBioticFormat.csv)
+	}
+	else if(SplitTableAllocation == "Lowest") {
+		file <- paste0("stox-translate-lowestTable-", NMDBioticFormat.csv)
+	}
+	else if(SplitTableAllocation == "Highest") {
+		file <- paste0("stox-translate-highestTable-", NMDBioticFormat.csv)
+	}
 	
 	complexMaps <- rbind(
 		data.table::fread(file), 
@@ -240,12 +256,20 @@ stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise
 stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3.1", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = FALSE
+	#lowestTable = FALSE
+	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv3.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3.1", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = TRUE
+	#lowestTable = TRUE
+	SplitTableAllocation = "Lowest"
+)
+stoxBioticObject$complexMaps_highestTable[["nmdbioticv3.1"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv3.1", 
+	keysForComplexMaps = keysForComplexMaps, 
+	#lowestTable = TRUE
+	SplitTableAllocation = "Highest"
 )
 
 
@@ -322,12 +346,20 @@ stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise")
 stoxBioticObject$complexMaps[["nmdbioticv3"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = FALSE
+	#lowestTable = FALSE
+	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv3"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = TRUE
+	#lowestTable = TRUE
+	SplitTableAllocation = "Lowest"
+)
+stoxBioticObject$complexMaps_highestTable[["nmdbioticv3"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv3", 
+	keysForComplexMaps = keysForComplexMaps, 
+	#lowestTable = TRUE
+	SplitTableAllocation = "Highest"
 )
 
 ## Length conversion
@@ -380,12 +412,20 @@ stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise
 stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.4", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = FALSE
+	#lowestTable = FALSE
+	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv1.4"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.4", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = TRUE
+	#lowestTable = TRUE
+	SplitTableAllocation = "Lowest"
+)
+stoxBioticObject$complexMaps_highestTable[["nmdbioticv1.4"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv1.4", 
+	keysForComplexMaps = keysForComplexMaps, 
+	#lowestTable = TRUE
+	SplitTableAllocation = "Highest"
 )
 
 ## Length conversion
@@ -450,12 +490,20 @@ stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- stoxBioticObject$tableMapLis
 stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.1", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = FALSE
+	#lowestTable = FALSE
+	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv1.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.1", 
 	keysForComplexMaps = keysForComplexMaps, 
-	lowestTable = TRUE
+	#lowestTable = TRUE
+	SplitTableAllocation = "Lowest"
+)
+stoxBioticObject$complexMaps_highestTable[["nmdbioticv1.1"]] <- readComplexMap(
+	NMDBioticFormat = "nmdbioticv1.1", 
+	keysForComplexMaps = keysForComplexMaps, 
+	#lowestTable = TRUE
+	SplitTableAllocation = "Highest"
 )
 
 ## Length conversion
@@ -491,7 +539,8 @@ stoxBioticObject$tableKeyList[["icesBiotic"]] <- list(
                 )
 stoxBioticObject$tableMapList[["icesBiotic"]] <- list(list("Cruise", "Cruise"), list("Biology", "Individual"))
 stoxBioticObject$complexMaps[["icesBiotic"]] <- fread("stox-translate-icesBiotic.csv", stringsAsFactors=FALSE)
-stoxBioticObject$complexMaps_lowestTable[["icesBiotic"]] <- fread("stox-translate-lowestTable-icesBiotic.csv", stringsAsFactors=FALSE)
+stoxBioticObject$complexMaps_lowestTable[["icesBiotic"]] <- fread("stox-translate-lowestTable-icesBiotic.csv", stringsAsFactors=FALSE) 
+stoxBioticObject$complexMaps_highestTable[["icesBiotic"]] <- fread("stox-translate-highestTable-icesBiotic.csv", stringsAsFactors=FALSE)
 
 ## Length Res conversion
 stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(resName) {

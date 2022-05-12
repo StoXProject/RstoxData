@@ -37,7 +37,8 @@ StoxBiotic <- function(BioticData) {
 BioticData2GeneralSamplingHierarchy <- function(
 	BioticData, 
 	NumberOfCores = 1L, 
-	AddToLowestTable = FALSE
+	#AddToLowestTable = FALSE, 
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
 ) {
 	
 	# Make a copy, since we are modifying things by reference:
@@ -48,7 +49,8 @@ BioticData2GeneralSamplingHierarchy <- function(
 		BioticDataCopy, 
 		FUN = StoxBiotic_firstPhase, 
 		NumberOfCores = NumberOfCores,
-		AddToLowestTable = AddToLowestTable
+		#AddToLowestTable = AddToLowestTable
+		SplitTableAllocation = SplitTableAllocation
 	)
 }
 
@@ -84,7 +86,13 @@ rbindlist_StoxFormat <- function(x) {
 
 # Function to convert the data read from one type of biotic data into the general sampling hierarchy for biotic data defined by StoX:
 #' @importFrom data.table .N setindexv
-firstPhase <- function(data, datatype, stoxBioticObject, AddToLowestTable = FALSE) {
+firstPhase <- function(
+	data, 
+	datatype, 
+	stoxBioticObject, 
+	#AddToLowestTable = FALSE
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
+) {
     
 	# Getting data for the datatype
     tableKey <- stoxBioticObject$tableKeyList[[datatype]]
@@ -275,7 +283,8 @@ firstPhase <- function(data, datatype, stoxBioticObject, AddToLowestTable = FALS
     complexMap <- getComplexMap(
     	datatype = datatype, 
     	stoxBioticObject = stoxBioticObject, 
-    	AddToLowestTable = AddToLowestTable
+    	#AddToLowestTable = AddToLowestTable
+    	SplitTableAllocation = SplitTableAllocation
     )
     
     # Get the different origin tables, and loop through these:
@@ -313,13 +322,31 @@ firstPhase <- function(data, datatype, stoxBioticObject, AddToLowestTable = FALS
     
 }
 
-getComplexMap <- function(datatype, stoxBioticObject, AddToLowestTable = FALSE) {
-	if(AddToLowestTable) {
-		stoxBioticObject$complexMaps_lowestTable[[datatype]]
-	}
-	else {
+getComplexMap <- function(
+	datatype, 
+	stoxBioticObject, 
+	#AddToLowestTable = FALSE
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
+) {
+	#if(AddToLowestTable) {
+	#	stoxBioticObject$complexMaps_lowestTable[[datatype]]
+	#}
+	#else {
+	#	stoxBioticObject$complexMaps[[datatype]]
+	#}
+	
+	# Read the appropriate mapping data:
+	SplitTableAllocation <- match.arg(SplitTableAllocation)
+	if(SplitTableAllocation == "Default") {
 		stoxBioticObject$complexMaps[[datatype]]
 	}
+	else if(SplitTableAllocation == "Lowest") {
+		stoxBioticObject$complexMaps_lowestTable[[datatype]]
+	}
+	else if(SplitTableAllocation == "Highest") {
+		stoxBioticObject$complexMaps_highestTable[[datatype]]
+	}
+	
 }
 
 
@@ -359,7 +386,11 @@ specialMerge <- function(catchRowIndex, Catch, byVars) {
 }
 
 # Function to get the StoxBiotic on one file:
-StoxBiotic_firstPhase <- function(BioticData, AddToLowestTable = FALSE) {
+StoxBiotic_firstPhase <- function(
+	BioticData, 
+	#AddToLowestTable = FALSE
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
+) {
     # Get data type: 
 	datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
 	
@@ -368,7 +399,13 @@ StoxBiotic_firstPhase <- function(BioticData, AddToLowestTable = FALSE) {
     }
     
     # Do first phase
-	first <- firstPhase(BioticData, datatype, stoxBioticObject, AddToLowestTable = AddToLowestTable)
+	first <- firstPhase(
+		BioticData, 
+		datatype, 
+		stoxBioticObject, 
+		#AddToLowestTable = AddToLowestTable
+		SplitTableAllocation = SplitTableAllocation
+	)
     
 	# Add the metadata:
     first$metadata <- BioticData$metadata
@@ -517,9 +554,15 @@ MergeStoxBiotic <- function(
 #'
 #' @inheritParams ModelData
 #' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
-#' @param AddToLowestTable Logical: If TRUE, place variables in the lowest possible table in StoxBioticData. In NMDBiotic and ICESBiotic there are tables that are split into two tables in StoxBioticData. These are fishstation -> Station/Haul (where the first table is the highest and the second is the lowest in the \code{\link[=generalSamplingHierarhcy]{General sampling hierarchy}}) and catchsample -> SpeciesCategory/Sample for NMDBiotic, and Haul -> Station/Haul and Catch -> SpeciesCategory/Sample for NMDBiotic. If AddToLowestTable = TRUE all variables from fishstation are placed in the table Haul, and similar for the other tables listed above.
+#' @param SplitTableAllocation A string indicating how to split tables of the BioticData into tables of the StoxBiotic format. See Details.
 #' 
-#' from tables that are split into two tables in StoxBiotic 
+#' @details The default \code{SplitTableAllocation} allocates variables to the StoxBiotic tables according to the mapping defined in \cr\cr
+#' \code{RstoxData::stoxBioticObject$complexMaps}. \cr\cr
+#' When \code{SplitTableAllocation} is "Lowest" or "Highest" variables are allocated to the lowest or highest table, respectively, as defined in \cr\cr
+#' \code{RstoxData::stoxBioticObject$complexMaps_lowestTable} \cr\cr
+#' and \cr\cr
+#' \code{RstoxData::stoxBioticObject$complexMaps_highestTable}, \cr\cr
+#' respectively. In NMDBiotic the tables that are split are fishstation -> Station/Haul (where the first table is the highest and the second is the lowest in the \code{\link[=generalSamplingHierarhcy]{General sampling hierarchy}}) and catchsample -> SpeciesCategory/Sample. In ICESBiotic the tables that are split are Haul -> Station/Haul and Catch -> SpeciesCategory/Sample for NMDBiotic.
 #'
 #' @return An object of StoX data type \code{\link{StoxBioticData}}.
 #'
@@ -529,13 +572,15 @@ AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
 	VariableNames = character(), 
-	AddToLowestTable = FALSE
+	#AddToLowestTable = FALSE, 
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
 ) {
 	StoxBioticData <- AddToStoxData(
 		StoxData = StoxBioticData, 
 		RawData = BioticData, 
 		VariableNames = VariableNames, 
-		AddToLowestTable = AddToLowestTable, 
+		#AddToLowestTable = AddToLowestTable, 
+		SplitTableAllocation = SplitTableAllocation, 
 		NumberOfCores = 1L, 
 		StoxDataFormat = "Biotic"
 	)

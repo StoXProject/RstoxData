@@ -530,7 +530,8 @@ AddToStoxData <- function(
 	StoxData, 
 	RawData, 
 	VariableNames = character(), 
-	AddToLowestTable = FALSE, 
+	#AddToLowestTable = FALSE, 
+	SplitTableAllocation = c("Default", "Lowest", "Highest"), 
 	NumberOfCores = 1L, 
 	StoxDataFormat = c("Biotic", "Acoustic")
 ) {
@@ -563,7 +564,8 @@ AddToStoxData <- function(
 		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(
 			RawData, 
 			NumberOfCores = NumberOfCores, 
-			AddToLowestTable = AddToLowestTable
+			#AddToLowestTable = AddToLowestTable
+			SplitTableAllocation = SplitTableAllocation
 		)
 		
 		allNames <- unlist(lapply(GeneralSamplingHierarchy, names))
