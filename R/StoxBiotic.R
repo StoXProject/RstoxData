@@ -620,7 +620,7 @@ CompensateEffectiveTowDistanceForFishingDepthCount <- function(StoxBioticData) {
 	
 	# Make a copy and change EffectiveTowDistance:
 	StoxBioticDataCopy <- data.table::copy(StoxBioticData)
-	StoxBioticDataCopy$Haul[, EffectiveTowDistance := EffectiveTowDistance / fishingdepthcount]
+	StoxBioticDataCopy$Haul[!is.na(fishingdepthcount), EffectiveTowDistance := EffectiveTowDistance / fishingdepthcount]
 	
 	return(StoxBioticDataCopy)
 }

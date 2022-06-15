@@ -96,6 +96,21 @@ initiateRstoxData <- function(){
 		NA_classes[[type]]
 	}
 	
+	# A function to extract the implemented xml formats for each of the types "biotic", "acoustic" and "landing":
+	getImplementedXsd <- function(type = c("Biotic", "Acoustic", "Landing")) {
+		type <- match.arg(type)
+		
+		if(type == "Acoustic") {
+			type <- c("acoustic", "echosounder")
+		}
+		
+		# Grep the type in the xsd names:
+		hasSelectedXsd <- do.call(pmax, lapply(type, grepl, names(xsdObjects), ignore.case = TRUE)) == 1
+		useXsd <- tools::file_path_sans_ext(names(xsdObjects)[hasSelectedXsd]) 
+		
+		return(useXsd)
+	}
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())

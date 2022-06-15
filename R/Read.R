@@ -19,6 +19,10 @@
 #' 
 ReadBiotic <- function(FileNames = character()) {
 	
+	if(!length(FileNames)) {
+		stop("FileNames must be given.")
+	}
+	
 	# Read BioticData possibly on several cores:
 	BioticData <- lapplyOnCores(
 		FileNames, 
@@ -57,6 +61,11 @@ ReadBiotic <- function(FileNames = character()) {
 #' @export
 #' 
 ReadAcoustic <- function(FileNames = character()) {
+	
+	if(!length(FileNames)) {
+		stop("FileNames must be given.")
+	}
+	
 	# Read AcousticData possibly on several cores:
 	AcousticData <- lapplyOnCores(
 		FileNames, 
@@ -100,7 +109,11 @@ ReadAcoustic <- function(FileNames = character()) {
 #' 
 ReadLanding <- function(FileNames = character()) {
   
-  # Read LandingData possibly on several cores:
+	if(!length(FileNames)) {
+		stop("FileNames must be given.")
+	}
+	
+	# Read LandingData possibly on several cores:
   LandingData <- lapplyOnCores(
     FileNames, 
     FUN = readXmlFile, 

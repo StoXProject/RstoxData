@@ -1,3 +1,7 @@
+# RstoxData v1.6.4  (2022-06-15)
+* Added exported functions MergeAcoustic(), unMergeAcoustic() and unMergeBiotic().
+* Added exported function setColumnClasses(). 
+
 # RstoxData v1.6.2  (2022-05-13)
 * Replaced the logical AddToLowestTable by the string SplitTableAllocation in AddToStoxBiotic(), allowing for allocating variables to either the default, highest or lowest table when splitting tables StoxBiotic.
 * Removed hard coded values for the following variables on ICESDatras() (variable name -> new value): 

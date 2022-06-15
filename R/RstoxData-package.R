@@ -31,7 +31,7 @@ utils::globalVariables(c(
 	 "lengthresolution", "lengthsamplecount", "lengthsampleweight", "level", "lngtClass",
 	 "lngtCode", "location", "logstart", "longitudeend", "longitudestart", "lsCountTot", "lsc",
 	 "maturationstage", "maturity", "maxFishID", "meanW", "missionstartdate", "missionstopdate",
-	 "ms", "nInd", "nWithWeight", "nation", "noMeas", "parasite", "platformname",
+	 "ms", "nInd", "nWithWeight", "nation", "newClass", "noMeas", "parasite", "platformname",
 	 "preferredagereading", "readability", "reportInMM", "reportingUnit", "res", "rowIndex", "s",
 	 "sampleFac", "samplequality", "sampletype", "serialnumber", "sex", "shortname", "sp",
 	 "specialstage", "specimenid", "start_time", "startyear", "station", "stationstartdate",
