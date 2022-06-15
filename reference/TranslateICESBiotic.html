@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.4</span>
       </span>
     </div>
 
@@ -69,24 +69,41 @@
     <h2>Arguments</h2>
     <dl><dt>ICESBioticData</dt>
 <dd><p><code><a href="ICESBioticData.html">ICESBioticData</a></code>.</p></dd>
+
+
 <dt>TranslationDefinition</dt>
 <dd><p>The method to use for defining the Translation, one of <code>FunctionParameter</code> to define the Translation on the fly in this function using the <code>TranslationTable</code>, or <code>FunctionInput</code> to import <code><a href="Translation.html">Translation</a></code> process data from a previously run process using the function <code><a href="DefineTranslation.html">DefineTranslation</a></code>. When reading the translation from a file <code>FunctionInput</code> must be used.</p></dd>
+
+
 <dt>TranslationTable</dt>
 <dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions or functions of the variable specified by the column name. See details.</p></dd>
+
+
 <dt>VariableName</dt>
 <dd><p>An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same <code><a href="Translation.html">Translation</a></code>, a column named "VariableName" must be inclcuded in <code>TranslationTable</code> (possibly read from the <code>FileName</code>) AND <code>VariableName</code> must be an empty string (blank field in the GUI).</p></dd>
+
+
 <dt>Conditional</dt>
 <dd><p>Logical: If TRUE the columns <code>ConditionalVariableNames</code> and <code>ConditionalValue</code> are expected in the <code>TranslationTable</code>. These define a variable interacting with the <code>VariableName</code> and <code>Value</code>, so that <code>VariableName</code> is changed from <code>Value</code> to <code>NewValue</code> only when <code>ConditionalVariableNames</code> has the value given by <code>ConditionalValue</code>. Note that <code>ConditionalVariableNames</code> must exist in the same table as <code>VariableName</code>.</p></dd>
+
+
 <dt>ConditionalVariableNames</dt>
 <dd><p>Similar to <code>VariableName</code>, but naming the conditional variables.</p></dd>
+
+
 <dt>Translation</dt>
 <dd><p><code><a href="Translation.html">Translation</a></code>.</p></dd>
+
+
 <dt>PreserveClass</dt>
 <dd><p>Logical: If TRUE (the default) do not convert the class of the data by the class of the translation table. E.g., with the default (<code>PreserveClass</code> = TRUE), if the variable to translate is integer (1, 2, etc) and the NewValue is character ("First", "Second", etc), the NewValue will be converted to integer before translation, resulting in NA if the character strings are not convertible to integer. In this example it could be the user's intention to convert the class of the variable to translate instead, which is possible using <code>PreserveClass</code> = FALSE.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code><a href="ICESBioticData.html">ICESBioticData</a></code> object.</p>
+    
+
+<p>A <code><a href="ICESBioticData.html">ICESBioticData</a></code> object.</p>
     </div>
 
   </div>
@@ -101,7 +118,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

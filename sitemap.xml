@@ -94,6 +94,9 @@
     <loc>/reference/LandingData.html</loc>
   </url>
   <url>
+    <loc>/reference/MergeAcoustic.html</loc>
+  </url>
+  <url>
     <loc>/reference/MergeStoxAcoustic.html</loc>
   </url>
   <url>
@@ -295,6 +298,9 @@
     <loc>/reference/roundSignifSPDF.html</loc>
   </url>
   <url>
+    <loc>/reference/setColumnClasses.html</loc>
+  </url>
+  <url>
     <loc>/reference/setRstoxPrecisionLevel.html</loc>
   </url>
   <url>
@@ -308,6 +314,12 @@
   </url>
   <url>
     <loc>/reference/stoxFunctionAttributes.html</loc>
+  </url>
+  <url>
+    <loc>/reference/unMergeAcoustic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/unMergeBiotic.html</loc>
   </url>
   <url>
     <loc>/reference/xsdObjects.html</loc>
