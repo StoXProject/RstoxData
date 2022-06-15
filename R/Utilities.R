@@ -952,12 +952,46 @@ createEmptyDataTable <- function(names, classes = NULL) {
 	if(length(classes) == length(names) && !is.list(classes)) {
 		classes <- structure(as.list(classes), names = names)
 	}
-	for(col in names(classes)) {
+	
+	setColumnClasses(DT, classes = classes)
+	
+	return(DT)
+}
+
+
+#' Convert classes of a data.table:
+#'
+#' @param DT A data.table
+#' @param classes A named list of classes. Columns in \code{DT} with name found in \code{classes} are modified if the existing class differs from the desired class.
+#'
+#' @export
+#' 
+setColumnClasses <- function(DT, classes = NULL) {
+	
+	# Create a table of the old and new class:
+	classTable <- merge(
+		data.table::data.table(
+			columnName = names(DT), 
+			oldClass = sapply(DT, firstClass)
+		), 
+		data.table::data.table(
+			columnName = names(classes), 
+			newClass = unlist(classes)
+		), 
+		by = "columnName", 
+		all = FALSE
+	)
+	# Change only the columns that differ between old and new class:
+	classTable <- subset(classTable, oldClass != newClass)
+	
+	# Accept  classes given as a vector of the same length as the names:
+	for(col in classTable$columnName) {
 		data.table::set(DT, j = col, value = do.call(paste("as", classes[[col]], sep = "."), list(DT[[col]])))
 	}
 	
 	return(DT)
 }
+
 
 
 

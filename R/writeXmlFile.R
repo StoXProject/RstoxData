@@ -1,5 +1,6 @@
 
 
+
 #' @noRd
 writeXmlDeclaration <- function(stream, version, encoding, standalone){
   
@@ -467,7 +468,8 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
 #' @param overwrite whether to overwrite any existing file(s)
 #' @noRd
 WriteBiotic <- function(BioticData, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
-  WriteBioticOrAcoustic(Data = BioticData, DataType = "BioticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
+  
+	WriteBioticOrAcoustic(Data = BioticData, DataType = "BioticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
 }
 
 
@@ -486,7 +488,8 @@ WriteBiotic <- function(BioticData, FileNames = character(), namespaces = charac
 #' @inheritParams WriteBiotic
 #' @noRd
 WriteAcoustic <- function(AcousticData, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
-  WriteBioticOrAcoustic(Data = AcousticData, DataType = "AcousticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
+  
+	WriteBioticOrAcoustic(Data = AcousticData, DataType = "AcousticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
 }
   
 
@@ -547,8 +550,6 @@ WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), names
       stop(paste("File", FileName, "already exists."))
     }
     
-    print('namespace == "http://www.imr.no/formats/nmdechosounder/v1"')
-    print(namespace == "http://www.imr.no/formats/nmdechosounder/v1")
     writeXmlFile(FileName, thisData, xsdObject, namespace, encoding, keepEmptyLevels = namespace == "http://www.imr.no/formats/nmdechosounder/v1")    
   }
   
@@ -702,7 +703,7 @@ getNamespace <- function(format, element = character()) {
     output <- namespaceTable[atNamespace, ]
   }
   else {
-    warning("The format/xsd/namespace not recognized. Implemented namespaces are ", paste(namespaceTable()$namespaces, collapse = ", "), ".")
+    warning("The format/xsd/namespace not recognized. Implemented namespaces are ", paste(namespaceTable()$namespace, collapse = ", "), ".")
     output <- data.table::data.table(
       format = NA, 
       xsd = NA, 
@@ -723,5 +724,180 @@ namespaceTable <- function() {
     namespace = unlist(lapply(xsdObjects, "[[", "targetNamespace"))
   )
 }
+
+
+
+
+
+
+#' Merge AcousticData
+#' 
+#' Function to merge the tables of \code{\link{AcousticData}}.
+#'  
+#' @inheritParams ModelData
+#' 
+#' @export
+#' 
+MergeAcoustic <- function(AcousticData) {
+	lapply(AcousticData, MergeAcousticOne)
+}
+
+MergeAcousticOne <- function(AcousticDataOne) {
+	if(grepl("nmdechosounderv1", AcousticDataOne$metadata$useXsd)) {
+		MergeNMDEchosounderOne(AcousticDataOne)
+	}
+	else if(grepl("icesAcoustic", AcousticDataOne$metadata$useXsd)) {
+		MergeICESAcousticOne(AcousticDataOne)
+	}
+	else {
+		stop("Unsupported format ", AcousticDataOne$metadata$useXsd, " in MergeAcoustic().")
+	}
+}
+
+
+MergeNMDEchosounderOne <- function(NMDEchosounderOne) {
+	tablesToMerge <- c("distance", "frequency", "ch_type", "sa_by_acocat", "sa")
+	
+	merged <- RstoxData::mergeDataTables(NMDEchosounderOne[tablesToMerge], output.only.last = TRUE, all = TRUE)
+	
+	# Add the echosounder_dataset:
+	merged <- cbind(NMDEchosounderOne$echosounder_dataset, merged)
+	
+	return(merged)
+}
+
+MergeICESAcousticOne <- function(ICESAcousticOne) {
+	stop("Not yet implemented.")
+}
+
+
+# We need also MergeBiotic()
+
+
+
+
+
+
+#' Un-merge MergeBioticData
+#' 
+#' Function to split MergeBioticData into \code{\link{BioticData}}
+#'  
+#' @param MergeBioticData The data to be split into \code{\link{BioticData}}.
+#' @param useXsd The xsd to use when splitting the flat tables into the different levels.
+#' @param ... Additionial values to inclcude in the output \code{\link{BioticData}}. Applies to all tables in MergeBioticData. The length of each of the elements given must match the number of rows of the table to add the values to.
+#' 
+#' @export
+#' 
+unMergeBiotic <- function(
+		MergeBioticData,  
+		useXsd, 
+		...
+) {
+	
+	useXsd <- match.arg(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Biotic"))
+	lapply(MergeBioticData, unMergeBioticOrAcousticOne, useXsd = useXsd, ...)
+}
+
+
+
+#' Un-merge MergeAcousticData
+#' 
+#' Function to split MergeAcousticData into \code{\link{AcousticData}}
+#'  
+#' @param MergeAcousticData The data to be split into \code{\link{AcousticData}}.
+#' @param useXsd The xsd to use when splitting the flat tables into the different levels.
+#' @param ... Additionial values to inclcude in the output \code{\link{AcousticData}}. Applies to all tables in MergeAcousticData. The length of each of the elements given must match the number of rows of the table to add the values to.
+#' 
+#' @export
+#' 
+unMergeAcoustic <- function(
+		MergeAcousticData,  
+		useXsd, 
+		...
+) {
+	useXsd <- match.arg(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Acoustic"))
+	lapply(MergeAcousticData, unMergeBioticOrAcousticOne, useXsd = useXsd, ...)
+}
+
+
+#' Un-merge MergeAcousticData
+#' 
+#' Function to convert the sonarData to a table with all channels as columns, and write to NMDEchosounder xml file
+#'  
+#' @param MergeDataOne The \code{\link{AcousticData}} merged to one table for each file.
+#' @param useXsd The xsd to add as metadata.
+#' @param ... Additionial values to inclcude in the \code{\link{AcousticData}} The length of each of the elements given must match the number of rows of the table to add the values to.
+#' @noRd
+#' 
+unMergeBioticOrAcousticOne <- function(
+		MergeDataOne,  
+		useXsd, 
+		...
+) {
+	
+	#  Extract the data at each level, adding any additional data from ...:
+	lll <- list(...)
+	
+	# Use the XML schema of the NMDEchosounder:
+	if(!grepl(".xsd", tolower(useXsd))) {
+		useXsd <- paste0(useXsd, ".xsd")
+	}
+	xsd <- RstoxData::xsdObjects[[useXsd]]
+	AcousticData <- lapply(xsd$tableOrder, getUniqueVariablesOfLevel, data = MergeDataOne, xsd = xsd, lll = lll)
+	names(AcousticData) <- xsd$tableOrder
+	
+	# Add the useXsd as metadata: 
+	AcousticData$metadata <- data.table::data.table(
+		useXsd = useXsd
+	)
+	
+	return(AcousticData)
+}
+
+
+# Run through the levels and extract the columns that should be written as each level, adding the optional inputs in given ...:
+getUniqueVariablesOfLevel <- function(level, data, xsd, lll) {
+	# Identify the variables to extract at this level:
+	varsToExtract <- xsd$tableHeaders[[level]]
+	keys <- varsToExtract[seq_len(xsd$prefixLens[[level]])]
+	keys <- intersect(names(data), keys)
+	
+	# Extract these variables present in the data: and in lll
+	varsToExtractFromData <- intersect(names(data), varsToExtract)
+	thisData <- data[, varsToExtractFromData, with = FALSE]
+	# Uniqueify:
+	
+	if(length(keys)) {
+		thisData <- unique(thisData, by = keys)
+	}
+	else {
+		thisData <- unique(thisData)
+	}
+	
+	
+	thisAdditionalData <- lll[intersect(names(lll), varsToExtract)]
+	
+	# Try to cbind the data with the lll:
+	if(all(lengths(thisAdditionalData) == nrow(thisData) | lengths(thisAdditionalData) == 1)) {
+		for(var in names(thisAdditionalData)) {
+			thisData[, eval(var) := thisAdditionalData[[var]]]
+		}
+		#levelData <- data.table(
+		#	thisData, 
+		#	thisAdditionalData
+		#)
+	}
+	else {
+		stop("Variables given in ... must match the lengths of the data at the appropriate level.")
+	}
+	
+	if(length(keys)) {
+		data.table::setorderv(thisData, keys)
+	}
+	
+	return(thisData)
+}
+
+
 
 
