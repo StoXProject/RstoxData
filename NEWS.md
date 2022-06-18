@@ -1,3 +1,7 @@
+# RstoxData v1.6.5  (2022-06-17)
+* Fixed bug in StoxAcoustic() where LogKey in ICESAcoustic data was misspecified when using time format "YYYY-MM-DDThh:mm" or "YYYY-MM-DD hh:mm" (without seconds). The seconds (00) are now included.
+* Fixed bug in StoxBiotic() where the time format "YYYY-MM-DDThh:mm" in an ICESBiotic xml files was truncated to only the date.
+
 # RstoxData v1.6.4  (2022-06-15)
 * Added exported functions MergeAcoustic(), unMergeAcoustic() and unMergeBiotic().
 * Added exported function setColumnClasses(). 

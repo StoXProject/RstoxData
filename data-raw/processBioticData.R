@@ -228,7 +228,43 @@ getBottomDepth_NMDBiotic <- function(bottomdepthstart, bottomdepthstop) {
 }
 
 
+getDateTime_NMDBiotic1 <- function(startdate.fishstation, starttime) {
+	
+	DateTime <- as.POSIXct(paste0(startdate.fishstation, starttime), format = "%d/%m/%Y %H:%M:%S", tz = "UTC")
+	
+	return(DateTime)
+}
 
+
+getDateTime_NMDBiotic3 <- function(stationstartdate, stationstarttime) {
+	
+	DateTime <- as.POSIXct(paste0(stationstartdate, stationstarttime), format = "%Y-%m-%dZ%H:%M:%OSZ", tz = "UTC")
+	
+	return(DateTime)
+}
+
+
+getDateTime_ICESBiotic <- function(StartTime) {
+	
+	StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
+	
+	# Try the two allowed time formats of the ICESBiotic:
+	allowedTimeFormatsICESBiotic <- c(
+		"%Y-%m-%dT%H:%M", 
+		"%Y-%m-%d %H:%M"
+	)
+	
+	areNotNAs <- !is.na(StartTime)
+	
+	DateTime <- NULL
+	for(format in allowedTimeFormatsICESBiotic) {
+		if(!length(DateTime) || !all(!is.na(DateTime[areNotNAs]))) {
+			DateTime <- as.POSIXct(StartTime, tz = StoxTimeZone, format = format)
+		}
+	}
+	
+	return(DateTime)
+}
 
 
 
@@ -284,6 +320,9 @@ stoxBioticObject$getSampleWeight[["nmdbioticv3.1"]] <- getSampleWeight_NMDBiotic
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3.1"]] <- getIndividualRoundWeight_NMDBiotic3
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv3.1"]] <- getIndividualTotalLength_NMDBiotic3
 stoxBioticObject$getBottomDepth[["nmdbioticv3.1"]] <- getBottomDepth_NMDBiotic
+
+# DateTime of NMDBiotic3.1:
+stoxBioticObject$getDateTime[["nmdbioticv3.1"]] <- getDateTime_NMDBiotic3
 
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]] <- function(distance, fishingdepthcount) {
@@ -372,6 +411,9 @@ stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3"]] <- getIndividualRound
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv3"]] <- getIndividualTotalLength_NMDBiotic3
 stoxBioticObject$getBottomDepth[["nmdbioticv3"]] <- getBottomDepth_NMDBiotic
 
+# DateTime of NMDBiotic3.0:
+stoxBioticObject$getDateTime[["nmdbioticv3"]] <- getDateTime_NMDBiotic3
+
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv3.1"]]
 stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- stoxBioticObject$borrowVariables[["nmdbioticv3.1"]]
@@ -445,6 +487,9 @@ stoxBioticObject$getIndividualRoundWeight[["nmdbioticv1.4"]] <- getIndividualRou
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv1.4"]] <- getIndividualTotalLength_NMDBiotic1
 stoxBioticObject$getBottomDepth[["nmdbioticv1.4"]] <- getBottomDepth_NMDBiotic
 
+# DateTime of NMDBiotic1.4:
+stoxBioticObject$getDateTime[["nmdbioticv1.4"]] <- getDateTime_NMDBiotic1
+
 stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 	list(
 		variable = "lengthmeasurement", 
@@ -516,6 +561,9 @@ stoxBioticObject$getIndividualRoundWeight[["nmdbioticv1.1"]] <- getIndividualRou
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv1.1"]] <- getIndividualTotalLength_NMDBiotic1
 stoxBioticObject$getBottomDepth[["nmdbioticv1.1"]] <- getBottomDepth_NMDBiotic
 
+# DateTime of NMDBiotic1.1:
+stoxBioticObject$getDateTime[["nmdbioticv1.1"]] <- getDateTime_NMDBiotic1
+
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.1"]] <- stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.4"]]
 stoxBioticObject$borrowVariables[["nmdbioticv1.1"]] <- stoxBioticObject$borrowVariables[["nmdbioticv1.4"]]
@@ -541,6 +589,9 @@ stoxBioticObject$tableMapList[["icesBiotic"]] <- list(list("Cruise", "Cruise"), 
 stoxBioticObject$complexMaps[["icesBiotic"]] <- fread("stox-translate-icesBiotic.csv", stringsAsFactors=FALSE)
 stoxBioticObject$complexMaps_lowestTable[["icesBiotic"]] <- fread("stox-translate-lowestTable-icesBiotic.csv", stringsAsFactors=FALSE) 
 stoxBioticObject$complexMaps_highestTable[["icesBiotic"]] <- fread("stox-translate-highestTable-icesBiotic.csv", stringsAsFactors=FALSE)
+
+# DateTime of ICESBiotic:
+stoxBioticObject$getDateTime[["icesBiotic"]] <- getDateTime_ICESBiotic
 
 ## Length Res conversion
 stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(resName) {

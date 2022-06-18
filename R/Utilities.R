@@ -1004,12 +1004,6 @@ sanitizeExpression <- function(x) {
 }
 
 
-createISO8601TimeString <- function(x, format = "%Y-%m-%dT%H:%M:%OS3Z") {
-	POSIX <- as.POSIXct(x, format = "%Y-%m-%d %H:%M:%OS", tz = getRstoxDataDefinitions("StoxTimeZone"))
-	format(POSIX, format = format)
-}
-
-
 
 
 #' Informative match.arg
