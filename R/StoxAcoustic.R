@@ -114,11 +114,11 @@ StoxAcousticOne <- function(data_list) {
 		#data_list$AcousticCategory[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
 		#data_list$ChannelReference[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
 		#data_list$NASC[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
-		data_list$Log[, LogKey := createISO8601TimeString(start_time)]
-		data_list$Beam[, LogKey := createISO8601TimeString(start_time)]
-		data_list$AcousticCategory[, LogKey := createISO8601TimeString(start_time)]
-		data_list$ChannelReference[, LogKey := createISO8601TimeString(start_time)]
-		data_list$NASC[, LogKey := createISO8601TimeString(start_time)]
+		data_list$Log[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
+		data_list$Beam[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
+		data_list$AcousticCategory[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
+		data_list$ChannelReference[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
+		data_list$NASC[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
 		
 		
 		
@@ -360,7 +360,9 @@ StoxAcousticOne <- function(data_list) {
 		#################################################################
 		#         Fiks to correct time format, and add to key           #
 		#################################################################
-		data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
+		#data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
+		data_list$Log[, LogKey := formatLogKey(as.POSIXct_ICESAcoustic(Time))]
+		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
 		
 		
@@ -609,6 +611,12 @@ StoxAcousticOne <- function(data_list) {
 	return(data_list[tablesToReturn])
 }
 
+
+as.POSIXct_NMDEchosounder <- function(x, format = "%Y-%m-%d %H:%M:%OS") {
+	as.POSIXct(x, format = format, tz = getRstoxDataDefinitions("StoxTimeZone"))
+}
+
+
 as.POSIXct_ICESAcoustic <- function(x) {
 	
 	StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
@@ -633,6 +641,11 @@ as.POSIXct_ICESAcoustic <- function(x) {
 	}
 	
 	return(DateTime)
+}
+
+
+formatLogKey <- function(POSIX, output_format = "%Y-%m-%dT%H:%M:%OS3Z") {
+	format(POSIX, format = output_format)
 }
 
 

@@ -6,7 +6,7 @@ CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,Station,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 Station,Station,"paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')",,character
 CatchPlatform,Station,catchplatform,catchplatform,platform,platform,Platform,,character
-DateTime,Station,"as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='UTC')","as.POSIXct(paste0(stationstartdate, stationstarttime), format='%Y-%m-%dZ%H:%M:%OSZ', tz='UTC')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='UTC')","as.POSIXct(paste(startdate.fishstation, starttime), format='%d/%m/%Y %H:%M:%S', tz='UTC')","as.POSIXct(StartTime, tz='UTC')",,POSIXct
+DateTime,Station,"getDateTime(stationstartdate, stationstarttime)","getDateTime(stationstartdate, stationstarttime)","getDateTime(startdate.fishstation, starttime)","getDateTime(startdate.fishstation, starttime)","getDateTime(StartTime)",,POSIXct
 Latitude,Station,latitudestart,latitudestart,latitudestart,latitudestart,StartLatitude,,numeric
 Longitude,Station,longitudestart,longitudestart,longitudestart,longitudestart,StartLongitude,,numeric
 BottomDepth,Station,"getBottomDepth(bottomdepthstart, bottomdepthstop)","getBottomDepth(bottomdepthstart, bottomdepthstop)","getBottomDepth(bottomdepthstart, bottomdepthstop)","getBottomDepth(bottomdepthstart, bottomdepthstop)",BottomDepth,,numeric

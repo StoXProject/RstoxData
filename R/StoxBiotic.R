@@ -426,6 +426,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     getIndividualRoundWeight <- stoxBioticObject$getIndividualRoundWeight[[datatype]]
     getIndividualTotalLength <- stoxBioticObject$getIndividualTotalLength[[datatype]]
     getBottomDepth <- stoxBioticObject$getBottomDepth[[datatype]]
+    getDateTime <- stoxBioticObject$getDateTime[[datatype]]
     
     # Try to stop data.table warnings (https://github.com/Rdatatable/data.table/issues/2988)
     .. <- function (x, env = parent.frame()) {
