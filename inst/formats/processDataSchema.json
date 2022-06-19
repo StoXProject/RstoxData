@@ -6,7 +6,7 @@
 			{
 				"type": "object",
 				"properties": {
-					"NewValue": { "type": ["number","string","boolean"] }
+					"NewValue": { "type": ["string", "null"] }
 				},
 				"required": [
 					"NewValue"

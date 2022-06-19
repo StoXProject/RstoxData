@@ -361,6 +361,7 @@ StoxAcousticOne <- function(data_list) {
 		#         Fiks to correct time format, and add to key           #
 		#################################################################
 		#data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
+		browser()
 		data_list$Log[, LogKey := formatLogKey(as.POSIXct_ICESAcoustic(Time))]
 		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
@@ -522,6 +523,7 @@ StoxAcousticOne <- function(data_list) {
 		### data_list$Log$Latitude2 <- NA_real_
 		
 		# Convert to POSIX.ct:
+		browser()
 		data_list$Log[, DateTime := as.POSIXct_ICESAcoustic(DateTime)]
 		
 		
@@ -627,8 +629,8 @@ as.POSIXct_ICESAcoustic <- function(x) {
 		"%Y-%m-%d %H:%M"
 	)
 	allowedTimeFormatsICESAcoustic <- c(
-		allowedTimeFormatsICESAcousticSansSeconds, 
-		paste0(allowedTimeFormatsICESAcousticSansSeconds, ":%OS")
+		paste0(allowedTimeFormatsICESAcousticSansSeconds, ":%OS"), 
+		allowedTimeFormatsICESAcousticSansSeconds
 	)
 	
 	areNotNAs <- !is.na(x)
