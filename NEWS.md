@@ -1,3 +1,7 @@
+# RstoxData v1.6.6  (2022-06-19)
+* Fixed bug in the JSON schema of the Translation process data, where number, string and boolean were allowed for the NewValue field, in that order, whereas string and null is correct.
+* Fixed bug in as.POSIXct_ICESAcoustic() where the minute resoslution was tested first, causing loss of available seconds.
+
 # RstoxData v1.6.5  (2022-06-17)
 * Fixed bug in StoxAcoustic() where LogKey in ICESAcoustic data was misspecified when using time format "YYYY-MM-DDThh:mm" or "YYYY-MM-DD hh:mm" (without seconds). The seconds (00) are now included.
 * Fixed bug in StoxBiotic() where the time format "YYYY-MM-DDThh:mm" in an ICESBiotic xml files was truncated to only the date.
