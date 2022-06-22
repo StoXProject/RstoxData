@@ -1,3 +1,9 @@
+# RstoxData v1.6.7  (2022-06-22)
+* Restored the LogKey to the form where seconds are dropped in StoxAcousticData from ICESAcoustic files with minute resolution, to avoid issues with processData in existing StoX projects.
+* Removed LogKey and EDSU from AcousticData read from ICESAcoustic files, which were added by reference in StoxAcoustic(). Added data.table::copy to fix this.
+* Added test for allowed file extensions in readXmlFile() to avoid R crashing when e.g. RData file is accidentally used.
+* Fixed temporary bug where StoxTimeZone was used from Definitions.R in processBioticData.R when it is not defined before onLoad.
+
 # RstoxData v1.6.6  (2022-06-19)
 * Fixed bug in the JSON schema of the Translation process data, where number, string and boolean were allowed for the NewValue field, in that order, whereas string and null is correct.
 * Fixed bug in as.POSIXct_ICESAcoustic() where the minute resoslution was tested first, causing loss of available seconds.

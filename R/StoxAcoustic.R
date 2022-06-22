@@ -47,6 +47,11 @@ StoxAcousticOne <- function(data_list) {
 	}
 	
 	
+	# Copy the tables, as we are modifying by reference later in the function:
+	tablesToCopy <- sapply(data_list, data.table::is.data.table)
+	data_list[tablesToCopy] <- lapply(data_list[tablesToCopy], data.table::copy)
+	
+	
 	if(ices_format==FALSE){
 		#################################################################
 		# Description: protocol to convert NMDacoustic to StoxAcoustic  #
@@ -64,11 +69,6 @@ StoxAcousticOne <- function(data_list) {
 		names(data_list)[names(data_list)=='sa']<- 'NASC'
 		
 		
-		
-		
-		
-		
-		
 		################################################################
 		#   Reorder the levels to AcousticCategory > ChannelReference  #
 		################################################################
@@ -84,10 +84,6 @@ StoxAcousticOne <- function(data_list) {
 		#data_list$ChannelReference<-mm
 		
 		
-		
-		
-		
-		
 		#################################################################
 		#        Add cruice key to all list                             #
 		#################################################################
@@ -97,13 +93,6 @@ StoxAcousticOne <- function(data_list) {
 		data_list$AcousticCategory$CruiseKey <- data_list$Cruise$cruise
 		data_list$ChannelReference$CruiseKey <- data_list$Cruise$cruise
 		data_list$NASC$CruiseKey             <- data_list$Cruise$cruise
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		#################################################################
@@ -119,10 +108,6 @@ StoxAcousticOne <- function(data_list) {
 		data_list$AcousticCategory[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
 		data_list$ChannelReference[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
 		data_list$NASC[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
-		
-		
-		
-		
 		
 		
 		if(any(duplicated(data_list$Log[,c('LogKey')]))) {
@@ -141,8 +126,6 @@ StoxAcousticOne <- function(data_list) {
 		}
 		
 		
-		
-		
 		#################################################################
 		#            Add BeamKey to all list                            #
 		#################################################################
@@ -150,11 +133,6 @@ StoxAcousticOne <- function(data_list) {
 		data_list$AcousticCategory[, BeamKey := paste(freq, transceiver, sep='/')]
 		data_list$ChannelReference[, BeamKey := paste(freq, transceiver, sep='/')]
 		data_list$NASC[, BeamKey := paste(freq, transceiver, sep='/')]
-		
-		
-		
-		
-		
 		
 		
 		#################################################################
@@ -166,23 +144,11 @@ StoxAcousticOne <- function(data_list) {
 		data_list$NASC$AcousticCategoryKey              <- as.character(data_list$NASC$acocat)
 		
 		
-		
-		
-		
-		
-		
-		
 		#################################################################
 		#        Add ChannelReferenceKey to all list                    #
 		#################################################################
 		data_list$ChannelReference$ChannelReferenceKey  <- data_list$ChannelReference$type
 		data_list$NASC$ChannelReferenceKey              <- data_list$NASC$type
-		
-		
-		
-		
-		
-		
 		
 		
 		##############################################################
@@ -191,25 +157,12 @@ StoxAcousticOne <- function(data_list) {
 		data_list$NASC$NASCKey           <- as.character(data_list$NASC$ch)
 		
 		
-		
-		
-		
-		
-		
-		
-		
 		#################################################################
 		#                       RENAME cruise level                     #
 		#################################################################
 		names(data_list$Cruise)[names(data_list$Cruise)=='platform'] <- 'Platform'
 		# Platform should be character, whereas this is integer (!) in NMDEchosounder:
 		data_list$Cruise$Platform <- as.character(data_list$Cruise$Platform)
-		
-		
-		
-		
-		
-		
 		
 		
 		#################################################################
@@ -223,7 +176,6 @@ StoxAcousticOne <- function(data_list) {
 		names(data_list$Log)[names(data_list$Log)=='lat_stop']       <- 'Latitude2'
 		
 		data_list$Cruise[, Cruise := CruiseKey]
-		
 		
 		
 		#################################################################
@@ -260,8 +212,6 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log$BottomDepth <- NA_real_
 		
 		
-		
-		
 		#################################################################
 		#                       RENAME Frequency level                  #
 		#################################################################
@@ -272,17 +222,10 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Beam$Beam <- data_list$Beam$BeamKey
 		
 		
-		
-		
-		
-		
 		#################################################################
 		#                       RENAME AcousticCatecory level           #
 		#################################################################
 		data_list$AcousticCategory$AcousticCategory <- data_list$AcousticCategory$AcousticCategoryKey
-		
-		
-		
 		
 		
 		#################################################################
@@ -293,7 +236,6 @@ StoxAcousticOne <- function(data_list) {
 		data_list$ChannelReference$ChannelReferenceType <- data_list$ChannelReference$type
 		data_list$ChannelReference$ChannelReferenceDepth <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 0, NA_real_) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
 		data_list$ChannelReference$ChannelReferenceTilt <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
-		
 		
 		
 		#################################################################
@@ -315,11 +257,8 @@ StoxAcousticOne <- function(data_list) {
 		data_list$NASC <- merge(data_list$NASC, data_list$Log[,c('upper_integrator_depth','pel_ch_thickness','LogKey','BeamKey')],by=c('LogKey','BeamKey'))
 		
 		
-		
 		data_list$NASC$MinChannelRange <- data_list$NASC$pel_ch_thickness * (as.integer(data_list$NASC$ch) - 1)
 		data_list$NASC$MaxChannelRange <- data_list$NASC$pel_ch_thickness * as.integer(data_list$NASC$ch)
-		
-		
 		
 		
 		#Fiks upper integration depth for pelagic
@@ -327,25 +266,20 @@ StoxAcousticOne <- function(data_list) {
 		data_list$NASC[(data_list$NASC$MinChannelRange < data_list$NASC$upper_integrator_depth) & (data_list$NASC$ChannelReferenceKey == 'P'),]$MinChannelRange <- data_list$NASC[(data_list$NASC$MinChannelRange < data_list$NASC$upper_integrator_depth) & (data_list$NASC$ChannelReferenceKey == 'P'),]$upper_integrator_depth
 		
 		
-		
 		data_list$ChannelReference[data_list$ChannelReference$ChannelReferenceKey=='B']
-		
 		
 		
 		# Temporary change class of the Longitude2 and Latitude2 to double, due to error in the xsd:
 		data_list$Log$Latitude2 <- as.double(data_list$Log$Latitude2)
 		data_list$Log$Longitude2 <- as.double(data_list$Log$Longitude2)
-		
-		
-		
-		
 	}
+	
+	
 	else{
 		
 		#################################################################
 		# Description: protocol to convert ICESacoustic to StoxAcoustic #
 		#################################################################
-		
 		
 		#################################################################
 		#                       RENAME general level                    #
@@ -353,22 +287,13 @@ StoxAcousticOne <- function(data_list) {
 		names(data_list)[names(data_list)=='Data']<- 'NASC'
 		
 		
-		
-		
-		
-		
 		#################################################################
 		#         Fiks to correct time format, and add to key           #
 		#################################################################
 		#data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
-		browser()
-		data_list$Log[, LogKey := formatLogKey(as.POSIXct_ICESAcoustic(Time))]
+		data_list$Log[, LogKey := getLogKey_ICESAcoustic(Time)]
 		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
-		
-		
-		
-		
 		
 		
 		#################################################################
@@ -381,7 +306,6 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Category can be in either EchoType of SaCategory
 		tmp[, AcousticCategory:=ifelse(is.na(SaCategory), EchoType, SaCategory)]
-		
 		
 		
 		#apply beam level, and add Beam key to all
@@ -405,15 +329,12 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'AcousticCategory','Type','Unit','SvThreshold', 'SaCategory')])
 		
 		
-		
-		
 		#apply acoustic catecory, and add Key to all
 		data_list$AcousticCategory <- tmp
 		data_list$AcousticCategory$AcousticCategoryKey <- tmp$AcousticCategory
 		tmp$AcousticCategoryKey<- tmp$AcousticCategory
 		# Get only unique lines:
 		data_list$AcousticCategory <- unique(data_list$AcousticCategory[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'Type','Unit','SvThreshold', 'SaCategory')])
-		
 		
 		
 		#Apply channel, and apply key to all
@@ -426,44 +347,6 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Added on 2020-12-09:
 		# Parse the tilt from the elevation angle in Instrument$TransducerOrientation:
-		getBeamTiltAngle <- function(x) {
-			# Check code words:
-			if(grepl("downwards", tolower(x))) {
-				tiltAngle <- 180
-			}
-			else if(grepl("upward", tolower(x))) {
-				tiltAngle <- 0
-			}
-			else {
-				# Remove trailing string "elevation":
-				elevationAngle <- gsub(
-					'^.*elevation\\s*', 
-					'', 
-					x
-				)
-				# Remoev non-numeric:
-				elevationAngle <- gsub(
-					"[^[:digit:]., ]", 
-					'', 
-					elevationAngle
-				)#  Remove all from first space and on:
-				elevationAngle <- strsplit(elevationAngle, " ", fixed = TRUE)[[1]][1]
-				elevationAngle <- as.numeric(elevationAngle)
-				
-				tiltAngle <- 180 - elevationAngle
-			}
-			
-			
-			return(tiltAngle)
-		}
-		
-		
-		
-		
-		
-			
-			
-			
 		ChannelReferenceTiltTable <- data_list$Instrument[, .(ChannelReferenceTilt = getBeamTiltAngle(TransducerOrientation)), by = "ID"]
 		
 		tmp <- merge(tmp, ChannelReferenceTiltTable, by.x = "BeamKey", by.y = "ID")
@@ -523,7 +406,6 @@ StoxAcousticOne <- function(data_list) {
 		### data_list$Log$Latitude2 <- NA_real_
 		
 		# Convert to POSIX.ct:
-		browser()
 		data_list$Log[, DateTime := as.POSIXct_ICESAcoustic(DateTime)]
 		
 		
@@ -613,6 +495,57 @@ StoxAcousticOne <- function(data_list) {
 	return(data_list[tablesToReturn])
 }
 
+
+hasMinuteResoslution_ICESAcoustic <- function(Time) {
+	# Count the number of colons, where 2 indicates seconds and 1 indicates minutes:
+	max(stringi::stri_count(Time, fixed = ':'), na.rm = TRUE) == 1
+}
+
+getLogKey_ICESAcoustic <- function(Time) {
+	# Use the old form "2021-06-30T03:11.000Z", which was an error, but add a warning stating that the LogKey and DateTime will not correspond, and that we recommend using seconds resoslution:
+	if(hasMinuteResoslution_ICESAcoustic(Time)) {
+		warning("The AcousticData contains data read from ICESAcoustic files with minute resolution (seconds not given) in the Time field of the Log table. This is accepted when creating the DateTime field in the StoxAcousticData, but will for backwards compatibility to RstoxData 1.6.0 and older result in the time part of the LogKey and EDSU in the form YYYY-MM-DDThh:mm.000Z instead of the more reasonable YYYY-MM-DDThh:mm:ss.000Z. It is generally recommended to use ICESAcoustic data with secondss resolution.")
+		# Use the code from RstoxData 1.6.0, file StoxAcoustic.R, line 354 (https://github.com/StoXProject/RstoxData/blob/RstoxData-v1.6.0/R/StoxAcoustic.R#L354):
+		#paste0(gsub(' ', 'T', Time),'.000Z')
+		formatLogKey(as.POSIXct_ICESAcoustic(Time))
+	}
+	else {
+		formatLogKey(as.POSIXct_ICESAcoustic(Time))
+	}
+}
+
+
+
+getBeamTiltAngle <- function(x) {
+	# Check code words:
+	if(grepl("downwards", tolower(x))) {
+		tiltAngle <- 180
+	}
+	else if(grepl("upward", tolower(x))) {
+		tiltAngle <- 0
+	}
+	else {
+		# Remove trailing string "elevation":
+		elevationAngle <- gsub(
+			'^.*elevation\\s*', 
+			'', 
+			x
+		)
+		# Remoev non-numeric:
+		elevationAngle <- gsub(
+			"[^[:digit:]., ]", 
+			'', 
+			elevationAngle
+		)#  Remove all from first space and on:
+		elevationAngle <- strsplit(elevationAngle, " ", fixed = TRUE)[[1]][1]
+		elevationAngle <- as.numeric(elevationAngle)
+		
+		tiltAngle <- 180 - elevationAngle
+	}
+	
+	
+	return(tiltAngle)
+}
 
 as.POSIXct_NMDEchosounder <- function(x, format = "%Y-%m-%d %H:%M:%OS") {
 	as.POSIXct(x, format = format, tz = getRstoxDataDefinitions("StoxTimeZone"))

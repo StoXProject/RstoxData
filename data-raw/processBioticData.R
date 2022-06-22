@@ -246,8 +246,6 @@ getDateTime_NMDBiotic3 <- function(stationstartdate, stationstarttime) {
 
 getDateTime_ICESBiotic <- function(StartTime) {
 	
-	StoxTimeZone <- getRstoxDataDefinitions("StoxTimeZone")
-	
 	# Try the two allowed time formats of the ICESBiotic:
 	allowedTimeFormatsICESBiotic <- c(
 		"%Y-%m-%dT%H:%M", 
@@ -259,7 +257,7 @@ getDateTime_ICESBiotic <- function(StartTime) {
 	DateTime <- NULL
 	for(format in allowedTimeFormatsICESBiotic) {
 		if(!length(DateTime) || !all(!is.na(DateTime[areNotNAs]))) {
-			DateTime <- as.POSIXct(StartTime, tz = StoxTimeZone, format = format)
+			DateTime <- as.POSIXct(StartTime, tz = "UTC", format = format)
 		}
 	}
 	

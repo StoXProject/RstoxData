@@ -30,16 +30,24 @@
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
 
-  if (endsWith(xmlFilePath, ".zip") & !stream){
+  if (tolower(tools::file_ext(xmlFilePath)) == "zip" & !stream){
     stop("Zip files can only be read in streaming mode")
   }
   
-	# To UTf-8
-	toUTF8 <- function(srcvec) {
-		Encoding(srcvec) <- "UTF-8"
-		return(srcvec)
+	# Accept only file extension "xml", "zip" (or "txt" for historic reasons):
+	if(! tolower(tools::file_ext(xmlFilePath)) %in% c("xml", "zip", "txt")) {
+		stop("File ", xmlFilePath, " does not have file extension xml or zip.")
 	}
-
+	
+	# Expand path
+	xmlFilePath <- path.expand(xmlFilePath)
+	
+	# Check file exists
+	if(!file.exists(xmlFilePath) || isTRUE(file.info(xmlFilePath)$isdir)) {
+		stop("File ", xmlFilePath, " does not exist.")
+	}
+	
+	
 	if (!is.null(useXsd)){
 	  supportedXsds <- gsub(".xsd", "", names(RstoxData::xsdObjects))
 	  if (!(useXsd %in% supportedXsds)){
@@ -47,150 +55,13 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	  }
 	}
 	
-	# Ices Acoustic XSD needs several additional treatments
-	icesAcousticPreprocess <- function(xsdObject) {
-
-		AC <- xsdObject
-
-		# We only interested in these tables
-		allData <- AC$tableOrder
-		newAC <- lapply(AC, function(x) x[allData])
-
-		# Set again the root
-		newAC$root <- "Acoustic"
-
-		# Re-build prefix data
-		newAC$prefixLens[allData] <- 0
-
-		allDatawithPrefix <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
-
-		newAC$prefixLens[allDatawithPrefix] <- 1
-		newAC$prefixLens["Log"] <- 2
-		newAC$prefixLens["Sample"] <- 3
-		newAC$prefixLens["Data"] <- 4
-
-		newAC$tableHeaders$Log <- c("LocalID", newAC$tableHeaders$Log)
-		newAC$tableTypes$Log <- c("xsd:string", newAC$tableTypes$Log)
-
-		newAC$tableHeaders$Sample <- c("LocalID", "Distance", newAC$tableHeaders$Sample)
-		newAC$tableTypes$Sample <- c("xsd:string", "xsd:float", newAC$tableTypes$Sample)
-
-		newAC$tableHeaders$Data <- c("LocalID", "Distance", "ChannelDepthUpper", newAC$tableHeaders$Data)
-		newAC$tableTypes$Data <- c("xsd:string", "xsd:float",  "xsd:float", newAC$tableTypes$Data)
-
-
-		# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
-		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
-
-		# Put back table order
-		newAC$tableOrder <- allData
-
-		return(newAC)
-	}
-
-	# Ices Biotic XSD needs several additional treatments
-	icesBioticPreprocess <- function(xsdObject) {
-
-		AC <- xsdObject
-
-		# We only interested in these tables
-		allData <- AC$tableOrder
-		newAC <- lapply(AC, function(x) x[allData])
-
-		# Set again the root
-		newAC$root <- "Biotic"
-
-		# Re-build prefix data
-		newAC$prefixLens[allData] <- 0
-
-		allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
-
-		newAC$prefixLens[allDatawithPrefix] <- 1
-		newAC$prefixLens["Haul"] <- 3
-		newAC$prefixLens["Catch"] <- 5
-		newAC$prefixLens["Biology"] <- 6
-
-		newAC$tableHeaders$Haul <- c("LocalID", newAC$tableHeaders$Haul)
-		newAC$tableTypes$Haul <- c("xsd:string", newAC$tableTypes$Haul)
-
-		newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "DataType", "SpeciesValidity", tail(newAC$tableHeaders$Catch, length(newAC$tableHeaders$Catch) - 4))
-		newAC$tableTypes$Catch <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", "xsd:string", "xsd:string", tail(newAC$tableTypes$Catch, length(newAC$tableTypes$Catch) - 4))
-
-		newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
-		newAC$tableTypes$Biology <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", newAC$tableTypes$Biology)
-
-		# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
-		newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
-
-		# Put back table order
-		newAC$tableOrder <- allData
-
-		return(newAC)
-	}
-
-	# Process column names and types
-	applyNameType <- function(x, result, tableHeaders, tableTypes) {
-
-		# Known atomic data types
-		knownTypes <- list( "xsd:ID"="character", "xsd:float"="double", "xs:string"="character",
-						"xsd:string"="character", "xsd:int"="integer", "xs:long"="integer", "xs:integer"="integer",
-						"xs:decimal"="double", "xs:date"="character", "xs:time"="character", "xs:double"="double")
-
-		# Get result matrix
-		y <- result[[x]]
-
-		# Handle empty data
-		if(ncol(y) == 0)
-			y <- matrix(data = "", nrow = 0, ncol = length(tableHeaders[[x]]))
-
-		# Convert to data.table
-		z <- data.table(y)
-
-		# Set column names
-		tableHeader <- tableHeaders[[x]]
-
-		# NOTE: Landings' Fartoy header has duplicate header name try to rename the second
-		
-		# Instead of adding integers, add the level:
-		#tableHeader <- make.unique(tableHeader)
-		if(anyDuplicated(tableHeader)) {
-			dup <- duplicated(tableHeader)
-			tableHeader[dup] <- paste(tableHeader[dup], x, sep = ".")
-		}
-		
-		Encoding(tableHeader) <- "UTF-8"
-		setnames(z, tableHeader)
-
-		# Set encoding (Rcpp uses UTF-8)
-		cn <- colnames(z)
-		if(nrow(z) > 0)
-			z[, (cn):=lapply(.SD, toUTF8), .SDcols=cn]
-
-		# Set column types (only double and integer for now)
-		tableType <- tableTypes[[x]]
-		if(length(tableType) > 0) {
-			for(i in seq_len(ncol(z))) {
-				# Map the types
-				doConv <- eval(parse(text = paste0("as.", knownTypes[[tableType[i]]])))
-				z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
-			}
-		}
-		return(z)
-	}
+	
 
 	# Load data if necessary
 	if(!exists("xsdObjects"))
 		data(xsdObjects, package="RstoxData", envir = environment())
 
-	# Expand path
-	xmlFilePath <- path.expand(xmlFilePath)
-
-	# Check file exists
-	if(!file.exists(xmlFilePath)) {
-		stop(paste("File", xmlFilePath, "does not exist."))
-		#return(NULL)
-	}
-
+	
 	# Check that the zip contains a properly named file:
 	checkFileNameInZip(xmlFilePath)
 	
@@ -267,3 +138,141 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 
 	return(final)
 }
+
+# Ices Acoustic XSD needs several additional treatments
+icesAcousticPreprocess <- function(xsdObject) {
+	
+	AC <- xsdObject
+	
+	# We only interested in these tables
+	allData <- AC$tableOrder
+	newAC <- lapply(AC, function(x) x[allData])
+	
+	# Set again the root
+	newAC$root <- "Acoustic"
+	
+	# Re-build prefix data
+	newAC$prefixLens[allData] <- 0
+	
+	allDatawithPrefix <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
+	
+	newAC$prefixLens[allDatawithPrefix] <- 1
+	newAC$prefixLens["Log"] <- 2
+	newAC$prefixLens["Sample"] <- 3
+	newAC$prefixLens["Data"] <- 4
+	
+	newAC$tableHeaders$Log <- c("LocalID", newAC$tableHeaders$Log)
+	newAC$tableTypes$Log <- c("xsd:string", newAC$tableTypes$Log)
+	
+	newAC$tableHeaders$Sample <- c("LocalID", "Distance", newAC$tableHeaders$Sample)
+	newAC$tableTypes$Sample <- c("xsd:string", "xsd:float", newAC$tableTypes$Sample)
+	
+	newAC$tableHeaders$Data <- c("LocalID", "Distance", "ChannelDepthUpper", newAC$tableHeaders$Data)
+	newAC$tableTypes$Data <- c("xsd:string", "xsd:float",  "xsd:float", newAC$tableTypes$Data)
+	
+	
+	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
+	newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+	
+	# Put back table order
+	newAC$tableOrder <- allData
+	
+	return(newAC)
+}
+
+# Ices Biotic XSD needs several additional treatments
+icesBioticPreprocess <- function(xsdObject) {
+	
+	AC <- xsdObject
+	
+	# We only interested in these tables
+	allData <- AC$tableOrder
+	newAC <- lapply(AC, function(x) x[allData])
+	
+	# Set again the root
+	newAC$root <- "Biotic"
+	
+	# Re-build prefix data
+	newAC$prefixLens[allData] <- 0
+	
+	allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
+	
+	newAC$prefixLens[allDatawithPrefix] <- 1
+	newAC$prefixLens["Haul"] <- 3
+	newAC$prefixLens["Catch"] <- 5
+	newAC$prefixLens["Biology"] <- 6
+	
+	newAC$tableHeaders$Haul <- c("LocalID", newAC$tableHeaders$Haul)
+	newAC$tableTypes$Haul <- c("xsd:string", newAC$tableTypes$Haul)
+	
+	newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "DataType", "SpeciesValidity", tail(newAC$tableHeaders$Catch, length(newAC$tableHeaders$Catch) - 4))
+	newAC$tableTypes$Catch <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", "xsd:string", "xsd:string", tail(newAC$tableTypes$Catch, length(newAC$tableTypes$Catch) - 4))
+	
+	newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
+	newAC$tableTypes$Biology <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", newAC$tableTypes$Biology)
+	
+	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
+	newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+	
+	# Put back table order
+	newAC$tableOrder <- allData
+	
+	return(newAC)
+}
+
+# Process column names and types
+applyNameType <- function(x, result, tableHeaders, tableTypes) {
+	
+	# Known atomic data types
+	knownTypes <- list( "xsd:ID"="character", "xsd:float"="double", "xs:string"="character",
+						"xsd:string"="character", "xsd:int"="integer", "xs:long"="integer", "xs:integer"="integer",
+						"xs:decimal"="double", "xs:date"="character", "xs:time"="character", "xs:double"="double")
+	
+	# Get result matrix
+	y <- result[[x]]
+	
+	# Handle empty data
+	if(ncol(y) == 0)
+		y <- matrix(data = "", nrow = 0, ncol = length(tableHeaders[[x]]))
+	
+	# Convert to data.table
+	z <- data.table(y)
+	
+	# Set column names
+	tableHeader <- tableHeaders[[x]]
+	
+	# NOTE: Landings' Fartoy header has duplicate header name try to rename the second
+	
+	# Instead of adding integers, add the level:
+	#tableHeader <- make.unique(tableHeader)
+	if(anyDuplicated(tableHeader)) {
+		dup <- duplicated(tableHeader)
+		tableHeader[dup] <- paste(tableHeader[dup], x, sep = ".")
+	}
+	
+	Encoding(tableHeader) <- "UTF-8"
+	setnames(z, tableHeader)
+	
+	# Set encoding (Rcpp uses UTF-8)
+	cn <- colnames(z)
+	if(nrow(z) > 0)
+		z[, (cn):=lapply(.SD, toUTF8), .SDcols=cn]
+	
+	# Set column types (only double and integer for now)
+	tableType <- tableTypes[[x]]
+	if(length(tableType) > 0) {
+		for(i in seq_len(ncol(z))) {
+			# Map the types
+			doConv <- eval(parse(text = paste0("as.", knownTypes[[tableType[i]]])))
+			z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
+		}
+	}
+	return(z)
+}
+
+# To UTf-8
+toUTF8 <- function(srcvec) {
+	Encoding(srcvec) <- "UTF-8"
+	return(srcvec)
+}
+
