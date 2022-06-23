@@ -1,3 +1,6 @@
+# RstoxData v1.6.8  (2022-06-23)
+* Fixed bug in getLogKey_ICESAcoustic().
+
 # RstoxData v1.6.7  (2022-06-22)
 * Restored the LogKey to the form where seconds are dropped in StoxAcousticData from ICESAcoustic files with minute resolution, to avoid issues with processData in existing StoX projects.
 * Removed LogKey and EDSU from AcousticData read from ICESAcoustic files, which were added by reference in StoxAcoustic(). Added data.table::copy to fix this.

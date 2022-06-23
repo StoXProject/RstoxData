@@ -506,8 +506,7 @@ getLogKey_ICESAcoustic <- function(Time) {
 	if(hasMinuteResoslution_ICESAcoustic(Time)) {
 		warning("The AcousticData contains data read from ICESAcoustic files with minute resolution (seconds not given) in the Time field of the Log table. This is accepted when creating the DateTime field in the StoxAcousticData, but will for backwards compatibility to RstoxData 1.6.0 and older result in the time part of the LogKey and EDSU in the form YYYY-MM-DDThh:mm.000Z instead of the more reasonable YYYY-MM-DDThh:mm:ss.000Z. It is generally recommended to use ICESAcoustic data with secondss resolution.")
 		# Use the code from RstoxData 1.6.0, file StoxAcoustic.R, line 354 (https://github.com/StoXProject/RstoxData/blob/RstoxData-v1.6.0/R/StoxAcoustic.R#L354):
-		#paste0(gsub(' ', 'T', Time),'.000Z')
-		formatLogKey(as.POSIXct_ICESAcoustic(Time))
+		paste0(gsub(' ', 'T', Time),'.000Z')
 	}
 	else {
 		formatLogKey(as.POSIXct_ICESAcoustic(Time))
