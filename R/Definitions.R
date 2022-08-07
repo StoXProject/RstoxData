@@ -111,6 +111,12 @@ initiateRstoxData <- function(){
 		return(useXsd)
 	}
 	
+	FilterStoxBioticWarningMessges <- list(
+		SampleCount = "The FilterExpression contains the StoxBiotic variable \"SampleCount\", which was changed to \"SampleNumber\" in RstoxData v1.3.5. Please change the FilterExpression.",
+		CatchFractionCount = "The FilterExpression contains the StoxBiotic variable \"CatchFractionCount\", which was changed to \"CatchFractionNumber\" in RstoxData v1.3.5. Please change the FilterExpression."
+	)
+	
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())
