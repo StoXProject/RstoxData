@@ -308,12 +308,40 @@ FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards 
 #' @export
 #' 
 FilterStoxBiotic <- function(StoxBioticData, FilterExpression = list(), FilterUpwards = FALSE) {
-    filterData(
+	
+	FilterStoxBiotic_FilterExpressionWarning(FilterExpression)
+	
+	filterData(
         StoxBioticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
         propagateUpwards = FilterUpwards
     )
+}
+
+FilterStoxBiotic_FilterExpressionWarning <- function(FilterExpression) {
+	FilterStoxBioticWarningMessges <- getRstoxDataDefinitions("FilterStoxBioticWarningMessges")
+	msg <- unlist(
+		mapply(
+			getFilterStoxBiotic_FilterExpressionWarningMessage, 
+			keyWord = names(FilterStoxBioticWarningMessges), 
+			message = unlist(FilterStoxBioticWarningMessges), 
+			MoreArgs = list(FilterExpression = FilterExpression), 
+			SIMPLIFY = FALSE
+		)
+	)
+	if(length(msg))	{
+		lapply(msg, warning)
+	}
+}
+
+getFilterStoxBiotic_FilterExpressionWarningMessage <- function(FilterExpression, keyWord, message) {
+	if(any(mapply(grepl, keyWord, FilterExpression))) {
+		return(message)
+	}
+	else {
+		return(NULL)
+	}	
 }
 
 #' Filter StoxAcoustic data

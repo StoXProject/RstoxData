@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.5">
   <xsd:include schemaLocation="Types.xsd"/>
   <xsd:include schemaLocation="Cruise.xsd"/>
   <xsd:element name="Biotic" type="Biotic"/>
