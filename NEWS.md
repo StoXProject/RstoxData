@@ -1,5 +1,8 @@
-# RstoxData v1.6.8  (2022-06-23)
+# RstoxData v1.6.8  (2022-08-07)
 * Fixed bug in getLogKey_ICESAcoustic().
+* Disabled warning in Translate-functions when a table contained some but not all of the variables of the Translation. 
+* Added warning when SampleCount is used instead of the new SampleNumber in a filter, asking the user to change the filter. 
+* Updated the ICES XSDs.
 
 # RstoxData v1.6.7  (2022-06-22)
 * Restored the LogKey to the form where seconds are dropped in StoxAcousticData from ICESAcoustic files with minute resolution, to avoid issues with processData in existing StoX projects.
