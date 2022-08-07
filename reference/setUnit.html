@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.8</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">setUnit</span><span class="op">(</span><span class="va">value</span>, <span class="va">id</span>, conversionTable <span class="op">=</span> <span class="fu">RstoxData</span><span class="fu">::</span><span class="va"><a href="StoxUnits.html">StoxUnits</a></span>, assertNew <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">setUnit</span><span class="op">(</span><span class="va">value</span>, <span class="va">id</span>, conversionTable <span class="op">=</span> <span class="fu">RstoxData</span><span class="fu">::</span><span class="va"><a href="StoxUnits.html">StoxUnits</a></span>, assertNew <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -91,14 +91,14 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"> <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>weight<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">1200</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"> <span class="va">dt</span><span class="op">$</span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="fu">setUnit</span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span>, <span class="st">"mass-g"</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>weight<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">1200</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="va">dt</span><span class="op">$</span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="fu">setUnit</span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span>, <span class="st">"mass-g"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000 1200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"stoxUnit")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass-g"</span>
-<span class="r-in"> <span class="va">dt</span><span class="op">$</span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="fu">setUnit</span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span>, <span class="st">"mass-kg"</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span></span>
+<span class="r-in"><span> <span class="va">dt</span><span class="op">$</span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="fu">setUnit</span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span>, <span class="st">"mass-kg"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dt</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.0 1.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"stoxUnit")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass-kg"</span>
@@ -116,7 +116,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
