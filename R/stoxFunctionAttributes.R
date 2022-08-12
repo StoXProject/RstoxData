@@ -114,7 +114,7 @@ stoxFunctionAttributes <- list(
 	FilterICESAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
-		functionOutputDataType = "ICESBAcousticData", 
+		functionOutputDataType = "ICESAcousticData", 
 		functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	

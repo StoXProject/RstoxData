@@ -43,11 +43,12 @@ jobs:
       - name: Do autorelease increment, tagging, and environment setup
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
-          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/checktag-actions.sh" --output checktag.sh
+          #curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/checktag-actions.sh" --output checktag.sh
           curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/deploy-actions.sh" --output deploy.sh
-          chmod +x ./checktag.sh ./deploy.sh
-          . checktag.sh
-          echo "FINAL_TAG=${FINAL_TAG}" >> $GITHUB_ENV
+          #chmod +x ./checktag.sh ./deploy.sh
+          chmod +x ./deploy.sh
+          #. checktag.sh
+          #echo "FINAL_TAG=${FINAL_TAG}" >> $GITHUB_ENV
           echo "PKG_FILE_PREFIX=${PKG_FILE_PREFIX}" >> $GITHUB_ENV
           echo "PKG_FILE=${PKG_FILE_PREFIX}${{ matrix.config.pkgext }}" >> $GITHUB_ENV
           echo "PKG_FREL=${PKG_FILE_PREFIX}-R.${{ matrix.config.r }}-${{ runner.os }}${{ matrix.config.pkgext }}" >> $GITHUB_ENV
