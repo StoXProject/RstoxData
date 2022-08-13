@@ -137,7 +137,7 @@ ReadLanding <- function(FileNames = character()) {
 
 
 # Function to compare with ices vocabulary of allowed values
-compareICES <- function(url, field) {
+compareICES <- function(tableName, fieldName, data, url) {
 	pg <- tryCatch(
 		{
 			read_xml(url)
@@ -150,9 +150,9 @@ compareICES <- function(url, field) {
 	)
 	recs <- xml_find_all(pg, "//Key")
 	vals <- trimws(xml_text(recs))
-	for(x in field){
+	for(x in unique(data[[tableName]][[fieldName]])){
 		if(!x %in% vals){
-			warning(paste0("StoX: ", x, " not defined in ", url))
+			warning(paste0("StoX: ", tableName, fieldName, " = ", x, " is not defined in ", url))
 		}
 	}
 }     
