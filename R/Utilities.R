@@ -15,9 +15,6 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	## Get data type:
 	plen <- NULL
 	if(!is.null(data[["metadata"]])) {
-		if(!exists("xsdObjects")) {
-			xsdObjects <- RstoxData::xsdObjects
-		}
 		datatype <- unlist(data[["metadata"]][1, "useXsd"])
 		plen <- xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
 	}

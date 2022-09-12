@@ -1,3 +1,9 @@
+# RstoxData v1.7.1  (2022-09-12)
+* Added the exported functions WriteAcoustic() and WriteBiotic().
+* Changed error to warning when type is not convertible in writeXmlFile().
+* Improved warnings in StoxBiotic() when missing values are generated for different producttype etc.
+* Cleaned up use of xsdObjects, which is now always used directly and not via RstoxData::xsdObjects.
+
 # RstoxData v1.7.0  (2022-08-11)
 * Improved warnings AcousticDataToICESAcousticOne() when values are not found in ICES reference tables.
 * Start of using semantic versioning (https://semver.org/). Before this release the two first version numbers represented the major and minor release number, in accordance with semantic versioning, whereas the third version number identified test versions. The major and minor releases (versions ending with 0.0 or 0) were considered as official versions. From this release and onwards, the third version number will represent patches (bug fixes), and are to be considered equally official as the major and minor releases. In fact, as patches are restricted to fixing bugs and not adding new functionality, the latest patch will be the recommended version.

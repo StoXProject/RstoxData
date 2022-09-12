@@ -49,19 +49,15 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	
 	
 	if (!is.null(useXsd)){
-	  supportedXsds <- gsub(".xsd", "", names(RstoxData::xsdObjects))
+	  supportedXsds <- gsub(".xsd", "", names(xsdObjects))
 	  if (!(useXsd %in% supportedXsds)){
 	    stop("useXsd=", useXsd, " is not supported. Supported values: ", paste(supportedXsds, collapse=","))
 	  }
 	}
 	
-	
-
-	# Load data if necessary
-	if(!exists("xsdObjects"))
-		data(xsdObjects, package="RstoxData", envir = environment())
-
-	
+	#if(!exists("xsdObjects"))
+	#	data(xsdObjects, package="RstoxData", envir = environment())
+	#
 	# Check that the zip contains a properly named file:
 	checkFileNameInZip(xmlFilePath)
 	
@@ -95,7 +91,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 		xmlFilePath <- tempXml
 	}
 
-	# Apply preprocess for ICES XSDs
+	# Apply preprocess for ICES XSDs. This must happen on the xsdObjects, and not e.g. on a copy, as the zip reading fails in that case:
 	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
 	} else if(!is.null(useXsd) && useXsd == "icesBiotic") {

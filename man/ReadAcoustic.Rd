@@ -18,9 +18,9 @@ This function reads multiple acoustic file to a list with a list of tables for e
 \examples{
 exampleFile <- system.file(
     "testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
-bioticData <- ReadBiotic(exampleFile)
+acousticData <- ReadAcoustic(exampleFile)
 
 }
 \seealso{
-\code{\link{readXmlFile}}.
+\code{\link{ReadBiotic}} and \code{\link{readXmlFile}}.
 }
