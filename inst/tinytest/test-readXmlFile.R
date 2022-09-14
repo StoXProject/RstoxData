@@ -4,6 +4,16 @@ example_cdata <- system.file("testresources","landing_cdata.xml", package="Rstox
 example_wo_cdata <- system.file("testresources","landing.xml", package="RstoxData")
 example_malformed <- system.file("testresources","landing_nonl.xml", package="RstoxData")
 
+# test encoding of commonname column by filtering
+enctest <- RstoxData:::readXmlFile(example, stream = F)
+expect_equal(nrow(enctest$catchsample), 4)
+expect_equal(nrow(enctest$catchsample[enctest$catchsample$commonname == "sn\u00F8krabbe"]), 2)
+
+enctest <- RstoxData:::readXmlFile(example, stream = T)
+expect_equal(nrow(enctest$catchsample), 4)
+expect_equal(nrow(enctest$catchsample[enctest$catchsample$commonname == "sn\u00F8krabbe"]), 2)
+
+
 #context("test-readXmlFile: DOM parse NMD Biotic v3.1")
 defaultParseBiotic <- RstoxData:::readXmlFile(example, stream = F)
 expect_true(all(c("mission", "fishstation", "catchsample", "individual", "agedetermination") %in% names(defaultParseBiotic)))

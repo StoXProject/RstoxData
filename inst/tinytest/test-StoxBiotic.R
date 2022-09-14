@@ -10,6 +10,8 @@ defaultParseBiotic <- RstoxData::readXmlFile(example, stream = F)
 suppressWarnings(sb1 <- RstoxData::StoxBiotic(list(defaultParseBiotic)))
 expect_equal(nrow(sb1$Haul), 2)
 
+p2 <- defaultParseBiotic
+
 #context("test-StoxBiotic: using stream parse biotic v3.1")
 streamParseBiotic <- RstoxData::readXmlFile(example, stream = T)
 suppressWarnings(sb2 <- RstoxData::StoxBiotic(list(streamParseBiotic)))
