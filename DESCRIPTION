@@ -42,6 +42,7 @@ Imports:
     xslt (>= 1.4)
 Suggests: 
     tinytest (>= 1.2.0)
+    dplyr
 LinkingTo: 
     Rcpp
 RoxygenNote: 7.1.2
