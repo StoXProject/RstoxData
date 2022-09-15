@@ -8,11 +8,11 @@ example_malformed <- system.file("testresources","landing_nonl.xml", package="Rs
 library(dplyr)
 enctest <- RstoxData:::readXmlFile(example, stream = F)
 expect_equal(nrow(enctest$catchsample), 4)
-expect_equal(nrow(enctest$catchsample %>% filter(commonname == "sn\u00F8krabbe")), 2)
+expect_equal(nrow(enctest$catchsample %>% filter(commonname == "snøkrabbe")), 2)
 
 enctest <- RstoxData:::readXmlFile(example, stream = T)
 expect_equal(nrow(enctest$catchsample), 4)
-expect_equal(nrow(enctest$catchsample %>% filter(commonname == "sn\u00F8krabbe")), 2)
+expect_equal(nrow(enctest$catchsample %>% filter(commonname == "snøkrabbe")), 2)
 
 
 #context("test-readXmlFile: DOM parse NMD Biotic v3.1")
