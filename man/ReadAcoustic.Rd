@@ -22,5 +22,5 @@ acousticData <- ReadAcoustic(exampleFile)
 
 }
 \seealso{
-\code{\link{ReadBiotic}} and \code{\link{readXmlFile}}.
+\code{\link{readXmlFile}}.
 }

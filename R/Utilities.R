@@ -1053,3 +1053,65 @@ match_arg <- function (arg, choices, several.ok = FALSE, arg_name = substitute(a
 deparse_onestring <- function(...) {
 	paste(deparse(...), collapse = "\n")
 }
+
+
+
+
+
+#' Function to return the names of the arguments to show for a function:
+#'
+#' @param functionArgumentHierarchy The function argument hierarchy defined in the stoxFunctionAttributes.
+#' @param functionArguments A list of the arguments to the function (both function inputs and function parameters).
+#' @param return.only.names Logical: If TRUE return only the names of the arguments to show.
+#'
+#' @export
+#' 
+applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionArguments, return.only.names = TRUE) {
+	
+	# Loop through the arguments given by parent tags in the functionArgumentHierarchy, and set toShow to FALSE if not any of the criterias are fulfilled:
+	toShow <- logical(length(functionArguments))
+	names(toShow) <- names(functionArguments)
+	for(argumentName in names(toShow)) {
+		# Check whether the argument is given in the functionArgumentHierarchy. If not, it will be shown:
+		atArgumentName <- which(argumentName == names(functionArgumentHierarchy))
+		if(length(atArgumentName)) {
+			# Loop through the occurrences of the argumentName in the functionArgumentHierarchy, applying &&:
+			hitsOr <- logical(length(atArgumentName))
+			for(ind in seq_along(atArgumentName)) {
+				# Loop through the conditions and set hitsAnd to TRUE if at least one condition is fullfilled:
+				conditionNames <- names(functionArgumentHierarchy[[atArgumentName[ind]]])
+				hitsAnd <- logical(length(conditionNames))
+				names(hitsAnd) <- conditionNames
+				for(conditionName in conditionNames) {
+					if(is.function(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]])) {
+						if(isTRUE(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]](functionArguments))) {
+							hitsAnd[conditionName] <- TRUE
+						}
+					}
+					else {
+						# Added requirement that functionArguments[[conditionName]] has positie length:
+						if(length(functionArguments[[conditionName]]) && functionArguments[[conditionName]] %in% eval(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]])) {
+							hitsAnd[conditionName] <- TRUE
+						}
+					}
+				}
+				# Apply the AND condition, implying that hitsAnd is TRUE if all are TRUE:
+				hitsOr[ind] <- all(hitsAnd)
+			}
+			toShow[[argumentName]] <- any(hitsOr)
+		}
+		else {
+			toShow[[argumentName]] <- TRUE
+		}
+	}
+	
+	# Return only the names of the arguments to show:
+	if(return.only.names) {
+		toShow <- names(toShow)[toShow]
+	}
+	
+	return(toShow)
+}
+
+
+
