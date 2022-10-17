@@ -699,7 +699,7 @@ WriteICESBioticOne <- function(ICESBioticDataOne){
 # Function to add the table name to the column names, but not to the keys.
 renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType = c("Biotic", "Acoustic")) {
 	
-	formatType <- match.arg(formatType)
+	formatType <- match_arg_informative(formatType)
 	
 	# Create a table of the original and new column names, but remove keys:
 	columnName <- lapply(data[tableNames], names)

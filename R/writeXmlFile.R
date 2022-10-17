@@ -834,7 +834,7 @@ unMergeBiotic <- function(
 		...
 ) {
 	
-	useXsd <- match.arg(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Biotic"))
+	useXsd <- match_arg_informative(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Biotic"))
 	lapply(MergeBioticData, unMergeBioticOrAcousticOne, useXsd = useXsd, ...)
 }
 
@@ -855,7 +855,7 @@ unMergeAcoustic <- function(
 		useXsd, 
 		...
 ) {
-	useXsd <- match.arg(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Acoustic"))
+	useXsd <- match_arg_informative(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Acoustic"))
 	lapply(MergeAcousticData, unMergeBioticOrAcousticOne, useXsd = useXsd, ...)
 }
 
