@@ -92,13 +92,13 @@ initiateRstoxData <- function(){
 		character = NA_character_
 	)
 	getNAByType <- function(type = c("numeric", "double", "integer", "character")) {
-		type <- match.arg(type)
+		type <- match_arg_informative(type)
 		NA_classes[[type]]
 	}
 	
 	# A function to extract the implemented xml formats for each of the types "biotic", "acoustic" and "landing":
 	getImplementedXsd <- function(type = c("Biotic", "Acoustic", "Landing")) {
-		type <- match.arg(type)
+		type <- match_arg_informative(type)
 		
 		if(type == "Acoustic") {
 			type <- c("acoustic", "echosounder")

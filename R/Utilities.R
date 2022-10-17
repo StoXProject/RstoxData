@@ -15,9 +15,6 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	## Get data type:
 	plen <- NULL
 	if(!is.null(data[["metadata"]])) {
-		if(!exists("xsdObjects")) {
-			xsdObjects <- RstoxData::xsdObjects
-		}
 		datatype <- unlist(data[["metadata"]][1, "useXsd"])
 		plen <- xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
 	}
@@ -179,7 +176,7 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 #' @export
 #' 
 getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, keys.out = c("all", "only.present", "all.but.present")) {
-	StoxDataType <- match.arg(StoxDataType)
+	StoxDataType <- match_arg_informative(StoxDataType)
 	if(StoxDataType == "StoxBiotic") {
 		if(!exists("stoxBioticObject")) {
 			data(stoxBioticObject, package="RstoxData", envir = environment())
@@ -200,7 +197,7 @@ getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = 
 	    return(keys)
 	}
 	
-	keys.out <- match.arg(keys.out)
+	keys.out <- match_arg_informative(keys.out)
 	if(keys.out == "only.present") {
 		keys <- utils::tail(keys, 1)
 	}
@@ -494,7 +491,7 @@ checkUniqueFormat <- function(x) {
 #' @importFrom data.table .I
 removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
-	stoxDataFormat <- match.arg(stoxDataFormat)
+	stoxDataFormat <- match_arg_informative(stoxDataFormat)
 	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
 	
 	# Run through the tables of the StoxData and remove duplicate rows:
@@ -506,12 +503,12 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 		# Remove the rows with duplicated keys:
 		if(any(duplicatedKeys)) {
 			# Get the rows with equal keys, and indicate this in a copy of the data, and write to a tempfile:
-			allDuplicated <- duplicated(StoxData[[tableName]], by = presentKeys) | duplicated(StoxData[[tableName]], by = presentKeys, fromLast = TRUE)
-			dupData <- data.table::copy(StoxData[[tableName]])
-			dupData[, duplicated := ..allDuplicated]
-			dupData[, rowIndex := .I]
-			fileToWriteDupDataTo <- tempfile()
-			data.table::fwrite(dupData, fileToWriteDupDataTo)
+			#allDuplicated <- duplicated(StoxData[[tableName]], by = presentKeys) | duplicated(StoxData[[tableName]], by = presentKeys, fromLast = TRUE)
+			#dupData <- data.table::copy(StoxData[[tableName]])
+			#dupData[, duplicated := ..allDuplicated]
+			#dupData[, rowIndex := .I]
+			#fileToWriteDupDataTo <- tempfile()
+			#data.table::fwrite(dupData, fileToWriteDupDataTo)
 			
 			#warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". This may be due to different files with the same keys, e.g. if different acoustic instruments are stored in different files. In such a case the order of the files is crucial, as only the information from the first file is kept. If not different files, then duplicated keys may be an error. To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\")")
 			#warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys from table ", tableName, ". To see the duplicated rows run the following in R: dat <- data.table::fread(\"", fileToWriteDupDataTo, "\"), which contains the column \"duplicated\"")
@@ -559,7 +556,7 @@ AddToStoxData <- function(
 	}
 	
 	# Convert from BioticData to the general sampling hierarchy:
-	StoxDataFormat <- match.arg(StoxDataFormat)
+	StoxDataFormat <- match_arg_informative(StoxDataFormat)
 	if(StoxDataFormat == "Biotic") {
 		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(
 			RawData, 
@@ -1014,7 +1011,7 @@ sanitizeExpression <- function(x) {
 #'
 #' @export
 #' 
-match_arg <- function (arg, choices, several.ok = FALSE, arg_name = substitute(arg), ignore.case = FALSE) {
+match_arg_informative <- function (arg, choices, several.ok = FALSE, arg_name = substitute(arg), ignore.case = FALSE) {
 	
 	# Stolen from https://github.com/DarwinAwardWinner/rctutils/blob/master/R/fixes_for_builtins.R:
 	
@@ -1049,10 +1046,82 @@ match_arg <- function (arg, choices, several.ok = FALSE, arg_name = substitute(a
 	i <- i[i > 0L]
 	
 	if (!several.ok && length(i) > 1)
-		stop("There is more than one match for ", arg_name_string, " in \"match_arg\"")
+		stop("There is more than one match for ", arg_name_string, " in \"
+			 match_arg_informative\"")
 	choices[i]
 }
 
 deparse_onestring <- function(...) {
 	paste(deparse(...), collapse = "\n")
+}
+
+
+
+
+
+#' Function to return the names of the arguments to show for a function:
+#'
+#' @param functionArgumentHierarchy The function argument hierarchy defined in the stoxFunctionAttributes.
+#' @param functionArguments A list of the arguments to the function (both function inputs and function parameters).
+#' @param return.only.names Logical: If TRUE return only the names of the arguments to show.
+#'
+#' @export
+#' 
+applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionArguments, return.only.names = TRUE) {
+	
+	# Loop through the arguments given by parent tags in the functionArgumentHierarchy, and set toShow to FALSE if not any of the criterias are fulfilled:
+	toShow <- logical(length(functionArguments))
+	names(toShow) <- names(functionArguments)
+	for(argumentName in names(toShow)) {
+		# Check whether the argument is given in the functionArgumentHierarchy. If not, it will be shown:
+		atArgumentName <- which(argumentName == names(functionArgumentHierarchy))
+		if(length(atArgumentName)) {
+			# Loop through the occurrences of the argumentName in the functionArgumentHierarchy, applying &&:
+			hitsOr <- logical(length(atArgumentName))
+			for(ind in seq_along(atArgumentName)) {
+				# Loop through the conditions and set hitsAnd to TRUE if at least one condition is fullfilled:
+				conditionNames <- names(functionArgumentHierarchy[[atArgumentName[ind]]])
+				hitsAnd <- logical(length(conditionNames))
+				names(hitsAnd) <- conditionNames
+				for(conditionName in conditionNames) {
+					if(is.function(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]])) {
+						if(isTRUE(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]](functionArguments))) {
+							hitsAnd[conditionName] <- TRUE
+						}
+					}
+					else {
+						# Added requirement that functionArguments[[conditionName]] has positie length:
+						if(length(functionArguments[[conditionName]]) && functionArguments[[conditionName]] %in% eval(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]])) {
+							hitsAnd[conditionName] <- TRUE
+						}
+					}
+				}
+				# Apply the AND condition, implying that hitsAnd is TRUE if all are TRUE:
+				hitsOr[ind] <- all(hitsAnd)
+			}
+			toShow[[argumentName]] <- any(hitsOr)
+		}
+		else {
+			toShow[[argumentName]] <- TRUE
+		}
+	}
+	
+	# Return only the names of the arguments to show:
+	if(return.only.names) {
+		toShow <- names(toShow)[toShow]
+	}
+	
+	return(toShow)
+}
+
+
+#' Paste to a linespace + tab separeted string
+#'
+#' @param errorIDs A vector of strings.
+#' @param collapse The separator.
+#'
+#' @export
+#' 
+printErrorIDs <- function(errorIDs, collapse = "\n\t") {
+	paste0(collapse,  paste0(errorIDs, collapse = collapse))
 }

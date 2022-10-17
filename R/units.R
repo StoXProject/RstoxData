@@ -154,7 +154,7 @@ getUnit <- function(value, property=c("id", "shortname", "symbol", "name"), unit
     return(as.character(NA))
   }
   
-  property <- match.arg(property)
+  property <- match_arg_informative(property)
   
   unit <- attr(value, "stoxUnit")
   if (!(unit %in% unitTable$id)){
@@ -184,7 +184,7 @@ getUnit <- function(value, property=c("id", "shortname", "symbol", "name"), unit
 #' @export
 getUnitOptions <- function(quantity, property=c("shortname", "symbol", "name"), unitTable=RstoxData::StoxUnits, conversionRange=NULL){
   
-  property <- match.arg(property)
+  property <- match_arg_informative(property)
   
   if (!(quantity %in% unitTable$quantity)){
     stop(paste(quantity, "is not a valid quantity."))
@@ -243,7 +243,7 @@ getUnitOptions <- function(quantity, unitTable=RstoxData::StoxUnits){
 #' @export
 getUnitOptions <- function(quantity, property=c("shortname", "symbol", "name"), unitTable=RstoxData::StoxUnits, conversionRange=NULL){
   
-  property <- match.arg(property)
+  property <- match_arg_informative(property)
   
   if (!(quantity %in% unitTable$quantity)){
     stop(paste(quantity, "is not a valid quantity."))

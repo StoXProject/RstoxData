@@ -692,7 +692,7 @@ stoxFunctionAttributes <- list(
 
 
 conversionTableFormatPossibleValuesFunction = function(data, ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
-	ConversionFunction <- match.arg(ConversionFunction)
+	ConversionFunction <- match_arg_informative(ConversionFunction)
 	
 	if(identical(ConversionFunction, "Constant")) {
 		numTypes <- 1

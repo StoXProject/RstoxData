@@ -46,7 +46,7 @@ expect_error(setUnit(dt$weight, "fraction-percent"), "mass-kg and fraction-perce
 expect_equal(getUnit(dt$weight), "mass-kg")
 expect_equal(getUnit(dt$weight, "name"), "kilogram")
 expect_true(is.na(getUnit(dt$var)))
-expect_error(getUnit(dt$weight, "names"), "'arg' should be one of")
+expect_error(getUnit(dt$weight, "names"), "\"property\" should be one of")
 
 expect_true(!is.null(attr(dt$weight, "stoxUnit")))
 dt$weight <- setUnit(dt$weight, NA)

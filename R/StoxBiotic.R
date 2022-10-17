@@ -107,6 +107,9 @@ firstPhase <- function(
         ## Merge individual and age
     	data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
     	
+    	# Merge in the tag:
+    	data$individual <- mergeByIntersect(data$individual, data$tag, all.x=TRUE)
+    	
     	## Merge individual and tag
     	#data$individual <- merge(data$individual, data$tag, by.x=indageHeaders, by.y=indageHeaders, all.x=TRUE)
     	
@@ -271,6 +274,19 @@ firstPhase <- function(
         setindexv(data[[curr]], tmpKeys)
     }
     
+    # Special warning if there are duplicate station for NMDBiotic:
+    CruiseStationKeys <- c("cruise", "station")
+    if("fishstation" %in% names(data) && any(duplicated(data$fishstation, by = CruiseStationKeys))) {
+    	numStations <- NROW(unique(data$fishstation, by = CruiseStationKeys))
+    	
+    	dup <- duplicated(data$fishstation, by = CruiseStationKeys) | duplicated(data$fishstation, by = CruiseStationKeys, fromLast = TRUE)
+    	stationsWithDuplicatedSerialnumber <- sort(unique(subset(data$fishstation, dup, select = CruiseStationKeys))[, do.call(paste, c(.SD, list(sep = "-")))])
+    	
+    	numDup <- length(stationsWithDuplicatedSerialnumber)
+    	
+    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). Duplicated serialnumber for the following cruise-station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithDuplicatedSerialnumber))
+    }
+    
     # 3. One to one mapping and keys
     firstPhaseTables <- list()
     
@@ -336,7 +352,7 @@ getComplexMap <- function(
 	#}
 	
 	# Read the appropriate mapping data:
-	SplitTableAllocation <- match.arg(SplitTableAllocation)
+	SplitTableAllocation <- match_arg_informative(SplitTableAllocation)
 	if(SplitTableAllocation == "Default") {
 		stoxBioticObject$complexMaps[[datatype]]
 	}
