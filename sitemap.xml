@@ -184,6 +184,12 @@
     <loc>/reference/Translation.html</loc>
   </url>
   <url>
+    <loc>/reference/WriteAcoustic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/WriteBiotic.html</loc>
+  </url>
+  <url>
     <loc>/reference/WriteICESAcoustic.html</loc>
   </url>
   <url>
@@ -200,6 +206,9 @@
   </url>
   <url>
     <loc>/reference/WriteICESDatrasData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/applyFunctionArgumentHierarchy.html</loc>
   </url>
   <url>
     <loc>/reference/backwardCompatibility.html</loc>
@@ -262,7 +271,7 @@
     <loc>/reference/mapplyOnCores.html</loc>
   </url>
   <url>
-    <loc>/reference/match_arg.html</loc>
+    <loc>/reference/match_arg_informative.html</loc>
   </url>
   <url>
     <loc>/reference/mergeByIntersect.html</loc>
@@ -281,6 +290,9 @@
   </url>
   <url>
     <loc>/reference/parseInterCatch.html</loc>
+  </url>
+  <url>
+    <loc>/reference/printErrorIDs.html</loc>
   </url>
   <url>
     <loc>/reference/processPropertyFormats.html</loc>

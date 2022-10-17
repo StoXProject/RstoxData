@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7.1-9001</span>
       </span>
     </div>
 
@@ -47,6 +47,19 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.7.1-9001" id="rstoxdata-v171-9001-2022-09-12">RstoxData v1.7.1-9001 (2022-09-12)<a class="anchor" aria-label="anchor" href="#rstoxdata-v171-9001-2022-09-12"></a></h2>
+<ul><li>Pre-release before 1.7.1. Errors are expected.</li>
+<li>Added the exported functions WriteAcoustic() and WriteBiotic().</li>
+<li>Changed error to warning when type is not convertible in writeXmlFile().</li>
+<li>Improved warnings in StoxBiotic() when missing values are generated for different producttype etc.</li>
+<li>Cleaned up use of xsdObjects, which is now always used directly and not via RstoxData::xsdObjects.</li>
+<li>Added applyFunctionArgumentHierarchy() for use in RstoxFramework and in any other Rstox packages in need for evaluating the function argument hierarchy.</li>
+<li>Added doc for WriteAcoustic, WriteBiotic, FunctionArgumentHierarchy.</li>
+<li>Renamed match_arg() to match_arg_informative().</li>
+<li>Added warning for duplicated station in NMDBiotic, which leads to more than one Haul per Station. This is not supported when assigning Hauls in the map, where all Hauls of a Station are selected. Filtering out Hauls can be a solution.</li>
+<li>Exported printErrorIDs().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.0" id="rstoxdata-v170-2022-08-11">RstoxData v1.7.0 (2022-08-11)<a class="anchor" aria-label="anchor" href="#rstoxdata-v170-2022-08-11"></a></h2>
 <ul><li>Improved warnings AcousticDataToICESAcousticOne() when values are not found in ICES reference tables.</li>
