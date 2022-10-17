@@ -7,7 +7,7 @@ RedefineData <- function(
 	NumberOfCores = 1L
 ) {
 	
-	StoxDataFormat <- match.arg(StoxDataFormat)
+	StoxDataFormat <- match_arg_informative(StoxDataFormat)
 	
 	# Add the requested variable:
 	StoxData <- AddToStoxData(
@@ -108,7 +108,7 @@ DefineTranslation <- function(
 		return(processData)
 	}
 	
-	DefinitionMethod = match.arg(DefinitionMethod)
+	DefinitionMethod <- match_arg_informative(DefinitionMethod)
 	
 	if(DefinitionMethod == "ResourceFile") {
 		# Get the conversion table:
@@ -247,7 +247,7 @@ translateVariables <- function(
 ) {
 	
 	# Get the Translation:
-	TranslationDefinition <- match.arg(TranslationDefinition)
+	TranslationDefinition <- match_arg_informative(TranslationDefinition)
 	if(TranslationDefinition == "FunctionParameter") {
 		Translation <- TranslationTable
 		# Sanitize the table:
@@ -948,7 +948,7 @@ ConvertDataOld <- function(
 ) {
 	
 	# Get the ConversionFunction input:
-	ConversionFunction <- match.arg(ConversionFunction)
+	ConversionFunction <- match_arg_informative(ConversionFunction)
 	
 	# Check the Conversion for unique grouping variables:
 	if(!all(GruopingVariables %in% names(Conversion))) {
@@ -1000,7 +1000,7 @@ ConvertData <- function(
 ) {
 	
 	# Get the ConversionFunction input:
-	ConversionFunction <- match.arg(ConversionFunction)
+	ConversionFunction <- match_arg_informative(ConversionFunction)
 	
 	# Check the Conversion for unique grouping variables:
 	if(!all(GruopingVariables %in% names(Conversion))) {

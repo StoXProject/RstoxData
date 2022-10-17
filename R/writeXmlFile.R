@@ -168,18 +168,18 @@ typeConvert <- function(dataTables, xsdObject){
             ok <- is.na(dataTables[[n]][[name]])
             ok <- ok | !is.na(as.POSIXct(dataTables[[n]][[name]], format="%Y-%m-%d"))
             if (!all(ok)){
-              stop(paste("Data type conversion from character to xs:date is not configured for some date formats in data."))
+              warning("Data type conversion from character to xs:date is not configured for some date formats in data.")
             }
           }
           else if (is.character(dataTables[[n]][[name]]) & xsdType == "xs:time"){
             ok <- is.na(dataTables[[n]][[name]])
             ok <- ok | !is.na(as.POSIXct(dataTables[[n]][[name]], format="%H:%M:%S"))
             if (!all(ok)){
-              stop(paste("Data type conversion from character to xs:time is not configured for some time formats in data."))
+            	warning("Data type conversion from character to xs:time is not configured for some time formats in data.")
             }
           }
           else{
-            stop(paste("Data type conversion from", class(dataTables[[n]][[name]]), "to", xsdType, "is not configured"))
+          	warning("Data type conversion from ", class(dataTables[[n]][[name]]), " to ", xsdType, " for variable ", name, " of table ", n, " is not configured")
           }
         }
       }
@@ -280,10 +280,12 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
   if (encoding != "UTF-8"){
     stop(paste("Encoding", encoding, "is not supported."))
   }
-  
+	
+	
   dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
-  dataTables <- setKeysDataTables(dataTables, xsdObject)
+  # Disabled this on 2022-09-01, as it reorders so that what is written and read back in differs from the original:
+  #dataTables <- setKeysDataTables(dataTables, xsdObject)
   
   stream = file(fileName, open="w", encoding="native.enc")
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
@@ -317,7 +319,7 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
   #
   
   if (namespace=="http://www.imr.no/formats/landinger/v2"){
-    xsdObject <- RstoxData::xsdObjects$landingerv2.xsd
+    xsdObject <- xsdObjects$landingerv2.xsd
   }
   else{
     stop(paste("Namespace", namespace, "not supported."))
@@ -441,7 +443,7 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
     }
     else{
       warning("Fast file writing cannot be enabled. Falling back to slow mode.")
-      writeXmlFile(FileName, data, RstoxData::xsdObjects$landingerv2.xsd, namespace, encoding)  
+      writeXmlFile(FileName, data, xsdObjects$landingerv2.xsd, namespace, encoding)  
     }
   }
   
@@ -466,7 +468,20 @@ WriteLanding <- function(LandingData, FileNames, namespaces=NULL, encoding="UTF-
 #' @param namespaces XML namespaces to use for formatting.
 #' @param encoding encoding to use for writing files
 #' @param overwrite whether to overwrite any existing file(s)
-#' @noRd
+#' 
+#' @examples 
+#' exampleFile <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
+#' bioticData <- ReadBiotic(exampleFile)
+#' newFile <- tempfile(fileext = ".xml")
+#' WriteBiotic(bioticData, newFile, namespaces = "http://www.imr.no/formats/nmdbiotic/v3.1")
+#' bioticDataReadBackIn <- ReadBiotic(newFile)
+#' all.equal(
+#'   bioticData[[1]][names(bioticData[[1]]) != "metadata"], 
+#'   bioticDataReadBackIn[[1]][names(bioticDataReadBackIn[[1]]) != "metadata"]
+#' )
+#' 
+#' @export
+#' 
 WriteBiotic <- function(BioticData, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
   
 	WriteBioticOrAcoustic(Data = BioticData, DataType = "BioticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
@@ -486,7 +501,21 @@ WriteBiotic <- function(BioticData, FileNames = character(), namespaces = charac
 #'   http://www.imr.no/formats/nmdechosounder/v1
 #' @param AcousticData \code{\link[RstoxData]{AcousticData}} data to write.
 #' @inheritParams WriteBiotic
-#' @noRd
+#' 
+#' @examples 
+#' exampleFile <- system.file(
+#'     "testresources","libas_ListUserFile20__L40.0-2259.9_small.xml", package="RstoxData")
+#' acousticData <- ReadAcoustic(exampleFile)
+#' newFile <- tempfile(fileext = ".xml")
+#' WriteAcoustic(acousticData, newFile, namespaces = "http://www.imr.no/formats/nmdechosounder/v1")
+#' acousticDataReadBackIn <- ReadAcoustic(newFile)
+#' all.equal(
+#'   acousticData[[1]][names(acousticData[[1]]) != "metadata"], 
+#'   acousticDataReadBackIn[[1]][names(acousticDataReadBackIn[[1]]) != "metadata"]
+#' )
+#' 
+#' @export
+#' 
 WriteAcoustic <- function(AcousticData, FileNames = character(), namespaces = character(), encoding = "UTF-8", overwrite = FALSE){
   
 	WriteBioticOrAcoustic(Data = AcousticData, DataType = "AcousticData", FileNames = FileNames, namespaces = namespaces, encoding = encoding, overwrite = overwrite)
@@ -633,6 +662,11 @@ createOneTable <- function(tableName, data, namespace) {
   
   data <- data[[tableName]]
   
+  if(NROW(data) && ! data.table::is.data.table(data)) {
+  	warning("The table ", tableName, " converted from data.frame to data.table.")
+  	data <- data.table::as.data.table(data)
+  }
+  
   tableHeadersOne <- xsdObjects[[namespace$xsd]]$tableHeaders[[tableName]]
   prefixLensOne <- xsdObjects[[namespace$xsd]]$prefixLens[[tableName]]
   
@@ -660,7 +694,13 @@ createOneTable <- function(tableName, data, namespace) {
     SIMPLIFY = FALSE
   )
   
-  if(!all(tableHeadersOne[seq_len(prefixLensOne)] %in% names(data))) {
+  if(!NROW(data)) {
+  	data <- data.table::as.data.table(emptyListOfTableHeaders)[0, ]
+  	return(data)
+  }
+  if(NROW(data) && !all(tableHeadersOne[seq_len(prefixLensOne)] %in% names(data))) {
+  	warning("The following required fields are missing in the table '", tableName, "': ", paste(setdiff(tableHeadersOne[seq_len(prefixLensOne)], names(data)), collapse = ", "), ".")
+  	
     data <- data.table::as.data.table(emptyListOfTableHeaders)[0, ]
     return(data)
   }
@@ -794,7 +834,7 @@ unMergeBiotic <- function(
 		...
 ) {
 	
-	useXsd <- match.arg(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Biotic"))
+	useXsd <- match_arg_informative(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Biotic"))
 	lapply(MergeBioticData, unMergeBioticOrAcousticOne, useXsd = useXsd, ...)
 }
 
@@ -815,7 +855,7 @@ unMergeAcoustic <- function(
 		useXsd, 
 		...
 ) {
-	useXsd <- match.arg(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Acoustic"))
+	useXsd <- match_arg_informative(useXsd, getRstoxDataDefinitions("getImplementedXsd")("Acoustic"))
 	lapply(MergeAcousticData, unMergeBioticOrAcousticOne, useXsd = useXsd, ...)
 }
 
@@ -842,7 +882,7 @@ unMergeBioticOrAcousticOne <- function(
 	if(!grepl(".xsd", tolower(useXsd))) {
 		useXsd <- paste0(useXsd, ".xsd")
 	}
-	xsd <- RstoxData::xsdObjects[[useXsd]]
+	xsd <- xsdObjects[[useXsd]]
 	AcousticData <- lapply(xsd$tableOrder, getUniqueVariablesOfLevel, data = MergeDataOne, xsd = xsd, lll = lll)
 	names(AcousticData) <- xsd$tableOrder
 	

@@ -296,7 +296,7 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 		})
 	
 	if(is.na(tmpText) || is.null(tmpText)) {
-                return(NULL)
+			return(NULL)
         }
 
 	bits <- read_html(tmpText)

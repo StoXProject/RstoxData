@@ -1,3 +1,15 @@
+# RstoxData v1.7.1-9001  (2022-09-12)
+* Pre-release before 1.7.1. Errors are expected.
+* Added the exported functions WriteAcoustic() and WriteBiotic().
+* Changed error to warning when type is not convertible in writeXmlFile().
+* Improved warnings in StoxBiotic() when missing values are generated for different producttype etc.
+* Cleaned up use of xsdObjects, which is now always used directly and not via RstoxData::xsdObjects.
+* Added applyFunctionArgumentHierarchy() for use in RstoxFramework and in any other Rstox packages in need for evaluating the function argument hierarchy.
+* Added doc for WriteAcoustic, WriteBiotic, FunctionArgumentHierarchy.
+* Renamed match_arg() to match_arg_informative().
+* Added warning for duplicated station in NMDBiotic, which leads to more than one Haul per Station. This is not supported when assigning Hauls in the map, where all Hauls of a Station are selected. Filtering out Hauls can be a solution.
+* Exported printErrorIDs().
+
 # RstoxData v1.7.0  (2022-08-11)
 * Improved warnings AcousticDataToICESAcousticOne() when values are not found in ICES reference tables.
 * Start of using semantic versioning (https://semver.org/). Before this release the two first version numbers represented the major and minor release number, in accordance with semantic versioning, whereas the third version number identified test versions. The major and minor releases (versions ending with 0.0 or 0) were considered as official versions. From this release and onwards, the third version number will represent patches (bug fixes), and are to be considered equally official as the major and minor releases. In fact, as patches are restricted to fixing bugs and not adding new functionality, the latest patch will be the recommended version.

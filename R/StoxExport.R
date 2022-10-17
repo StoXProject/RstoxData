@@ -609,7 +609,7 @@ setClassICESBiotic <- function(data, tables = c("Cruise", "Haul", "Catch", "Biol
 	classes <- mapply(
 		structure, 
 		lapply(
-		  RstoxData::xsdObjects$icesBiotic.xsd$tableTypes[tables], 
+		  xsdObjects$icesBiotic.xsd$tableTypes[tables], 
 			translateSimple, 
 			old = c(
 				"xsd:float", 
@@ -624,7 +624,7 @@ setClassICESBiotic <- function(data, tables = c("Cruise", "Haul", "Catch", "Biol
 				"character"
 			)
 		), 
-		names = RstoxData::xsdObjects$icesBiotic.xsd$tableHeaders[tables], 
+		names = xsdObjects$icesBiotic.xsd$tableHeaders[tables], 
 		SIMPLIFY = FALSE
 	)
 	classes <- lapply(classes, as.list)
@@ -699,7 +699,7 @@ WriteICESBioticOne <- function(ICESBioticDataOne){
 # Function to add the table name to the column names, but not to the keys.
 renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType = c("Biotic", "Acoustic")) {
 	
-	formatType <- match.arg(formatType)
+	formatType <- match_arg_informative(formatType)
 	
 	# Create a table of the original and new column names, but remove keys:
 	columnName <- lapply(data[tableNames], names)
