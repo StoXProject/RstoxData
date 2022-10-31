@@ -280,11 +280,12 @@ firstPhase <- function(
     	numStations <- NROW(unique(data$fishstation, by = CruiseStationKeys))
     	
     	dup <- duplicated(data$fishstation, by = CruiseStationKeys) | duplicated(data$fishstation, by = CruiseStationKeys, fromLast = TRUE)
-    	stationsWithDuplicatedSerialnumber <- sort(unique(subset(data$fishstation, dup, select = CruiseStationKeys))[, do.call(paste, c(.SD, list(sep = "-")))])
+    	stationsWithDuplicatedSerialnumber <- unique(subset(data$fishstation, dup, select = CruiseStationKeys))
+    	stationsWithDuplicatedSerialnumber <- sort(stationsWithDuplicatedSerialnumber[, do.call(paste, c(.SD, list(sep = "/")))])
     	
     	numDup <- length(stationsWithDuplicatedSerialnumber)
     	
-    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). Duplicated serialnumber for the following cruise-station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithDuplicatedSerialnumber))
+    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). Duplicated serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithDuplicatedSerialnumber))
     }
     
     # 3. One to one mapping and keys
