@@ -236,7 +236,34 @@ StoxAcousticOne <- function(data_list) {
 		data_list$ChannelReference$ChannelReferenceType <- data_list$ChannelReference$type
 		data_list$ChannelReference$ChannelReferenceDepth <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 0, NA_real_) # Hard coded to the surface for pelagic channels ("P") of the LUF20, and NA for bottom channels ("B"):
 		data_list$ChannelReference$ChannelReferenceTilt <- ifelse(data_list$ChannelReference$ChannelReferenceType == "P", 180, 0) # Hard coded to vertically downwards for pelagic channels ("P") of the LUF20, and vertically upwards for bottom channels ("B"):
-		
+		# Check whether P is present in all EDSUs:
+		if(data_list$metadata$useXsd == "nmdechosounderv1") {
+			checkBy <- c("LogKey", "BeamKey", "AcousticCategoryKey")
+			BButNotP <- data_list$ChannelReference[, .(PNotPresent = !"P" %in% ChannelReferenceType & "B" %in% ChannelReferenceType), by = checkBy]$PNotPresent
+			errorKeys <- subset(unique(data_list$ChannelReference, by = checkBy), BButNotP, select = checkBy)
+			errorKeys <- errorKeys[, do.call(paste, c(.SD, list(sep = " - ")))]
+			if(any(BButNotP)) {
+				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain ch_type \"B\" but not \"P\". As per the LSSS convention that P covers the entire watercolumn (or the part of the watercolumn that is stored in the data), ch_type \"P\" must always be present. This coculd be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following cruise, log-distance and frequency (CruiseKey - LogKey - BeamKey):", printErrorIDs(errorKeys))
+			}
+			
+			
+			sum_saBy <- c(checkBy, "ChannelReferenceKey")
+			sum_sa <- data_list$NASC[, .(sum_sa = sum(sa, na.rm = TRUE)), by = sum_saBy]
+			sum_sa_P <- subset(sum_sa, ChannelReferenceKey == "P")
+			sum_sa_B <- subset(sum_sa, ChannelReferenceKey == "B")
+			sum_sa_merged <- merge(sum_sa_P, sum_sa_B, all = TRUE, by = checkBy)
+			buffer = 1e-4
+			sum_sa_merged_onlyError <- subset(sum_sa_merged, (sum_sa.y / sum_sa.x) > (1 + buffer) )
+			oldNames <- c("sum_sa.x", "sum_sa.y")
+			newNames <- c("sum_sa.P", "sum_sa.B")
+			data.table::setnames(sum_sa_merged_onlyError, oldNames, newNames)
+			sum_sa_merged_onlyError <- subset(sum_sa_merged_onlyError, select = c(checkBy, newNames))
+			sum_sa_merged_onlyError <- sum_sa_merged_onlyError[, do.call(paste, c(.SD, list(sep = " - ")))]
+			
+			if(NROW(sum_sa_merged_onlyError)) {
+				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain more sa in ch_type \"B\" than \"P\". This coculd be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following cruise, log-distance, frequency and sum of sa for \"P\" and \"B\" (CruiseKey - LogKey - BeamKey - Sum_of_NASC_for_P - Sum_of_NASC_for_P):", printErrorIDs(sum_sa_merged_onlyError))
+			}
+		}
 		
 		#################################################################
 		#                RENAME NASC level                              #
@@ -244,6 +271,7 @@ StoxAcousticOne <- function(data_list) {
 		names(data_list$NASC)[names(data_list$NASC)=='sa'] <- 'NASC'
 		# This should not be a number but an ID, thus character:
 		data_list$NASC$Channel <- as.character(data_list$NASC$ch)
+		
 		
 		
 		#################################################################
