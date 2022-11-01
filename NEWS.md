@@ -1,3 +1,7 @@
+# RstoxData v1.7.1-9002  (2022-10-31)
+* Pre-release before 1.7.1. Errors are expected.
+* Added warning when ch_type P is missing or represent less sa than B.
+
 # RstoxData v1.7.1-9001  (2022-09-12)
 * Pre-release before 1.7.1. Errors are expected.
 * Added the exported functions WriteAcoustic() and WriteBiotic().
