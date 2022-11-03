@@ -323,6 +323,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
 		
+		#browser()
 		
 		#################################################################
 		#                   MAKE other general level                    #

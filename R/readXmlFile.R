@@ -47,6 +47,10 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 		stop("File ", xmlFilePath, " does not exist.")
 	}
 	
+	if(!exists("xsdObjects")) {
+		data(xsdObjects, package="RstoxData", envir = environment())
+	}
+	
 	
 	if (!is.null(useXsd)){
 	  supportedXsds <- gsub(".xsd", "", names(xsdObjects))
@@ -55,9 +59,6 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	  }
 	}
 	
-	#if(!exists("xsdObjects"))
-	#	data(xsdObjects, package="RstoxData", envir = environment())
-	#
 	# Check that the zip contains a properly named file:
 	checkFileNameInZip(xmlFilePath)
 	
