@@ -328,6 +328,13 @@ StoxAcousticOne <- function(data_list) {
 		#################################################################
 		#                   MAKE other general level                    #
 		#################################################################
+		# ICESACoustic does not seem to support multiple frequencies in the XML format, as Instrument is present in the Sample table but not in the Data table:
+		uniqueInstruments <- data_list$Sample[, unique(Instrument)]
+		if(length(uniqueInstruments) > 1) {
+			stop("The ICESAcoutsic XML file ", data_list$metadata$file, " contain multiple Instruments. However StocAcoustic can currently not convert data from ICESAcoutsic XML format as the Instrument tag is presesnt in the Sample but not the Data table.")
+		}
+		
+		
 		tmp <- merge(data_list$Sample,data_list$NASC)
 		tmp <- merge(tmp,data_list$Log[,c('Distance','Time','LogKey','Origin')],by='Distance')
 		names(tmp)[names(tmp)=="Instrument"]='ID'
