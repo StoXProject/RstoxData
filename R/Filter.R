@@ -336,7 +336,7 @@ FilterStoxBiotic_FilterExpressionWarning <- function(FilterExpression) {
 }
 
 getFilterStoxBiotic_FilterExpressionWarningMessage <- function(FilterExpression, keyWord, message) {
-	if(any(mapply(grepl, keyWord, FilterExpression))) {
+	if(length(FilterExpression) && any(mapply(grepl, keyWord, FilterExpression))) {
 		return(message)
 	}
 	else {
