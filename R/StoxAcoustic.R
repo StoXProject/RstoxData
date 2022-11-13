@@ -342,8 +342,7 @@ StoxAcousticOne <- function(data_list) {
 		
 		# Category can be in either EchoType of SaCategory
 		tmp[, AcousticCategory:=ifelse(is.na(SaCategory), EchoType, SaCategory)]
-		
-		
+
 		#apply beam level, and add Beam key to all
 		tmp_beam<-merge(tmp,data_list$Instrument, by='ID')
 		
