@@ -1,6 +1,6 @@
 Package: RstoxData
-Version: 1.7.1-9002
-Date: 2022-10-31
+Version: 1.7.2
+Date: 2022-11-13
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
   person(given = "Edvin", 
@@ -34,11 +34,11 @@ License: LGPL-3
 LazyData: true
 Encoding: UTF-8
 Imports: 
-    data.table (>= 1.12.6),
+    data.table (>= 1.12.0),
     Rcpp (>= 1.0.0),
-    stringi (>= 1.4.3),
+    stringi (>= 1.4.0),
     units (>= 0.7),
-    xml2 (>= 1.2.2),
+    xml2 (>= 1.2.0),
     xslt (>= 1.4)
 Suggests: 
     tinytest (>= 1.2.0)

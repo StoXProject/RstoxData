@@ -1,3 +1,11 @@
+# RstoxData v1.7.2  (2022-11-13)
+* Added warning when an ICESAcoustic xml files contains more than one instrument, in which case the xml file does not contain enough information for StoX to link the Sample and Data tables.
+* Fixed bug with R < 4.2, where a filter process with unspecified FilterExpression retuns error "zero-length inputs cannot be mixed with those of non-zero length". The error is returned both when opening the FilterExpression and when running the process.
+
+# RstoxData v1.7.1-9002  (2022-10-31)
+* Pre-release before 1.7.1. Errors are expected.
+* Added warning when ch_type P is missing or represent less sa than B.
+
 # RstoxData v1.7.1-9001  (2022-09-12)
 * Pre-release before 1.7.1. Errors are expected.
 * Added the exported functions WriteAcoustic() and WriteBiotic().
