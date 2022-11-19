@@ -155,17 +155,22 @@ icesAcousticPreprocess <- function(xsdObject) {
 	
 	newAC$prefixLens[allDatawithPrefix] <- 1
 	newAC$prefixLens["Log"] <- 2
-	newAC$prefixLens["Sample"] <- 3
-	newAC$prefixLens["Data"] <- 4
+	newAC$prefixLens["Sample"] <- 4
+	newAC$prefixLens["Data"] <- 5
 	
 	newAC$tableHeaders$Log <- c("LocalID", newAC$tableHeaders$Log)
 	newAC$tableTypes$Log <- c("xsd:string", newAC$tableTypes$Log)
 	
-	newAC$tableHeaders$Sample <- c("LocalID", "Distance", newAC$tableHeaders$Sample)
-	newAC$tableTypes$Sample <- c("xsd:string", "xsd:float", newAC$tableTypes$Sample)
+	# We need here to add Instrument as the first header, since it must serve as a key:
+	newAC$tableHeaders$Sample <- c("LocalID", "Distance", "Instrument", newAC$tableHeaders$Sample)
+	newAC$tableTypes$Sample <- c("xsd:string", "xsd:float", "xsd:string", newAC$tableTypes$Sample)
+	# Remove the duplicated Instrument:
+	atDup <- duplicated(newAC$tableHeaders$Sample)
+	newAC$tableHeaders$Sample <- newAC$tableHeaders$Sample[!atDup]
+	newAC$tableTypes$Sample <- newAC$tableTypes$Sample[!atDup]
 	
-	newAC$tableHeaders$Data <- c("LocalID", "Distance", "ChannelDepthUpper", newAC$tableHeaders$Data)
-	newAC$tableTypes$Data <- c("xsd:string", "xsd:float",  "xsd:float", newAC$tableTypes$Data)
+	newAC$tableHeaders$Data <- c("LocalID", "Distance", "Instrument", "ChannelDepthUpper", newAC$tableHeaders$Data)
+	newAC$tableTypes$Data <- c("xsd:string", "xsd:float", "xsd:string", "xsd:float", newAC$tableTypes$Data)
 	
 	
 	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)

@@ -261,7 +261,7 @@ StoxAcousticOne <- function(data_list) {
 			sum_sa_merged_onlyError <- sum_sa_merged_onlyError[, do.call(paste, c(.SD, list(sep = " - ")))]
 			
 			if(NROW(sum_sa_merged_onlyError)) {
-				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain more sa in ch_type \"B\" than \"P\". This coculd be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following cruise, log-distance, frequency and sum of sa for \"P\" and \"B\" (CruiseKey - LogKey - BeamKey - Sum_of_NASC_for_P - Sum_of_NASC_for_P):", printErrorIDs(sum_sa_merged_onlyError))
+				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain more sa in ch_type \"B\" than \"P\". This coculd be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following cruise, log-distance, frequency and sum of sa for \"P\" and \"B\" (CruiseKey - LogKey - BeamKey - Sum_of_NASC_for_P - Sum_of_NASC_for_B):", printErrorIDs(sum_sa_merged_onlyError))
 			}
 		}
 		
@@ -304,7 +304,6 @@ StoxAcousticOne <- function(data_list) {
 	
 	
 	else{
-		
 		#################################################################
 		# Description: protocol to convert ICESacoustic to StoxAcoustic #
 		#################################################################
@@ -319,22 +318,16 @@ StoxAcousticOne <- function(data_list) {
 		#         Fiks to correct time format, and add to key           #
 		#################################################################
 		#data_list$Log[, LogKey:= paste0(gsub(' ','T',Time),'.000Z')]
+		data_list$Log <- unique(data_list$Log)
+		
 		data_list$Log[, LogKey := getLogKey_ICESAcoustic(Time)]
 		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
 		
-		#browser()
 		
 		#################################################################
 		#                   MAKE other general level                    #
 		#################################################################
-		# ICESACoustic does not seem to support multiple frequencies in the XML format, as Instrument is present in the Sample table but not in the Data table:
-		uniqueInstruments <- data_list$Sample[, unique(Instrument)]
-		if(length(uniqueInstruments) > 1) {
-			stop("The ICESAcoutsic XML file ", data_list$metadata$file, " contain multiple Instruments. However StocAcoustic can currently not convert data from ICESAcoutsic XML format as the Instrument tag is presesnt in the Sample but not the Data table.")
-		}
-		
-		
 		tmp <- merge(data_list$Sample,data_list$NASC)
 		tmp <- merge(tmp,data_list$Log[,c('Distance','Time','LogKey','Origin')],by='Distance')
 		names(tmp)[names(tmp)=="Instrument"]='ID'
