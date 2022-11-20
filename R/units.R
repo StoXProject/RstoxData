@@ -165,6 +165,22 @@ getUnit <- function(value, property=c("id", "shortname", "symbol", "name"), unit
   
 }
 
+#' Does the input have unit?
+#' @description 
+#'  Get unit id, shortname, symbol or name of a value in accordance with StoX convention.
+#' @inheritParams getUnit
+#' @return TRUE if the \code{value} has unit, FALSE if not.
+#' @examples 
+#'  dt <- data.table::data.table(weight=c(1000,1200))
+#'  dt$weight <- setUnit(dt$weight, "mass-g")
+#'  print(hasUnit(dt$weight))
+#'  print(hasUnit(1))
+#' @export
+hasUnit <- function(value, property=c("id", "shortname", "symbol", "name"), unitTable=RstoxData::StoxUnits){
+	unit <- getUnit(value, property=property, unitTable=unitTable)
+	!is.na(unit)
+}
+
 #' Get available units
 #' @description 
 #'  Get the unit shortnames, symbols or names that are available for a given quantity.
