@@ -1,5 +1,14 @@
+# RstoxData v1.7.3-9002  (2022-11-17)
+* Fixed typo in warning for more sa in B than in P.
+* Added a unique fo the Log table in StoxAcoustic for ICESAcoutsic.
+* Added units for area number density, and one for megaton.
+* Added the exported hasUnit().
+
+
+# RstoxData v1.7.3-9001  (2022-11-15)
+* Fixed bug in ReadAcoustic when an ICESAcoustic xml files contains more than one instrument.
+
 # RstoxData v1.7.2  (2022-11-13)
-* Added warning when an ICESAcoustic xml files contains more than one instrument, in which case the xml file does not contain enough information for StoX to link the Sample and Data tables.
 * Fixed bug with R < 4.2, where a filter process with unspecified FilterExpression retuns error "zero-length inputs cannot be mixed with those of non-zero length". The error is returned both when opening the FilterExpression and when running the process.
 
 # RstoxData v1.7.1-9002  (2022-10-31)
