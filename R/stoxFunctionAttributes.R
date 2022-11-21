@@ -201,6 +201,20 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "WriteICESDatrasData"
 	),
 	
+	PrepareWriteICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData", 
+		functionParameterFormat = list(
+			RoundingTable = "roundingTable"
+		), 
+		functionArgumentHierarchy = list(
+			RoundingTable = list(
+				RoundDownLngtClass = TRUE
+			)
+		)
+	),
+	
 	# Translation:
 	DefineTranslation = list(
 		functionType = "processData", 
@@ -828,6 +842,19 @@ processPropertyFormats <- list(
 			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
 		}, 
 		variableTypes = "character"
+	), 
+	
+	roundingTable = list(
+		class = "table", 
+		title = "Table linking LngtCode and the length resolution", 
+		columnNames = c(
+			"LngtCode", 
+			"LengthResolution"
+		), 
+		variableTypes = c(
+			"character", 
+			"double"
+		)
 	)
 )
 

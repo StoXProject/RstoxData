@@ -1,9 +1,14 @@
+# RstoxData v1.7.5  (2022-11-17)
+* Added the function PrepareWriteICESDatras().
+* Fixed typo in ICESDatras() (BycSpecRecCode changed to BySpecRecCode).
+* Added specialstage in Maturity in CA.
+* Added the LiverWeight in CA, with values from the liverweight in NMDBiotic
+
 # RstoxData v1.7.3-9002  (2022-11-17)
 * Fixed typo in warning for more sa in B than in P.
-* Added a unique fo the Log table in StoxAcoustic for ICESAcoutsic.
+* Added a unique for the Log table in StoxAcoustic for ICESAcoutsic.
 * Added units for area number density, and one for megaton.
 * Added the exported hasUnit().
-
 
 # RstoxData v1.7.3-9001  (2022-11-15)
 * Fixed bug in ReadAcoustic when an ICESAcoustic xml files contains more than one instrument.
