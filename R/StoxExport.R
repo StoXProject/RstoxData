@@ -844,7 +844,7 @@ ICESDatrasOne <- function(
 		"HaulVal" = NA_character_,
 		"HydroStNo" = NA_character_,
 		"StdSpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=88.
-		"BycSpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=89.
+		"BySpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=89.
 		"DataType" = "R", # "Data by haul", see http://vocab.ices.dk/?ref=9.
 		"Netopening"= round(verticaltrawlopening, digits = 1),
 		"Rigging" = NA_character_,
@@ -896,7 +896,7 @@ ICESDatrasOne <- function(
 		"Quarter", "Country", "Ship", "Gear",
 		"SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
 		"TimeShot", "DepthStratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
-		"StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BycSpecRecCode", "DataType", "Netopening",
+		"StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BySpecRecCode", "DataType", "Netopening",
 		"Rigging", "Tickler", "Distance", "Warplngt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
 		"DoorSpread", "WingSpread", "Buoyancy", "KiteDim", "WgtGroundRope", "TowDir", "GroundSpeed",
 		"SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir", "WindSpeed",
@@ -1048,14 +1048,16 @@ ICESDatrasOne <- function(
 	# 2022-0512: Changed to NA
 	# Get maturity
 	#mergedCA[, maturity:=getDATRASMaturity(Quarter, aphia, specialstage, maturationstage)]
-	mergedCA[, maturity := NA_character_]
+	# Added speciealstage for Maturity on 2022-11-21, see below:
+	mergedCA[, maturity := specialstage]
+	
 	
 	# Aggregate count
 	mergedCA[!is.na(individualweight), `:=`(nWithWeight =.N, totWeight = sum(individualweight)), by = c(groupCA,  "lngtClass", "maturity", "age")]
 	
 	finalCA <- mergedCA[, .(nInd =.N), by = c(
 		groupCA, 
-		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite")]
+		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite", "liverweight")]
 	finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
 	
 	CAraw <- data.table::copy(finalCA[,
@@ -1097,7 +1099,8 @@ ICESDatrasOne <- function(
 			# 2022-05-12: The user needs to do the translation here, as readability
 			#"OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA_character_),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
 			"OtGrading" = ifelse(agingstructure %in% as.character(2), readability, NA_character_), 
-			"ParSamp" = ifelse(!is.na(parasite), "Y", "N")
+			"ParSamp" = ifelse(!is.na(parasite), "Y", "N"), 
+			"LiverWeight" = liverweight
 		)]
 	)
 	
@@ -1293,101 +1296,6 @@ ICESDatrasOne <- function(
 	return(ICESDatrasData)
 }
 
-
-
-
-
-#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
-#'
-#' @param ICESDatrasData A \code{\link{ICESDatrasData}} object returned from \code{\link{ICESDatras}}.
-#'
-#' @return List of string matrices in the ICES Datras CSV format.
-#'
-#' @export
-WriteICESDatras <- function(ICESDatrasData){
-	
-	WriteICESDatrasData <- lapply(
-		ICESDatrasData, 
-		WriteICESDatrasOne, 
-		na = "-9"
-	)
-	
-	return(WriteICESDatrasData)
-}
-
-
-WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
-	
-	# Convert all tables to string matrix with header and record, and rbind:
-	ICESDatrasCSVDataOne <- convertToRecordTypeMatrix(ICESDatrasDataOne)
-	
-	# Replace NAs:
-	if(length(na)) {
-		ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, function(x) {x[is.na(x)] <- na; x})
-	}
-	
-	#ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
-	
-	# Stack all matrices:
-	#ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
-	
-	# Convert each line of each table to comma separated:
-	ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, apply, 1, paste, collapse = ",")
-	
-	# Join to one vector, to be written to one file:
-	ICESDatrasCSVDataOne <- unlist(ICESDatrasCSVDataOne)
-	
-	return(ICESDatrasCSVDataOne)
-}
-
-
-
-
-
-#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
-#'
-#' @param ICESDatrasData A \code{\link{ICESDatrasData}} object returned from \code{\link{ICESDatras}}.
-#'
-#' @return List of string matrices in the ICES Datras CSV format.
-#'
-#' @export
-WriteICESDatras <- function(ICESDatrasData){
-	
-	#WriteICESDatrasData <- lapply(
-	#	ICESDatrasData, 
-	#	WriteICESDatrasOne, 
-	#	na = "-9"
-	#)
-	
-	WriteICESDatrasData <- WriteICESDatrasOne(ICESDatrasData, na = "-9")
-	
-	return(WriteICESDatrasData)
-}
-
-
-WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
-	
-	# Convert all tables to string matrix with header and record, and rbind:
-	ICESDatrasCSVDataOne <- convertToRecordTypeMatrix(ICESDatrasDataOne)
-	
-	# Replace NAs:
-	if(length(na)) {
-		ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, function(x) {x[is.na(x)] <- na; x})
-	}
-	
-	#ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
-	
-	# Stack all matrices:
-	#ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
-	
-	# Convert each line of each table to comma separated:
-	ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, apply, 1, paste, collapse = ",")
-	
-	# Join to one vector, to be written to one file:
-	ICESDatrasCSVDataOne <- unlist(ICESDatrasCSVDataOne)
-	
-	return(ICESDatrasCSVDataOne)
-}
 
 
 
@@ -1594,3 +1502,99 @@ roundDrop0 <- function(x, digits = 0) {
 	x[notNA] <- formatC(x[notNA], digits = digits, format = "f", drop0trailing = TRUE)
 	return(x)
 }
+
+
+
+#' Prepare for WriteICESDatras
+#'
+#' Depending on the model, there may be actions that shuold be taken on the ICESDatrasData before writing the data to file. Currently this includes rounding down LngtClass, and aggregating for any duplicated keys (typically due to translation of LngtCode to reduce resolution, as each combination of haul and species need the same resolution).
+#'
+#' @param ICESDatrasData A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.
+#' @param RoundDownLngtClass Logical: If TRUE round down LngtClass to the appropriate resolution given by the column LngtCode and the \code{RoundingTable}.
+#' @param RoundingTable A table of two columns; LngtCode (character) and LengthResolution (numeric) giving the resolution to apply when rounding down LngtClass. This table is merged to the ICESDatrasData using the LngtCode as key.
+#' @param AggregateHLNoAtLngt Logical: If TRUE aggrerate HLNoAtLngt for each combination of StNo, SpecCode, Sex, CatIdentifier and LngtClass.
+#'
+#' @return An \code{\link{ICESDatrasData}} object.
+#'
+#' @export
+#' 
+PrepareWriteICESDatras <- function(
+		ICESDatrasData, 
+		RoundDownLngtClass = TRUE, 
+		RoundingTable = data.table::data.table(), 
+		AggregateHLNoAtLngt =  TRUE
+) {
+	
+	ICESDatrasData <- data.table::copy(ICESDatrasData)
+	# Remember the coclumn order
+	HLColumnOrder <- names(ICESDatrasData$HL)
+	
+	if(RoundDownLngtClass) {
+		ICESDatrasData$HL <- merge(ICESDatrasData$HL, RoundingTable, by = "LngtCode", sort = FALSE)
+		ICESDatrasData$HL[, LngtClass := roundDownTo(LngtClass, to = LengthResolution)]
+		ICESDatrasData$HL[, LengthResolution := NULL]
+	}
+	
+	if(AggregateHLNoAtLngt) {
+		sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
+		ICESDatrasData$HL[, HLNoAtLngt := sum(HLNoAtLngt), by = sumBy]
+		ICESDatrasData$HL <- unique(ICESDatrasData$HL, by = sumBy)
+	}
+	
+	data.table::setcolorder(ICESDatrasData$HL, HLColumnOrder)
+	
+	return(ICESDatrasData)
+}
+
+
+roundDownTo <- function(x, to, buffer = 1e-10) {
+	floor(x / to + buffer) * to
+}
+
+
+
+#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#'
+#' @inheritParams PrepareWriteICESDatras
+#'
+#' @return List of string matrices in the ICES Datras CSV format.
+#'
+#' @export
+WriteICESDatras <- function(ICESDatrasData){
+	
+	#WriteICESDatrasData <- lapply(
+	#	ICESDatrasData, 
+	#	WriteICESDatrasOne, 
+	#	na = "-9"
+	#)
+	
+	WriteICESDatrasData <- WriteICESDatrasOne(ICESDatrasData, na = "-9")
+	
+	return(WriteICESDatrasData)
+}
+
+
+WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
+	
+	# Convert all tables to string matrix with header and record, and rbind:
+	ICESDatrasCSVDataOne <- convertToRecordTypeMatrix(ICESDatrasDataOne)
+	
+	# Replace NAs:
+	if(length(na)) {
+		ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+	}
+	
+	#ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
+	
+	# Stack all matrices:
+	#ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
+	
+	# Convert each line of each table to comma separated:
+	ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, apply, 1, paste, collapse = ",")
+	
+	# Join to one vector, to be written to one file:
+	ICESDatrasCSVDataOne <- unlist(ICESDatrasCSVDataOne)
+	
+	return(ICESDatrasCSVDataOne)
+}
+
