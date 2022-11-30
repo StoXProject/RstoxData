@@ -1,3 +1,10 @@
+# RstoxData v1.8.0-9001  (2022-11-30)
+* Unified how lengtht code is calculated for ICESBiotic and ICESDatras.
+* Added RegroupLengthICESDatras() (replacing PrepareWriteICESDatras()), which regroups the lengths of the HL table of ICESDatras.
+* Added lengthResolutionTable and lengthCode_unit_table to Definitions.R.
+* Fixed bug in pkgdown.yaml.
+* Added support for pre-releases, which are not deployed to the StoX repo.
+
 # RstoxData v1.7.5  (2022-11-17)
 * Added the function PrepareWriteICESDatras().
 * Fixed typo in ICESDatras() (BycSpecRecCode changed to BySpecRecCode).
