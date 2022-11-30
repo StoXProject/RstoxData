@@ -539,9 +539,9 @@ BioticData_NMDToICESBioticOne <- function(
 		StockCode = NA_character_,
 		FishID = specimenid,
 		#LengthCode = "mm", 
-		LengthCode = getLengthCodeICES(lengthresolution), 
+		LengthCode = getLengthCodeICES(lengthresolution, format = "ICESBiotic"), 
 		#LengthClass = length * 1000
-		LengthClass = scaleLengthUsingLengthCode(length, getLengthCodeICES(lengthresolution), inputUnit = "m"), 
+		LengthClass = scaleLengthUsingLengthCode(length, getLengthCodeICES(lengthresolution, format = "ICESBiotic"), inputUnit = "m", format = "ICESBiotic"), 
 		#WeightUnit = 'gr',
 		WeightUnit = 'kg', # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
 		#IndividualWeight = individualweight * 1000, # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
@@ -957,11 +957,16 @@ ICESDatrasOne <- function(
 	# mergedHL[is.na(sampletype), lngtCode := NA]
 	# mergedHL[isCrustacean == TRUE, lngtCode := "."]
 	# mergedHL[isHerringOrSprat == TRUE, lngtCode := "0"]
-	mergedHL[, lngtCode := getLengthCodeICES(lengthresolution)]
+	
+	mergedHL[, lngtCode := getLengthCodeICES(lengthresolution, format = "ICESDatras")]
+	mergedHL[, lngtClass := scaleLengthUsingLengthCode(length, lngtCode, inputUnit = "m", format = "ICESDatras")]
+	
+	#LengthClass = scaleLengthUsingLengthCode(length, getLengthCodeICES(lengthresolution), inputUnit = "m"), 
+	
 	
 	# lenInterval, and reportInMM
-	mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", 5, 1), reportInMM = ifelse(lngtCode %ni% c("1", NA_real_), TRUE, FALSE))]
-	mergedHL[is.na(lenInterval), lenInterval := 1]
+	### mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", 5, 1), reportInMM = ifelse(lngtCode %ni% c("1", NA_real_), TRUE, FALSE))]
+	### mergedHL[is.na(lenInterval), lenInterval := 1]
 	
 	
 	# Get count
@@ -971,24 +976,24 @@ ICESDatrasOne <- function(
 	mergedHL[N == 0, `:=`(lngtClass = NA_integer_, sex = NA_character_)]
 	
 	# Get Individual length
-	mergedHL[, length := length * 100]
+	### mergedHL[, length := length * 100]
 	
-	# 2022-05-12: Remove this in the future, when Convert-functionality is in place in StoX:
-	# Some species have very small length in cm, use mm instead
-	mergedHL[length < 1, `:=`(lngtCode = ".", lenInterval = 1, reportInMM = TRUE)]
-	# Process MM length
-	mergedHL[reportInMM == TRUE, length := length * 10]
+	## 2022-05-12: Remove this in the future, when Convert-functionality is in place in StoX:
+	## Some species have very small length in cm, use mm instead
+	#mergedHL[length < 1, `:=`(lngtCode = ".", lenInterval = 1, reportInMM = TRUE)]
+	## Process MM length
+	#mergedHL[reportInMM == TRUE, length := length * 10]
 	
 	# 2022-05-12: Changed to use sex, and leave translate to the user:
 	# Get sex
 	#mergedHL[, sex := ifelse(is.na(sex), NA_character_, ifelse(sex == "1", "F", "M"))]
 	#mergedHL[, sex := sex]
 	
-	# Get lngtClass
-	for(interval in unique(mergedHL$lenInterval)) {
-		intVec <- seq(0, max(mergedHL$length, na.rm = T), by = interval)
-		mergedHL[lenInterval == interval, lngtClass := intVec[findInterval(length, intVec)]]
-	}
+	### # Get lngtClass
+	### for(interval in unique(mergedHL$lenInterval)) {
+	### 	intVec <- seq(0, max(mergedHL$length, na.rm = T), by = interval)
+	### 	mergedHL[lenInterval == interval, lngtClass := intVec[findInterval(length, intVec)]]
+	### }
 	
 	# Count measured individual
 	mergedHL[!is.na(length), lsCountTot := 1]
@@ -1505,57 +1510,93 @@ roundDrop0 <- function(x, digits = 0) {
 
 
 
-#' Prepare for WriteICESDatras
-#'
-#' Depending on the model, there may be actions that shuold be taken on the ICESDatrasData before writing the data to file. Currently this includes rounding down LngtClass, and aggregating for any duplicated keys (typically due to translation of LngtCode to reduce resolution, as each combination of haul and species need the same resolution).
-#'
-#' @param ICESDatrasData A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.
-#' @param RoundDownLngtClass Logical: If TRUE round down LngtClass to the appropriate resolution given by the column LngtCode and the \code{RoundingTable}.
-#' @param RoundingTable A table of two columns; LngtCode (character) and LengthResolution (numeric) giving the resolution to apply when rounding down LngtClass. This table is merged to the ICESDatrasData using the LngtCode as key.
-#' @param AggregateHLNoAtLngt Logical: If TRUE aggrerate HLNoAtLngt for each combination of StNo, SpecCode, Sex, CatIdentifier and LngtClass.
-#'
-#' @return An \code{\link{ICESDatrasData}} object.
-#'
-#' @export
-#' 
-PrepareWriteICESDatras <- function(
-		ICESDatrasData, 
-		RoundDownLngtClass = TRUE, 
-		RoundingTable = data.table::data.table(), 
-		AggregateHLNoAtLngt =  TRUE
-) {
-	
-	ICESDatrasData <- data.table::copy(ICESDatrasData)
-	# Remember the coclumn order
-	HLColumnOrder <- names(ICESDatrasData$HL)
-	
-	if(RoundDownLngtClass) {
-		ICESDatrasData$HL <- merge(ICESDatrasData$HL, RoundingTable, by = "LngtCode", sort = FALSE)
-		ICESDatrasData$HL[, LngtClass := roundDownTo(LngtClass, to = LengthResolution)]
-		ICESDatrasData$HL[, LengthResolution := NULL]
-	}
-	
-	if(AggregateHLNoAtLngt) {
-		sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
-		ICESDatrasData$HL[, HLNoAtLngt := sum(HLNoAtLngt), by = sumBy]
-		ICESDatrasData$HL <- unique(ICESDatrasData$HL, by = sumBy)
-	}
-	
-	data.table::setcolorder(ICESDatrasData$HL, HLColumnOrder)
-	
-	return(ICESDatrasData)
-}
-
-
 roundDownTo <- function(x, to, buffer = 1e-10) {
 	floor(x / to + buffer) * to
 }
 
 
 
+#' Regroup LngtCode ICESDatrasData
+#'
+#' ICES Datras requires equal LngtCode per haul and species. 
+#'
+#' @param ICESDatrasData A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.
+#' @param GroupingVariables A vector of variable names giving the variables for which to reduce resolution to the lowest resolution.
+#' @param AggregateHLNoAtLngt Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.
+#' @param AggregationVariables A vector of variables of the HL table for which to aggregate individuals. Usually this should include exactly the following variables: "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".
+#'
+#' @return An \code{\link{ICESDatrasData}} object.
+#'
+#' @export
+#' 
+RegroupLengthICESDatras <- function(
+		ICESDatrasData, 
+		GroupingVariables = character(), 
+		AggregateHLNoAtLngt = TRUE, 
+		AggregationVariables = character()
+) {
+	
+	ICESDatrasData <- data.table::copy(ICESDatrasData)
+	
+	ICESDatrasData$HL[, c("LngtCode", "LngtClass") := regroupLengthICESDatrasOne(.SD), by = GroupingVariables]
+	
+	
+	# Sum up indivviduals:
+	if(AggregateHLNoAtLngt) {
+		#sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
+		sumBy <- AggregationVariables
+		if(any(! sumBy %in% names(ICESDatrasData$HL))) {
+			toRemove <- setdiff(sumBy, names(ICESDatrasData$HL))
+			warning("Removing the following AggregationVariables not present in the HL table: ", paste(toRemove, collapse = ", "))
+			sumBy <- intersect(sumBy, names(ICESDatrasData$HL))
+		}
+		
+		ICESDatrasData$HL[, HLNoAtLngt := sum(HLNoAtLngt), by = sumBy]
+		ICESDatrasData$HL <- unique(ICESDatrasData$HL, by = sumBy)
+	}
+	
+	
+	return(ICESDatrasData)
+}
+
+
+regroupLengthICESDatrasOne <- function(data) {
+	
+	lengthCode_unit_table <- getRstoxDataDefinitions("lengthCode_unit_table")
+	# Get the lowest resolution:
+	maxRank <- data[, max(lengthCode_unit_table$rank[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)])]
+	atMax  <- lengthCode_unit_table$rank == maxRank
+	maxReportingUnit <- lengthCode_unit_table$reportingUnit[atMax]
+	maxLengthCodeICESDatras <- lengthCode_unit_table$lengthCodeICESDatras[atMax]
+	
+	# Get the unit temporarily:
+	reportingUnit <- data[, lengthCode_unit_table$reportingUnit[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)]]
+	
+	# Set the new LngtCode:
+	LngtCode <- maxLengthCodeICESDatras
+
+	
+	# Change the units:
+	LngtClass <- data[, scaleUsingUnit(LngtClass, inputUnit = reportingUnit, outputUnit = maxReportingUnit)]
+	
+	# Round down:
+	numericResolution <- data[, lengthCode_unit_table$numericResolution[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)]]
+	LngtClass <- roundDownTo(LngtClass, to = numericResolution)
+	
+	return(
+		list(
+			LngtCode = LngtCode, 
+			LngtClass = LngtClass
+		)
+	)
+}
+
+
+
+
 #' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 #'
-#' @inheritParams PrepareWriteICESDatras
+#' @inheritParams ModelData
 #'
 #' @return List of string matrices in the ICES Datras CSV format.
 #'

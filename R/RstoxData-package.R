@@ -18,7 +18,7 @@ utils::globalVariables(c(
 	 "ChannelDepthUpper", "ChannelReferenceKey", "ChannelReferenceType", "Constant", "Country",
 	 "Cruise", "CruiseKey", "DateTime", "DoorType", "EDSU", "EchoType", "EffectiveTowDistance",
 	 "FishID", "Gear", "GearEx", "HLNoAtLngt", "HaulNo", "LengthCode", "LengthResolution",
-	 "LngtClass", "LocalID", "LogKey", "N", "NewValue", "NumberAtLength",
+	 "LengthUnit", "LngtClass", "LocalID", "LogKey", "N", "NewValue", "NumberAtLength",
 	 "NumberOfIndividualsToGenerate", "NumberOfSampledIndividuals", "Quarter", "ReplaceBy",
 	 "SaCategory", "Scaling", "Ship", "SpecVal", "SpeciesCategoryNumber", "SpeciesCategoryWeight",
 	 "SpeciesCode", "StatRec", "SubsampleWeight", "SubsampledNumber", "Survey", "SweepLngt", "Time",
