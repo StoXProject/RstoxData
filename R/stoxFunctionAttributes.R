@@ -201,16 +201,17 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "WriteICESDatrasData"
 	),
 	
-	PrepareWriteICESDatras = list(
+	RegroupLengthICESDatras = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESDatrasData", 
 		functionParameterFormat = list(
-			RoundingTable = "roundingTable"
-		), 
+			GroupingVariables = "groupingVariables_RegroupLengthICESDatras", 
+			AggregationVariables = "groupingVariables_RegroupLengthICESDatras"
+		),
 		functionArgumentHierarchy = list(
-			RoundingTable = list(
-				RoundDownLngtClass = TRUE
+			AggregationVariables = list(
+				AggregateHLNoAtLngt = TRUE
 			)
 		)
 	),
@@ -855,6 +856,15 @@ processPropertyFormats <- list(
 			"character", 
 			"double"
 		)
+	), 
+	
+	groupingVariables_RegroupLengthICESDatras = list(
+		class = "vector", 
+		title = "One or more variables to group by when regrouping lengths in Datras", 
+		possibleValues = function(ICESDatrasData) {
+			sort(names(ICESDatrasData$HL))
+		}, 
+		variableTypes = "character"
 	)
 )
 

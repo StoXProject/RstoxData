@@ -308,77 +308,72 @@ getTimeDiff <- function(stationstartdate, stationstarttime, stationstopdate, sta
 
 
 
-# Function to interpret ICES LengthCode from NMCBiotic lengthresolution. This function uses getLengthResolutionTable() which defines the relationship between these.
-getLengthCodeICES <- function(lengthresolution) {
+# Function to interpret ICES lengthCode from NMCBiotic lengthresolution. This function uses getLengthResolutionTable() which defines the relationship between these.
+getLengthCodeICES <- function(lengthresolution, format = c("ICESBiotic", "ICESDatras")) {
+	format <- match.arg(format)
 	# Interpret/approximate the lengthresolution as mm, halfcm or cm, which also implies modifying the length if cm (see convertLengthGivenLengthCode()):
-	lengthResolutionTable <- getLengthResolutionTable()
-	LengthCode <- lengthResolutionTable$LengthCode[match(lengthresolution, lengthResolutionTable$lengthresolution)]
-	nonValid <- !is.na(lengthresolution) & is.na(LengthCode)
+	lengthResolutionTable <- getLengthResolutionTable(format = format)
+	lengthCode <- lengthResolutionTable$lengthCode[match(lengthresolution, lengthResolutionTable$lengthresolution)]
+	nonValid <- !is.na(lengthresolution) & is.na(lengthCode)
 	if(any(nonValid)) {
-		warning("StoX: The following lengthresolution do not match any of the LengthCode defined by http://vocab.ices.dk/?ref=1486: ", paste(unique(lengthresolution[nonValid]), collapse = ", "), ". The following table shows the valid lengthresolution:\n",  paste(names(lengthResolutionTable), collapse = "\t"), "\n", paste(lengthResolutionTable[, do.call(paste, c(.SD, list(sep = "\t")))], collapse = "\n"))
+		warning("StoX: The following lengthresolution do not match any of the lengthCode defined by http://vocab.ices.dk/?ref=1486: ", paste(unique(lengthresolution[nonValid]), collapse = ", "), ". The following table shows the valid lengthresolution:\n",  paste(names(lengthResolutionTable), collapse = "\t"), "\n", paste(lengthResolutionTable[, do.call(paste, c(.SD, list(sep = "\t")))], collapse = "\n"))
 	}
-	return(LengthCode)
+	return(lengthCode)
 }
 
-getLengthResolutionTable <- function() {
+getLengthResolutionTable <- function(format = c("ICESBiotic", "ICESDatras")) {
+	format <- match.arg(format)
 	# The length resolutions defined by NMDReference as per 2021-04-22:
-	lengthResolutionTable <- data.table::data.table(
-		lengthresolution = 1:12, 
-		shortname = c(
-			"1 mm", 
-			"5 mm", 
-			"1 cm", 
-			"3 cm", 
-			"5 cm", 
-			"0.5 mm", 
-			"0.1 mm", 
-			"0.1 mm", 
-			"2 mm", 
-			"3 mm", 
-			"2 cm", 
-			"20 cm"
-		)
-	)
-	# Interpret length code:
-	#value_unit <- strsplit(lengthResolutionTable$shortname, " ")
-	#value <- as.numeric(sapply(value_unit, "[[", 1))
-	#unit <- sapply(value_unit, "[[", 2)
-	#mm <- value * 10^(match(unit, c("mm", "cm")) - 1)
-	
-	valid <- data.table::data.table(
-		shortname = c("1 mm", "5 mm", "1 cm"), 
-		LengthCode = c("mm", "halfcm", "cm")
-	)
-	
-	lengthResolutionTable[, LengthCode := valid$LengthCode[match(shortname, valid$shortname)]]
+	lengthResolutionTable <- getRstoxDataDefinitions("lengthResolutionTable")
+	lengthCode_unit_table <- getRstoxDataDefinitions("lengthCode_unit_table")
+
+	lengthResolutionTable[, lengthCode := lengthCode_unit_table[[paste0("lengthCode", format)]][match(shortname, lengthCode_unit_table$shortname)]]
 	
 	return(lengthResolutionTable)
 }
 
-scaleLengthUsingLengthCode <- function(length, LengthCode, inputUnit) {
+scaleLengthUsingLengthCode <- function(length, lengthCode, inputUnit, format = c("ICESBiotic", "ICESDatras")) {
 	
-	lengthCode_unit_table <- data.table::data.table(
-		lengthCode = c("mm", "halfcm", "cm"), 
-		reportingUnit = c("mm", "mm", "cm")
-	)
+	format <- match.arg(format)
 	
-	outputUnit <- lengthCode_unit_table[match(LengthCode, lengthCode), reportingUnit]
+	lengthCode_unit_table <- getRstoxDataDefinitions("lengthCode_unit_table")
 	
-	outputLength <- length * scaleUnit(inputUnit, outputUnit)
+	outputUnit <- lengthCode_unit_table[match(lengthCode, get(paste0("lengthCode", format))), reportingUnit]
+	
+	outputLength <- scaleUsingUnit(length, inputUnit = inputUnit, outputUnit = outputUnit)
 	
 	return(outputLength)
 }
 
 # Use the units package to scale 
-scaleUnit <- function(inputLengthUnit, outputLengthUnit) {
-	output <- double(max(length(inputLengthUnit), length(outputLengthUnit))) + 1
+scaleUsingUnit <- function(x, inputUnit, outputUnit) {
+	len <- max(length(x), length(inputUnit), length(outputUnit))
+	if(! length(x) %in% c(1, len) || ! length(inputUnit) %in% c(1, len) || ! length(outputUnit) %in% c(1, len)) {
+		stop("The inputs must have the same length or length 1")
+	}
+	if(length(x) != len) {
+		x <- rep(x, length.out = len)
+	}
+	if(length(inputUnit) != len) {
+		inputUnit <- rep(inputUnit, length.out = len)
+	}
+	if(length(outputUnit) != len) {
+		outputUnit <- rep(outputUnit, length.out = len)
+	}
+	
+	# Scale only those with unit:
+	atNAUnit <- is.na(inputUnit) | is.na(outputUnit)
+	scaled <- x[!atNAUnit]
 	
 	# Use mixed units here as there may be fish with different units, and then update the units with set_units():
-	output <- units::mixed_units(output, inputLengthUnit)
-	output <- units::set_units(output, outputLengthUnit)
+	scaled <- units::mixed_units(scaled, inputUnit[!atNAUnit])
+	scaled <- units::set_units(scaled, outputUnit[!atNAUnit])
+	scaled <- units::drop_units(scaled)
 	
-	output <- units::drop_units(output)
-	return(output)
+	# Insert the scaled:
+	x[!atNAUnit] <- scaled
+	
+	return(x)
 }
 
 

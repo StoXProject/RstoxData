@@ -7,7 +7,7 @@
 WriteICESDatras(ICESDatrasData)
 }
 \arguments{
-\item{ICESDatrasData}{A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.}
+\item{ICESDatrasData}{\code{\link{ICESDatrasData}}.}
 }
 \value{
 List of string matrices in the ICES Datras CSV format.

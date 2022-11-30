@@ -117,6 +117,52 @@ initiateRstoxData <- function(){
 	)
 	
 	
+	lengthResolutionTable <- data.table::data.table(
+		lengthresolution = 1:12, 
+		shortname = c(
+			"1 mm", 
+			"5 mm", 
+			"1 cm", 
+			"3 cm", 
+			"5 cm", 
+			"0.5 mm", 
+			"0.1 mm", 
+			"0.1 mm", 
+			"2 mm", 
+			"3 mm", 
+			"2 cm", 
+			"20 cm"
+		)
+	)
+	
+	
+	
+	
+	lengthCode_unit_table <- data.table::data.table(
+		shortnameNMDBiotic = c("1 mm", "5 mm", "1 cm"), 
+		lengthCodeICESBiotic = c("mm", "halfcm", "cm"), 
+		lengthCodeICESDatras = c(".", "0", "1"), 
+		reportingUnit = c("mm", "mm", "cm"), 
+		numericResolution = c(1, 5, 1)
+	)
+	lengthCode_unit_table[, rank := seq_len(.N)]
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+	
+	
+	
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())

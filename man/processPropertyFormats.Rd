@@ -5,7 +5,7 @@
 \alias{processPropertyFormats}
 \title{Define the process property formats:}
 \format{
-An object of class \code{list} of length 9.
+An object of class \code{list} of length 10.
 }
 \usage{
 processPropertyFormats
