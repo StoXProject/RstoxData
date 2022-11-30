@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9001</span>
       </span>
     </div>
 
@@ -102,8 +102,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     useXsd &lt;- tools::file_path_sans_ext(names(xsdObjects)[hasSelectedXsd])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     return(useXsd)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7fbb3c5df740&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fbb3c5daf10&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7fe126d05e40&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fe126d01f90&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $getNAByType</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (type = c("numeric", "double", "integer", "character")) </span>
@@ -111,8 +111,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     type &lt;- match_arg_informative(type)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     NA_classes[[type]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7fbb3c5df270&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fbb3c5daf10&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7fe126ca08e0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fe126d01f90&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Cruise</span>
@@ -144,6 +144,31 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] "SpeciesCategory" "StockCode"       "FishID"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $lengthCode_unit_table</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    shortnameNMDBiotic lengthCodeICESBiotic lengthCodeICESDatras reportingUnit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:               1 mm                   mm                    .            mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:               5 mm               halfcm                    0            mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:               1 cm                   cm                    1            cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    numericResolution rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:                 1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                 5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:                 1    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $lengthResolutionTable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lengthresolution shortname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:                1      1 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:                2      5 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:                3      1 cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:                4      3 cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:                5      5 cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:                6    0.5 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:                7    0.1 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:                8    0.1 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:                9      2 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:               10      3 mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:               11      2 cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:               12     20 cm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $NA_classes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $NA_classes$numeric</span>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9001</span>
       </span>
     </div>
 
@@ -48,6 +48,14 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.8.0-9001" id="rstoxdata-v180-9001-2022-11-30">RstoxData v1.8.0-9001 (2022-11-30)<a class="anchor" aria-label="anchor" href="#rstoxdata-v180-9001-2022-11-30"></a></h2>
+<ul><li>Unified how lengtht code is calculated for ICESBiotic and ICESDatras.</li>
+<li>Added RegroupLengthICESDatras() (replacing PrepareWriteICESDatras()), which regroups the lengths of the HL table of ICESDatras.</li>
+<li>Added lengthResolutionTable and lengthCode_unit_table to Definitions.R.</li>
+<li>Fixed bug in pkgdown.yaml.</li>
+<li>Added support for pre-releases, which are not deployed to the StoX repo.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.5" id="rstoxdata-v175-2022-11-17">RstoxData v1.7.5 (2022-11-17)<a class="anchor" aria-label="anchor" href="#rstoxdata-v175-2022-11-17"></a></h2>
 <ul><li>Added the function PrepareWriteICESDatras().</li>
 <li>Fixed typo in ICESDatras() (BycSpecRecCode changed to BySpecRecCode).</li>
@@ -63,10 +71,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.3-9001" id="rstoxdata-v173-9001-2022-11-15">RstoxData v1.7.3-9001 (2022-11-15)<a class="anchor" aria-label="anchor" href="#rstoxdata-v173-9001-2022-11-15"></a></h2>
-<ul><li>Fixed bug in ReadAcoustic when an ICESAcoustic xml files contains more than one instrument.</li></ul></div>
+<ul><li>Fixed bug in ReadAcoustic when an ICESAcoustic xml files contains more than one instrument.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.2" id="rstoxdata-v172-2022-11-13">RstoxData v1.7.2 (2022-11-13)<a class="anchor" aria-label="anchor" href="#rstoxdata-v172-2022-11-13"></a></h2>
-<ul><li>Fixed bug with R &lt; 4.2, where a filter process with unspecified FilterExpression retuns error “zero-length inputs cannot be mixed with those of non-zero length”. The error is returned both when opening the FilterExpression and when running the process.</li></ul></div>
+<ul><li>Fixed bug with R &lt; 4.2, where a filter process with unspecified FilterExpression retuns error “zero-length inputs cannot be mixed with those of non-zero length”. The error is returned both when opening the FilterExpression and when running the process.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.1-9002" id="rstoxdata-v171-9002-2022-10-31">RstoxData v1.7.1-9002 (2022-10-31)<a class="anchor" aria-label="anchor" href="#rstoxdata-v171-9002-2022-10-31"></a></h2>
 <ul><li>Pre-release before 1.7.1. Errors are expected.</li>
@@ -138,22 +148,28 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.18" id="rstoxdata-v1518-2022-03-29">RstoxData v1.5.18 (2022-03-29)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1518-2022-03-29"></a></h2>
-<ul><li>Improved warnings when catchproducttype, sampleproducttype, individualproducttype or lengthmeasurement does not have the appropriate value.</li></ul></div>
+<ul><li>Improved warnings when catchproducttype, sampleproducttype, individualproducttype or lengthmeasurement does not have the appropriate value.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.17" id="rstoxdata-v1517-2022-03-22">RstoxData v1.5.17 (2022-03-22)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1517-2022-03-22"></a></h2>
-<ul><li>Added the parameter AddToLowestTable in AddToStoxBiotic(), which can be used for adding variables from tables in NMDBiotic or ICESBiotic that are split into two tables in StoxBiotic (fishstation and catchsample in NMDBiotic and Haul and Catch in ICESBiotic). When these tables are split into two tables StoX decides which variable should be placed in each table. E.g., geographical position is placed in the Station table of StoxBiotic, which implies that only the first position of several hauls that comprise one Station is kept. If one needs all positions, AddToLowestTable can be set to TRUE so that the positions are placed in the Haul table instead of the Station table of StoxBiotic.</li></ul></div>
+<ul><li>Added the parameter AddToLowestTable in AddToStoxBiotic(), which can be used for adding variables from tables in NMDBiotic or ICESBiotic that are split into two tables in StoxBiotic (fishstation and catchsample in NMDBiotic and Haul and Catch in ICESBiotic). When these tables are split into two tables StoX decides which variable should be placed in each table. E.g., geographical position is placed in the Station table of StoxBiotic, which implies that only the first position of several hauls that comprise one Station is kept. If one needs all positions, AddToLowestTable can be set to TRUE so that the positions are placed in the Haul table instead of the Station table of StoxBiotic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.16" id="rstoxdata-v1516-2022-03-14">RstoxData v1.5.16 (2022-03-14)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1516-2022-03-14"></a></h2>
-<ul><li>Added warning when at least one of bottomdepthstart and bottomdepthstop are missing, so that BottomDepth is NA.</li></ul></div>
+<ul><li>Added warning when at least one of bottomdepthstart and bottomdepthstop are missing, so that BottomDepth is NA.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.15" id="rstoxdata-v1515-2022-03-10">RstoxData v1.5.15 (2022-03-10)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1515-2022-03-10"></a></h2>
-<ul><li>Included more informative warning when e.g. product types are not the required value in StoxBiotic().</li></ul></div>
+<ul><li>Included more informative warning when e.g. product types are not the required value in StoxBiotic().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.13" id="rstoxdata-v1513-2022-03-02">RstoxData v1.5.13 (2022-03-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1513-2022-03-02"></a></h2>
-<ul><li>Updated to the new ICESAcoustic and ICESBiotic format (released March 2022).</li></ul></div>
+<ul><li>Updated to the new ICESAcoustic and ICESBiotic format (released March 2022).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.11" id="rstoxdata-v1511-2022-02-28">RstoxData v1.5.11 (2022-02-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1511-2022-02-28"></a></h2>
-<ul><li>Increased significant digits of small numbers foomo 6 to 12.</li></ul></div>
+<ul><li>Increased significant digits of small numbers foomo 6 to 12.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.10" id="rstoxdata-v1510-2022-02-25">RstoxData v1.5.10 (2022-02-25)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1510-2022-02-25"></a></h2>
 <ul><li>Relaxed the warning for translation columns not present in the data to accept if all are not present (unaffected table).</li>
@@ -181,7 +197,8 @@
 <li>Changed the output of ICESBiotic(), ICESDatras() and ICESAcoustic() to combine tables from the different files in the same way that StoxBiotic() and StoxAcoustic() does. This also affects the name of the output of WriteICESAcoustic(), WriteICESBiotic() and WriteICESDatras(), which is no longer named by the input file to the Read* function.</li>
 <li>Added warning when a filter species a table that does not exist in the data.</li>
 <li>Fixed bug where log-distances of duplicated LogKey (sometimes occurring when times are on minutes instead of seconds resolution) were not properly removed in all tables.</li>
-<li>Removed unwanted and in some cases erroneous hard coded values in ICESDatras(), as listed in the following table:<ul><li>Gear: Changed from “GOV” to the NMDBiotic/fishstation variable gear</li>
+<li>Removed unwanted and in some cases erroneous hard coded values in ICESDatras(), as listed in the following table:
+<ul><li>Gear: Changed from “GOV” to the NMDBiotic/fishstation variable gear</li>
 <li>DoorType: Changed from “P” to the NMDBiotic/fishstation variable trawldoortype</li>
 <li>DoorSurface: Changed from 4 to the NMDBiotic/fishstation variable trawldoorarea = 4.5,</li>
 <li>DoorWgt: Changed from 1075 to the NMDBiotic/fishstation variable trawldoorweight = 1075</li>
@@ -203,13 +220,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.3" id="rstoxdata-v133-2022-01-09">RstoxData v1.3.3 (2022-01-09)<a class="anchor" aria-label="anchor" href="#rstoxdata-v133-2022-01-09"></a></h2>
-<ul><li>Changed type of the columns of the Translation process data to accept strings, numeric and boolean (preivously restricted to string).</li></ul></div>
+<ul><li>Changed type of the columns of the Translation process data to accept strings, numeric and boolean (preivously restricted to string).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.2" id="rstoxdata-v132-2022-01-07">RstoxData v1.3.2 (2022-01-07)<a class="anchor" aria-label="anchor" href="#rstoxdata-v132-2022-01-07"></a></h2>
-<ul><li>Changed TranslationTable to Table in DefineTranslation(). Fixed bug where NA in Tanslation was not converted properly to the type of the existing data. Added change of class in ICESBiotic() as per the XSD. Fixed bug in AddToStoxBiotic(), where variables from agedetermination in NMDBiotic &gt;= 3 were not added. Code changed to use the xsd to determine the variables that can be added.</li></ul></div>
+<ul><li>Changed TranslationTable to Table in DefineTranslation(). Fixed bug where NA in Tanslation was not converted properly to the type of the existing data. Added change of class in ICESBiotic() as per the XSD. Fixed bug in AddToStoxBiotic(), where variables from agedetermination in NMDBiotic &gt;= 3 were not added. Code changed to use the xsd to determine the variables that can be added.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.20" id="rstoxdata-v1220-2021-12-02">RstoxData v1.2.20 (2021-12-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1220-2021-12-02"></a></h2>
-<ul><li>Final version for the release of StoX 3.2.0.</li></ul></div>
+<ul><li>Final version for the release of StoX 3.2.0.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.20" id="rstoxdata-v1220-2021-12-02-1">RstoxData v1.2.20 (2021-12-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1220-2021-12-02-1"></a></h2>
 <ul><li>Added warning when ValueColumn, NewValueColumn or ConditionalValueColumn did not exist in the file in DefineTranslation().</li>
@@ -222,16 +242,20 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.13" id="rstoxdata-v1213-2021-11-04">RstoxData v1.2.13 (2021-11-04)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1213-2021-11-04"></a></h2>
-<ul><li>Fixed bug in readVariableTranslation() (where eval() was used instead of get()).</li></ul></div>
+<ul><li>Fixed bug in readVariableTranslation() (where eval() was used instead of get()).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.12" id="rstoxdata-v1212-2021-10-26">RstoxData v1.2.12 (2021-10-26)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1212-2021-10-26"></a></h2>
-<ul><li>Added warning when adding a variable that already exists in AddToStoxBiotic(), particularly aimed at SpeciesCategory in ICESBiotic, which has a different meaning that SpeciesCategory in StoxBioticData.</li></ul></div>
+<ul><li>Added warning when adding a variable that already exists in AddToStoxBiotic(), particularly aimed at SpeciesCategory in ICESBiotic, which has a different meaning that SpeciesCategory in StoxBioticData.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.11" id="rstoxdata-v1211-2021-10-23">RstoxData v1.2.11 (2021-10-23)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1211-2021-10-23"></a></h2>
-<ul><li>Added the parameters ValueColumn and NewValueColumn to DefineTranslaion().</li></ul></div>
+<ul><li>Added the parameters ValueColumn and NewValueColumn to DefineTranslaion().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.10" id="rstoxdata-v1210-2021-10-20">RstoxData v1.2.10 (2021-10-20)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1210-2021-10-20"></a></h2>
-<ul><li>Added CompensateEffectiveTowDistanceForFishingDepthCount() for NMDBiotic data with hauls made at several depths.</li></ul></div>
+<ul><li>Added CompensateEffectiveTowDistanceForFishingDepthCount() for NMDBiotic data with hauls made at several depths.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.7" id="rstoxdata-v127-2021-10-08">RstoxData v1.2.7 (2021-10-08)<a class="anchor" aria-label="anchor" href="#rstoxdata-v127-2021-10-08"></a></h2>
 <ul><li>Fixed error in links to documentation in RstoxData.</li>
@@ -258,7 +282,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.0" id="rstoxdata-v120-2021-06-18">RstoxData v1.2.0 (2021-06-18)<small>2021-06-24</small><a class="anchor" aria-label="anchor" href="#rstoxdata-v120-2021-06-18"></a></h2>
-<ul><li>Final version for the release of StoX 3.1.0.</li></ul></div>
+<ul><li>Final version for the release of StoX 3.1.0.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.16" id="rstoxdata-v1116-2021-06-16">RstoxData v1.1.16 (2021-06-16)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1116-2021-06-16"></a></h2>
 <ul><li>Fixed bug in StoxBiotic(), where date and time were borrowed from Station to Haul, which could crash due to missing values in StationKey.</li>
@@ -266,7 +291,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.13" id="rstoxdata-v1113-2021-06-07">RstoxData v1.1.13 (2021-06-07)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1113-2021-06-07"></a></h2>
-<ul><li>Changed to sort in en_US_POSIX-locale in createOrderKey() using the stringi-package, which ensures platform independence while replicating sorting done by data.table.</li></ul></div>
+<ul><li>Changed to sort in en_US_POSIX-locale in createOrderKey() using the stringi-package, which ensures platform independence while replicating sorting done by data.table.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.9" id="rstoxdata-v119-2021-05-21">RstoxData v1.1.9 (2021-05-21)<a class="anchor" aria-label="anchor" href="#rstoxdata-v119-2021-05-21"></a></h2>
 <ul><li>Fixed bugs and added auto-detect xsd for reading zipped xml files.</li>
@@ -317,7 +343,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0" id="rstoxdata-v110-2021-02-10">RstoxData v1.1.0 (2021-02-10)<a class="anchor" aria-label="anchor" href="#rstoxdata-v110-2021-02-10"></a></h2>
-<ul><li>Final version for the release of StoX 3.0.0.</li></ul></div>
+<ul><li>Final version for the release of StoX 3.0.0.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.28" id="rstoxdata-v1028-2021-02-08">RstoxData v1.0.28 (2021-02-08)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1028-2021-02-08"></a></h2>
 <ul><li>Renamed TowedDistance to TowDistance and EffectiveTowedDistance to EffectiveTowDistance.</li>
@@ -325,7 +352,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.26" id="rstoxdata-v1026-2021-02-02">RstoxData v1.0.26 (2021-02-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1026-2021-02-02"></a></h2>
-<ul><li>Added support for NMDBiotoic1.4 and NMDBiotoic1.1 in StoxBiotic().</li></ul></div>
+<ul><li>Added support for NMDBiotoic1.4 and NMDBiotoic1.1 in StoxBiotic().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.25" id="rstoxdata-v1025-2021-01-28">RstoxData v1.0.25 (2021-01-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1025-2021-01-28"></a></h2>
 <ul><li>Added DefineTranslation and TranslateAcoustic, TranslateBiotic, TranslateLanding and TranslateStoxLanding.</li>
@@ -392,10 +420,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.14" id="rstoxdata-v1014-2020-10-29">RstoxData v1.0.14 (2020-10-29)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1014-2020-10-29"></a></h2>
-<ul><li>New minor release.</li></ul></div>
+<ul><li>New minor release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.14" id="rstoxdata-v1014-2020-10-01">RstoxData v1.0.14 (2020-10-01)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1014-2020-10-01"></a></h2>
-<ul><li>Changed SampleKey to catchsampleid.</li></ul></div>
+<ul><li>Changed SampleKey to catchsampleid.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.12" id="rstoxdata-v1012-2020-09-30">RstoxData v1.0.12 (2020-09-30)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1012-2020-09-30"></a></h2>
 <ul><li>StoxExport: Adopt the latest unified DATRAS format.</li>
@@ -405,79 +435,104 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.11" id="rstoxdata-v1011-2020-09-18">RstoxData v1.0.11 (2020-09-18)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1011-2020-09-18"></a></h2>
-<ul><li>New minor release.</li></ul></div>
+<ul><li>New minor release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.10" id="rstoxdata-v1010-2020-09-08">RstoxData v1.0.10 (2020-09-08)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1010-2020-09-08"></a></h2>
-<ul><li>New <code><a href="../reference/getStoxKeys.html">getStoxKeys()</a></code>.</li></ul></div>
+<ul><li>New <code><a href="../reference/getStoxKeys.html">getStoxKeys()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.9" id="rstoxdata-v109-2020-09-07">RstoxData v1.0.9 (2020-09-07)<a class="anchor" aria-label="anchor" href="#rstoxdata-v109-2020-09-07"></a></h2>
-<ul><li>Added <code><a href="../reference/mergeByStoxKeys.html">mergeByStoxKeys()</a></code>.</li></ul></div>
+<ul><li>Added <code><a href="../reference/mergeByStoxKeys.html">mergeByStoxKeys()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.8" id="rstoxdata-v108-2020-09-01">RstoxData v1.0.8 (2020-09-01)<a class="anchor" aria-label="anchor" href="#rstoxdata-v108-2020-09-01"></a></h2>
-<ul><li>Added support for undefined <code>signifDigits</code>.</li></ul></div>
+<ul><li>Added support for undefined <code>signifDigits</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.7" id="rstoxdata-v107-2020-09-01">RstoxData v1.0.7 (2020-09-01)<a class="anchor" aria-label="anchor" href="#rstoxdata-v107-2020-09-01"></a></h2>
-<ul><li>Modified <code>setPrecisionLevelOneDT()</code> to keep at least 6 significant digits.</li></ul></div>
+<ul><li>Modified <code>setPrecisionLevelOneDT()</code> to keep at least 6 significant digits.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.6" id="rstoxdata-v106-2020-08-28">RstoxData v1.0.6 (2020-08-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v106-2020-08-28"></a></h2>
-<ul><li>Removed unit in variable and parameter names.</li></ul></div>
+<ul><li>Removed unit in variable and parameter names.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.5" id="rstoxdata-v105-2020-08-25">RstoxData v1.0.5 (2020-08-25)<a class="anchor" aria-label="anchor" href="#rstoxdata-v105-2020-08-25"></a></h2>
-<ul><li>Added IDs separated by ‘-’.</li></ul></div>
+<ul><li>Added IDs separated by ‘-’.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.4" id="rstoxdata-v104-2020-08-21">RstoxData v1.0.4 (2020-08-21)<a class="anchor" aria-label="anchor" href="#rstoxdata-v104-2020-08-21"></a></h2>
-<ul><li>New minor release.</li></ul></div>
+<ul><li>New minor release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.3" id="rstoxdata-v103-2020-08-15">RstoxData v1.0.3 (2020-08-15)<a class="anchor" aria-label="anchor" href="#rstoxdata-v103-2020-08-15"></a></h2>
-<ul><li>Fix small bug in <code>DefineDataTranslation()</code>.</li></ul></div>
+<ul><li>Fix small bug in <code>DefineDataTranslation()</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.2" id="rstoxdata-v102-2020-08-14">RstoxData v1.0.2 (2020-08-14)<a class="anchor" aria-label="anchor" href="#rstoxdata-v102-2020-08-14"></a></h2>
-<ul><li>Added <code>Cruise</code> in <code>StoxAcoustic</code>.</li></ul></div>
+<ul><li>Added <code>Cruise</code> in <code>StoxAcoustic</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1.9001" id="rstoxdata-v1019001-2020-07-17">RstoxData v1.0.1.9001 (2020-07-17)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1019001-2020-07-17"></a></h2>
-<ul><li>Added <code>Cruise</code> in the Cruise table of <code>StoxBiotic</code>.</li></ul></div>
+<ul><li>Added <code>Cruise</code> in the Cruise table of <code>StoxBiotic</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1.9000" id="rstoxdata-v1019000-2020-07-17">RstoxData v1.0.1.9000 (2020-07-17)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1019000-2020-07-17"></a></h2>
-<ul><li>Added Redefine, Translate and Convert.</li></ul></div>
+<ul><li>Added Redefine, Translate and Convert.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="rstoxdata-v101-2020-07-11">RstoxData v1.0.1 (2020-07-11)<a class="anchor" aria-label="anchor" href="#rstoxdata-v101-2020-07-11"></a></h2>
-<ul><li>Changed <code>AcousticCategory</code> to character.</li></ul></div>
+<ul><li>Changed <code>AcousticCategory</code> to character.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.15" id="rstoxdata-v0815-2020-06-21">RstoxData v0.8.15 (2020-06-21)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0815-2020-06-21"></a></h2>
-<ul><li>Added warning for non-unique <code>LogKey</code>.</li></ul></div>
+<ul><li>Added warning for non-unique <code>LogKey</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.14" id="rstoxdata-v0814-2020-06-16">RstoxData v0.8.14 (2020-06-16)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0814-2020-06-16"></a></h2>
-<ul><li>Added <code>AddStoxBioticVariables()</code> and ConversionType in ConvertStoxBiotic.</li></ul></div>
+<ul><li>Added <code>AddStoxBioticVariables()</code> and ConversionType in ConvertStoxBiotic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.13" id="rstoxdata-v0813-2020-06-11">RstoxData v0.8.13 (2020-06-11)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0813-2020-06-11"></a></h2>
-<ul><li>Add NMD Biotic format v3.1 support.</li></ul></div>
+<ul><li>Add NMD Biotic format v3.1 support.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.12" id="rstoxdata-v0812-2020-06-10">RstoxData v0.8.12 (2020-06-10)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0812-2020-06-10"></a></h2>
-<ul><li>Renamed Cores to NumberOfCores and LengthInterval to LengthIntervalCentimeters.</li></ul></div>
+<ul><li>Renamed Cores to NumberOfCores and LengthInterval to LengthIntervalCentimeters.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.11.9000" id="rstoxdata-v08119000-2020-06-08">RstoxData v0.8.11.9000 (2020-06-08)<a class="anchor" aria-label="anchor" href="#rstoxdata-v08119000-2020-06-08"></a></h2>
-<ul><li>Filter: Filtering upwards now able to skip empty tables.</li></ul></div>
+<ul><li>Filter: Filtering upwards now able to skip empty tables.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.11" id="rstoxdata-v0811-2020-06-06">RstoxData v0.8.11 (2020-06-06)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0811-2020-06-06"></a></h2>
-<ul><li>Use Github actions.</li></ul></div>
+<ul><li>Use Github actions.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.10.9002" id="rstoxdata-v08109002-2020-06-02">RstoxData v0.8.10.9002 (2020-06-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v08109002-2020-06-02"></a></h2>
-<ul><li>Appveyor: fix logic.</li></ul></div>
+<ul><li>Appveyor: fix logic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.10.9001" id="rstoxdata-v08109001-2020-06-02">RstoxData v0.8.10.9001 (2020-06-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v08109001-2020-06-02"></a></h2>
-<ul><li>Appveyor: test logic.</li></ul></div>
+<ul><li>Appveyor: test logic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.9" id="rstoxdata-v089-2020-05-28">RstoxData v0.8.9 (2020-05-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v089-2020-05-28"></a></h2>
-<ul><li>Minor update to stox acoustic.</li></ul></div>
+<ul><li>Minor update to stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.8" id="rstoxdata-v088-2020-05-19">RstoxData v0.8.8 (2020-05-19)<a class="anchor" aria-label="anchor" href="#rstoxdata-v088-2020-05-19"></a></h2>
-<ul><li>Minor update to stox acoustic.</li></ul></div>
+<ul><li>Minor update to stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.7" id="rstoxdata-v087-2020-05-08">RstoxData v0.8.7 (2020-05-08)<a class="anchor" aria-label="anchor" href="#rstoxdata-v087-2020-05-08"></a></h2>
-<ul><li>Minor update to stox acoustic.</li></ul></div>
+<ul><li>Minor update to stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.6.9001" id="rstoxdata-v0869001-2020-05-05">RstoxData v0.8.6.9001 (2020-05-05)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0869001-2020-05-05"></a></h2>
-<ul><li>Use strict lss format.</li></ul></div>
+<ul><li>Use strict lss format.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.6" id="rstoxdata-v086-2020-05-04">RstoxData v0.8.6 (2020-05-04)<a class="anchor" aria-label="anchor" href="#rstoxdata-v086-2020-05-04"></a></h2>
 <p>New features: * Add multiple data export feature: 1. ICES acoustic XML format to ICES acoustic CSV format 2. NMD biotic v3 XML format to ICES biotic CSV format 3. NMD biotic V3 XML format to NS-IBTS ICES Datras (CSV) format</p>
@@ -490,28 +545,36 @@
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.4" id="rstoxdata-v084-2020-04-28">RstoxData v0.8.4 (2020-04-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v084-2020-04-28"></a></h2>
-<ul><li>New minor release.</li></ul></div>
+<ul><li>New minor release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.3" id="rstoxdata-v083-2020-04-16">RstoxData v0.8.3 (2020-04-16)<a class="anchor" aria-label="anchor" href="#rstoxdata-v083-2020-04-16"></a></h2>
-<ul><li>Add define and update variables.</li></ul></div>
+<ul><li>Add define and update variables.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.2" id="rstoxdata-v082-2020-04-07">RstoxData v0.8.2 (2020-04-07)<a class="anchor" aria-label="anchor" href="#rstoxdata-v082-2020-04-07"></a></h2>
-<ul><li>More fixes in stox acoustic.</li></ul></div>
+<ul><li>More fixes in stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.1" id="rstoxdata-v081-2020-04-02">RstoxData v0.8.1 (2020-04-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v081-2020-04-02"></a></h2>
-<ul><li>Fixes in stox acoustic.</li></ul></div>
+<ul><li>Fixes in stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.0.9002" id="rstoxdata-v0809002-2020-04-01">RstoxData v0.8.0.9002 (2020-04-01)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0809002-2020-04-01"></a></h2>
-<ul><li>Minor bug fix.</li></ul></div>
+<ul><li>Minor bug fix.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.0" id="rstoxdata-v080-2020-04-01">RstoxData v0.8.0 (2020-04-01)<a class="anchor" aria-label="anchor" href="#rstoxdata-v080-2020-04-01"></a></h2>
-<ul><li>New stox acoustic.</li></ul></div>
+<ul><li>New stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.0" id="rstoxdata-v070-2020-03-27">RstoxData v0.7.0 (2020-03-27)<a class="anchor" aria-label="anchor" href="#rstoxdata-v070-2020-03-27"></a></h2>
-<ul><li>Fixed bug with non-unique tables from ICESAcoustic.</li></ul></div>
+<ul><li>Fixed bug with non-unique tables from ICESAcoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7" id="rstoxdata-v07-2020-03-26">RstoxData v0.7 (2020-03-26)<a class="anchor" aria-label="anchor" href="#rstoxdata-v07-2020-03-26"></a></h2>
-<ul><li>New stox acoustic.</li></ul></div>
+<ul><li>New stox acoustic.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.7" id="rstoxdata-v067-2020-03-19">RstoxData v0.6.7 (2020-03-19)<a class="anchor" aria-label="anchor" href="#rstoxdata-v067-2020-03-19"></a></h2>
 <p>New minor release. Notable new features are the support for NMD Biotic v1.4 and ICES Biotic data input.</p>
@@ -519,10 +582,12 @@
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.6" id="rstoxdata-v066-2020-02-11">RstoxData v0.6.6 (2020-02-11)<a class="anchor" aria-label="anchor" href="#rstoxdata-v066-2020-02-11"></a></h2>
-<ul><li>New minor release.</li></ul></div>
+<ul><li>New minor release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.5" id="rstoxdata-v065-2019-12-19">RstoxData v0.6.5 (2019-12-19)<a class="anchor" aria-label="anchor" href="#rstoxdata-v065-2019-12-19"></a></h2>
-<ul><li>New minor release.</li></ul><p>Changelog: * Update README(.md) * Increment version * Refresh xsdObjects data * Fix documentation * Add verbose output switch for reading XMLs * Add tests for StoxBiotic and StoxAcoustic functions * Fix merging proses in StoxAcoustic() after correction of the column types * Correct the data types in result tables * Fix StoxBiotic function</p>
+<ul><li>New minor release.</li>
+</ul><p>Changelog: * Update README(.md) * Increment version * Refresh xsdObjects data * Fix documentation * Add verbose output switch for reading XMLs * Add tests for StoxBiotic and StoxAcoustic functions * Fix merging proses in StoxAcoustic() after correction of the column types * Correct the data types in result tables * Fix StoxBiotic function</p>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.4" id="rstoxdata-v064-2019-12-18">RstoxData v0.6.4 (2019-12-18)<a class="anchor" aria-label="anchor" href="#rstoxdata-v064-2019-12-18"></a></h2>
@@ -531,13 +596,16 @@
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.3" id="rstoxdata-v063-2019-12-06">RstoxData v0.6.3 (2019-12-06)<a class="anchor" aria-label="anchor" href="#rstoxdata-v063-2019-12-06"></a></h2>
-<ul><li>New minor release, various bug fixes.</li></ul></div>
+<ul><li>New minor release, various bug fixes.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.2" id="rstoxdata-v062-2019-11-26">RstoxData v0.6.2 (2019-11-26)<a class="anchor" aria-label="anchor" href="#rstoxdata-v062-2019-11-26"></a></h2>
-<ul><li>New minor release, mainly for various bug fixes.</li></ul></div>
+<ul><li>New minor release, mainly for various bug fixes.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.1" id="rstoxdata-v061-2019-06-21">RstoxData v0.6.1 (2019-06-21)<a class="anchor" aria-label="anchor" href="#rstoxdata-v061-2019-06-21"></a></h2>
-<ul><li>New Feature: Reading ICES acoustic XML files.</li></ul></div>
+<ul><li>New Feature: Reading ICES acoustic XML files.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6.0" id="rstoxdata-v060-2019-06-12">RstoxData v0.6.0 (2019-06-12)<a class="anchor" aria-label="anchor" href="#rstoxdata-v060-2019-06-12"></a></h2>
 <p>Changes: * Rebrand to RstoxData. * Add support for all biotic formats.</p>
