@@ -1,3 +1,6 @@
+# RstoxData v1.8.0-9002  (2022-12-02)
+* Changed check-full.yaml to run for 'release' and specific R versions (4.2, 4.1, etc).
+
 # RstoxData v1.8.0-9001  (2022-11-30)
 * Unified how lengtht code is calculated for ICESBiotic and ICESDatras.
 * Added RegroupLengthICESDatras() (replacing PrepareWriteICESDatras()), which regroups the lengths of the HL table of ICESDatras.
