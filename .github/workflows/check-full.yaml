@@ -15,8 +15,7 @@ jobs:
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
-	# We include 'release' in order to always test the altest release, but mac and Windows binaries are not deployed to the drat repo:
-    strategy:
+	strategy:
       fail-fast: false
       matrix:
         config:
@@ -174,7 +173,9 @@ jobs:
       #     name: ${{ runner.os }}-${{ matrix.config.r }}-pkg
       #     path: '${{ github.workspace }}/*${{ matrix.config.pkgext }}'
 
-      - name: Upload to DRAT repo
+      # We include 'release' in order to always test the altest release, but mac and Windows binaries are not deployed to the drat repo:
+    
+     - name: Upload to DRAT repo
         if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
