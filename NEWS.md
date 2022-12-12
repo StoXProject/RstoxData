@@ -1,3 +1,14 @@
+# RstoxData v1.8.0-9004  (2022-12-12)
+* Added CopyBiotic, CopyStoxBiotic, CopyICESBiotic, CopyICESDatras, CopyAcoustic, CopyStoxAcoustic, CopyICESAcoustic, CopyLanding and CopyStoxLanding, used for copying one column to another (possibly existing) column.
+* Fixed bug in Translate functions where PreserveClass = TRUE had no effect.
+* Updated documentation of DefineTranslation and the Translate functions.
+* Added drop-down lists for the parameters VariableName and ConditionalVariableNames, and for valueColumn, newValueColumn and conditionalValueColumns in the case that the table is read from a file.
+* Fixed bug in StoxBiotic() from NMDBiotic <= 1.4 files, where platform from the mission table was used as CatchPlatform. Changed to using the platform from the fishstation.
+* Added support for adding variables in AddToStoxBiotic() that originate from CopyBiotic().
+
+# RstoxData v1.8.0-9003  (2022-12-05)
+* Fixed bug in Translate functions, where PreserveClass = FALSE did not work.
+
 # RstoxData v1.8.0-9002  (2022-12-02)
 * Changed check-full.yaml to run for 'release' and specific R versions (4.2, 4.1, etc).
 

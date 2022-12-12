@@ -1,7 +1,7 @@
 format,level,variable,target,iskey
 nmdbioticv1.1,fishstation,serialno,Station,
 nmdbioticv1.1,fishstation,nation,Station,
-nmdbioticv1.1,fishstation,platform,Station,
+nmdbioticv1.1,fishstation,platform.fishstation,Station,
 nmdbioticv1.1,fishstation,station,Station,
 nmdbioticv1.1,fishstation,fixedstation,Station,
 nmdbioticv1.1,fishstation,startdate.fishstation,Station,

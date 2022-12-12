@@ -97,6 +97,10 @@ firstPhase <- function(
 	# Getting data for the datatype
     tableKey <- stoxBioticObject$tableKeyList[[datatype]]
     tableMap <- stoxBioticObject$tableMapList[[datatype]]
+    simpleTableMap <- tableMap[sapply(tableMap, function(x) length(x[[2]])) == 1]
+    originalParentTables <- stoxBioticObject$originalParentTables[[datatype]]
+    
+    
     indageHeaders <- stoxBioticObject$indageHeadersList[[datatype]]
     
     # 1. Merge: a) Cruise number with everything b) age reading and individual (specific to data source type)
@@ -105,25 +109,32 @@ firstPhase <- function(
         ## If preferredagereading in indivdiual is NA, use 1 as the preferred reading
         data$individual[,preferredagereading:= ifelse(is.na(preferredagereading), 1, preferredagereading)]
         ## Merge individual and age
-    	data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "agedeterminationid"), all.x=TRUE)
+    	data$individual <- merge(data$individual, data$agedetermination, by.x = c(indageHeaders, "preferredagereading"), by.y = c(indageHeaders, "agedeterminationid"), all.x = TRUE)
     	
     	# Merge in the tag:
-    	data$individual <- mergeByIntersect(data$individual, data$tag, all.x=TRUE)
+    	data$individual <- mergeByIntersect(data$individual, data$tag, all.x = TRUE)
+    	# Store the names of the individual and prey tables:
+    	individualNames <- names(data$individual)
+    	preyNames <- names(data$prey)
     	
     	## Merge individual and tag
     	#data$individual <- merge(data$individual, data$tag, by.x=indageHeaders, by.y=indageHeaders, all.x=TRUE)
     	
     	## Cascading merge tables
-        toMerge <- c("mission", "fishstation", "catchsample", "individual", "prey")
-        data <- mergeDataTables(data, toMerge)
+    	toMerge <- c("mission", "fishstation", "catchsample", "individual", "prey")
+    	data <- mergeDataTables(data, toMerge)
+    	# For the individual and prey tables, what are not splitt by the complexMap later, keep only the original columns and the keys
     } 
     else if(datatype %in% c("nmdbioticv1.1", "nmdbioticv1.4")) {
 
 	    ## Merge individual and age
 	    indageHeaders <- intersect(names(data$agedetermination), names(data$individual))
 	    data$individual[,preferredagereading:= 1]
-	    data$individual <- merge(data$individual, data$agedetermination, by.x=c(indageHeaders, "preferredagereading"), by.y=c(indageHeaders, "no"), all.x=TRUE)
-
+	    data$individual <- merge(data$individual, data$agedetermination, by.x = c(indageHeaders, "preferredagereading"), by.y = c(indageHeaders, "no"), all.x=TRUE)
+	    # Store the names of the individual and prey tables:
+	    individualNames <- names(data$individual)
+	    preyNames <- names(data$prey)
+	    
 	    ## Cascading merge tables
 	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
 
@@ -262,6 +273,7 @@ firstPhase <- function(
 	    return(NULL)
     }
     
+    
     # 2. Making keys
     for(curr in names(data)) {
         tmpKeys <- c()
@@ -273,6 +285,16 @@ firstPhase <- function(
         }
         setindexv(data[[curr]], tmpKeys)
     }
+    
+    # Keep only the original names and the new kyes of the individual and prey tables:
+    if(datatype %in% c("nmdbioticv1.1", "nmdbioticv1.4", "nmdbioticv3", "nmdbioticv3.1")) {
+    	getKeyNames <- function(x) {
+    		names(x)[endsWith(names(x), "Key")]
+    	}
+    	data$individual <- subset(data$individual, select = c(individualNames, getKeyNames(data$individual)))
+    	data$prey <- subset(data$prey, select = c(preyNames, getKeyNames(data$prey)))
+    }
+    
     
     # Special warning if there are duplicate station for NMDBiotic:
     CruiseStationKeys <- c("cruise", "station")
@@ -292,11 +314,11 @@ firstPhase <- function(
     firstPhaseTables <- list()
     
     # Add the tables which should simply be renamed, and not split into several tables:
-    for(map in tableMap) {
+    for(map in simpleTableMap) {
         firstPhaseTables[[map[[2]]]] <- data[[map[[1]]]]
     }
     
-    # 4. "COMPLEX" mapping
+    # 4. "COMPLEX" mapping (for tables fishstation and catchsample of NMDBiotic):
     complexMap <- getComplexMap(
     	datatype = datatype, 
     	stoxBioticObject = stoxBioticObject, 
@@ -333,6 +355,20 @@ firstPhase <- function(
         }
         setindexv(firstPhaseTables[[dest]], tmpKeys)
     }
+    
+    # Remove the original keys of the higher levels of the original data:
+    #originalKeys <- lapply(tableKey, "[[", 1)
+    #originalKeysAggregatedFromHigherLevels <- c(list(NULL), lapply(seq_len(length(originalKeys) - 1), function(x) unlist(originalKeys[sequence(x)])))
+    #names(originalKeysAggregatedFromHigherLevels) <- names(tableKey)
+    # Changed to keeping keys from the table used as origin of a StoxBiotic table, to support the SplitTableAllocation of AddToStoxBiotic():
+    # Get the keys of the higher tables that should be removed:
+    keysOfOriginalParentTables <- lapply(names(originalParentTables), function(name) unlist(lapply(originalParentTables[[name]], function(tableName) tableKey[[tableName]][[1]])))
+    names(keysOfOriginalParentTables) <- names(originalParentTables)
+    for(curr in names(firstPhaseTables)) {
+    	toKeep <- setdiff(names(firstPhaseTables[[curr]]), keysOfOriginalParentTables[[curr]])
+    	firstPhaseTables[[curr]] <- subset(firstPhaseTables[[curr]], select = toKeep)
+    }
+    
     
     
     return(firstPhaseTables)
@@ -475,7 +511,6 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
     		)
     	}
     }
-    
     # Apply the conversions, such as pasting keys, converting to POSIX, etc.:
     for (i in unique(convertTable[, level])) {
     	
@@ -494,6 +529,10 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
         	secondPhaseTables[[i]] <- createEmptyDataTable(convertTable[level == i,]$variable, convertTable[level == i,]$class)
         }
     }
+
+    # Optionally select only the variables given by the convertTable:
+    
+    
     
     # Remove duplicated rows from SpeciesCategory
     # This has been moved to **** and made general for all tables. The rule is to remove dows of duplicated keys.

@@ -5,7 +5,7 @@ Platform,Cruise,platform,platform,platform,platform,Platform,,character
 CruiseKey,Station,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,Station,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 Station,Station,"paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')","paste(CruiseKey, StationKey, sep = '-')",,character
-CatchPlatform,Station,catchplatform,catchplatform,platform,platform,Platform,,character
+CatchPlatform,Station,catchplatform,catchplatform,platform.fishstation,platform.fishstation,Platform,,character
 DateTime,Station,"getDateTime(stationstartdate, stationstarttime)","getDateTime(stationstartdate, stationstarttime)","getDateTime(startdate.fishstation, starttime)","getDateTime(startdate.fishstation, starttime)","getDateTime(StartTime)",,POSIXct
 Latitude,Station,latitudestart,latitudestart,latitudestart,latitudestart,StartLatitude,,numeric
 Longitude,Station,longitudestart,longitudestart,longitudestart,longitudestart,StartLongitude,,numeric
