@@ -40,6 +40,33 @@
     <loc>/reference/ConvertStoxBiotic.html</loc>
   </url>
   <url>
+    <loc>/reference/CopyAcoustic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyBiotic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyICESAcoustic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyICESBiotic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyICESDatras.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyLanding.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyStoxAcoustic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyStoxBiotic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CopyStoxLanding.html</loc>
+  </url>
+  <url>
     <loc>/reference/DataTypes.html</loc>
   </url>
   <url>
@@ -224,6 +251,9 @@
   </url>
   <url>
     <loc>/reference/convertToLssData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/copy_arguments.html</loc>
   </url>
   <url>
     <loc>/reference/createOrderKey.html</loc>

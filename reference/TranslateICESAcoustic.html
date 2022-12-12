@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9003</span>
       </span>
     </div>
 
@@ -76,19 +76,19 @@
 
 
 <dt>TranslationTable</dt>
-<dd><p>A table of the variable to translate in the first column; the column <code>NewValue</code> giving the values to translate to in the second column; followed by zero or more conditional variables. Use NA in the Value column to translate missing values (shown as "-" in View output in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions or functions of the variable specified by the column name. See details.</p></dd>
+<dd><p>A table holding the following columns: The first column holds the values to translate FROM, the second column holds the values to translate TO, and the remaining zero or more columns holds the values for the conditional variables specified in <code>ConditionalVariableNames</code>. I.e., if <code>VariableName</code> = "IndividualAge" and <code>ConditionalVariableNames</code> = "IndividualSex", and the <code>TranslationTable</code> has values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4. Use NA to translate missing values (shown as "-" in Preview in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions of functions of the variable specified by the column name. See details.</p></dd>
 
 
 <dt>VariableName</dt>
-<dd><p>An optional string naming the variable to translate, which can be given if only one variable should be translated. If more than one variable should be translated using the same <code><a href="Translation.html">Translation</a></code>, a column named "VariableName" must be inclcuded in <code>TranslationTable</code> (possibly read from the <code>FileName</code>) AND <code>VariableName</code> must be an empty string (blank field in the GUI).</p></dd>
+<dd><p>The name of the variable to translate.</p></dd>
 
 
 <dt>Conditional</dt>
-<dd><p>Logical: If TRUE the columns <code>ConditionalVariableNames</code> and <code>ConditionalValue</code> are expected in the <code>TranslationTable</code>. These define a variable interacting with the <code>VariableName</code> and <code>Value</code>, so that <code>VariableName</code> is changed from <code>Value</code> to <code>NewValue</code> only when <code>ConditionalVariableNames</code> has the value given by <code>ConditionalValue</code>. Note that <code>ConditionalVariableNames</code> must exist in the same table as <code>VariableName</code>.</p></dd>
+<dd><p>Logical: If TRUE condition the translation on values of other variables.</p></dd>
 
 
 <dt>ConditionalVariableNames</dt>
-<dd><p>Similar to <code>VariableName</code>, but naming the conditional variables.</p></dd>
+<dd><p>The names of the variables to condition the translation on. Must be given if <code>Conditional == TRUE</code>.</p></dd>
 
 
 <dt>Translation</dt>
