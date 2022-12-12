@@ -109,7 +109,7 @@ firstPhase <- function(
         ## If preferredagereading in indivdiual is NA, use 1 as the preferred reading
         data$individual[,preferredagereading:= ifelse(is.na(preferredagereading), 1, preferredagereading)]
         ## Merge individual and age
-    	data$individual <- merge(data$individual, data$agedetermination, by.x = c(indageHeaders, "preferredagereading"), by.y = c(indageHeaders, "agedeterminationid"), all.x=TRUE)
+    	data$individual <- merge(data$individual, data$agedetermination, by.x = c(indageHeaders, "preferredagereading"), by.y = c(indageHeaders, "agedeterminationid"), all.x = TRUE)
     	
     	# Merge in the tag:
     	data$individual <- mergeByIntersect(data$individual, data$tag, all.x = TRUE)
