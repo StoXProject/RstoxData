@@ -1,3 +1,44 @@
+getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
+	if(!missing(BioticData)) {
+		sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
+	}
+	else if(!missing(StoxBioticData)) {
+		sort(unique(unlist(lapply(StoxBioticData, names))))
+	}
+	else if(!missing(ICESBioticData)) {
+		sort(unique(unlist(lapply(ICESBioticData, names))))
+	}
+	else if(!missing(ICESDatrasData)) {
+		sort(unique(unlist(lapply(ICESDatrasData, names))))
+	}
+	else if(!missing(AcousticData)) {
+		sort(unique(unlist(lapply(AcousticData, function(x) lapply(x, names)))))
+	}
+	else if(!missing(StoxAcousticData)) {
+		sort(unique(unlist(lapply(StoxAcousticData, names))))
+	}
+	else if(!missing(ICESAcousticData)) {
+		sort(unique(unlist(lapply(ICESAcousticData, names))))
+	}
+	else if(!missing(LandingData)) {
+		sort(unique(unlist(lapply(LandingData, function(x) lapply(x, names)))))
+	}
+	else if(!missing(StoxLandingData)) {
+		sort(unique(unlist(lapply(StoxLandingData, names))))
+	}
+	#else {
+	#	stop("Any of BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, AcousticData, StoxAcousticData, ICESAcousticData, Land#ingData and StoxLandingData must be given.")
+	#}
+}
+
+
+getValueColumns <- function(FileName, ValueColumn = NULL, NewValueColumn = NULL, ConditionalValueColumns = NULL) {
+	# Read the table from file:
+	tanslation <- data.table::fread(FileName, encoding = "UTF-8", colClasses = "character")
+	# Discard already given columns:
+	setdiff(names(tanslation), c(ValueColumn, NewValueColumn, ConditionalValueColumns))
+}
+
 #' Function specification for inclusion in StoX projects
 #' @export
 stoxFunctionAttributes <- list(
@@ -125,6 +166,136 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
+	
+	# Copy:
+	CopyBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "BioticData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"#, 
+			#ConditionalVariableNames = "conditionalVariableNames_Copy", 
+			#ConditionalTable = "conditionalTable_Copy"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)#, 
+			#ConditionalVariableNames = list(
+			#	Conditional = TRUE
+			#), 
+			#ConditionalTable = list(
+			#	Conditional = TRUE
+			#)
+		)
+	),
+	CopyStoxBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxBioticData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyICESBiotic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESBioticData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyICESDatras = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESDatrasData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "AcousticData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyStoxAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxAcousticData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyICESAcoustic = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "ICESAcousticData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyLanding = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "LandingData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	CopyStoxLanding = list(
+		functionType = "modelData", 
+		functionCategory = "baseline", 
+		functionOutputDataType = "StoxLandingData", 
+		functionParameterFormat = list(
+			FromVariable = "fromVariable_StoxData"
+		), 
+		functionArgumentHierarchy = list(
+			preserveClass = list(
+				overwrite = TRUE
+			)
+		)
+	),
+	
+	
+	
 	# Convert AcousticData to StoxAcousticData:
 	MergeStoxAcoustic = list(
 	    functionType = "modelData", 
@@ -224,7 +395,10 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
 			FileName = "filePath", 
-			ConditionalVariableNames = "conditionalVariableNames", 
+			# No format for ConditionalVariableNames, since we do not have any function input in DefineTranslation:
+			#ConditionalVariableNames = "conditionalVariableNames_translate", 
+			ValueColumn = "valueColumn", 
+			NewValueColumn = "newValueColumn", 
 			ConditionalValueColumns = "conditionalValueColumns"
 		), 
 		functionArgumentHierarchy = list(
@@ -281,7 +455,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "BioticData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -313,7 +488,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "AcousticData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -345,7 +521,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "LandingData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -378,7 +555,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "StoxBioticData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -410,7 +588,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "StoxAcousticData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -442,7 +621,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "StoxLandingData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -475,7 +655,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "ICESAcousticData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -506,8 +687,9 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESBioticData", 
 		functionParameterFormat = list(
-			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			TranslationTable = "translationTable",
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -539,7 +721,8 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "ICESDatrasData", 
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
-			ConditionalVariableNames = "conditionalVariableNames"
+			VariableName = "variableName_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate"
 		), 
 		functionArgumentHierarchy = list(
 			Translation = list(
@@ -816,15 +999,56 @@ processPropertyFormats <- list(
 		#	"character"
 		#)
 	), 
-	conditionalVariableNames = list(
+	
+	#conditionalTable_Copy = list(
+	#	class = "table", 
+	#	title = "Select the values which the copy is restricted to.", 
+	#	columnNames = function(ConditionalVariableNames) {
+	#		if(!length(ConditionalVariableNames)) {
+	#			stop("StoX: ConditionalVariableNames must be set when Conditional = TRUE.")
+	#			#return(NULL)
+	#		}
+	#		return(ConditionalVariableNames)
+	#	}, 
+	#	variableTypes = function(ConditionalVariableNames) {
+	#		if(!length(ConditionalVariableNames)) {
+	#			stop("StoX: ConditionalVariableNames must be set when Conditional = TRUE.")
+	#			#return(NULL)
+	#		}
+	#		return(rep("character", length(ConditionalVariableNames)))
+	#	}
+	#), 
+	
+	
+	conditionalVariableNames_translate = list(
 		class = "vector", 
 		title = "One or more conditional variables to translate by.", 
+		possibleValues = getVariableNamesStoxData, 
 		variableTypes = "character"
+	), 
+	variableName_translate = list(
+		class = "vector", 
+		title = "Select one variable to translate.", 
+		possibleValues = getVariableNamesStoxData, 
+		variableTypes = "character"
+	), 
+	valueColumn = list(
+		class = "vector", 
+		title = "The name of the column in the input file giving the values to tranlate.", 
+		variableTypes = "character", 
+		possibleValues = getValueColumns
+	), 
+	newValueColumn = list(
+		class = "vector", 
+		title = "The name of the column in the input file giving the (new) values to tranlate to.", 
+		variableTypes = "character", 
+		possibleValues = getValueColumns
 	), 
 	conditionalValueColumns = list(
 		class = "vector", 
 		title = "The column name in the input file of one or more conditional variables to translate by.", 
-		variableTypes = "character"
+		variableTypes = "character", 
+		possibleValues = getValueColumns
 	), 
 	
 	
@@ -844,6 +1068,18 @@ processPropertyFormats <- list(
 		}, 
 		variableTypes = "character"
 	), 
+	fromVariable_StoxData = list(
+		class = "vector", 
+		title = "Select one variable to copy", 
+		possibleValues = getVariableNamesStoxData, 
+		variableTypes = "character"
+	), 
+	conditionalVariableNames_Copy = list(
+		class = "vector", 
+		title = "Select one variable to copy", 
+		possibleValues = getVariableNamesStoxData, 
+		variableTypes = "character"
+	),
 	
 	roundingTable = list(
 		class = "table", 

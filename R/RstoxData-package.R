@@ -36,9 +36,10 @@ utils::globalVariables(c(
 	 "specimenid", "start_time", "startyear", "station", "stationstartdate", "stationstarttime",
 	 "stationstopdate", "stationstoptime", "stomach", "stoxBioticObject", "subFactor", "subWeight",
 	 "suffixes", "sum_sa.x", "sum_sa.y", "sweeplength", "target", "tissuesample", "totWeight",
-	 "totalNo", "transceiver", "trawldoorarea", "trawldoorspread", "trawldoortype",
-	 "trawldoorweight", "verticaltrawlopening", "vesselspeed", "winddirection", "windspeed",
-	 "wingspread", "wiredensity", "wirediameter", "wirelength", "xsdObjects"))
+	 "totalNo", "transceiver", "translationListOne", "trawldoorarea", "trawldoorspread",
+	 "trawldoortype", "trawldoorweight", "variableToTranslate", "verticaltrawlopening",
+	 "vesselspeed", "winddirection", "windspeed", "wingspread", "wiredensity", "wirediameter",
+	 "wirelength", "xsdObjects"))
 
 .onLoad <- function(libname, pkgname) {
 	# Initiate the RstoxData environment:

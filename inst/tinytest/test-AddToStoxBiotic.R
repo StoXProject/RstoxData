@@ -20,7 +20,12 @@ testOneFormat <- function(formatFile, variablesToAdd) {
 		SplitTableAllocation = "Lowest"
 	)
 	
-	valid0 <- all(unlist(mapply("%in%", variablesToAdd[names(variablesToAdd)], lapply(a[names(variablesToAdd)], names))))
+	valid0a <- all(unlist(mapply("%in%", variablesToAdd, lapply(a[names(variablesToAdd)], names))))
+	variablesToAddLowest <- list(
+		Haul = unlist(variablesToAdd[c("Station", "Haul")]), 
+		Sample = unlist(variablesToAdd[c("SpeciesCategory", "Sample")])
+	)
+	valid0b <- all(unlist(mapply("%in%", variablesToAddLowest, lapply(aLowest[names(variablesToAddLowest)], names))))
 	valid1 <- all(unlist(variablesToAdd[c("Station", "Haul")]) %in% names(aLowest$Haul))
 	valid2 <- all(unlist(variablesToAdd[c("SpeciesCategory", "Sample")]) %in% names(aLowest$Sample))
 	valid3 <- !any(unlist(variablesToAdd) %in% names(aLowest$Station))
@@ -29,7 +34,8 @@ testOneFormat <- function(formatFile, variablesToAdd) {
 	noDuplicatedStationKey <- !any(duplicated(a[[names(variablesToAdd)[1]]], by = "StationKey"))
 	
 	out <- list(
-		valid0 = valid0, 
+		valid0a = valid0a, 
+		valid0b = valid0b, 
 		valid1 = valid1, 
 		valid2 = valid2, 
 		valid3 = valid3, 
