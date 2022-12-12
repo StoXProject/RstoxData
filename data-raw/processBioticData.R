@@ -291,7 +291,8 @@ tableKeyList1 <- list(
 	Cruise = list(c("cruise", "missiontype", "year", "platform", "missionnumber"), "CruiseKey"),
 	Station = list("station", "StationKey"),
 	Haul = list("serialno", "HaulKey"),
-	SpeciesCategory = list(c("noname", "species", "aphia"), "SpeciesCategoryKey"),
+	# Using "group" here is a bug, but we keep it for backwards compatibility, and because this is an ancient format. The Norwegian Marine Data Centre only provides data in the format NMDBiotic >= 3: 
+	SpeciesCategory = list(c("noname", "species", "aphia", "group"), "SpeciesCategoryKey"),
 	Sample = list("samplenumber", "SampleKey"),
 	Individual = list("specimenno", "IndividualKey"),
 	SubIndividual = list("fishno", "SubIndividualKey")
