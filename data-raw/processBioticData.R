@@ -51,11 +51,13 @@ stoxBioticObject$borrowVariables <- list()
 
 
 # Define the keys on each level, to add to the complexMaps:
-StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual")
+#StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual")
+StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample")
 StoxBioticLevelsSansCruise <- setdiff(StoxBioticLevels, "Cruise")
 StoxBioticLevelsNumeric <- structure(seq_along(StoxBioticLevels), names = StoxBioticLevels)
 StoxBioticLevelsNumericSansCruise <- StoxBioticLevelsNumeric[names(StoxBioticLevelsNumeric) != "Cruise"]
-NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample", "individual")
+#NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample", "individual")
+NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample")
 
 
 keysForComplexMaps <- data.table::data.table(
@@ -114,12 +116,15 @@ readComplexMap <- function(
 		file <- paste0("stox-translate-highestTable-", NMDBioticFormat.csv)
 	}
 	
-	complexMaps <- rbind(
-		data.table::fread(file), 
-		getIndividualComplexMap("individual", NMDBioticFormat), 
-		getIndividualComplexMap("agedetermination", NMDBioticFormat), 
-		getIndividualComplexMap("tag", NMDBioticFormat)
-	)
+	# It seems that this was not needed, as the agedetermination and tag is merged into the individual in firstPhase(): 
+	#complexMaps <- rbind(
+	#	data.table::fread(file), 
+	#	getIndividualComplexMap("individual", NMDBioticFormat), 
+	#	getIndividualComplexMap("agedetermination", NMDBioticFormat), 
+	#	getIndividualComplexMap("tag", NMDBioticFormat)
+	#)
+	complexMaps <- data.table::fread(file)
+		
 	if(any(duplicated(complexMaps$variable))) {
 		complexMaps[duplicated(variable), variable := paste(variable, level, sep = ".")]
 	}
@@ -266,7 +271,40 @@ getDateTime_ICESBiotic <- function(StartTime) {
 }
 
 
-
+tableMapList_nmdbiotic <- list(
+	list("mission", "Cruise"), 
+	list("fishstation", c("Station", "Haul")), 
+	list("catchsample", c("SpeciesCategory", "Sample")), 
+	list("individual", "Individual"), 
+	list("prey", "SubIndividual")
+)
+tableKeyList3 <- list(
+	Cruise = list(c("cruise", "missiontype", "startyear", "platform", "missionnumber"), "CruiseKey"),
+	Station = list("station", "StationKey"),
+	Haul = list("serialnumber", "HaulKey"),
+	SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
+	Sample = list("catchsampleid", "SampleKey"),
+	Individual = list("specimenid", "IndividualKey"),
+	SubIndividual = list("preysampleid", "SubIndividualKey")
+)
+tableKeyList1 <- list(
+	Cruise = list(c("cruise", "missiontype", "year", "platform", "missionnumber"), "CruiseKey"),
+	Station = list("station", "StationKey"),
+	Haul = list("serialno", "HaulKey"),
+	SpeciesCategory = list(c("noname", "species", "aphia"), "SpeciesCategoryKey"),
+	Sample = list("samplenumber", "SampleKey"),
+	Individual = list("specimenno", "IndividualKey"),
+	SubIndividual = list("fishno", "SubIndividualKey")
+)
+originalParentTables <- list(
+	Cruise = NULL, 
+	Station = "Cruise", 
+	Haul = "Cruise", 
+	SpeciesCategory = c("Cruise", "Station", "Haul"), 
+	Sample = c("Cruise", "Station", "Haul"), 
+	Individual = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample"), 
+	SubIndividual = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample")
+)
 
 
 
@@ -274,18 +312,10 @@ getDateTime_ICESBiotic <- function(StartTime) {
 stoxBioticObject$indageHeadersList[["nmdbioticv3.1"]] <- c("missiontype", "startyear", "platform", "missionnumber", "serialnumber", "catchsampleid", "specimenid")
 
 ## Format: {source variable, target keyname}
-stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- list(
-                 Cruise = list(c("cruise", "missiontype", "startyear", "platform", "missionnumber"), "CruiseKey"),
-                 Station = list("station", "StationKey"),
-                 Haul = list("serialnumber", "HaulKey"),
-                 SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-                 #Sample = list("catchpartnumber", "SampleKey"),
-                 Sample = list("catchsampleid", "SampleKey"),
-                 Individual = list("specimenid", "IndividualKey"),
-                 SubIndividual = list("preysampleid", "SubIndividualKey")
-                )
+stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- tableKeyList3
 #stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual"))
-stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
+stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- tableMapList_nmdbiotic
+stoxBioticObject$originalParentTables[["nmdbioticv3.1"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- readComplexMap(
@@ -367,18 +397,10 @@ stoxBioticObject$borrowVariables[["nmdbioticv3.1"]] <- list(
 stoxBioticObject$indageHeadersList[["nmdbioticv3"]] <- c("missiontype", "startyear", "platform", "missionnumber", "serialnumber", "catchsampleid", "specimenid")
 
 ## Format: {source variable, target keyname}  
-stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- list(
-                 Cruise = list(c("cruise", "missiontype", "startyear", "platform", "missionnumber"), "CruiseKey"), 
-                 Station = list("station", "StationKey"),
-                 Haul = list("serialnumber", "HaulKey"),
-                 SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-                 #Sample = list("catchpartnumber", "SampleKey"),
-                 Sample = list("catchsampleid", "SampleKey"),
-                 Individual = list("specimenid", "IndividualKey"),
-                 SubIndividual = list("preysampleid", "SubIndividualKey")
-                )
+stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- tableKeyList3
 #stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual")) 
-stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual")) 
+stoxBioticObject$tableMapList[["nmdbioticv3"]] <- tableMapList_nmdbiotic
+stoxBioticObject$originalParentTables[["nmdbioticv3"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv3"]] <- readComplexMap(
@@ -437,17 +459,9 @@ stoxBioticObject$borrowVariables[["nmdbioticv3"]] <- stoxBioticObject$borrowVari
 stoxBioticObject$indageHeadersList[["nmdbioticv1.4"]] <- NULL
 
 ## Format: {source variable, target keyname}
-stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- list(
-                 Cruise = list(c("cruise", "missiontype", "year", "platform", "missionnumber"), "CruiseKey"),
-                 Station = list("station", "StationKey"),
-                 Haul = list("serialno", "HaulKey"),
-                 SpeciesCategory = list(c("noname", "species", "aphia", "group"), "SpeciesCategoryKey"),
-                 Sample = list("samplenumber", "SampleKey"),
-                 Individual = list("specimenno", "IndividualKey"),
-                 SubIndividual = list("fishno", "SubIndividualKey")
-                )
-#stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual"))
-stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- list(list("mission", "Cruise"), list("prey", "SubIndividual"))
+stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- tableKeyList1
+stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- tableMapList_nmdbiotic
+stoxBioticObject$originalParentTables[["nmdbioticv1.4"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- readComplexMap(
@@ -527,8 +541,9 @@ stoxBioticObject$borrowVariables[["nmdbioticv1.4"]] <- list(
 stoxBioticObject$indageHeadersList[["nmdbioticv1.1"]] <- stoxBioticObject$indageHeadersList[["nmdbioticv1.4"]]
 
 ## Format: {source variable, target keyname}
-stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- stoxBioticObject$tableKeyList[["nmdbioticv1.4"]]
-stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- stoxBioticObject$tableMapList[["nmdbioticv1.4"]]
+stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- tableKeyList1
+stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- tableMapList_nmdbiotic
+stoxBioticObject$originalParentTables[["nmdbioticv1.1"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- readComplexMap(
@@ -584,7 +599,12 @@ stoxBioticObject$tableKeyList[["icesBiotic"]] <- list(
                  Sample = list("SpeciesCategory", "SampleKey"),
                  Individual = list("FishID", "IndividualKey")
                 )
-stoxBioticObject$tableMapList[["icesBiotic"]] <- list(list("Cruise", "Cruise"), list("Biology", "Individual"))
+stoxBioticObject$tableMapList[["icesBiotic"]] <- list(
+	list("Cruise", "Cruise"), 
+	list("Haul", c("Station", "Haul")), 
+	list("Catch", c("SpeciesCategory", "Sample")), 
+	list("Biology", "Individual")
+)
 stoxBioticObject$complexMaps[["icesBiotic"]] <- fread("stox-translate-icesBiotic.csv", stringsAsFactors=FALSE)
 stoxBioticObject$complexMaps_lowestTable[["icesBiotic"]] <- fread("stox-translate-lowestTable-icesBiotic.csv", stringsAsFactors=FALSE) 
 stoxBioticObject$complexMaps_highestTable[["icesBiotic"]] <- fread("stox-translate-highestTable-icesBiotic.csv", stringsAsFactors=FALSE)

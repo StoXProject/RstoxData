@@ -558,6 +558,7 @@ AddToStoxData <- function(
 	# Convert from BioticData to the general sampling hierarchy:
 	StoxDataFormat <- match_arg_informative(StoxDataFormat)
 	if(StoxDataFormat == "Biotic") {
+		
 		GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(
 			RawData, 
 			NumberOfCores = NumberOfCores, 
@@ -1125,3 +1126,17 @@ applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionAr
 printErrorIDs <- function(errorIDs, collapse = "\n\t") {
 	paste0(collapse,  paste0(errorIDs, collapse = collapse))
 }
+
+
+getNAByType <- function(type = c("numeric", "double", "integer", "character")) {
+	NA_classes <- list(
+		numeric = NA_real_, 
+		double = NA_real_, 
+		integer = NA_integer_, 
+		character = NA_character_
+	)
+	type <- match_arg_informative(type)
+	NA_classes[[type]]
+}
+
+

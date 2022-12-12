@@ -12,6 +12,10 @@
 #' 
 initiateRstoxData <- function(){
 	
+	if(!exists("xsdObjects")) {
+		data(xsdObjects, package="RstoxData", envir = environment())
+	}
+	
 	# Define the number of digits (12) and the number of significant digits (6, used if values are very low) used by the Rstox packages:
 	digits <- 12
 	signifDigits <- 12
@@ -84,17 +88,6 @@ initiateRstoxData <- function(){
 		Catch =   c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory"), 
 		Biology = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "StockCode", "FishID")
 	)
-	
-	NA_classes <- list(
-		numeric = NA_real_, 
-		double = NA_real_, 
-		integer = NA_integer_, 
-		character = NA_character_
-	)
-	getNAByType <- function(type = c("numeric", "double", "integer", "character")) {
-		type <- match_arg_informative(type)
-		NA_classes[[type]]
-	}
 	
 	# A function to extract the implemented xml formats for each of the types "biotic", "acoustic" and "landing":
 	getImplementedXsd <- function(type = c("Biotic", "Acoustic", "Landing")) {

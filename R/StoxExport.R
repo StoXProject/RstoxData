@@ -649,7 +649,7 @@ changeClassOfNonNA <- function(name, classes, data) {
 	if(name %in% names(data) && name %in% names(classes) && firstClass(data[[name]]) != classes[[name]]) {
 		thisClass <- classes[[name]]
 		if(all(is.na(data[[name]]))) {
-			NAToInsert <- getRstoxDataDefinitions("getNAByType")(thisClass)
+			NAToInsert <- getNAByType(thisClass)
 			data[, c(name) := ..NAToInsert]
 		}
 		else {
