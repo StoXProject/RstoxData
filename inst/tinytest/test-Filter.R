@@ -1,3 +1,15 @@
+# check filtering with branched levels (agedetermination and prey in NMDbiotic)
+filenames <- system.file("testresources","biotic3.1_w_ageandprey.xml", package="RstoxData")
+inputData <- RstoxData:::ReadBiotic(filenames)
+
+filterExpression <- list()
+filterExpression$`biotic3.1_w_ageandprey.xml`$fishstation <- c(
+  'serialnumber == 2'
+)
+out <- RstoxData:::filterData(inputData, filterExpression)
+expect_true(all(out$biotic3.1_w_ageandprey.xml$agedetermination$serialnumber==2))
+
+
 # Satisfy R CMD check
 options("mc.cores" = 2)
 
