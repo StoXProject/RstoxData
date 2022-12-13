@@ -609,7 +609,7 @@ setClassICESBiotic <- function(data, tables = c("Cruise", "Haul", "Catch", "Biol
 	classes <- mapply(
 		structure, 
 		lapply(
-		  xsdObjects$icesBiotic.xsd$tableTypes[tables], 
+		  RstoxData::xsdObjects$icesBiotic.xsd$tableTypes[tables], 
 			translateSimple, 
 			old = c(
 				"xsd:float", 
@@ -624,7 +624,7 @@ setClassICESBiotic <- function(data, tables = c("Cruise", "Haul", "Catch", "Biol
 				"character"
 			)
 		), 
-		names = xsdObjects$icesBiotic.xsd$tableHeaders[tables], 
+		names = RstoxData::xsdObjects$icesBiotic.xsd$tableHeaders[tables], 
 		SIMPLIFY = FALSE
 	)
 	classes <- lapply(classes, as.list)

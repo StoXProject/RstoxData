@@ -532,7 +532,7 @@ WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), names
     for (l in Data){
       
       if (length(l$metadata$useXsd)){
-        xsdObj <- xsdObjects[[paste(l$metadata$useXsd, "xsd", sep=".")]]
+        xsdObj <- RstoxData::xsdObjects[[paste(l$metadata$useXsd, "xsd", sep=".")]]
         ns <- xsdObj$targetNamespace
         if (is.na(ns)){
           ns <- ""
@@ -602,11 +602,11 @@ WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), names
 #' @export
 convertBioticFile <- function(sourceFile, targetFile, targetFormat = "nmdbioticv3.xsd", overwrite = FALSE){
   
-  if (!is.character(targetFormat) | !(targetFormat %in% names(xsdObjects))){
+  if (!is.character(targetFormat) | !(targetFormat %in% names(RstoxData::xsdObjects))){
     stop("'targetFormat must be one of those in names(RstoxData::xsdObjects).")
   }
   
-  targetFormat <- xsdObjects[[targetFormat]]
+  targetFormat <- RstoxData::xsdObjects[[targetFormat]]
   namespace=targetFormat$targetNamespace
   
   if (!file.exists(sourceFile)){
@@ -646,7 +646,7 @@ createBioticOrAcousticData <- function(data = list(), namespace = character()) {
 createBioticOrAcousticDataOne <- function(dataOne = list(), namespace = character()) {
   namespace <- getNamespace(namespace)
   
-  tableNames <- names(xsdObjects[[namespace$xsd]]$tableHeaders)
+  tableNames <- names(RstoxData::xsdObjects[[namespace$xsd]]$tableHeaders)
   
   dataOne <- lapply(
     tableNames, 
@@ -667,11 +667,11 @@ createOneTable <- function(tableName, data, namespace) {
   	data <- data.table::as.data.table(data)
   }
   
-  tableHeadersOne <- xsdObjects[[namespace$xsd]]$tableHeaders[[tableName]]
-  prefixLensOne <- xsdObjects[[namespace$xsd]]$prefixLens[[tableName]]
+  tableHeadersOne <- RstoxData::xsdObjects[[namespace$xsd]]$tableHeaders[[tableName]]
+  prefixLensOne <- RstoxData::xsdObjects[[namespace$xsd]]$prefixLens[[tableName]]
   
   # Get class:
-  tableTypesOne <- xsdObjects[[namespace$xsd]]$tableTypes[[tableName]]
+  tableTypesOne <- RstoxData::xsdObjects[[namespace$xsd]]$tableTypes[[tableName]]
   type_class_table <- data.table::data.table(
     type = c("xs:date", "xs:decimal", "xs:double", "xs:integer", "xs:string", "xs:time"), 
     class = c("character", "numeric", "numeric", "integer", "character", "character")
@@ -759,9 +759,9 @@ getNamespace <- function(format, element = character()) {
 }
 namespaceTable <- function() {
   data.table::data.table(
-    format = sub(".xsd", "", names(xsdObjects), fixed = TRUE), 
-    xsd = names(xsdObjects), 
-    namespace = unlist(lapply(xsdObjects, "[[", "targetNamespace"))
+    format = sub(".xsd", "", names(RstoxData::xsdObjects), fixed = TRUE), 
+    xsd = names(RstoxData::xsdObjects), 
+    namespace = unlist(lapply(RstoxData::xsdObjects, "[[", "targetNamespace"))
   )
 }
 
@@ -882,7 +882,7 @@ unMergeBioticOrAcousticOne <- function(
 	if(!grepl(".xsd", tolower(useXsd))) {
 		useXsd <- paste0(useXsd, ".xsd")
 	}
-	xsd <- xsdObjects[[useXsd]]
+	xsd <- RstoxData::xsdObjects[[useXsd]]
 	AcousticData <- lapply(xsd$tableOrder, getUniqueVariablesOfLevel, data = MergeDataOne, xsd = xsd, lll = lll)
 	names(AcousticData) <- xsd$tableOrder
 	
