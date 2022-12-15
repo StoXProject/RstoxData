@@ -1,26 +1,147 @@
+#' Propagate filter downwards
+#' @param retained data retained by filter
+#' @param deleted data explicitly deleted from 'table'
+#' @param table name of table to propagate deletions to
+#' @param treeStruct the hierarchical structure of the data
+#' @noRd
+propogateFilterDown <- function(retained, deleted, table, treeStruct){
+  
+  if (is.null(treeStruct[[table]])){
+    return(retained)
+  }
+  
+  for (child in treeStruct[[table]]){
+    keys <- names(deleted)
+    deleteKeys <- unique(deleted[,.SD, .SDcol=keys])
+    retainKeys <- data.table::fsetdiff(retained[[child]][,.SD, .SDcol=keys], deleteKeys)
+    retained[[child]] <- retained[[child]][retainKeys, on=keys]
+    retained <- propogateFilterDown(retained, deleted, child, treeStruct)
+  }
+  return(retained)
+  
+}
+
+#' Propagate filter upwards
+#' Remove any ancestor that have all data removed from all decendents by application of the filter
+#' @param retained data retained by filter
+#' @param table name of table to propagate deletions from
+#' @param treeStruct the hierarchical structure of the data
+#' @param propDown whether to propagate changes down after deletions
+#' @noRd
+propogateFilterUp <- function(retained, table, treeStruct, propDown){
+  
+  parent <- NULL
+  for (p in names(treeStruct)){
+    if (table %in% treeStruct[[p]]){
+      parent <- p
+    }
+  }
+  
+  #terminate at root node
+  if (is.null(parent)){
+    return(retained)
+  }
+  
+  #skip empty levels
+  if (nrow(retained[[parent]]) == 0){
+    return(propogateFilterUp(retained, parent, treeStruct, propDown))
+  }
+  
+  keys <- names(retained[[parent]])[names(retained[[parent]]) %in% names(retained[[table]])]
+  
+  retainKeys <- unique(retained[[table]][,.SD, .SDcol=keys])
+  retainKeys <- data.table::fintersect(retainKeys, unique(retained[[parent]][, .SD, .SDcol=keys]))
+  deleted <- data.table::fsetdiff(retained[[parent]][, .SD, .SDcol=keys], retainKeys)
+  retained[[parent]] <- retained[[parent]][retainKeys, on=keys]
+  
+  retained <- propogateFilterUp(retained, parent, treeStruct, propDown)
+  
+  if (propDown){
+    
+    retained <- propogateFilterDown(retained, deleted, parent, treeStruct)
+  }
+  
+  return(retained)
+}
+
+#' Extract keys from Stox convention
+#' by comparing names between parent and decendant
+#' Return empty set of keys if no descendant has data
+#' @noRd
+getKeysDown <- function(data, parent, treeStruct){
+
+  #leaf node has empty set of keys
+  if (is.null(treeStruct[[parent]])){
+    return(c())
+  }
+  
+  #return once a set of keys are found
+  for (child in treeStruct[[parent]]){
+    if (data.table::is.data.table(data[[child]])){
+      return(names(data[[child]])[names(data[[child]]) %in% names(data[[parent]])])
+    }
+    
+    #only return if some decentent have a non-empty set of keys
+    decKeys <- getKeysDown(data, child, treeStruct)
+    if (length(decKeys)>0){
+      return(decKeys)
+    }
+  }
+  
+  #return empty set of keys if keys are not otherwise found
+  return(c())
+}
+
+#' Extract keys from Stox convention
+#' by comparing names between child and parent
+#' halt with error if no parent can be found
+#' @noRd
+getKeysUp <- function(data, child, treeStruct){
+  for (parent in names(treeStruct)){
+    if (child %in% treeStruct[[parent]]){
+      return(names(data[[child]]) %in% names(data[[parent]]))
+    }
+  }
+  stop(paste("Could not find parent of ", child))
+}
+
 #' Run filter on any StoX related data source
 #'
 #' @name filterData
+#'
+#' @description
+#'  Applies filters to hierarchical data formats
+#'
+#' @details
+#'  propagateDownwards removes all data lower in the hierarchy that was linked to data explicitly removed by filter.
+#'  propagateUpwards removes all data higher in the hierarchy that is not linked with anything at the levelse where explicitly filtered data has been removed.
+#'  
+#'  The argument 'useXsd' specifies if the hierarchical relation between tables in 'inputData', should be inferred
+#'  from \code{\link[RstoxData]{xsdObjects}} via the conventional use of a metadata table on the 'inputData'
+#'  
+#'  If useXsd is FALSE, each table in the hierarchy is assumed to be strictly lower in the hierarchy than any table preceding it,
+#'  and any table called 'metadata' is ignored for backwards compatibility.
+#'  
+#'  Otherwise, column names are assumed to be unique across all levels of the data hierarchy, except that each table is expected to
+#'  repeated the key-columns of all its ancestors.
 #'
 #' @param inputData An input data. Can be a list of biotic data (StoX data type \code{\link{BioticData}}), list of acoustic data, StoxBiotic data, or StoxAcoustic data.
 #' @param filterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param propagateDownwards Whether the filter action will propagate in the downwards direction. Default to TRUE.
 #' @param propagateUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
-#'
+#' @param useXsd logical determining if treeStruct should be read from xsd provided in metadata table. See details.
+#' 
 #' @return An object of filtered data in the same format as the input data.
 #'
 #' @importFrom utils head
 #' @importFrom data.table fsetdiff fintersect is.data.table %like% %flike% %ilike% %inrange% %chin% %between%
 #' @export
-#' 
-filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE) {
+#' @md
+filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE, treeStruct = NULL, useXsd = FALSE) {
     
 	`%notin%` <- Negate(`%in%`)
 	
 	`%notequal%` <- function(x, table) is.na(x) | x %notin% table
-	
-	
-	
 
 	processFilter <- function(filters) {
 		# Do not accept system calls in filters:
@@ -40,7 +161,24 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	
 	applyFilter <- function(tableName, filter, data, propDown, propUp) {
 		
-		ret <- list()
+	  #extract treeStruct if not provided.
+	  if (!useXsd){
+	    levels <- names(data)[names(data) != "metadata"]
+	    treeStruct <- as.list(tail(levels,-1))
+	    names(treeStruct) <- head(levels,-1)
+	  }
+	  else if (!("metadata" %in% names(data))){
+	    stop("'useXsd' is TRUE, but no table named 'metadata' is found.")
+	  }
+	  else{
+	    xsdname  <- paste(data$metadata$useXsd, "xsd", sep=".")
+	    if (!(xsdname %in% names(RstoxData::xsdObjects))){
+	      stop(paste("No xsd object found for", xsdname))
+	    }
+	    treeStruct <- RstoxData::xsdObjects[[xsdname]]$treeStruct
+	  }
+	  
+		ret <- data
 		
 		filts <- filter[[tableName]]
 		
@@ -54,59 +192,30 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 		if(class(test)[1] == "try-error") {
 			warning("StoX: Apply filter error:\n", test[1])
 		} else {
-			# 3. propagate down
+		  # 3. propagate up
+		  if(propUp) {
+		    
+		    key <- getKeysUp(data, tableName, treeStruct)
+		    # if key has zero length no descendants have data, so we do not propagate
+		    if (length(key)!=0){
+		      ret <- propogateFilterUp(ret, tableName, treeStruct, propDown)
+		    }
+		  }
+		  
+			# 4. propagate down
 			if(propDown) {
-				start <- which(names(data) == tableName)
-				range <- c(start:length(names(data)))
-				# Don't propage if it's the only table
-				if(length(range) > 1) {
-					for(parent in head(range, -1)) {
-						# Sometimes we need to hop (some) empty tables that were originally empty (e.g., NMD's prey)
-						goUp <- 0
-						while(nrow(data[[parent - goUp]]) == 0 && parent - goUp > 1) {
-							goUp <- goUp + 1
-						}
-						# Find similar columns (assume those are keys)
-						key <- intersect(names(data[[parent + 1]]), names(data[[parent - goUp]]))
-						if(length(key) > 0) {
-							# Find the not deleted keys after filtering
-							deleted <- data.table::fsetdiff(unique(data[[parent - goUp]][, ..key]), unique(ret[[names(data)[parent - goUp]]][, ..key]))
-							# Propagate to child
-							ret[[names(data)[parent+1]]] <- data[[parent+1]][!deleted, on = names(deleted)]
-						}
-					}
-				}
+			  
+			  key <- getKeysDown(data, tableName, treeStruct)
+			  # if key has zero length no descendants have data, so we do not propagate
+			  if (length(key)!=0){
+			    deleted <- data.table::fsetdiff(data[[tableName]][,.SD,.SDcol=key], ret[[tableName]][,.SD,.SDcol=key])
+			    ret <- propogateFilterDown(ret, deleted, tableName, treeStruct)
+			  }
+			  
 			}
-			# 4. propagate up
-			if(propUp) {
-				start <- which(names(data) == tableName)
-				range <- c(1:start)
-				# Don't propage if it's the only table
-				if(length(range) > 1) {
-					for(parent in head(rev(range), -1)) {
-						# Sometimes we need to hop (some) empty tables that were originally empty (e.g., NMD's prey)
-						goDown <- 0
-						while(nrow(data[[parent + goDown]]) == 0 && parent + goDown <= length(data)) {
-							goDown <- goDown + 1
-						}
-						# Find similar columns (assume those are keys)
-						key <- intersect(names(data[[parent - 1]]), names(data[[parent + goDown]]))
-						if(length(key) > 0) {
-							### # Find the not deleted keys after filtering
-							### deleted <- fsetdiff(unique(data[[parent + goDown]][, ..key]), unique(ret[[names(data)[parent + goDown]]][, ..key]))
-							### # Propagate to parent
-							### ret[[names(data)[parent-1]]] <- data[[parent-1]][!deleted, on = names(deleted)]
-							
-							# Find the not deleted keys after filtering
-							toKeep <- fintersect(unique(data[[parent + goDown]][, ..key]), unique(ret[[names(data)[parent + goDown]]][, ..key]))
-							# Propagate to parent
-							ret[[names(data)[parent-1]]] <- data[[parent-1]][toKeep, on = names(toKeep)]
-							
-						}
-					}
-				}
-			}
+			
 		}
+		
 		return(ret)
 	}
 
@@ -245,7 +354,8 @@ FilterBiotic <- function(BioticData, FilterExpression = list(), FilterUpwards = 
         BioticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
-        propagateUpwards = FilterUpwards
+        propagateUpwards = FilterUpwards,
+        useXsd = TRUE
     )
 }
 
@@ -269,7 +379,8 @@ FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpward
         AcousticData, 
         filterExpression = FilterExpression, 
         propagateDownwards = TRUE, 
-        propagateUpwards = FilterUpwards
+        propagateUpwards = FilterUpwards,
+        useXsd = T
     )
 }
 
@@ -291,7 +402,8 @@ FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards 
 		LandingData, 
 		filterExpression = FilterExpression, 
 		propagateDownwards = TRUE, 
-		propagateUpwards = FilterUpwards
+		propagateUpwards = FilterUpwards,
+		useXsd = TRUE
 	)
 }
 
