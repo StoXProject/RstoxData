@@ -13,6 +13,7 @@ filterExpression <- list()
 filterExpression$`biotic3.1_w_ageandprey.xml`$agedetermination <- c(
   'age == 100'
 )
+
 expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
 expect_true(nrow(out$biotic3.1_w_ageandprey.xml$prey)==1)
 
@@ -24,11 +25,13 @@ filterExpression$`biotic3.1_w_ageandprey.xml`$prey <- c(
 
 # expect age at same station as prey to be removed
 # since treestruct is not given (age consider below prey)
+
 expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
 expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),1)
 expect_equal(out$biotic3.1_w_ageandprey.xml$agedetermination$serialnumber[1],1)
 
 # expect ages to be unnaffected when propdown is off
+
 expect_warning(out <- RstoxData:::filterData(inputData, filterExpression, propagateDownwards = F))
 expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),nrow(inputData$biotic3.1_w_ageandprey.xml$agedetermination))
 

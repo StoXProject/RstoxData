@@ -154,7 +154,7 @@ getKeysUp <- function(data, child, treeStruct){
 #' @export
 #' @md
 filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, propagateUpwards = FALSE, useXsd = FALSE) {
-    
+
 	`%notin%` <- Negate(`%in%`)
 	
 	`%notequal%` <- function(x, table) is.na(x) | x %notin% table
