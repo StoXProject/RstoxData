@@ -14,10 +14,9 @@ match_arg_informative(
 }
 \arguments{
 \item{arg}{a character vector (of length one unless \code{several.ok}
-    is \code{TRUE}) or \code{NULL} which means to take \code{choices[1]}.}
+    is \code{TRUE}) or \code{NULL}.}
 
-\item{choices}{a character vector of candidate values, often missing, see
-    \sQuote{Details}.}
+\item{choices}{a character vector of candidate values}
 
 \item{several.ok}{logical specifying if \code{arg} should be allowed
     to have more than one element.}

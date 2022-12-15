@@ -6,8 +6,64 @@ filterExpression <- list()
 filterExpression$`biotic3.1_w_ageandprey.xml`$fishstation <- c(
   'serialnumber == 2'
 )
-out <- RstoxData:::filterData(inputData, filterExpression)
+expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
 expect_true(all(out$biotic3.1_w_ageandprey.xml$agedetermination$serialnumber==2))
+
+filterExpression <- list()
+filterExpression$`biotic3.1_w_ageandprey.xml`$agedetermination <- c(
+  'age == 100'
+)
+expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
+expect_true(nrow(out$biotic3.1_w_ageandprey.xml$prey)==1)
+
+
+filterExpression <- list()
+filterExpression$`biotic3.1_w_ageandprey.xml`$prey <- c(
+  'preydigestion == 100'
+)
+
+# expect age at same station as prey to be removed
+# since treestruct is not given (age consider below prey)
+expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),1)
+expect_equal(out$biotic3.1_w_ageandprey.xml$agedetermination$serialnumber[1],1)
+
+# expect ages to be unnaffected when propdown is off
+expect_warning(out <- RstoxData:::filterData(inputData, filterExpression, propagateDownwards = F))
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),nrow(inputData$biotic3.1_w_ageandprey.xml$agedetermination))
+
+# expect age to not be removed with prey when treestruct is given
+out <- RstoxData:::filterData(inputData, filterExpression, useXsd=T)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),2)
+
+# expect age to not be removed with prey using FilterBiotic
+out <- RstoxData:::FilterBiotic(inputData, filterExpression)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),2)
+
+# expect all ages to be removed with prey using FilterBiotic with FilterUpwards
+out <- RstoxData:::FilterBiotic(inputData, filterExpression, FilterUpwards = T)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),0)
+
+#expect all data to be removed in this case
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$mission),0)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$fishstation),0)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$catchsample),0)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$individual),0)
+
+filterExpression <- list()
+filterExpression$`biotic3.1_w_ageandprey.xml`$prey <- c(
+  'serialnumber == 2'
+)
+
+# expect one age to be removed with prey using FilterBiotic with FilterUpwards
+out <- RstoxData:::FilterBiotic(inputData, filterExpression, FilterUpwards = T)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),1)
+
+#expect one station to be remaining in this case
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$mission),1)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$fishstation),1)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$catchsample),1)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$individual),1)
 
 
 # Satisfy R CMD check
@@ -42,7 +98,7 @@ filterExpression$`biotic_v3_example.xml`$agedetermination <- c(
 )
 
 # Should be OK
-out <- RstoxData:::filterData(inputData, filterExpression)
+out <- RstoxData:::filterData(inputData, filterExpression, useXsd = T)
 
 #context("test-Filter: Filtering Biotic Data")
 # Should be TRUE
@@ -84,7 +140,7 @@ filterExpression2$Haul <- c(
 	"HaulKey %notin% c(99483)"
 )
 
-suppressWarnings(out1 <- RstoxData:::StoxBiotic(RstoxData:::filterData(inputData1, filterExpression1)))
+suppressWarnings(out1 <- RstoxData:::StoxBiotic(RstoxData:::filterData(inputData1, filterExpression1, useXsd = T)))
 out2 <- RstoxData:::filterData(inputData2, filterExpression2)
 
 #context("test-Filter: Filter downward propagation")
@@ -103,7 +159,7 @@ filterExpression$`biotic_v3_example.xml`$catchsample <- c(
 )
 
 #context("test-Filter: Filter downward propagation with blank record tables in between")
-outPrup <- RstoxData:::filterData(inputData, filterExpression, propagateUpwards = TRUE)
+outPrup <- RstoxData:::filterData(inputData, filterExpression, propagateUpwards = TRUE, useXsd = T)
 expect_equal(nrow(outPrup$`biotic_v3_example.xml`$agedetermination), 0)
 
 #context("test-Filter: Filter upward propagation (BioticData)")
@@ -150,6 +206,7 @@ filteredLprop <- RstoxData:::FilterLanding(Landings, filterExpressionL, FilterUp
 expect_equal(nrow(filteredLprop$landing.xml$Fangstdata), sum(Landings$landing.xml$Fangstdata[["Hovedomr\u00E5de_kode"]] %in% c("37", "08")))
 expect_true(nrow(filteredLprop$landing.xml$Art) < nrow(Landings$landing.xml$Art))
 expect_true(nrow(filteredLprop$landing.xml$Fangstdata) < nrow(Landings$landing.xml$Fangstdata))
+expect_equal(nrow(filteredLprop$landing.xml$Fangstdata), nrow(filteredLprop$landing.xml$Art))
 
 
 
