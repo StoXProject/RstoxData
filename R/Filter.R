@@ -113,19 +113,25 @@ getKeysUp <- function(data, child, treeStruct){
 #'  Applies filters to hierarchical data formats
 #'
 #' @details
-#'  Applies filters to a set up table that are hierarchically related, and provides options for
+#'  Applies filters to a set of table that are hierarchically related, and provides options for
 #'  propagating filters up or down in the data hierarchy.
 #'  
-#'  propagateDownwards removes all data lower in the hierarchy that was linked to data explicitly removed by filter.
-#'  propagateUpwards removes all data higher in the hierarchy that is not linked with anything at the levelse where explicitly filtered data has been removed.
+#'  Filters are specified as strings encoding logical expressions in standard R syntax, each associated to one of
+#'  the tables in the input. 
+#'  
+#'  After a filter is applied to a table, data that corresponds to the removed in other tables will be removed
+#'  as specified by the options:
+#'  
+#'  * propagateDownwards removes all data lower in the hierarchy that was linked to data explicitly removed by filter.
+#'  * propagateUpwards removes all data higher in the hierarchy that is not linked with anything at the levels where explicitly filtered data has been removed.
 #'  
 #'  The argument 'useXsd' specifies if the hierarchical relation between tables in 'inputData', should be inferred
 #'  from \code{\link[RstoxData]{xsdObjects}} via the conventional use of a metadata table on the 'inputData'
 #'  
 #'  If useXsd is FALSE, each table in the hierarchy is assumed to be strictly lower in the hierarchy than any table preceding it,
-#'  and any table called 'metadata' is ignored for backwards compatibility.
+#'  and any table called 'metadata' is ignored.
 #'  
-#'  Otherwise, column names are assumed to be unique across all levels of the data hierarchy, except that each table is expected to
+#'  Column names are assumed to be unique across all levels of the data hierarchy, except that each table is expected to
 #'  repeated the key-columns of all its ancestors.
 #'
 #' @param inputData An input data. Can be a list of biotic data (StoX data type \code{\link{BioticData}}), list of acoustic data, StoxBiotic data, or StoxAcoustic data.
@@ -147,7 +153,15 @@ getKeysUp <- function(data, child, treeStruct){
 #'      'age < 10'
 #'  )
 #'  
-#'  filteredData <- RstoxData:::filterData(inputData, filterExpression, useXsd=TRUE)
+#'  filteredData <- RstoxData::filterData(inputData, 
+#'              filterExpression, 
+#'              useXsd=TRUE)
+#'  nrow(filteredData$biotic3.1_w_ageandprey.xml$fishstation)
+#'  filteredPropUp <- RstoxData::filterData(inputData, 
+#'              filterExpression, 
+#'              propagateUpwards = TRUE, 
+#'              useXsd=TRUE)
+#'  nrow(filteredPropUp$biotic3.1_w_ageandprey.xml$fishstation)
 #'
 #' @importFrom utils head
 #' @importFrom data.table fsetdiff fintersect is.data.table %like% %flike% %ilike% %inrange% %chin% %between%
