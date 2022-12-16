@@ -1,7 +1,7 @@
 # RstoxData v1.8.0-9004  (2022-12-16)
 * Fixed bug with filterpropagation on branched data formats. E.g. agereadings not being removed when corresponding individuals where removed in biotic, and clarified documentation (#241, #240).
 * Fixed bug when RstoxData functions relying on the global variable xsdObjects was called without RstoxData being loaded ("263")
-* Fix bug when reading some logbook-variants (#237)
+* Fixed bug with reading some logbook-variants (#237)
 
 # RstoxData v1.8.0-9003  (2022-12-12)
 * Added CopyBiotic, CopyStoxBiotic, CopyICESBiotic, CopyICESDatras, CopyAcoustic, CopyStoxAcoustic, CopyICESAcoustic, CopyLanding and CopyStoxLanding, used for copying one column to another (possibly existing) column.
@@ -10,9 +10,9 @@
 * Added drop-down lists for the parameters VariableName and ConditionalVariableNames, and for valueColumn, newValueColumn and conditionalValueColumns in the case that the table is read from a file.
 * Fixed bug in StoxBiotic() from NMDBiotic <= 1.4 files, where platform from the mission table was used as CatchPlatform. Changed to using the platform from the fishstation.
 * Added support for adding variables in AddToStoxBiotic() that originate from CopyBiotic().
+* Fixed bug in Translate functions, where PreserveClass = FALSE did not work.
 
 # RstoxData v1.8.0-9002  (2022-12-02)
-* Fixed bug in Translate functions, where PreserveClass = FALSE did not work.
 * Changed check-full.yaml to run for 'release' and specific R versions (4.2, 4.1, etc).
 
 # RstoxData v1.8.0-9001  (2022-11-30)
