@@ -57,7 +57,7 @@ expect_true(is.numeric(data[["ST\u00D8RSTE_LENGDE"]]))
 expect_equal(nrow(data),9)
 expect_true("UTC" %in% attr(as.POSIXlt(data$STARTTIDSPUNKT), "tzone"))
 
-dataMissingColumns <- RstoxData:::readErsFile(system.file("testresources","logbooks_trimmed_2011.psv", package="RstoxData"))
+expect_warning(dataMissingColumns <- RstoxData:::readErsFile(system.file("testresources","logbooks_trimmed_2011.psv", package="RstoxData")))
 expect_true(all(names(dataMissingColumns) == names(data)))
 expect_true(all(!is.na(dataMissingColumns$RUNDVEKT)))
 expect_true(all(!is.na(dataMissingColumns$RC)))

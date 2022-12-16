@@ -359,7 +359,8 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	applyFilterWrap <- function(fileName, filters, data) {
 		
 	  if (!(fileName %in% names(data))){
-	    stop(paste("Filter specified for file not found in data: ", fileName, ".", sep=""))
+	    warning(paste("StoX: Filter specified for file not found in data: ", fileName, ".", sep=""))
+	    return(list())
 	  }
 	 # Do per file filtering
 	 tables <- data[[fileName]]

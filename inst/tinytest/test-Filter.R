@@ -212,8 +212,8 @@ filterExpressionLWrong$`wrong.xml`$Fangstdata <- c(
   'Hovedomr\u00E5de_kode %in% c("37", "08")'
 )
 
-expect_error(RstoxData:::FilterLanding(Landings, filterExpressionLWrong), "Filter specified for file not found in data: wrong.xml.")
-
+expect_warning(out <- RstoxData:::FilterLanding(Landings, filterExpressionLWrong), "Filter specified for file not found in data: wrong.xml.")
+expect_true(all.equal(out, Landings))
 
 filterExpressionSL <- list()
 filterExpressionSL$Landing <- c(
