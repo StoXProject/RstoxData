@@ -30,7 +30,7 @@ landings <- RstoxData:::convertToLandingData(data)
 expect_true(all(landings$ConvertedData[["Fart\u00F8y"]][["Fart\u00F8ynasjonalitet_kode.Fart\u00F8y"]] == landings$ConvertedData[["Fart\u00F8y"]][["Fart\u00F8ynasjonalitet_kode"]]))
 expect_true(RstoxData::is.LandingData(landings))
 expect_equal(sum(landings$ConvertedData$Produkt$Rundvekt), sum(data$Rundvekt))
-sl <- StoxLanding(landings)
+sl <- RstoxData::StoxLanding(landings)
 expect_true(RstoxData::is.StoxLandingData(sl))
 
 #context("Test convertToLssData")
@@ -48,10 +48,21 @@ expect_true(all.equal(lss, data))
 
 #context("readErsFile: normal run")
 data <- RstoxData:::readErsFile(system.file("testresources","logbooks_trimmed_2015.psv", package="RstoxData"))
+expect_equal(sum(is.na(data$LOKASJON_START)), 2) # one coded as |""| one coded as ||
+expect_equal(sum(is.na(data$LOKASJON_STOP)), 2) # one coded as |""| one coded as ||
 expect_true(data.table::is.data.table(data))
 expect_true("RC" %in% names(data))
 expect_true(is.numeric(data$RUNDVEKT))
 expect_true(is.numeric(data[["ST\u00D8RSTE_LENGDE"]]))
 expect_equal(nrow(data),9)
 expect_true("UTC" %in% attr(as.POSIXlt(data$STARTTIDSPUNKT), "tzone"))
+
+expect_warning(dataMissingColumns <- RstoxData:::readErsFile(system.file("testresources","logbooks_trimmed_2011.psv", package="RstoxData")))
+expect_true(all(names(dataMissingColumns) == names(data)))
+expect_true(all(!is.na(dataMissingColumns$RUNDVEKT)))
+expect_true(all(!is.na(dataMissingColumns$RC)))
+expect_true(all(is.na(dataMissingColumns$MASKEVIDDE)))
+expect_true(all(is.na(dataMissingColumns$PUMPET_FRA)))
+expect_true(all(is.na(dataMissingColumns$AKTIVITET)))
+expect_true(all(is.na(dataMissingColumns$AKTIVITET_KODE)))
 

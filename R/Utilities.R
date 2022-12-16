@@ -16,7 +16,7 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	plen <- NULL
 	if(!is.null(data[["metadata"]])) {
 		datatype <- unlist(data[["metadata"]][1, "useXsd"])
-		plen <- xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
+		plen <- RstoxData::xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
 	}
 
 	# Merge all tables by default:
