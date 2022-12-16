@@ -27,21 +27,21 @@ filterData(
 An object of filtered data in the same format as the input data.
 }
 \description{
-Applies filters to hierarchical data formats
+Applies filters to hierarchical data formats.
 }
 \details{
+This is a convenient wrapper around \code{\link[RstoxData]{filterTables}}, which determines hierarchy based on available metadata.
+For more explicit control of the hierarchical relations used, consider \code{\link[RstoxData]{filterTables}}.
+
 Applies filters to a set of table that are hierarchically related, and provides options for
-propagating filters up or down in the data hierarchy.
+propagating filters up or down in the data hierarchy. Accepts either a list of data.tables or a
+list of such lists.
 
 Filters are specified as strings encoding logical expressions in standard R syntax, each associated to one of
 the tables in the input.
 
 After a filter is applied to a table, data that corresponds to the removed in other tables will be removed
-as specified by the options:
-\itemize{
-\item propagateDownwards removes all data lower in the hierarchy that was linked to data explicitly removed by filter.
-\item propagateUpwards removes all data higher in the hierarchy that is not linked with anything at the levels where explicitly filtered data has been removed.
-}
+as specified by the options propagateDownwards and propagateUpwards. These are defined in \code{\link[RstoxData]{filterTables}}:
 
 The argument 'useXsd' specifies if the hierarchical relation between tables in 'inputData', should be inferred
 from \code{\link[RstoxData]{xsdObjects}} via the conventional use of a metadata table on the 'inputData'
@@ -63,9 +63,14 @@ repeated the key-columns of all its ancestors.
      'age < 10'
  )
  
- filteredData <- RstoxData::filterData(inputData, filterExpression, useXsd=TRUE)
+ filteredData <- RstoxData::filterData(inputData, 
+             filterExpression, 
+             useXsd=TRUE)
  nrow(filteredData$biotic3.1_w_ageandprey.xml$fishstation)
- filteredPropUp <- RstoxData::filterData(inputData, filterExpression, propagateUpwards = TRUE, useXsd=TRUE)
+ filteredPropUp <- RstoxData::filterData(inputData, 
+             filterExpression, 
+             propagateUpwards = TRUE, 
+             useXsd=TRUE)
  nrow(filteredPropUp$biotic3.1_w_ageandprey.xml$fishstation)
 
 }
