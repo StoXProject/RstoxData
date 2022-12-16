@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9004</span>
       </span>
     </div>
 
@@ -48,17 +48,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.8.0-9004" id="rstoxdata-v180-9004-2022-12-12">RstoxData v1.8.0-9004 (2022-12-12)<a class="anchor" aria-label="anchor" href="#rstoxdata-v180-9004-2022-12-12"></a></h2>
+<h2 class="page-header" data-toc-text="1.8.0-9004" id="rstoxdata-v180-9004-2022-12-16">RstoxData v1.8.0-9004 (2022-12-16)<a class="anchor" aria-label="anchor" href="#rstoxdata-v180-9004-2022-12-16"></a></h2>
+<ul><li>Fixed bug with filterpropagation on branched data formats. E.g. agereadings not being removed when corresponding individuals where removed in biotic, and clarified documentation (<a href="https://github.com/StoXProject/RstoxData/issues/241" class="external-link">#241</a>, <a href="https://github.com/StoXProject/RstoxData/issues/240" class="external-link">#240</a>).</li>
+<li>Fixed bug when RstoxData functions relying on the global variable xsdObjects was called without RstoxData being loaded (“263”)</li>
+<li>Fixed bug with reading some logbook-variants (<a href="https://github.com/StoXProject/RstoxData/issues/237" class="external-link">#237</a>)</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.8.0-9003" id="rstoxdata-v180-9003-2022-12-12">RstoxData v1.8.0-9003 (2022-12-12)<a class="anchor" aria-label="anchor" href="#rstoxdata-v180-9003-2022-12-12"></a></h2>
 <ul><li>Added CopyBiotic, CopyStoxBiotic, CopyICESBiotic, CopyICESDatras, CopyAcoustic, CopyStoxAcoustic, CopyICESAcoustic, CopyLanding and CopyStoxLanding, used for copying one column to another (possibly existing) column.</li>
 <li>Fixed bug in Translate functions where PreserveClass = TRUE had no effect.</li>
 <li>Updated documentation of DefineTranslation and the Translate functions.</li>
 <li>Added drop-down lists for the parameters VariableName and ConditionalVariableNames, and for valueColumn, newValueColumn and conditionalValueColumns in the case that the table is read from a file.</li>
 <li>Fixed bug in StoxBiotic() from NMDBiotic &lt;= 1.4 files, where platform from the mission table was used as CatchPlatform. Changed to using the platform from the fishstation.</li>
 <li>Added support for adding variables in AddToStoxBiotic() that originate from CopyBiotic().</li>
-</ul></div>
-    <div class="section level2">
-<h2 class="page-header" data-toc-text="1.8.0-9003" id="rstoxdata-v180-9003-2022-12-05">RstoxData v1.8.0-9003 (2022-12-05)<a class="anchor" aria-label="anchor" href="#rstoxdata-v180-9003-2022-12-05"></a></h2>
-<ul><li>Fixed bug in Translate functions, where PreserveClass = FALSE did not work.</li>
+<li>Fixed bug in Translate functions, where PreserveClass = FALSE did not work.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.0-9002" id="rstoxdata-v180-9002-2022-12-02">RstoxData v1.8.0-9002 (2022-12-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v180-9002-2022-12-02"></a></h2>
