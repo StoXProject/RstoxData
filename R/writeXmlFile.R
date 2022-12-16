@@ -319,7 +319,7 @@ fWriteLandings <- function(fileName, dataTables, namespace="http://www.imr.no/fo
   #
   
   if (namespace=="http://www.imr.no/formats/landinger/v2"){
-    xsdObject <- xsdObjects$landingerv2.xsd
+    xsdObject <- RstoxData::xsdObjects$landingerv2.xsd
   }
   else{
     stop(paste("Namespace", namespace, "not supported."))
