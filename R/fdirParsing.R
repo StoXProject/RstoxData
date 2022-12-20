@@ -267,12 +267,33 @@ readErsFile <- function(file, encoding="Latin-1"){
   
   names(spec_log) <- c(names(spec_log)[1:2], "ST\u00D8RSTE_LENGDE", names(spec_log)[4:9], "FANGST\u00C5R", names(spec_log)[11:length(spec_log)])
   
-  #sel <- names(spec_log)
+  sel <- names(spec_log)
   typ <- unlist(spec_log)
   
+  
   logb <- read_psv(file, encoding, col_types=typ)
+  if (!all(sel %in% names(logb))){
+    for (missing in sel[!(sel %in% names(logb))]){
+      if (spec_log[[missing]] == "character"){
+        logb[[missing]] <- as.character(NA)        
+      }
+      else if (spec_log[[missing]] %in% c("integer", "numeric")){
+        logb[[missing]] <- as.numeric(NA)        
+      }
+      else{
+        warning(paste("Not setting type for NAs for column", sel))
+        logb[[missing]] <- NA
+      }
+    }
+  }
+  logb <- logb[,.SD, .SDcol=sel]
+  
+  
   logb$STARTTIDSPUNKT <- as.POSIXct(logb$STARTTIDSPUNKT, format="%Y-%m-%d %H:%M:%S", tz="UTC")
   logb$STOPPTIDSPUNKT <- as.POSIXct(logb$STOPPTIDSPUNKT, format="%Y-%m-%d %H:%M:%S", tz="UTC")
+  
+  logb$LOKASJON_START[logb$LOKASJON_START==""] <- as.character(NA)
+  logb$LOKASJON_STOPP[logb$LOKASJON_STOPP==""] <- as.character(NA)
   
   return(logb)
 }
@@ -288,7 +309,7 @@ readErsFile <- function(file, encoding="Latin-1"){
 #' @return \code{\link[RstoxData]{LandingData}} the converted landings
 #' @export
 convertToLandingData <- function(lssLandings){
-  xsdObject <- xsdObjects$landingerv2.xsd
+  xsdObject <- RstoxData::xsdObjects$landingerv2.xsd
   
   #name mapping between lss and landingerv2.xsd
   nameMap <- list("Dokumentnummer"="Dokumentnummer",

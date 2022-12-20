@@ -8,7 +8,8 @@ filterData(
   inputData,
   filterExpression,
   propagateDownwards = TRUE,
-  propagateUpwards = FALSE
+  propagateUpwards = FALSE,
+  useXsd = FALSE
 )
 }
 \arguments{
@@ -19,10 +20,57 @@ filterData(
 \item{propagateDownwards}{Whether the filter action will propagate in the downwards direction. Default to TRUE.}
 
 \item{propagateUpwards}{Whether the filter action will propagate in the upwards direction. Default to FALSE.}
+
+\item{useXsd}{logical determining if treeStruct should be read from xsd provided in metadata table. See details.}
 }
 \value{
 An object of filtered data in the same format as the input data.
 }
 \description{
-Run filter on any StoX related data source
+Applies filters to hierarchical data formats.
+}
+\details{
+This is a convenient wrapper around \code{\link[RstoxData]{filterTables}}, which determines hierarchy based on available metadata.
+For more explicit control of the hierarchical relations used, consider \code{\link[RstoxData]{filterTables}}.
+
+Applies filters to a set of table that are hierarchically related, and provides options for
+propagating filters up or down in the data hierarchy. Accepts either a list of data.tables or a
+list of such lists.
+
+Filters are specified as strings encoding logical expressions in standard R syntax, each associated to one of
+the tables in the input.
+
+After a filter is applied to a table, data that corresponds to the removed in other tables will be removed
+as specified by the options propagateDownwards and propagateUpwards. These are defined in \code{\link[RstoxData]{filterTables}}:
+
+The argument 'useXsd' specifies if the hierarchical relation between tables in 'inputData', should be inferred
+from \code{\link[RstoxData]{xsdObjects}} via the conventional use of a metadata table on the 'inputData'
+
+If useXsd is FALSE, each table in the hierarchy is assumed to be strictly lower in the hierarchy than any table preceding it,
+and any table called 'metadata' is ignored.
+
+Column names are assumed to be unique across all levels of the data hierarchy, except that each table is expected to
+repeated the key-columns of all its ancestors.
+}
+\examples{
+ filenames <- system.file("testresources",
+       "biotic3.1_w_ageandprey.xml", package="RstoxData")
+ inputData <- RstoxData:::ReadBiotic(filenames)
+ 
+ #filters are nested list matching the structure of inputData
+ filterExpression <- list()
+ filterExpression$`biotic3.1_w_ageandprey.xml`$agedetermination <- c(
+     'age < 10'
+ )
+ 
+ filteredData <- RstoxData::filterData(inputData, 
+             filterExpression, 
+             useXsd=TRUE)
+ nrow(filteredData$biotic3.1_w_ageandprey.xml$fishstation)
+ filteredPropUp <- RstoxData::filterData(inputData, 
+             filterExpression, 
+             propagateUpwards = TRUE, 
+             useXsd=TRUE)
+ nrow(filteredPropUp$biotic3.1_w_ageandprey.xml$fishstation)
+
 }
