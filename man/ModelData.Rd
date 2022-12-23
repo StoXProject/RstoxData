@@ -16,34 +16,25 @@
 
 \item{StoxLandingData}{\code{\link{StoxLandingData}}.}
 
+\item{MergeStoxBioticData}{\code{\link{MergeStoxBioticData}}.}
+
+\item{MergeStoxAcousticData}{\code{\link{MergeStoxAcousticData}}.}
+
 \item{ICESBioticData}{\code{\link{ICESBioticData}}.}
 
 \item{ICESAcousticData}{\code{\link{ICESAcousticData}}.}
 
 \item{ICESDatrasData}{\code{\link{ICESDatrasData}}.}
+
+\item{WriteICESBioticData}{\code{\link{WriteICESBioticData}}.}
+
+\item{WriteICESAcousticData}{\code{\link{WriteICESAcousticData}}.}
+
+\item{WriteICESDatrasData}{\code{\link{WriteICESDatrasData}}.}
 }
 \description{
 The model data of a StoX model are the data generated during the model run based on input data and user settings and resources given in the project description (project.json file). Model data are transient and only exists from a process has been run until the project is closed.
 }
-\details{
-This RstoxData package produces the following StoX data types:
-\itemize{
-\item{\code{\link{BioticData}}}
-\item{\code{\link{StoxBioticData}}}
-\item{\code{\link{MergeStoxBioticData}}}
-\item{\code{\link{AcousticData}}}
-\item{\code{\link{StoxAcousticData}}}
-\item{\code{\link{MergeStoxAcousticData}}}
-\item{\code{\link{LandingData}}}
-\item{\code{\link{StoxLandingData}}}
-\item{\code{\link{ICESAcousticData}}}
-\item{\code{\link{ICESBioticData}}}
-\item{\code{\link{ICESDatrasData}}}
-\item{\code{\link{WriteICESAcousticData}}}
-\item{\code{\link{WriteICESBioticData}}}
-\item{\code{\link{WriteICESDatrasData}}}
-}
-}
 \seealso{
-\href{https://github.com/StoXProject/RstoxBase}{RstoxBase} and \href{https://github.com/StoXProject/RstoxFDA}{RstoxFDA} for a list of all StoX data types produced by the other official StoX function packages.
+For ModelData defined by RstoxBase see \code{\link[RstoxBase]{ModelData}}, and for ModelData defined by RstoxFramework see \code{\link[RstoxFramework]{ModelData}}.
 }
