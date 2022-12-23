@@ -1,3 +1,6 @@
+# RstoxData v1.8.0-9005  (2022-12-23)
+* Cleaned up data.R.
+
 # RstoxData v1.8.0-9004  (2022-12-16)
 * Fixed bug with filterpropagation on branched data formats. E.g. agereadings not being removed when corresponding individuals where removed in biotic, and clarified documentation (#241, #240).
 * Fixed bug when RstoxData functions relying on the global variable xsdObjects was called without RstoxData being loaded ("263")
