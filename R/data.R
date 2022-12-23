@@ -170,36 +170,22 @@ NULL
 #' 
 #' The model data of a StoX model are the data generated during the model run based on input data and user settings and resources given in the project description (project.json file). Model data are transient and only exists from a process has been run until the project is closed.
 #' 
-#' @details
-#' This RstoxData package produces the following StoX data types:
-#' \itemize{
-#' \item{\code{\link{BioticData}}}
-#' \item{\code{\link{StoxBioticData}}}
-#' \item{\code{\link{MergeStoxBioticData}}}
-#' \item{\code{\link{AcousticData}}}
-#' \item{\code{\link{StoxAcousticData}}}
-#' \item{\code{\link{MergeStoxAcousticData}}}
-#' \item{\code{\link{LandingData}}}
-#' \item{\code{\link{StoxLandingData}}}
-#' \item{\code{\link{ICESAcousticData}}}
-#' \item{\code{\link{ICESBioticData}}}
-#' \item{\code{\link{ICESDatrasData}}}
-#' \item{\code{\link{WriteICESAcousticData}}}
-#' \item{\code{\link{WriteICESBioticData}}}
-#' \item{\code{\link{WriteICESDatrasData}}}
-#' }
-#' 
 #' @param BioticData \code{\link{BioticData}}.
 #' @param AcousticData \code{\link{AcousticData}}.
 #' @param LandingData \code{\link{LandingData}}.
 #' @param StoxBioticData \code{\link{StoxBioticData}}.
 #' @param StoxAcousticData \code{\link{StoxAcousticData}}.
 #' @param StoxLandingData \code{\link{StoxLandingData}}.
+#' @param MergeStoxBioticData \code{\link{MergeStoxBioticData}}.
+#' @param MergeStoxAcousticData \code{\link{MergeStoxAcousticData}}.
 #' @param ICESBioticData \code{\link{ICESBioticData}}.
 #' @param ICESAcousticData \code{\link{ICESAcousticData}}.
 #' @param ICESDatrasData \code{\link{ICESDatrasData}}.
+#' @param WriteICESBioticData \code{\link{WriteICESBioticData}}.
+#' @param WriteICESAcousticData \code{\link{WriteICESAcousticData}}.
+#' @param WriteICESDatrasData \code{\link{WriteICESDatrasData}}.
 #'
-#' @seealso \href{https://github.com/StoXProject/RstoxBase}{RstoxBase} and \href{https://github.com/StoXProject/RstoxFDA}{RstoxFDA} for a list of all StoX data types produced by the other official StoX function packages.
+#' @seealso For ModelData defined by RstoxBase see \code{\link[RstoxBase]{ModelData}}, and for ModelData defined by RstoxFramework see \code{\link[RstoxFramework]{ModelData}}.
 #' 
 #' @name ModelData
 #' 
@@ -216,7 +202,7 @@ NULL
 #' 
 #' @name ProcessData
 #' 
-#' @seealso \code{\link{ModelData}} for model data types and \code{\link{DataTypes}} for all data types produced by \code{\link{RstoxData}}.
+#' @seealso For ProcessData defined by RstoxBase see \code{\link[RstoxBase]{ProcessData}}.
 #' 
 NULL
 
