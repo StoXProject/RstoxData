@@ -1140,3 +1140,24 @@ getNAByType <- function(type = c("numeric", "double", "integer", "character")) {
 }
 
 
+#' do.call which ignores non-relevant parameters
+#'
+#' @inheritParams base::do.call
+#' @param keep.unnamed Logical: If TRUE keep all unnamed arguments.
+#'
+#' @export
+#' 
+do.call_robust <- function(what, args, quote = FALSE, envir = parent.frame(), keep.unnamed = FALSE) {
+	# Get the formals of the function:
+	f <-  formals(what)
+	# Keep only the relevant args:
+	if(is.list(args)) {
+		keep <- which(names(args) %in% names(f))
+		if(keep.unnamed) {
+			keep  <- sort(c(keep, which(names(args) == "")))
+		}
+		args <- args[keep]
+	}
+	# Run the function:
+	do.call(what, args, quote = quote, envir = envir)
+}

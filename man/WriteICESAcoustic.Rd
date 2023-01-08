@@ -2,7 +2,7 @@
 % Please edit documentation in R/StoxExport.R
 \name{WriteICESAcoustic}
 \alias{WriteICESAcoustic}
-\title{Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}}
+\title{Write ICESAcoustic to CSV fille}
 \usage{
 WriteICESAcoustic(ICESAcousticData)
 }

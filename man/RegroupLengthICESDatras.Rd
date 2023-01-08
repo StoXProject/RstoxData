@@ -2,7 +2,7 @@
 % Please edit documentation in R/StoxExport.R
 \name{RegroupLengthICESDatras}
 \alias{RegroupLengthICESDatras}
-\title{Regroup LngtCode ICESDatrasData}
+\title{Regroup LngtCode and LngtClass ICESDatrasData}
 \usage{
 RegroupLengthICESDatras(
   ICESDatrasData,
@@ -14,15 +14,15 @@ RegroupLengthICESDatras(
 \arguments{
 \item{ICESDatrasData}{A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.}
 
-\item{GroupingVariables}{A vector of variable names giving the variables for which to reduce resolution to the lowest resolution.}
+\item{GroupingVariables}{A vector of variable names giving the variables by which to reduce the resolution of LngtCode and LngtClass. Defaulted to "HaulNo" and "SpecCode".}
 
 \item{AggregateHLNoAtLngt}{Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.}
 
-\item{AggregationVariables}{A vector of variables of the HL table for which to aggregate individuals. Usually this should include exactly the following variables: "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".}
+\item{AggregationVariables}{A vector of variables of the HL table for which to aggregate individuals. Defaulted to "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".}
 }
 \value{
 An \code{\link{ICESDatrasData}} object.
 }
 \description{
-ICES Datras requires equal LngtCode per haul and species.
+ICES Datras requires equal LngtCode and LngtClass per haul and species.
 }
