@@ -1,3 +1,9 @@
+# RstoxData v1.8.0-9006  (2023-01-09)
+* Added support for NMDEchosounder files in ICESAcoustic().
+* Added defaults for GroupingVariables and AggregationVariables in RegroupLengthICESDatras().
+* Reorderd TranslationTable to after VariableName, Conditional and ConditionalVariableNames in Translate functions.
+* Moved do.call_robust() from RstoxFramework to RstoxData.
+
 # RstoxData v1.8.0-9005  (2022-12-23)
 * Cleaned up data.R.
 

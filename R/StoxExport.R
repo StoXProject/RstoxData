@@ -31,19 +31,21 @@ ICESAcoustic <- function(AcousticData){
 
 AcousticDataToICESAcousticOne <- function(AcousticDataOne){
 	
-	if(AcousticDataOne$metadata$useXsd=='icesAcoustic'){
-		
-		ICESAcousticDataOne <- AcousticData_ICESToICESAcousticOne(AcousticDataOne)
+	if(AcousticDataOne$metadata$useXsd=='icesAcoustic') {
+		ICESAcousticDataOne <- AcousticData_icesAcoustic_ToICESAcousticOne(AcousticDataOne)
 	}
-	else{
+	else if(AcousticDataOne$metadata$useXsd=='nmdechosounderv1'){
+		ICESAcousticDataOne <- AcousticData_nmdechosounderv1_ToICESAcousticOne(AcousticDataOne)
+	}
+	else {
 		stop('StoX: only ices acoustic format is allowed')
 	}
 	
 	return(ICESAcousticDataOne)
 }
 
-
-AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
+# From LUF25 to ICESAcoustic:
+AcousticData_icesAcoustic_ToICESAcousticOne <- function(AcousticData_ICESOne){
 	
 	# Make a copy as we are modifying by reference:
 	ICESAcousticDataOne <- data.table::copy(AcousticData_ICESOne)
@@ -143,7 +145,204 @@ AcousticData_ICESToICESAcousticOne <- function(AcousticData_ICESOne){
 
 
 
+# From LUF20 to ICESAcoustic:
+AcousticData_nmdechosounderv1_ToICESAcousticOne <-  function(AcousticData_NMDOne){
+	
+	# Make a copy as we are modifying by reference:
+	NMDAcousticDataOne <- data.table::copy(AcousticData_NMDOne)
+	
+	
+	#Check if multiple channel type
+	if(length(unique(NMDAcousticDataOne$ch_type$type))>1) {
+		warning('Multiple channel type! you need to run filter acoustic to select the needed channel type')
+	}
+	
+	
+	#grab frequency
+	freq <- NMDAcousticDataOne$frequency
+	freq <- unique(freq[,.(Frequency = freq,InstrumentID=as.character(transceiver))])
+	
+	
+	#Prepare the Instrument table
+	#Here we set the transducer ID to the transceiver number
+	#The rest needs to be added using translation
+	# NA_character_
+	# NA_integer_
+	# NA_real_
+	Instrument <- freq[,.(InstrumentFrequency = Frequency,
+						  InstrumentTransducerLocation = NA_character_,
+						  InstrumentTransducerManufacturer = NA_character_,
+						  InstrumentTransducerModel = NA_character_, 
+						  InstrumentTransducerSerial=NA_character_, 
+						  InstrumentTransducerBeamType=NA_character_, 
+						  InstrumentTransducerDepth=NA_real_,
+						  InstrumentTransducerOrientation=NA_character_,
+						  InstrumentTransducerPSI=NA_real_, 
+						  InstrumentTransducerBeamAngleMajor=NA_real_,
+						  InstrumentTransducerBeamAngleMinor=NA_real_,
+						  InstrumentTransceiverManufacturer=NA_character_,
+						  InstrumentTransceiverModel=NA_character_,
+						  InstrumentTransceiverSerial=NA_character_,  
+						  InstrumentTransceiverFirmware=NA_character_,
+						  InstrumentComments = NA_character_,     
+						  InstrumentID=InstrumentID
+	)]
+	
+	
+	#Prepare the calibration table
+	#All values needs to be filled inn using translation
+	Calibration <- data.table::data.table(CalibrationDate=NA_character_,
+										  CalibrationAcquisitionMethod=NA_character_,
+										  CalibrationProcessingMethod=NA_character_,
+										  CalibrationAccuracyEstimate=NA_real_, 
+										  CalibrationReport=NA_character_,
+										  CalibrationComments=NA_character_,
+										  CalibrationID=NA_character_
+	)
+	
+	
+	#Prepare the DataAcquisition table
+	#All values needs to be filled in using translation
+	DataAcquisition<-data.table::data.table(DataAcquisitionSoftwareName=NA_character_, 
+											DataAcquisitionSoftwareVersion=NA_character_, 
+											DataAcquisitionStoredDataFormat=NA_character_, 
+											DataAcquisitionPingDutyCycle=NA_character_, 
+											DataAcquisitionComments=NA_character_, 
+											DataAcquisitionID=NA_character_
+	)
+	
+	#Prepare the DataProcessing table
+	#Perhaps the Frequency can be picked up from the LUF20 file
+	#The rest of the fields needs to be filled using translation
+	DataProcessing <- data.table::data.table(
+		DataProcessingSoftwareName=NA_character_, 
+		DataProcessingSoftwareVersion=NA_character_,
+		DataProcessingTriwaveCorrection="NO", 
+		DataProcessingBandwidth=NA_real_, 
+		DataProcessingFrequency=NA_real_, 
+		DataProcessingTransceiverPower=NA_real_,   
+		DataProcessingTransmitPulseLength=NA_real_, 
+		DataProcessingOnAxisGain=NA_real_, 
+		DataProcessingOnAxisGainUnit=NA_character_,
+		DataProcessingSaCorrection=NA_real_, 
+		DataProcessingAbsorption=NA_real_,
+		DataProcessingAbsorptionDescription=NA_character_, 
+		DataProcessingSoundSpeed=NA_real_,
+		DataProcessingSoundSpeedDescription=NA_character_, 
+		DataProcessingTransducerPSI=NA_real_,
+		DataProcessingComments=NA_character_, 
+		DataProcessingID=NA_character_,
+		DataProcessingChannelID=NA_character_
+	)
+	
+	
+	#Prepare the cruise table,  
+	#Some of the fields needs to be filled using translation
+	Cruise <- NMDAcousticDataOne$echosounder_dataset
+	Cruise <-Cruise[,.(CruiseCountry=as.character(nation),
+					   CruisePlatform = as.character(platform),
+					   CruiseStartDate = NA_character_,
+					   CruiseEndDate = NA_character_,
+					   CruiseOrganisation = NA_character_,
+					   CruiseSurvey=NA_character_,
+					   CruiseLocalID = as.character(cruise)
+	)]
+	
+	
+	#Prepare data for the Data table
+	#dd<-suppressMessages(plyr::join(plyr::join(NMDAcousticDataOne$frequency,
+	#										   NMDAcousticDataOne$distance),
+	#								NMDAcousticDataOne$sa))
+	
+	dd <- mergeDataTables(
+		NMDAcousticDataOne, 
+		tableNames = c("distance", "frequency", "sa"), 
+		output.only.last = TRUE, 
+		all = TRUE
+	)
+	
+	
+	
+	#Summarise sa value of same acocat in same channel
+	#AJ can make this function more pretty 
+	# Indeed:
+	# Get the keys of the sa table:
+	keysSa <- xsdObjects$nmdechosounderv1.xsd$tableHeaders$sa[seq_len(xsdObjects$nmdechosounderv1.xsd$prefixLens["sa"])]
+	dd[, sa := sum(sa), by = keysSa]
+	dd <- unique(dd, by = keysSa)
+	
+	
+	
+	
+	#Writing Data table
+	#see inline comments!
+	Data <- dd[,.(
+		LogDistance = log_start,
+		LogTime = start_time,
+		LogLatitude = lat_start,
+		LogLongitude = lon_start,
+		LogOrigin = 'start',
+		LogLatitude2 = lat_stop, 
+		LogLongitude2 = lon_stop, 
+		LogOrigin2 = 'end',
+		LogValidity = 'V',
+		LogBottomDepth = max_bot_depth,                       #Have used max instead of min bottom depth
+		SampleChannelDepthLower = pel_ch_thickness*(ch),      #Need to check if this is correct    
+		SampleChannelDepthUpper = pel_ch_thickness*(ch-1),     #Need to check
+		
+		SamplePingAxisInterval = integrator_dist, 
+		SamplePingAxisIntervalType = 'distance',             #How can we see the unit, is it always distance (nmi)? 
+		SamplePingAxisIntervalUnit = 'nmi',
+		
+		SampleSvThreshold = threshold,
+		
+		SamplePingAxisIntervalOrigin = 'start',              #Is this start? 
+		
+		DataSaCategory = as.character(acocat),                             #This may be a challange in translation. we may need to merge to get UNK
+		DataType = 'C',                                      #Assumes sA values in LUF25
+		DataUnit = "m2nmi-2",                              #Still an assumption
+		DataValue = sa, 
+		
+		CruiseLocalID = Cruise$CruiseLocalID, 
+		InstrumentID = as.character(transceiver), 
+		CalibrationID=NA_character_,                                  
+		DataAcquisitionID = NA_character_, 
+		DataProcessingID = NA_character_
+		
+	)]
+	
+	
+	#
+	#library(dplyr)
+	#agg_tbl <- Data %>% group_by(LogDistance,LogTime,LogLatitude,LogLongitude,
+	#							 LogOrigin,LogLatitude2,LogLongitude2,LogOrigin2,LogValidity,LogBottomDepth,
+	#							 SampleChannelDepthLower,SampleChannelDepthUpper,SamplePingAxisInterval,
+	#							 SamplePingAxisIntervalType,SamplePingAxisIntervalUnit,SampleSvThreshold,
+	#							 SamplePingAxisIntervalOrigin,DataSaCategory,DataType,DataUnit,
+	#							 CruiseLocalID,InstrumentID,CalibrationID,DataAcquisitionID,DataProcessingID  ) %>% 
+	#	summarise(DataValue=sum(DataValue),
+	#			  .groups = 'drop')
+	
+	#Make the data table
+	#Data <- data.table::as.data.table(dd)
+	
+	
+	#Prepare the output 
+	IcesAcoustic <- list(Instrument = Instrument, 
+						 Calibration = Calibration,
+						 DataAcquisition = DataAcquisition,
+						 DataProcessing = DataProcessing,
+						 Cruise = Cruise, 
+						 Data = Data)
+	return(IcesAcoustic)
+	
+	
+}
 
+
+
+#' Write ICESAcoustic to CSV fille
+#'
 #' Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
 #'
 #' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
@@ -659,6 +858,8 @@ changeClassOfNonNA <- function(name, classes, data) {
 }
 
 
+#' Write ICESBiotic to CSV fille
+#'
 #' Writes \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
 #'
 #' @param ICESBioticData A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.
@@ -1516,14 +1717,14 @@ roundDownTo <- function(x, to, buffer = 1e-10) {
 
 
 
-#' Regroup LngtCode ICESDatrasData
+#' Regroup LngtCode and LngtClass ICESDatrasData
 #'
-#' ICES Datras requires equal LngtCode per haul and species. 
+#' ICES Datras requires equal LngtCode and LngtClass per haul and species. 
 #'
 #' @param ICESDatrasData A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.
-#' @param GroupingVariables A vector of variable names giving the variables for which to reduce resolution to the lowest resolution.
+#' @param GroupingVariables A vector of variable names giving the variables by which to reduce the resolution of LngtCode and LngtClass. Defaulted to "HaulNo" and "SpecCode". 
 #' @param AggregateHLNoAtLngt Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.
-#' @param AggregationVariables A vector of variables of the HL table for which to aggregate individuals. Usually this should include exactly the following variables: "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".
+#' @param AggregationVariables A vector of variables of the HL table for which to aggregate individuals. Defaulted to "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".
 #'
 #' @return An \code{\link{ICESDatrasData}} object.
 #'
@@ -1541,7 +1742,7 @@ RegroupLengthICESDatras <- function(
 	ICESDatrasData$HL[, c("LngtCode", "LngtClass") := regroupLengthICESDatrasOne(.SD), by = GroupingVariables]
 	
 	
-	# Sum up indivviduals:
+	# Sum up individuals:
 	if(AggregateHLNoAtLngt) {
 		#sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
 		sumBy <- AggregationVariables
@@ -1593,7 +1794,8 @@ regroupLengthICESDatrasOne <- function(data) {
 
 
 
-
+#' Write ICESDatras to CSV fille
+#'
 #' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 #'
 #' @inheritParams ModelData
