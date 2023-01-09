@@ -185,8 +185,6 @@ NULL
 #' @param WriteICESAcousticData \code{\link{WriteICESAcousticData}}.
 #' @param WriteICESDatrasData \code{\link{WriteICESDatrasData}}.
 #'
-#' @seealso For ModelData defined by RstoxBase see \code{\link[RstoxBase]{ModelData}}, and for ModelData defined by RstoxFramework see \code{\link[RstoxFramework]{ModelData}}.
-#' 
 #' @name ModelData
 #' 
 NULL
