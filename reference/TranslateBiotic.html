@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0-9006</span>
       </span>
     </div>
 
@@ -56,10 +56,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">TranslateBiotic</span><span class="op">(</span></span>
 <span>  <span class="va">BioticData</span>,</span>
 <span>  TranslationDefinition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FunctionParameter"</span>, <span class="st">"FunctionInput"</span><span class="op">)</span>,</span>
-<span>  TranslationTable <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  VariableName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  Conditional <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ConditionalVariableNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  TranslationTable <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">Translation</span>,</span>
 <span>  PreserveClass <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -75,10 +75,6 @@
 <dd><p>The method to use for defining the Translation, one of <code>FunctionParameter</code> to define the Translation on the fly in this function using the <code>TranslationTable</code>, or <code>FunctionInput</code> to import <code><a href="Translation.html">Translation</a></code> process data from a previously run process using the function <code><a href="DefineTranslation.html">DefineTranslation</a></code>. When reading the translation from a file <code>FunctionInput</code> must be used.</p></dd>
 
 
-<dt>TranslationTable</dt>
-<dd><p>A table holding the following columns: The first column holds the values to translate FROM, the second column holds the values to translate TO, and the remaining zero or more columns holds the values for the conditional variables specified in <code>ConditionalVariableNames</code>. I.e., if <code>VariableName</code> = "IndividualAge" and <code>ConditionalVariableNames</code> = "IndividualSex", and the <code>TranslationTable</code> has values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4. Use NA to translate missing values (shown as "-" in Preview in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions of functions of the variable specified by the column name. See details.</p></dd>
-
-
 <dt>VariableName</dt>
 <dd><p>The name of the variable to translate.</p></dd>
 
@@ -89,6 +85,10 @@
 
 <dt>ConditionalVariableNames</dt>
 <dd><p>The names of the variables to condition the translation on. Must be given if <code>Conditional == TRUE</code>.</p></dd>
+
+
+<dt>TranslationTable</dt>
+<dd><p>A table holding the following columns: The first column holds the values to translate FROM, the second column holds the values to translate TO, and the remaining zero or more columns holds the values for the conditional variables specified in <code>ConditionalVariableNames</code>. I.e., if <code>VariableName</code> = "IndividualAge" and <code>ConditionalVariableNames</code> = "IndividualSex", and the <code>TranslationTable</code> has values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4. Use NA to translate missing values (shown as "-" in Preview in the StoX GUI, and usually as empty cell in excel). Values in the <code>TranslationTable</code> can be given either as single values or as expressions of functions of the variable specified by the column name. See details of <code><a href="DefineTranslation.html">DefineTranslation</a></code>.</p></dd>
 
 
 <dt>Translation</dt>
