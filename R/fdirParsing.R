@@ -497,10 +497,10 @@ convertToLandingData <- function(lssLandings){
       for (i in 1:length(xsdObject$tableTypes[[n]])){
         t <- xsdObject$tableTypes[[n]][i]
         if (t == "xs:string"){
-          if (class(ConvertedData[[n]][[i]])!="character"){
+          if (!"character" %in% class(ConvertedData[[n]][[i]])){
             stop("Handle type for ", names(ConvertedData[[n]])[i], " (", class(ConvertedData[[n]][[i]]), ")")
           }
-          stopifnot(class(ConvertedData[[n]][[i]])=="character")
+          stopifnot("character" %in% class(ConvertedData[[n]][[i]]))
         }
         else if (t == "xs:decimal"){
           ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])

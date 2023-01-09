@@ -384,6 +384,10 @@ stoxFunctionAttributes <- list(
 			AggregationVariables = list(
 				AggregateHLNoAtLngt = TRUE
 			)
+		), 
+		functionParameterDefaults = list(
+			GroupingVariables = c("HaulNo", "SpecCode"), 
+			AggregationVariables = c("HaulNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
 		)
 	),
 	
