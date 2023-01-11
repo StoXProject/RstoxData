@@ -500,7 +500,8 @@ convertToLandingData <- function(lssLandings){
           if (!"character" %in% class(ConvertedData[[n]][[i]])){
             stop("Handle type for ", names(ConvertedData[[n]])[i], " (", class(ConvertedData[[n]][[i]]), ")")
           }
-          stopifnot("character" %in% class(ConvertedData[[n]][[i]]))
+          stopifnot(
+          	"character" %in% class(ConvertedData[[n]][[i]]))
         }
         else if (t == "xs:decimal"){
           ConvertedData[[n]][[i]] <- as.numeric(ConvertedData[[n]][[i]])
