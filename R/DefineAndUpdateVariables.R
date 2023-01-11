@@ -386,9 +386,6 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 	}
 	else {
 		# Convert the class to the class of the existing value in the table:
-		#browser()
-		
-		
 		if(PreserveClass) {
 			
 			# Convert the class of the translationList to that of the variable to transate:

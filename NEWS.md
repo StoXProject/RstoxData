@@ -1,3 +1,6 @@
+# RstoxData v1.8.0-9007  (2023-01-11)
+* Disabled removing namespace prefix in readXmlFile(), which used xslt::xml_xslt().
+
 # RstoxData v1.8.0-9006  (2023-01-09)
 * Added support for NMDEchosounder files in ICESAcoustic().
 * Added defaults for GroupingVariables and AggregationVariables in RegroupLengthICESDatras().

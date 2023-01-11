@@ -25,7 +25,6 @@
 #' @importFrom data.table as.data.table transpose data.table := .SD
 #' @importFrom utils data
 #' @importFrom xml2 read_xml
-#' @importFrom xslt xml_xslt
 #'
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
@@ -80,17 +79,17 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	  }
 	}
 	
-	# See if we have a namespace prefix set
-	if(!is.null(usePrefix)) {
-		warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
-		stripXslt <- system.file("extdata/stripns.xsl", package = "RstoxData")
-		stripped <- xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
-		tempXml <- tempfile(fileext=".xml")
-		fileConn <- file(tempXml)
-		writeLines(as.character(stripped), fileConn)
-		close(fileConn)
-		xmlFilePath <- tempXml
-	}
+	## See if we have a namespace prefix set
+	#if(!is.null(usePrefix)) {
+	#	warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
+	#	stripXslt <- system.file("extdata/stripns.xsl", package = "RstoxData")
+	#	stripped <- xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
+	#	tempXml <- tempfile(fileext=".xml")
+	#	fileConn <- file(tempXml)
+	#	writeLines(as.character(stripped), fileConn)
+	#	close(fileConn)
+	#	xmlFilePath <- tempXml
+	#}
 
 	# Apply preprocess for ICES XSDs. This must happen on the xsdObjects, and not e.g. on a copy, as the zip reading fails in that case:
 	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
