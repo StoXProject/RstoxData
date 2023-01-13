@@ -15,7 +15,7 @@ ICESBiotic(
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
 
-\item{SurveyName}{A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).}
+\item{SurveyName}{A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE.}
 
 \item{Country}{The ISO_3166 code of the country running the cruise. See \url{http://vocab.ices.dk/?ref=337}.}
 
