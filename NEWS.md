@@ -1,3 +1,6 @@
+# RstoxData v1.8.0-9008  (2023-01-13)
+* Changed error to warning when FilterUpwards from the top table.
+
 # RstoxData v1.8.0-9007  (2023-01-11)
 * Disabled removing namespace prefix in readXmlFile(), which used xslt::xml_xslt().
 

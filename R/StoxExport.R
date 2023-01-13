@@ -13,7 +13,7 @@ ICESAcoustic <- function(AcousticData){
 	# Run for each file:
 	ICESAcousticData <- lapply(
 		AcousticData, 
-		AcousticDataToICESAcousticOne
+		AcousticDataToICESAcousticCSVOne
 	)
 	
 	# Rbind accross files:
@@ -29,34 +29,34 @@ ICESAcoustic <- function(AcousticData){
 
 
 
-AcousticDataToICESAcousticOne <- function(AcousticDataOne){
+AcousticDataToICESAcousticCSVOne <- function(AcousticDataOne){
 	
 	if(AcousticDataOne$metadata$useXsd=='icesAcoustic') {
-		ICESAcousticDataOne <- AcousticData_icesAcoustic_ToICESAcousticOne(AcousticDataOne)
+		ICESAcousticDataOne <- prepareICESAcousticCSV_icesAcoustic(AcousticDataOne)
 	}
 	else if(AcousticDataOne$metadata$useXsd=='nmdechosounderv1'){
-		ICESAcousticDataOne <- AcousticData_nmdechosounderv1_ToICESAcousticOne(AcousticDataOne)
+		ICESAcousticDataOne <- prepareICESAcousticCSV_nmdechosounderv1(AcousticDataOne)
 	}
 	else {
-		stop('StoX: only ices acoustic format is allowed')
+		stop('StoX: Only ICESAcoustic version 1 and NMDEchosounder version 1 can be converted to the ICESAcoustic CSV format.')
 	}
+	
+	
+	# Run checks and create the ICESAcousticCSV format:
+	ICESAcousticDataOne <- checkAndCreateICESAcousticCSV(ICESAcousticDataOne)
 	
 	return(ICESAcousticDataOne)
 }
 
 # From LUF25 to ICESAcoustic:
-AcousticData_icesAcoustic_ToICESAcousticOne <- function(AcousticData_ICESOne){
+prepareICESAcousticCSV_icesAcoustic <- function(AcousticDataOne){
 	
 	# Make a copy as we are modifying by reference:
-	ICESAcousticDataOne <- data.table::copy(AcousticData_ICESOne)
+	ICESAcousticDataOne <- data.table::copy(AcousticDataOne)
 	
 	# Remove echo type, as this is not included in the CSV:
 	ICESAcousticDataOne$Data$EchoType<-NULL
 	
-	
-	independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
-	hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
-	tablesToKeep <- c(independentTables, hierarchicalTables)
 	
 	# Add the Survey to the Cruise table, with a hack to get the last line (until it has been fixed so that only the code and not the value is present):
 	ICESAcousticDataOne$Cruise$Survey <- utils::tail(ICESAcousticDataOne$Survey$Code, 1)
@@ -65,13 +65,13 @@ AcousticData_icesAcoustic_ToICESAcousticOne <- function(AcousticData_ICESOne){
 	if(length(ICESAcousticDataOne$vocabulary)) {
 		vocabulary <- findVariablesMathcinigVocabulary(
 			vocabulary = ICESAcousticDataOne$vocabulary, 
-			data = ICESAcousticDataOne[tablesToKeep]
+			data = ICESAcousticDataOne
 		)
 		# Uniqueify since some columns (keys) are present in several tables:
 		vocabulary <- unique(vocabulary)
 		
 		translateVariables(
-			data = ICESAcousticDataOne[tablesToKeep], 
+			data = ICESAcousticDataOne, 
 			TranslationDefinition = "FunctionInput",
 			Translation = vocabulary, 
 			translate.keys = TRUE, 
@@ -79,34 +79,208 @@ AcousticData_icesAcoustic_ToICESAcousticOne <- function(AcousticData_ICESOne){
 		)
 	}
 	
+	return(ICESAcousticDataOne)
+}
+
+
+
+
+# From LUF20 to ICESAcoustic:
+prepareICESAcousticCSV_nmdechosounderv1 <-  function(AcousticDataOne){
+	
+	#Check if multiple channel type
+	if(length(unique(AcousticDataOne$ch_type$type)) > 1) {
+		warning('Multiple channel type! you need to run filter acoustic to select the needed channel type')
+	}
 	
 	
-	#Check metadata towards ices definitions
-	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(ICESAcousticDataOne$DataAcquisition$SoftwareName))
-	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(ICESAcousticDataOne$Survey$Code))
-	compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml')
-	compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml')
-	compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml')
-	compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml')
-	compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml')
-	compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml')
-	compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml')
-	compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml')
-	compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml')
-	compareICES("Cruise", "Country", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml')
-	compareICES("Cruise", "Platform", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml')
-	compareICES("Cruise", "Organisation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml')
-	compareICES("Cruise", "Survey", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml')
-	compareICES("Log", "Origin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml')
-	compareICES("Log", "Validity", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml')
-	compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml')
-	compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml')
-	compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml')
-	compareICES("Data", "SaCategory", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml')
-	compareICES("Data", "Type", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml')
-	compareICES("Data", "Unit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml')
+	#grab frequency
+	freq <- AcousticDataOne$frequency
+	freq <- unique(freq[,.(Frequency = freq, ID = as.character(transceiver))])
+	
+	
+	#Prepare the Instrument table
+	#Here we set the transducer ID to the transceiver number
+	#The rest needs to be added using translation
+	# NA_character_
+	# NA_integer_
+	# NA_real_
+	Instrument <- freq[, .(
+		Frequency = Frequency,
+		TransducerLocation = NA_character_,
+		TransducerManufacturer = NA_character_,
+		TransducerModel = NA_character_, 
+		TransducerSerial = NA_character_, 
+		TransducerBeamType = NA_character_, 
+		TransducerDepth = NA_real_,
+		TransducerOrientation = NA_character_,
+		TransducerPSI = NA_real_, 
+		TransducerBeamAngleMajor = NA_real_,
+		TransducerBeamAngleMinor = NA_real_,
+		TransceiverManufacturer = NA_character_,
+		TransceiverModel = NA_character_,
+		TransceiverSerial = NA_character_,  
+		TransceiverFirmware = NA_character_,
+		Comments = NA_character_,     
+		ID = ID
+	)]
+	
+	
+	#Prepare the calibration table
+	#All values needs to be filled inn using translation
+	Calibration <- data.table::data.table(
+		Date = NA_character_,
+		AcquisitionMethod = NA_character_,
+		ProcessingMethod = NA_character_,
+		AccuracyEstimate = NA_real_, 
+		Report = NA_character_,
+		Comments = NA_character_,
+		ID = NA_character_
+	)
+	
+	
+	#Prepare the DataAcquisition table
+	#All values needs to be filled in using translation
+	DataAcquisition <- data.table::data.table(
+		SoftwareName = NA_character_, 
+		SoftwareVersion = NA_character_, 
+		StoredDataFormat = NA_character_, 
+		PingDutyCycle = NA_character_, 
+		Comments = NA_character_, 
+		ID = NA_character_
+	)
+	
+	#Prepare the DataProcessing table
+	#Perhaps the Frequency can be picked up from the LUF20 file
+	#The rest of the fields needs to be filled using translation
+	DataProcessing <- data.table::data.table(
+		 SoftwareName = NA_character_, 
+		 SoftwareVersion = NA_character_,
+		 TriwaveCorrection = "NA",
+		 Bandwidth = NA_real_, 
+		 Frequency = NA_real_, 
+		 TransceiverPower = NA_real_,   
+		 TransmitPulseLength = NA_real_, 
+		 OnAxisGain = NA_real_, 
+		 OnAxisGainUnit = NA_character_,
+		 SaCorrection = NA_real_, 
+		 Absorption = NA_real_,
+		 AbsorptionDescription = NA_character_, 
+		 SoundSpeed = NA_real_,
+		 SoundSpeedDescription = NA_character_, 
+		 TransducerPSI = NA_real_,
+		 Comments = NA_character_, 
+		 ID = NA_character_,
+		 ChannelID = NA_character_
+	)
+	
+	
+	#Prepare the cruise table,  
+	#Some of the fields needs to be filled using translation
+	Cruise <- AcousticDataOne$echosounder_dataset[, .(
+		Country = as.character(nation),
+		Platform = as.character(platform),
+		StartDate = NA_character_,
+		EndDate = NA_character_,
+		Organisation = NA_character_,
+		Survey = NA_character_,
+		LocalID = as.character(cruise)
+	)]
+	
+	
+	#Prepare data for the Data table
+	distanceFrequencySa <- mergeDataTables(
+		AcousticDataOne, 
+		tableNames = c("distance", "frequency", "sa"), 
+		output.only.last = TRUE, 
+		all = TRUE
+	)
+	
+	# Create the Log, Sample and Data separately, then check definitions, and then merge:
+	Log <- unique(distanceFrequencySa[, .(
+		LocalID = Cruise$LocalID, 
+		Distance = log_start,
+		Time = start_time,
+		Latitude = lat_start,
+		Longitude = lon_start,
+		Origin = 'start',
+		Latitude2 = lat_stop, 
+		Longitude2 = lon_stop, 
+		Origin2 = 'end',
+		Validity = 'V',
+		BottomDepth = max_bot_depth                       #Have used max instead of min bottom depth
+	)])
+	
+	Sample <- unique(distanceFrequencySa[, .(
+		LocalID = Cruise$LocalID, 
+		Distance = log_start,
+		Instrument = as.character(transceiver), 
+		ChannelDepthUpper = pel_ch_thickness * (ch - 1),     #Need to check
+		ChannelDepthLower = pel_ch_thickness * (ch),      #Need to check if this is correct    
+		PingAxisInterval = integrator_dist, 
+		PingAxisIntervalType = 'distance',             #How can we see the unit, is it always distance (nmi)? 
+		PingAxisIntervalUnit = 'nmi',
+		SvThreshold = threshold,
+		Calibration = NA_character_,                                  
+		DataAcquisition = NA_character_, 
+		DataProcessing = NA_character_, 
+		PingAxisIntervalOrigin = 'start'              #Is this start? 
+	)])
+	
+	Data <- distanceFrequencySa[, .(
+		LocalID = Cruise$LocalID, 
+		Distance = log_start,
+		Instrument = as.character(transceiver), 
+		ChannelDepthUpper = pel_ch_thickness * (ch - 1),     #Need to check
+		SaCategory = as.character(acocat),                             #This may be a challenge in translation. we may need to merge to get UNK
+		Type = 'C',                                      #Assumes sA values in LUF25
+		Unit = "m2nmi-2",                              #Still an assumption
+		Value = sa
+	)]
+	
+	
+	
+	#Summarise sa value of same acocat in same channel
+	#AJ can make this function more pretty 
+	# Indeed:
+	# Get the keys of the Data table:
+	keysData <- c(
+		getRstoxDataDefinitions("ICESAcousticKeys")$Data, 
+		"Instrument" # This is introduced in the Sample table, and acts as a key in the Data table (before merging):
+	)
+	Data[, Value := sum(Value), by = keysData]
+	Data <- unique(Data, by = keysData)
+	
+	
+	#Prepare the output 
+	ICESAcousticDataOne <- list(
+		Instrument = Instrument, 
+		Calibration = Calibration,
+		DataAcquisition = DataAcquisition,
+		DataProcessing = DataProcessing,
+		Cruise = Cruise, 
+		Log = Log,
+		Sample = Sample, 
+		Data = Data
+		)
+	
+	return(ICESAcousticDataOne)
+}
+
+
+checkAndCreateICESAcousticCSV <- function(ICESAcousticDataOne) {
+	
+	# Check metadata against ices definitions
+	checkICESAcousticDefinitions (ICESAcousticDataOne)
+	
+	# Set classes of the variables, especially taking care of NAs. The class of the variables is used later to format the output from WriteICESAcoustic, where NA double type is stored as empty sting to support these beingg empty fields in the written file:
+	setClassICESAcoustic(ICESAcousticDataOne)
+	
 	
 	#### Rename columns to start with the table name:
+	independentTables <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing")
+	hierarchicalTables <- c("Cruise", "Log", "Sample", "Data")
+	
 	# Rename the independent tables:
 	independentTablesColumnNames <- lapply(ICESAcousticDataOne[independentTables], names)
 	independentTablesNewColumnNames <- mapply(paste0, independentTables, independentTablesColumnNames)
@@ -143,201 +317,34 @@ AcousticData_icesAcoustic_ToICESAcousticOne <- function(AcousticData_ICESOne){
 }
 
 
-
-
-# From LUF20 to ICESAcoustic:
-AcousticData_nmdechosounderv1_ToICESAcousticOne <-  function(AcousticData_NMDOne){
-	
-	# Make a copy as we are modifying by reference:
-	NMDAcousticDataOne <- data.table::copy(AcousticData_NMDOne)
-	
-	
-	#Check if multiple channel type
-	if(length(unique(NMDAcousticDataOne$ch_type$type))>1) {
-		warning('Multiple channel type! you need to run filter acoustic to select the needed channel type')
-	}
-	
-	
-	#grab frequency
-	freq <- NMDAcousticDataOne$frequency
-	freq <- unique(freq[,.(Frequency = freq,InstrumentID=as.character(transceiver))])
-	
-	
-	#Prepare the Instrument table
-	#Here we set the transducer ID to the transceiver number
-	#The rest needs to be added using translation
-	# NA_character_
-	# NA_integer_
-	# NA_real_
-	Instrument <- freq[,.(InstrumentFrequency = Frequency,
-						  InstrumentTransducerLocation = NA_character_,
-						  InstrumentTransducerManufacturer = NA_character_,
-						  InstrumentTransducerModel = NA_character_, 
-						  InstrumentTransducerSerial=NA_character_, 
-						  InstrumentTransducerBeamType=NA_character_, 
-						  InstrumentTransducerDepth=NA_real_,
-						  InstrumentTransducerOrientation=NA_character_,
-						  InstrumentTransducerPSI=NA_real_, 
-						  InstrumentTransducerBeamAngleMajor=NA_real_,
-						  InstrumentTransducerBeamAngleMinor=NA_real_,
-						  InstrumentTransceiverManufacturer=NA_character_,
-						  InstrumentTransceiverModel=NA_character_,
-						  InstrumentTransceiverSerial=NA_character_,  
-						  InstrumentTransceiverFirmware=NA_character_,
-						  InstrumentComments = NA_character_,     
-						  InstrumentID=InstrumentID
-	)]
-	
-	
-	#Prepare the calibration table
-	#All values needs to be filled inn using translation
-	Calibration <- data.table::data.table(CalibrationDate=NA_character_,
-										  CalibrationAcquisitionMethod=NA_character_,
-										  CalibrationProcessingMethod=NA_character_,
-										  CalibrationAccuracyEstimate=NA_real_, 
-										  CalibrationReport=NA_character_,
-										  CalibrationComments=NA_character_,
-										  CalibrationID=NA_character_
-	)
-	
-	
-	#Prepare the DataAcquisition table
-	#All values needs to be filled in using translation
-	DataAcquisition<-data.table::data.table(DataAcquisitionSoftwareName=NA_character_, 
-											DataAcquisitionSoftwareVersion=NA_character_, 
-											DataAcquisitionStoredDataFormat=NA_character_, 
-											DataAcquisitionPingDutyCycle=NA_character_, 
-											DataAcquisitionComments=NA_character_, 
-											DataAcquisitionID=NA_character_
-	)
-	
-	#Prepare the DataProcessing table
-	#Perhaps the Frequency can be picked up from the LUF20 file
-	#The rest of the fields needs to be filled using translation
-	DataProcessing <- data.table::data.table(
-		DataProcessingSoftwareName=NA_character_, 
-		DataProcessingSoftwareVersion=NA_character_,
-		DataProcessingTriwaveCorrection="NO", 
-		DataProcessingBandwidth=NA_real_, 
-		DataProcessingFrequency=NA_real_, 
-		DataProcessingTransceiverPower=NA_real_,   
-		DataProcessingTransmitPulseLength=NA_real_, 
-		DataProcessingOnAxisGain=NA_real_, 
-		DataProcessingOnAxisGainUnit=NA_character_,
-		DataProcessingSaCorrection=NA_real_, 
-		DataProcessingAbsorption=NA_real_,
-		DataProcessingAbsorptionDescription=NA_character_, 
-		DataProcessingSoundSpeed=NA_real_,
-		DataProcessingSoundSpeedDescription=NA_character_, 
-		DataProcessingTransducerPSI=NA_real_,
-		DataProcessingComments=NA_character_, 
-		DataProcessingID=NA_character_,
-		DataProcessingChannelID=NA_character_
-	)
-	
-	
-	#Prepare the cruise table,  
-	#Some of the fields needs to be filled using translation
-	Cruise <- NMDAcousticDataOne$echosounder_dataset
-	Cruise <-Cruise[,.(CruiseCountry=as.character(nation),
-					   CruisePlatform = as.character(platform),
-					   CruiseStartDate = NA_character_,
-					   CruiseEndDate = NA_character_,
-					   CruiseOrganisation = NA_character_,
-					   CruiseSurvey=NA_character_,
-					   CruiseLocalID = as.character(cruise)
-	)]
-	
-	
-	#Prepare data for the Data table
-	#dd<-suppressMessages(plyr::join(plyr::join(NMDAcousticDataOne$frequency,
-	#										   NMDAcousticDataOne$distance),
-	#								NMDAcousticDataOne$sa))
-	
-	dd <- mergeDataTables(
-		NMDAcousticDataOne, 
-		tableNames = c("distance", "frequency", "sa"), 
-		output.only.last = TRUE, 
-		all = TRUE
-	)
-	
-	
-	
-	#Summarise sa value of same acocat in same channel
-	#AJ can make this function more pretty 
-	# Indeed:
-	# Get the keys of the sa table:
-	keysSa <- xsdObjects$nmdechosounderv1.xsd$tableHeaders$sa[seq_len(xsdObjects$nmdechosounderv1.xsd$prefixLens["sa"])]
-	dd[, sa := sum(sa), by = keysSa]
-	dd <- unique(dd, by = keysSa)
-	
-	
-	
-	
-	#Writing Data table
-	#see inline comments!
-	Data <- dd[,.(
-		LogDistance = log_start,
-		LogTime = start_time,
-		LogLatitude = lat_start,
-		LogLongitude = lon_start,
-		LogOrigin = 'start',
-		LogLatitude2 = lat_stop, 
-		LogLongitude2 = lon_stop, 
-		LogOrigin2 = 'end',
-		LogValidity = 'V',
-		LogBottomDepth = max_bot_depth,                       #Have used max instead of min bottom depth
-		SampleChannelDepthLower = pel_ch_thickness*(ch),      #Need to check if this is correct    
-		SampleChannelDepthUpper = pel_ch_thickness*(ch-1),     #Need to check
-		
-		SamplePingAxisInterval = integrator_dist, 
-		SamplePingAxisIntervalType = 'distance',             #How can we see the unit, is it always distance (nmi)? 
-		SamplePingAxisIntervalUnit = 'nmi',
-		
-		SampleSvThreshold = threshold,
-		
-		SamplePingAxisIntervalOrigin = 'start',              #Is this start? 
-		
-		DataSaCategory = as.character(acocat),                             #This may be a challange in translation. we may need to merge to get UNK
-		DataType = 'C',                                      #Assumes sA values in LUF25
-		DataUnit = "m2nmi-2",                              #Still an assumption
-		DataValue = sa, 
-		
-		CruiseLocalID = Cruise$CruiseLocalID, 
-		InstrumentID = as.character(transceiver), 
-		CalibrationID=NA_character_,                                  
-		DataAcquisitionID = NA_character_, 
-		DataProcessingID = NA_character_
-		
-	)]
-	
-	
-	#
-	#library(dplyr)
-	#agg_tbl <- Data %>% group_by(LogDistance,LogTime,LogLatitude,LogLongitude,
-	#							 LogOrigin,LogLatitude2,LogLongitude2,LogOrigin2,LogValidity,LogBottomDepth,
-	#							 SampleChannelDepthLower,SampleChannelDepthUpper,SamplePingAxisInterval,
-	#							 SamplePingAxisIntervalType,SamplePingAxisIntervalUnit,SampleSvThreshold,
-	#							 SamplePingAxisIntervalOrigin,DataSaCategory,DataType,DataUnit,
-	#							 CruiseLocalID,InstrumentID,CalibrationID,DataAcquisitionID,DataProcessingID  ) %>% 
-	#	summarise(DataValue=sum(DataValue),
-	#			  .groups = 'drop')
-	
-	#Make the data table
-	#Data <- data.table::as.data.table(dd)
-	
-	
-	#Prepare the output 
-	IcesAcoustic <- list(Instrument = Instrument, 
-						 Calibration = Calibration,
-						 DataAcquisition = DataAcquisition,
-						 DataProcessing = DataProcessing,
-						 Cruise = Cruise, 
-						 Data = Data)
-	return(IcesAcoustic)
-	
-	
+checkICESAcousticDefinitions <- function(ICESAcousticDataOne) {
+	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(ICESAcousticDataOne$DataAcquisition$SoftwareName))
+	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(ICESAcousticDataOne$Survey$Code))
+	compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml')
+	compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml')
+	compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml')
+	compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml')
+	compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml')
+	compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml')
+	compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml')
+	compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml')
+	compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml')
+	compareICES("Cruise", "Country", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml')
+	compareICES("Cruise", "Platform", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml')
+	compareICES("Cruise", "Organisation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml')
+	compareICES("Cruise", "Survey", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml')
+	compareICES("Log", "Origin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml')
+	compareICES("Log", "Validity", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml')
+	compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml')
+	compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml')
+	compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml')
+	compareICES("Data", "SaCategory", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml')
+	compareICES("Data", "Type", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml')
+	compareICES("Data", "Unit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml')
 }
+
+
+
 
 
 
@@ -367,8 +374,9 @@ WriteICESAcoustic <- function(ICESAcousticData){
 WriteICESAcousticOne <- function(ICESAcousticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
+	#ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne, keepNA = "DataProcessingTriwaveCorrection")
 	ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne)
-	ICESAcousticCSVDataOne <- expandWidth(ICESAcousticCSVDataOne)
+	ICESAcousticCSVDataOne <- expandWidth(ICESAcousticCSVDataOne, na = "")
 	
 	# Stack all matrices:
 	ICESAcousticCSVDataOne <- do.call(rbind, ICESAcousticCSVDataOne)
@@ -380,12 +388,12 @@ WriteICESAcousticOne <- function(ICESAcousticDataOne){
 
 
 # Function to convert a list of ICESAcoustic data to a list of tables with Header and Reccord, fitting the ICES CSV formats:
-convertToHeaderRecordMatrix <- function(ICESData) {
+convertToHeaderRecordMatrix <- function(ICESData, keepNA = character()) {
 	# Run through the table names and convert to Header, Record, and stringify:
-	lapply(names(ICESData), createHeaderRecordMatrix, ICESData = ICESData)
+	lapply(names(ICESData), createHeaderRecordMatrix, ICESData = ICESData, keepNA = keepNA)
 }
 
-createHeaderRecordMatrix <- function(ICESDataTableName, ICESData) {
+createHeaderRecordMatrix <- function(ICESDataTableName, ICESData, keepNA = character()) {
 	
 	thisTable <- ICESData[[ICESDataTableName]]
 	# # Move IDs last:
@@ -399,9 +407,28 @@ createHeaderRecordMatrix <- function(ICESDataTableName, ICESData) {
 		names(thisTable)
 	)
 	
-	# Format the table to a character table before converting to matrix class (used by RstoxFramework to write as csv). Here,  format(thisTable) cannot be used as it converts NAs to "NA" (at least per defaul):
-	cols <- names(thisTable)
-	thisTable[, (cols) := lapply(.SD, as.character), .SDcols = cols]
+	# # Format the table to a character table before converting to matrix class (used by RstoxFramework to write as csv). Here,  format(thisTable) cannot be used as it converts NAs to "NA" (at least per defaul):
+	as.character_setNA <- function(x, na = "") {
+		# ICES (https://acoustic.ices.dk/submit) does not accept NA for missing value, but accepts empty field:
+		atNA <- is.na(x)
+		x <- as.character(x)
+		if(any(atNA)) {
+			x[atNA] <- na
+		}
+		
+		return(x)
+	}
+	
+	
+	setNaASEmptyCharacter <- setdiff(names(thisTable), keepNA)
+	
+	# Set to character with NAs as empty character:
+	thisTable[, (setNaASEmptyCharacter) := lapply(.SD, as.character_setNA), .SDcols = setNaASEmptyCharacter]
+	# Set to character:
+	if(length(keepNA)) {
+		thisTable[, (keepNA) := lapply(.SD, as.character), .SDcols = keepNA]
+	}
+	
 	thisTable <- as.matrix(thisTable)
 	record <- cbind(
 		ICESDataTableName, 
@@ -475,7 +502,7 @@ expandWidth <- function(x, na = NA) {
 #' \code{BioticData} generated from NMDBiotic version > 3 XML files.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
-#' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE (the default).
+#' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE.
 #' @param Country The ISO_3166 code of the country running the cruise. See \url{http://vocab.ices.dk/?ref=337}.
 #' @param Organisation An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).
 #' @param AllowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
@@ -539,9 +566,13 @@ BioticDataToICESBioticOne <- function(
 	}
 	
 	
-	# Copy the data to prepare for using data.tables by reference functions (set* and :=)
+	# Order the tables:
 	hierarchicalTables <- c("Cruise", "Haul", "Catch", "Biology")
 	ICESBioticDataOne <- ICESBioticDataOne[hierarchicalTables]
+	
+	# Set classes of the variables, especially taking care of NAs. The class of the variables is used later to format the output from WriteICESBiotic, where NA double type is stored as empty sting to support these being empty fields in the written file:
+	setClassICESBiotic(ICESAcousticDataOne)
+	
 	
 	# Create a table of the original and new column names, but remove keys:
 	renameToTableNameFirst(
@@ -552,6 +583,8 @@ BioticDataToICESBioticOne <- function(
 	
 	# Move ID columns last:
 	ICESBioticDataOne <- lapply(ICESBioticDataOne, moveIDsLast)
+	
+	
 	
 	return(ICESBioticDataOne)
 }
@@ -795,35 +828,45 @@ BioticData_NMDToICESBioticOne <- function(
 		Biology = Biology
 	)
 	
-	setClassICESBiotic(ICESBioticCSV, tables = c("Cruise", "Haul", "Catch", "Biology"))
-	
 	return(ICESBioticCSV)
 }
 
 
 
 
-setClassICESBiotic <- function(data, tables = c("Cruise", "Haul", "Catch", "Biology")) {
+setClassICESBiotic <- function(data, tables = names(data), xsd = RstoxData::xsdObjects$icesBiotic.xsd) {
+	setClassICES(data, xsd, tables = names(data))
+}
+
+setClassICESAcoustic <- function(data, tables = names(data), xsd = RstoxData::xsdObjects$icesAcoustic.xsd) {
+	setClassICES(data, xsd, tables = names(data))
+}
+
+
+
+setClassICES <- function(data, xsd, tables = names(data)) {
 	# Get the classes per table:
 	classes <- mapply(
 		structure, 
 		lapply(
-		  RstoxData::xsdObjects$icesBiotic.xsd$tableTypes[tables], 
+			xsd$tableTypes[tables], 
 			translateSimple, 
 			old = c(
 				"xsd:float", 
 				"xsd:int", 
 				"xsd:string", 
-				"xs:string"
+				"xs:string", 
+				"xsd:ID"
 			), 
 			new = c(
 				"numeric", 
 				"integer", 
 				"character", 
+				"character", 
 				"character"
 			)
 		), 
-		names = RstoxData::xsdObjects$icesBiotic.xsd$tableHeaders[tables], 
+		names = xsd$tableHeaders[tables], 
 		SIMPLIFY = FALSE
 	)
 	classes <- lapply(classes, as.list)
@@ -884,7 +927,7 @@ WriteICESBioticOne <- function(ICESBioticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	ICESBioticCSVDataOne <- convertToHeaderRecordMatrix(ICESBioticDataOne)
-	ICESBioticCSVDataOne <- expandWidth(ICESBioticCSVDataOne)
+	ICESBioticCSVDataOne <- expandWidth(ICESBioticCSVDataOne, na = "")
 	
 	# Stack all matrices:
 	ICESBioticCSVDataOne <- do.call(rbind, ICESBioticCSVDataOne)

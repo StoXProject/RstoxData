@@ -677,7 +677,7 @@ findVariablesMathcinigVocabulary <- function(vocabulary, data) {
 findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 	# Get the names of the columns which has values in vocabularyOne$id:
 	#VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(x %in% vocabularyOne$id))])))))
-	VariableName <- unlist(lapply(data, function(table) names(which(unlist(table[, lapply(.SD, function(x) any(unique(x) %in% vocabularyOne$id))])))))
+	VariableName <- unlist(lapply(data, function(table) if(NROW(table)) names(which(unlist(table[, lapply(.SD, function(x) any(unique(x) %in% vocabularyOne$id))]))) else NULL))
 	# Add the VariableName to the vocabularyOne
 	if(!length(VariableName)) {
 		# Add NA if no variable was recognized (this avoids warnings when cbind with character(0)

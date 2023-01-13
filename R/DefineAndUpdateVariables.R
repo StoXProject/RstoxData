@@ -232,7 +232,7 @@ oldToNewTranslationOne <- function(x) {
 
 
 
-# Function to convert variables given a conversion table:
+# Function to convert variables given a conversion table (by reference):
 translateVariables <- function(
 	data, 
 	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
