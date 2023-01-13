@@ -102,7 +102,8 @@ getKeysUp <- function(data, child, treeStruct){
       return(names(data[[child]]) %in% names(data[[parent]]))
     }
   }
-  stop(paste("Could not find parent of ", child))
+  warning(paste("The table ", child, " has no parent table. FilterUpwards has no effect."))
+  return(NULL)
 }
 
 
