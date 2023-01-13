@@ -376,7 +376,7 @@ WriteICESAcousticOne <- function(ICESAcousticDataOne){
 	# Convert all tables to string with header and reccord, and rbind:
 	#ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne, keepNA = "DataProcessingTriwaveCorrection")
 	ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne)
-	ICESAcousticCSVDataOne <- expandWidth(ICESAcousticCSVDataOne, na = "")
+	ICESAcousticCSVDataOne <- expandWidth(ICESAcousticCSVDataOne, na = NA)
 	
 	# Stack all matrices:
 	ICESAcousticCSVDataOne <- do.call(rbind, ICESAcousticCSVDataOne)
@@ -388,12 +388,12 @@ WriteICESAcousticOne <- function(ICESAcousticDataOne){
 
 
 # Function to convert a list of ICESAcoustic data to a list of tables with Header and Reccord, fitting the ICES CSV formats:
-convertToHeaderRecordMatrix <- function(ICESData, keepNA = character()) {
+convertToHeaderRecordMatrix <- function(ICESData) {
 	# Run through the table names and convert to Header, Record, and stringify:
-	lapply(names(ICESData), createHeaderRecordMatrix, ICESData = ICESData, keepNA = keepNA)
+	lapply(names(ICESData), createHeaderRecordMatrix, ICESData = ICESData)
 }
 
-createHeaderRecordMatrix <- function(ICESDataTableName, ICESData, keepNA = character()) {
+createHeaderRecordMatrix <- function(ICESDataTableName, ICESData) {
 	
 	thisTable <- ICESData[[ICESDataTableName]]
 	# # Move IDs last:
@@ -407,35 +407,14 @@ createHeaderRecordMatrix <- function(ICESDataTableName, ICESData, keepNA = chara
 		names(thisTable)
 	)
 	
-	# # Format the table to a character table before converting to matrix class (used by RstoxFramework to write as csv). Here,  format(thisTable) cannot be used as it converts NAs to "NA" (at least per defaul):
-	as.character_setNA <- function(x, na = "") {
-		# ICES (https://acoustic.ices.dk/submit) does not accept NA for missing value, but accepts empty field:
-		atNA <- is.na(x)
-		x <- as.character(x)
-		if(any(atNA)) {
-			x[atNA] <- na
-		}
-		
-		return(x)
-	}
-	
-	
-	setNaASEmptyCharacter <- setdiff(names(thisTable), keepNA)
 	
 	# Set to character with NAs as empty character:
-	thisTable[, (setNaASEmptyCharacter) := lapply(.SD, as.character_setNA), .SDcols = setNaASEmptyCharacter]
-	# Set to character:
-	if(length(keepNA)) {
-		thisTable[, (keepNA) := lapply(.SD, as.character), .SDcols = keepNA]
-	}
-	
+	cols <- names(thisTable)
+	thisTable[, (cols) := lapply(.SD, as.character), .SDcols = cols]
 	thisTable <- as.matrix(thisTable)
 	record <- cbind(
 		ICESDataTableName, 
 		"Record", 
-		# Convert all columns to string:
-		#as.matrix(thisTable, trim = TRUE)
-		#format(thisTable, justify = "none", trim = TRUE)
 		thisTable
 	)
 	
@@ -571,7 +550,7 @@ BioticDataToICESBioticOne <- function(
 	ICESBioticDataOne <- ICESBioticDataOne[hierarchicalTables]
 	
 	# Set classes of the variables, especially taking care of NAs. The class of the variables is used later to format the output from WriteICESBiotic, where NA double type is stored as empty sting to support these being empty fields in the written file:
-	setClassICESBiotic(ICESAcousticDataOne)
+	setClassICESBiotic(ICESBioticDataOne)
 	
 	
 	# Create a table of the original and new column names, but remove keys:
@@ -927,7 +906,7 @@ WriteICESBioticOne <- function(ICESBioticDataOne){
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	ICESBioticCSVDataOne <- convertToHeaderRecordMatrix(ICESBioticDataOne)
-	ICESBioticCSVDataOne <- expandWidth(ICESBioticCSVDataOne, na = "")
+	ICESBioticCSVDataOne <- expandWidth(ICESBioticCSVDataOne, na = NA)
 	
 	# Stack all matrices:
 	ICESBioticCSVDataOne <- do.call(rbind, ICESBioticCSVDataOne)
@@ -1375,7 +1354,7 @@ ICESDatrasOne <- function(
 		groupingVariables <- c("StNo", "SpecCode", "Sex", "CatIdentifier")
 		allNA <- sapply(groupingVariables, function(x) all(is.na(hlAphiaSerialnumber[[x]])))
 		groupingVariables <- groupingVariables[!allNA]
-		aggregateFormula <- as.formula(paste0("CatCatchWgt ~ ", paste(groupingVariables, collapse = " + ")))
+		aggregateFormula <- stats::as.formula(paste0("CatCatchWgt ~ ", paste(groupingVariables, collapse = " + ")))
 		
 		found <- stats::aggregate(
 			aggregateFormula, 

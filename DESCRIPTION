@@ -1,5 +1,5 @@
 Package: RstoxData
-Version: 1.8.0-9008
+Version: 1.8.0
 Date: 2023-01-13
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
@@ -26,7 +26,7 @@ Description: Set of tools to read and manipulate various data formats for fisher
   catered towards scientific trawl survey sampling ('biotic') data, acoustic
   trawl data, and commercial fishing catch ('landings') data. Among the
   supported data formats are the data products from the Norwegian Institute
-  Marine Research ('IMR') and the International Council for the Exploration of
+  Marine Research (IMR) and the International Council for the Exploration of
   the Sea (ICES).
 URL: https://github.com/StoXProject/RstoxData
 BugReports: https://github.com/StoXProject/RstoxData/issues
