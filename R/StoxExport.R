@@ -648,7 +648,9 @@ BioticData_NMDToICESBioticOne <- function(
 		StopLongitude = longitudeend,
 		# Changed 2022-05-12 to pasting area and location:
 		#StatisticalRectangle = getICESrect(latitudestart, longitudestart),
-		StatisticalRectangle = getICESrect(area, location),
+		# Changed 2023-01-14 to the new function getStatisticalRectangle() since getICESrect() has errors (includes "I" and A4, ..., A9) :
+		#StatisticalRectangle = getICESrect(area, location),
+		StatisticalRectangle = getStatisticalRectangle(latitudestart, longitudestart),
 		MinTrawlDepth = ifelse(is.na(fishingdepthmin), fishingdepthmax, fishingdepthmin),
 		MaxTrawlDepth = fishingdepthmax,
 		BottomDepth = ifelse(bottomdepthstop > fishingdepthmax, bottomdepthstop, NA_real_),
@@ -1060,7 +1062,9 @@ ICESDatrasOne <- function(
 		"HaulLong" = round(longitudeend, digits = 4),
 		# Changed 2022-05-12 to pasting area and location:
 		#"StatRec" = getICESrect(latitudestart, longitudestart),
-		"StatRec" = getICESrect(area, location),
+		#"StatRec" = getICESrect(area, location),
+		# Changed 2023-01-14 to the new function getStatisticalRectangle() since getICESrect() has errors (includes "I" and A4, ..., A9) :
+		"StatRec" = getStatisticalRectangle(latitudestart, longitudestart),
 		"Depth" = round(bottomdepthstart),
 		# Changed to NA on 2022-05-12, as StoX cannot decide which of gearcondition and samplequality should be used:
 		#"HaulVal" = getHaulVal(gearcondition, samplequality),
