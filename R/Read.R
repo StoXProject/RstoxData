@@ -229,8 +229,37 @@ getICESrect_old <- function(lat, lng){
 	paste(num1,lett,num2,sep='')
 }
 
-getICESrect <- function(area, location){
-	paste0(area, location)
+getStatisticalRectangle <- function(lat, lon){
+	# The ICES statistical rectangles (https://www.ices.dk/data/maps/Pages/ICES-statistical-rectangles.aspx) are defined on a grid with latitude in 0.5 degree steps from 36 to 85.5 degrees north, and with longitude from 44 degrees west to 68.5 degrees east:
+	latGrid <- seq(36, 85.5, by = 0.5)
+	lonGrid <- c(seq(-44, 68, by = 1), 68.5)
+	# Locate the positions in the grid:
+	latInd <- findInterval(lat, latGrid, rightmost.closed = TRUE)
+	lonInd <- findInterval(lon, lonGrid, rightmost.closed = TRUE)
+	# Store the indices of the positions that fall outside of the grid, and set these to NA in the output:
+	atNA <- latInd %in% c(0L, length(latGrid)) | lonInd %in% c(0L, length(lonGrid))
+	
+	# Set the indices to NA to secure that the latCode and lonCode are not subset by using index 0:
+	latInd[atNA] <- NA
+	lonInd[atNA] <- NA
+	
+	# The names of the statistical rectangles is a concatenation of a latitude code and a longitude code. The latitude code is 01, 02, ..., 99:
+	latCode <- formatC(latInd, width = 2, format = "d", flag = "0")
+	# The longitude code is more complicated. It is A0, A1, A2, A3, B0, B1, ..., B9, C0, C1, ..., C9, ..., H0, H1, ..., H9, (no "I"), J0, J1, ..., J9, ..., M0, M1, ..., M8, where A0 is [-44, -43), ..., A3 is [-41, -40], and M8 is [68, 68.5]
+	lonNames  <- c(
+		paste0("A", 0:3), #  No  4, ..., 9
+		c(t(outer(c("B", "C", "D", "E", "F", "G", "H"), 0:9, paste0))), 
+		# No "I"!
+		c(t(outer(c("J", "K", "L"), 0:9, paste0))), 
+		paste0("M", 0:8)
+	)
+	lonCode <- lonNames[lonInd]
+	
+	# Get the final codes and insert NAs where approrpiate:
+	latLonCode <- paste0(latCode, lonCode)
+	latLonCode[atNA] <- NA
+	
+	return(latLonCode)
 }
 
 
