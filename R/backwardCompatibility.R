@@ -177,6 +177,13 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "SplitTableAllocation", 
 			parameterValue = "Default"
+		), 
+		list(
+			changeVersion = "1.9.0-9001", 
+			functionName = "RegroupLengthICESDatras", 
+			modelName = "baseline", 
+			parameterName = "RegroupMethod", 
+			parameterValue = "HighestResolution"
 		)
 	), 
 	
@@ -311,6 +318,13 @@ backwardCompatibility <- list(
 			modelName = "baseline", 
 			parameterName = "ConditionalValueColumn",
 			newParameterName = "ConditionalValueColumns"
+		), 
+		list(
+			changeVersion = "1.9.0-9001", 
+			functionName = "RegroupLengthICESDatras", 
+			modelName = "baseline", 
+			parameterName = "AggregationVariables",
+			newParameterName = "AggregationVariablesHL"
 		)
 	),  
 	

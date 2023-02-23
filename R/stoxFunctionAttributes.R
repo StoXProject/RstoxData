@@ -378,16 +378,36 @@ stoxFunctionAttributes <- list(
 		functionOutputDataType = "ICESDatrasData", 
 		functionParameterFormat = list(
 			GroupingVariables = "groupingVariables_RegroupLengthICESDatras", 
-			AggregationVariables = "groupingVariables_RegroupLengthICESDatras"
+			AggregationVariablesHL = "groupingVariables_RegroupLengthICESDatras", 
+			AggregationVariablesCA = "groupingVariables_RegroupLengthICESDatras", 
+			ResolutionTableVariables = "groupingVariables_RegroupLengthICESDatras", 
+			ResolutionTable = "resolutionTable_RegroupLengthICESDatras"
 		),
 		functionArgumentHierarchy = list(
-			AggregationVariables = list(
+			AggregationVariablesHL = list(
 				AggregateHLNoAtLngt = TRUE
+			), 
+			AggregationVariablesCA = list(
+				AggregateCANoAtLngt = TRUE
+			),
+			ResolutionTableVariables = list(
+				RegroupMethod = "ResolutionTable"
+			),
+			ResolutionTable = list(
+				RegroupMethod = "ResolutionTable"
+			),
+			GroupingVariables = list(
+				RegroupMethod = "HighestResolution"
 			)
 		), 
 		functionParameterDefaults = list(
 			GroupingVariables = c("HaulNo", "SpecCode"), 
-			AggregationVariables = c("HaulNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
+			# This need verification
+			AggregationVariablesHL = c("HaulNo", "SpecCode", "CatIdentifier", "Sex", "LngtClass"), 
+			# From https://datras.ices.dk/Data_products/ReportingFormat.aspx, clicking on CANoAtLngt:
+			# "Amount of fish at the given category (per haul, species, length class, sex, maturity, age)."
+			# Here a haul is represented not by the HaulNo, which is a sequential numbering of the hauls
+			AggregationVariablesCA = c("HaulNo", "SpecCode", "LngtClass", "Sex", "Maturity", "AgeRings")
 		)
 	),
 	
@@ -1105,6 +1125,24 @@ processPropertyFormats <- list(
 			sort(names(ICESDatrasData$HL))
 		}, 
 		variableTypes = "character"
+	), 
+	
+	
+	resolutionTable_RegroupLengthICESDatras = list(
+		class = "table", 
+		title = "Table of requested length resolution (column ResolutionCode) for combinations of the ResolutionTableVariables", 
+		columnNames = function(ResolutionTableVariables) {
+			c(ResolutionTableVariables, "ResolutionCode")
+		}, 
+		variableTypes = function(ResolutionTableVariables) {
+			rep("character", 1 + length(ResolutionTableVariables))
+		}, 
+		possibleValues = function(ICESDatrasData, ResolutionTableVariables) {
+			c(
+				lapply(ResolutionTableVariables, function(x) sort(unique(ICESDatrasData[[x]]))), 
+				list(getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic)
+			)
+		}
 	)
 )
 

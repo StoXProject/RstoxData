@@ -1049,6 +1049,7 @@ match_arg_informative <- function (arg, choices, several.ok = FALSE, arg_name = 
 	if (!several.ok && length(i) > 1)
 		stop("There is more than one match for ", arg_name_string, " in \"
 			 match_arg_informative\"")
+	
 	choices[i]
 }
 
