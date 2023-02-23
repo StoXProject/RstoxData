@@ -70,7 +70,7 @@ Output &Output::operator<<(const char *str)
 Output &Output::operator<<(int value)
 {
 	char tmp[50];
-	sprintf(tmp, "%d", value);
+	// sprintf(tmp, "%d", value);
 	writeString(tmp);
 	return *this;
 }
@@ -78,7 +78,7 @@ Output &Output::operator<<(int value)
 Output &Output::operator<<(unsigned int value)
 {
 	char tmp[50];
-	sprintf(tmp, "%d", value);
+	// sprintf(tmp, "%d", value);
 	writeString(tmp);
 	return *this;
 }
@@ -86,7 +86,7 @@ Output &Output::operator<<(unsigned int value)
 Output &Output::operator<<(double value)
 {
 	char tmp[50];
-	sprintf(tmp, "%g", value);
+	// sprintf(tmp, "%g", value);
 	writeString(tmp);
 	return *this;
 }
