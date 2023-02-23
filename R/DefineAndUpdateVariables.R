@@ -387,7 +387,6 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 	else {
 		# Convert the class to the class of the existing value in the table:
 		if(PreserveClass) {
-			
 			# Convert the class of the translationList to that of the variable to transate:
 			translationListOneConverted <- convertTranslationListClass(
 				translationList = translationListOne, 
@@ -412,16 +411,18 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 			}
 		}
 		
-		# Otherwise change the class of the existing column. This is new in RstoxData 1.8.0-9003, as it was discovered that changing the class of the existing column did not work:
-		else {
-			setColumnClasses(table, structure(list(class(translationListOne$NewValue)), names = variableToTranslate))
-		}
+		
 		
 		# Replace by the new value:
 		if(variableToTranslate %in% names(table)) {
 			varsToMatch <- setdiff(names(translationListOne), "NewValue")
 			mathces <- lapply(varsToMatch, mathcVariable, list = translationListOne, table = table)
 			mathces <- apply(do.call(cbind, mathces), 1, all)
+			
+			# Change the type after matching and before translating to avoid type conversion warninigs:
+			if(!PreserveClass) {
+				setColumnClasses(table, structure(list(class(translationListOne$NewValue)), names = variableToTranslate))
+			}
 			
 			# Replace:
 			replacement <- translationListOne$NewValue

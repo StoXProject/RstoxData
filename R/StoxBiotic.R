@@ -216,7 +216,7 @@ firstPhase <- function(
 	    	!is.na(data$Catch$LengthCode)
 	    )
 	    
-	    # Generate the individuals:
+	    # Generate the individuals with average weights:
 	    generatedBiology <- lapply(
 	    	atGenerateIndividuals, 
 	    	specialMerge, 
@@ -269,7 +269,7 @@ firstPhase <- function(
 		data$Catch <- unique(data$Catch, by = byVars)
 	  } 
     else {
-	    warning("StoX: Invalid data input format ", datatype, ". Only NMD Biotic ver 1.4 / ver 3 and ices Biotic formats that are supported for now.")
+	    warning("StoX: Invalid data input format ", datatype, ". Only NMD Biotic ver 1.1, 1.4 and >= 3, and ices Biotic formats that are supported for now.")
 	    return(NULL)
     }
     
@@ -301,13 +301,13 @@ firstPhase <- function(
     if("fishstation" %in% names(data) && any(duplicated(data$fishstation, by = CruiseStationKeys))) {
     	numStations <- NROW(unique(data$fishstation, by = CruiseStationKeys))
     	
-    	dup <- duplicated(data$fishstation, by = CruiseStationKeys) | duplicated(data$fishstation, by = CruiseStationKeys, fromLast = TRUE)
-    	stationsWithDuplicatedSerialnumber <- unique(subset(data$fishstation, dup, select = CruiseStationKeys))
-    	stationsWithDuplicatedSerialnumber <- sort(stationsWithDuplicatedSerialnumber[, do.call(paste, c(.SD, list(sep = "/")))])
+    	duplicatedCruiseStationKeys <- duplicated(data$fishstation, by = CruiseStationKeys) | duplicated(data$fishstation, by = CruiseStationKeys, fromLast = TRUE)
+    	stationsWithMoreThanOneSerialnumber <- unique(subset(data$fishstation, duplicatedCruiseStationKeys, select = CruiseStationKeys))
+    	stationsWithMoreThanOneSerialnumber <- sort(stationsWithMoreThanOneSerialnumber[, do.call(paste, c(.SD, list(sep = "/")))])
     	
-    	numDup <- length(stationsWithDuplicatedSerialnumber)
+    	numDup <- length(stationsWithMoreThanOneSerialnumber)
     	
-    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). Duplicated serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithDuplicatedSerialnumber))
+    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
     }
     
     # 3. One to one mapping and keys
@@ -470,7 +470,7 @@ StoxBiotic_firstPhase <- function(
 #' @importFrom data.table indices
 secondPhase <- function(data, datatype, stoxBioticObject) {
 	
-	# Getting conversion function for datatype
+	# Getting conversion function for datatype, used in the loop using convertTable below (applying the conersions in "stox-biotic-final-phase.csv"):
 	convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
     convertLen <- stoxBioticObject$convertLen[[datatype]]
     convertWt <- stoxBioticObject$convertWt[[datatype]]

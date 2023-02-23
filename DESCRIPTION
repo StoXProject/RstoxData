@@ -1,6 +1,6 @@
 Package: RstoxData
-Version: 1.8.0
-Date: 2023-01-14
+Version: 1.9.0-9001
+Date: 2023-02-23
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
   person(given = "Edvin", 
@@ -43,4 +43,4 @@ Suggests:
     tinytest (>= 1.2.0)
 LinkingTo: 
     Rcpp
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

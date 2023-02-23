@@ -128,9 +128,6 @@ initiateRstoxData <- function(){
 		)
 	)
 	
-	
-	
-	
 	lengthCode_unit_table <- data.table::data.table(
 		shortnameNMDBiotic = c("1 mm", "5 mm", "1 cm"), 
 		lengthCodeICESBiotic = c("mm", "halfcm", "cm"), 
@@ -139,21 +136,6 @@ initiateRstoxData <- function(){
 		numericResolution = c(1, 5, 1)
 	)
 	lengthCode_unit_table[, rank := seq_len(.N)]
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-	
-	
-	
 	
 	
 	#### Assign to RstoxDataEnv and return the definitions: ####

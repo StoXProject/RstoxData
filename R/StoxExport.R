@@ -1046,7 +1046,9 @@ ICESDatrasOne <- function(
 		"GearEx" = NA_character_,
 		"DoorType" = trawldoortype, # Changed from "P" on 2022-01-27
 		"StNo" = serialnumber,
-		"HaulNo" = station,
+		# This seems like a bug. The HaulNo should be a "Sequential numbering of hauls during cruise.", so for Norwegian data we use serialnumber also for this one:
+		# "HaulNo" = station,
+		"HaulNo" = serialnumber,
 		"Year" = getYear(stationstartdate),
 		"Month" = getMonth(stationstartdate),
 		"Day" = getDay(stationstartdate),
@@ -1198,7 +1200,6 @@ ICESDatrasOne <- function(
 	
 	# Get count
 	mergedHL[, N := sum(!is.na(specimenid)), by = groupHL]
-	
 	# For the record with empty individual data
 	mergedHL[N == 0, `:=`(lngtClass = NA_integer_, sex = NA_character_)]
 	
@@ -1269,7 +1270,7 @@ ICESDatrasOne <- function(
 	
 	
 	## 3. CA ##
-	
+	# Set preferredagereading to 1 if not given:
 	mergedHL[is.na(preferredagereading), preferredagereading := 1]
 	baseAge <- intersect(names(mergedHL), names(BioticDataOne$agedetermination))
 	mergedCA <- merge(mergedHL, BioticDataOne$agedetermination, by.x=c(baseAge, "preferredagereading"), by.y= c(baseAge, "agedeterminationid"), all.x = TRUE)
@@ -1283,16 +1284,19 @@ ICESDatrasOne <- function(
 	# Added speciealstage for Maturity on 2022-11-21, see below:
 	mergedCA[, maturity := specialstage]
 	
-	
 	# Aggregate count
-	mergedCA[!is.na(individualweight), `:=`(nWithWeight =.N, totWeight = sum(individualweight)), by = c(groupCA,  "lngtClass", "maturity", "age")]
+	aggregateBy <- c(groupCA,  "lngtClass", "maturity", "age")
+	#mergedCA[!is.na(individualweight), `:=`(nWithWeight = .N, totWeight = sum(individualweight)), by = aggregateBy]
+	#mergedCA[, `:=`(nInd = .N), by = aggregateBy]
+	#mergedCA <- unique(mergedCA, by = aggregateBy)
+	#mergedCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
+	# Get number of individuals and mean weight (to use for the individuals without weight):
+	mergedCA[, nInd := .N, by = aggregateBy]
+	mergedCA[, meanW := mean(individualweight, na.rm = TRUE), by = aggregateBy]
+	mergedCA <- unique(mergedCA, by = aggregateBy)
 	
-	finalCA <- mergedCA[, .(nInd =.N), by = c(
-		groupCA, 
-		"lngtClass", "maturity", "age", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "StatRec", "lngtCode", "stationtype", "nWithWeight", "totWeight", "specimenid", "tissuesample", "stomach", "agingstructure", "readability", "parasite", "liverweight")]
-	finalCA[!is.na(nWithWeight),  meanW := totWeight / nWithWeight]
 	
-	CAraw <- data.table::copy(finalCA[,
+	CAraw <- data.table::copy(mergedCA[,
 		.(
 			"Quarter" = Quarter,
 			"Country" = Country,
@@ -1748,33 +1752,58 @@ roundDownTo <- function(x, to, buffer = 1e-10) {
 #' ICES Datras requires equal LngtCode and LngtClass per haul and species. 
 #'
 #' @param ICESDatrasData A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.
+#' @param RegroupMethod Character: A string naming the method to use, one of "ResolutionTable", for specifying a table with the desired resolutions for combinations of the \code{ResolutionTableVariables}, or "HighestResolution" to set the highest possible resolution for each combination of the \code{GroupingVariables}. In the former case, the \code{ResolutionTableVariables} must be given when the function is used in the StoX GUI, but this is not required when applied directly in R.
+#' @param ResolutionTableVariables A vector of names of the variables to use in the \code{ResolutionTable} in the GUI. Typically this could be "SpecCode".
+#' @param ResolutionTable A table of a number of columns named by variables present in both the HL and the CA, and one column named "ResolutionCode" holding desired resolution for the combinations of values in the previous columns. The values in the column "ResolutionCode" must be "1 mm", "5 mm" or "1 cm" (see getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic). An example is data.table::data.table(SpecCode = c("126417", "126441"), ResolutionCode = c("5 mm", "1 cm")).
 #' @param GroupingVariables A vector of variable names giving the variables by which to reduce the resolution of LngtCode and LngtClass. Defaulted to "HaulNo" and "SpecCode". 
 #' @param AggregateHLNoAtLngt Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.
-#' @param AggregationVariables A vector of variables of the HL table for which to aggregate individuals. Defaulted to "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".
+#' @param AggregationVariablesHL A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "CatIdentifier", "Sex", "LngtClass"), which is the default when creating a StoX process.
+#' @param AggregateCANoAtLngt Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.
+#' @param AggregationVariablesCA A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "LngtClass", "Sex", "Maturity", "AgeRings"), which is the default when creating a StoX process.
 #'
 #' @return An \code{\link{ICESDatrasData}} object.
 #'
 #' @export
 #' 
 RegroupLengthICESDatras <- function(
-		ICESDatrasData, 
-		GroupingVariables = character(), 
-		AggregateHLNoAtLngt = TRUE, 
-		AggregationVariables = character()
+	ICESDatrasData, 
+	RegroupMethod = c("ResolutionTable", "HighestResolution"), 
+	# For RegroupMethod = "ResolutionTable":
+	ResolutionTableVariables = character(),
+	ResolutionTable = data.table::data.table(), 
+	# For RegroupMethod = "HighestResolution":
+	GroupingVariables = character(),
+	# Whether to aggregate numbers:
+	AggregateHLNoAtLngt = TRUE, 
+	AggregationVariablesHL = character(), 
+	AggregateCANoAtLngt = TRUE, 
+	AggregationVariablesCA = character()
 ) {
 	
+	RegroupMethod <- match_arg_informative(RegroupMethod)
 	ICESDatrasData <- data.table::copy(ICESDatrasData)
 	
-	ICESDatrasData$HL[, c("LngtCode", "LngtClass") := regroupLengthICESDatrasOne(.SD), by = GroupingVariables]
+	ICESDatrasData$HL <- RegroupLengthICESDatrasOneTable(
+		ICESDatrasData$HL, 
+		RegroupMethod = RegroupMethod, 
+		ResolutionTable = ResolutionTable, 
+		GroupingVariables = GroupingVariables
+	)
+	ICESDatrasData$CA <- RegroupLengthICESDatrasOneTable(
+		ICESDatrasData$CA, 
+		RegroupMethod = RegroupMethod, 
+		ResolutionTable = ResolutionTable, 
+		GroupingVariables = GroupingVariables
+	)
 	
 	
 	# Sum up individuals:
 	if(AggregateHLNoAtLngt) {
 		#sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
-		sumBy <- AggregationVariables
+		sumBy <- AggregationVariablesHL
 		if(any(! sumBy %in% names(ICESDatrasData$HL))) {
 			toRemove <- setdiff(sumBy, names(ICESDatrasData$HL))
-			warning("Removing the following AggregationVariables not present in the HL table: ", paste(toRemove, collapse = ", "))
+			warning("Removing the following AggregationVariablesHL not present in the HL table: ", paste(toRemove, collapse = ", "))
 			sumBy <- intersect(sumBy, names(ICESDatrasData$HL))
 		}
 		
@@ -1782,41 +1811,92 @@ RegroupLengthICESDatras <- function(
 		ICESDatrasData$HL <- unique(ICESDatrasData$HL, by = sumBy)
 	}
 	
+	# Sum up individuals:
+	if(AggregateCANoAtLngt) {
+		#sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
+		sumBy <- AggregationVariablesCA
+		if(any(! sumBy %in% names(ICESDatrasData$CA))) {
+			toRemove <- setdiff(sumBy, names(ICESDatrasData$CA))
+			warning("Removing the following AggregationVariablesCA not present in the HL table: ", paste(toRemove, collapse = ", "))
+			sumBy <- intersect(sumBy, names(ICESDatrasData$CA))
+		}
+		
+		ICESDatrasData$CA[, CANoAtLngt := sum(CANoAtLngt), by = sumBy]
+		ICESDatrasData$CA <- unique(ICESDatrasData$CA, by = sumBy)
+	}
 	
 	return(ICESDatrasData)
 }
 
-
-regroupLengthICESDatrasOne <- function(data) {
+RegroupLengthICESDatrasOneTable <- function(table, RegroupMethod, ResolutionTable, GroupingVariables) {
 	
+	# Get the Datras length resolution definitions:
 	lengthCode_unit_table <- getRstoxDataDefinitions("lengthCode_unit_table")
-	# Get the lowest resolution:
-	maxRank <- data[, max(lengthCode_unit_table$rank[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)])]
-	atMax  <- lengthCode_unit_table$rank == maxRank
-	maxReportingUnit <- lengthCode_unit_table$reportingUnit[atMax]
-	maxLengthCodeICESDatras <- lengthCode_unit_table$lengthCodeICESDatras[atMax]
+	
+	if(RegroupMethod == "ResolutionTable") {
+		
+		# Get the ResolutionTableVariables as the variables of the ResolutionTable except "ResolutionCode" (in StoX the columns of ResolutionTable will be ser by the ResolutionTableVariables, but from R this should not be required):
+		ResolutionTableVariables <- setdiff(names(ResolutionTable), "ResolutionCode")
+		
+		# Add the columns "newLngtCode", "newLngtCodeNumeric" and "newReportingUnit" to the ResolutionTable, and remove the "ResolutionCode", in order to merge the resolution information into the table:
+		atResolution <- ResolutionTable[, match(ResolutionCode, lengthCode_unit_table$shortnameNMDBiotic)]
+		ResolutionTable[, newLngtCode := lengthCode_unit_table$lengthCodeICESDatras[..atResolution]]
+		ResolutionTable[, newLngtCodeNumeric := lengthCode_unit_table$numericResolution[..atResolution]]
+		ResolutionTable[, newReportingUnit := lengthCode_unit_table$reportingUnit[..atResolution]]
+		ResolutionTable[, ResolutionCode := NULL]
+		
+		# Merge in the resolution information:
+		table <- merge(table, ResolutionTable, by = ResolutionTableVariables, all.x = TRUE, sort = FALSE)
+	}
+	else if(RegroupMethod == "HighestResolution") {
+		# Get the highest resolution by the GroupingVariables:
+		table[, c("newLngtCode", "newLngtCodeNumeric", "newReportingUnit") := getHighestResolution(.SD), by = GroupingVariables]
+	}
+	
+	# Regroup only rows with non-missing newLngtCode:
+	toRegroup <- table[, !is.na(newLngtCode)]
 	
 	# Get the unit temporarily:
-	reportingUnit <- data[, lengthCode_unit_table$reportingUnit[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)]]
-	
-	# Set the new LngtCode:
-	LngtCode <- maxLengthCodeICESDatras
-
+	table[, currentReportingUnit := lengthCode_unit_table$reportingUnit[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)]]
 	
 	# Change the units:
-	LngtClass <- data[, scaleUsingUnit(LngtClass, inputUnit = reportingUnit, outputUnit = maxReportingUnit)]
+	table[toRegroup, LngtClass := scaleUsingUnit(LngtClass, inputUnit = currentReportingUnit, outputUnit = newReportingUnit)]
 	
 	# Round down:
-	numericResolution <- data[, lengthCode_unit_table$numericResolution[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)]]
-	LngtClass <- roundDownTo(LngtClass, to = numericResolution)
+	table[toRegroup, LngtClass := roundDownTo(LngtClass, to = newLngtCodeNumeric)]
 	
-	return(
-		list(
-			LngtCode = LngtCode, 
-			LngtClass = LngtClass
-		)
+	# Set the new LngtCode:
+	table[toRegroup, LngtCode := newLngtCode]
+	
+	table[, currentReportingUnit := NULL]
+	table[, newLngtCode := NULL]
+	table[, newLngtCodeNumeric := NULL]
+	table[, newReportingUnit := NULL]
+	
+	return(table)
+}
+
+getHighestResolution <- function(table) {
+	
+	# Get the Datras length resolution definitions:
+	lengthCode_unit_table <- getRstoxDataDefinitions("lengthCode_unit_table")
+	
+	# Get the lowest resolution:
+	maxRank <- table[, max(lengthCode_unit_table$rank[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)])]
+	atMaxRank <- which(lengthCode_unit_table$rank == maxRank)
+	
+	# Insert the LngtCode, LngtCodeNumeric and ReportingUnit:
+	newLngtCode <- lengthCode_unit_table$lengthCodeICESDatras[atMaxRank]
+	newLngtCodeNumeric <- lengthCode_unit_table$numericResolution[atMaxRank]
+	newReportingUnit <- lengthCode_unit_table$reportingUnit[atMaxRank]
+	
+	list(
+		newLngtCode = newLngtCode, 
+		newLngtCodeNumeric = newLngtCodeNumeric, 
+		newReportingUnit = newReportingUnit
 	)
 }
+
 
 
 
