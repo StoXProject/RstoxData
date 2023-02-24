@@ -107,6 +107,11 @@ jobs:
             message("Installing the following packages using default type:\n", paste0(missing, collapse = ", "))
             utils::install.packages(missing, dependencies = TRUE)
           }
+          
+          # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
+          if(packageVersion("Rcpp") <= "1.0.10") {
+          	install.packages("Rcpp")
+          }
         shell: Rscript {0}
 
       - name: Prepare for CRANdependencies on Linux

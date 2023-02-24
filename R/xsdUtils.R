@@ -381,7 +381,7 @@ checkFileNameInZip <- function(x) {
 		file <- utils::unzip(zipfile = x, list = TRUE)[, "Name"]
 		# Check whether a file named by the basename of the zip exists (sans ext):
 		if(!basename(tools::file_path_sans_ext(x)) %in% basename(tools::file_path_sans_ext(file))) {
-			stop("Zipped input data must contain the a file with the same name as the zip, excluding file extension.")
+			stop("Zipped input data must contain the a file with the same name as the zip, excluding file extension (was.", basename(tools::file_path_sans_ext(file)), ", should be ", basename(tools::file_path_sans_ext(x)), ").")
 		}
 	}
 }

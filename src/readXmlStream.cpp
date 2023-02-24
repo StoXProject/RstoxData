@@ -469,7 +469,8 @@ static void rootHandler(XML::Element &elem, void *userData)
 
 	// If there is a user supplied xsd namespace
 	if (xsdOverride != NULL) {
-		sprintf (xsd, "%s.xsd", xmlns);
+		// sprintf (xsd, "%s.xsd", xmlns);
+		snprintf(xsd, sizeof xsd, "%s.xsd", xmlns);
 	} else {
 		// Process namespace to get the correct XSD data
 		char *token = std::strtok(xmlns, "/");
@@ -482,7 +483,8 @@ static void rootHandler(XML::Element &elem, void *userData)
 			two = token;
 			token = strtok(NULL, "/");
 		}
-		sprintf (xsd, "%s%s.xsd", one, two);
+		// sprintf (xsd, "%s%s.xsd", one, two);
+		snprintf(xsd, sizeof xsd, "%s%s.xsd", one, two);
 	}
 
 	if (verbose == true)

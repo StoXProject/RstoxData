@@ -232,7 +232,8 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 	
 	// If there is a user supplied xsd namespace
 	if (xsdOverride.isNotNull()) {
-		sprintf (xsd, "%s.xsd", xmlns);
+		// sprintf (xsd, "%s.xsd", xmlns);
+		snprintf(xsd, sizeof xsd, "%s.xsd", xmlns);
 	} else {
 		// Process namespace to get the correct XSD data
 		char *token = std::strtok(xmlns, "/");
@@ -246,8 +247,10 @@ Rcpp::List readXmlCpp(Rcpp::CharacterVector inputFile, Rcpp::List xsdObjects, Rc
 			token = strtok(NULL, "/");
 		}
 
-		sprintf (xsd, "%s%s.xsd", one, two);
+		// sprintf (xsd, "%s%s.xsd", one, two);
+		snprintf(xsd, sizeof xsd, "%s%s.xsd", one, two);
 	}
+	
 	// Print out XML information
 	if (verbose == true)
 		Rcpp::Rcout << "Using XSD: " << xsd << std::endl;

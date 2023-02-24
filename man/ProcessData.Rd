@@ -9,6 +9,3 @@
 \description{
 The process data of a StoX model are data that are saved to the project description (project.json file), which in the case of RstoxData is only the \code{\link{Translation}} data type.
 }
-\seealso{
-For ProcessData defined by RstoxBase see \code{\link[RstoxBase]{ProcessData}}.
-}

@@ -1,3 +1,12 @@
+# RstoxData v1.9.0-90010  (2023-01-19	)
+* Corrected warning " There are more than one 'serialnumber' ..." to end with "More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):" instead of "Duplicated serialnumber for the following cruise/station (of the fishstation table of the BioticData):".
+* Corrected warning for more NASC in B than in P.
+* Corrected warninig for non-supported NMDEhcosounder format from >= 1.4 to >= 1.1.
+* Removed the StoX XML from https://acoustic.ices.dk/submissions.
+* Fixed bug in translateOneTranslationOneTable() used by Translate-functions, where type conversion was applied before applying the translation, which for a function such as IndividualAge > 9 resulted in 10, 11, ... to be comared as text and thus not translated.
+* Changed HaulNo to use the serialnumber and not the station variable of NMDBiotic >= 3 in ICESDatras().
+* Changed RegroupLengthICESDatras() to regroup lengths both in the HL and the CA table, and also to support recalculating both HLNoAtLngt and CANoAtLngt. Also added the parameters ResolutionTableVariables and ResolutionTable to support specices specific (or other variables) regrouping.
+
 # RstoxData v1.8.0  (2023-01-13)
 * Changed error to warning when FilterUpwards from the top table.
 * Added support for the string "NA" in WriteICESAcoustic() (used in the field DataProcessingTriwaveCorrection) (and also in WriteICESBiotic()). 

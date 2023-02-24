@@ -200,8 +200,6 @@ NULL
 #' 
 #' @name ProcessData
 #' 
-#' @seealso For ProcessData defined by RstoxBase see \code{\link[RstoxBase]{ProcessData}}.
-#' 
 NULL
 
 

@@ -243,7 +243,7 @@ StoxAcousticOne <- function(data_list) {
 			errorKeys <- subset(unique(data_list$ChannelReference, by = checkBy), BButNotP, select = checkBy)
 			errorKeys <- errorKeys[, do.call(paste, c(.SD, list(sep = " - ")))]
 			if(any(BButNotP)) {
-				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain ch_type \"B\" but not \"P\". As per the LSSS convention that P covers the entire watercolumn (or the part of the watercolumn that is stored in the data), ch_type \"P\" must always be present. This coculd be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following cruise, log-distance and frequency (CruiseKey - LogKey - BeamKey):", printErrorIDs(errorKeys))
+				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain ch_type \"B\" but not \"P\". As per the LSSS convention that P covers the entire watercolumn (or the part of the watercolumn that is stored in the data), ch_type \"P\" must always be present. This could be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following log-distance, frequency and acoustic category (LogKey - BeamKey - AcousticCategoryKey):", printErrorIDs(errorKeys))
 			}
 			
 			
@@ -261,7 +261,7 @@ StoxAcousticOne <- function(data_list) {
 			sum_sa_merged_onlyError <- sum_sa_merged_onlyError[, do.call(paste, c(.SD, list(sep = " - ")))]
 			
 			if(NROW(sum_sa_merged_onlyError)) {
-				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain more sa in ch_type \"B\" than \"P\". This coculd be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following cruise, log-distance, frequency and sum of sa for \"P\" and \"B\" (CruiseKey - LogKey - BeamKey - Sum_of_NASC_for_P - Sum_of_NASC_for_B):", printErrorIDs(sum_sa_merged_onlyError))
+				warning("StoX: There are data of the file ", data_list$metadata$file, " that contain more sa in ch_type \"B\" than \"P\". This could be an indication of loss of data from raw files + work files (scrutinization) to the NMDEchosounder file. The problem occurs for the following log-distance, frequency, acoustic category and sum of sa for \"P\" and \"B\" (LogKey - BeamKey - AcousticCategoryKey - Sum_of_NASC_for_P - Sum_of_NASC_for_B):", printErrorIDs(sum_sa_merged_onlyError))
 			}
 		}
 		
