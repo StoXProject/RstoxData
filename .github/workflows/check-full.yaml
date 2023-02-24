@@ -110,7 +110,7 @@ jobs:
           
           # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
           if(packageVersion("Rcpp") <= "1.0.10") {
-          	install.pakcages("Rcpp")
+          	install.packages("Rcpp")
           }
         shell: Rscript {0}
 
