@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0-9001</span>
       </span>
     </div>
 
@@ -55,9 +55,14 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">RegroupLengthICESDatras</span><span class="op">(</span></span>
 <span>  <span class="va">ICESDatrasData</span>,</span>
+<span>  RegroupMethod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ResolutionTable"</span>, <span class="st">"HighestResolution"</span><span class="op">)</span>,</span>
+<span>  ResolutionTableVariables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  ResolutionTable <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  GroupingVariables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  AggregateHLNoAtLngt <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  AggregationVariables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  AggregationVariablesHL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  AggregateCANoAtLngt <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  AggregationVariablesCA <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -65,6 +70,18 @@
     <h2>Arguments</h2>
     <dl><dt>ICESDatrasData</dt>
 <dd><p>A <code><a href="ICESDatrasData.html">ICESDatrasData</a></code> object as returned from <code><a href="ICESDatras.html">ICESDatras</a></code>.</p></dd>
+
+
+<dt>RegroupMethod</dt>
+<dd><p>Character: A string naming the method to use, one of "ResolutionTable", for specifying a table with the desired resolutions for combinations of the <code>ResolutionTableVariables</code>, or "HighestResolution" to set the highest possible resolution for each combination of the <code>GroupingVariables</code>. In the former case, the <code>ResolutionTableVariables</code> must be given when the function is used in the StoX GUI, but this is not required when applied directly in R.</p></dd>
+
+
+<dt>ResolutionTableVariables</dt>
+<dd><p>A vector of names of the variables to use in the <code>ResolutionTable</code> in the GUI. Typically this could be "SpecCode".</p></dd>
+
+
+<dt>ResolutionTable</dt>
+<dd><p>A table of a number of columns named by variables present in both the HL and the CA, and one column named "ResolutionCode" holding desired resolution for the combinations of values in the previous columns. The values in the column "ResolutionCode" must be "1 mm", "5 mm" or "1 cm" (see getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic). An example is data.table::data.table(SpecCode = c("126417", "126441"), ResolutionCode = c("5 mm", "1 cm")).</p></dd>
 
 
 <dt>GroupingVariables</dt>
@@ -75,8 +92,16 @@
 <dd><p>Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.</p></dd>
 
 
-<dt>AggregationVariables</dt>
-<dd><p>A vector of variables of the HL table for which to aggregate individuals. Defaulted to "StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass".</p></dd>
+<dt>AggregationVariablesHL</dt>
+<dd><p>A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "CatIdentifier", "Sex", "LngtClass"), which is the default when creating a StoX process.</p></dd>
+
+
+<dt>AggregateCANoAtLngt</dt>
+<dd><p>Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.</p></dd>
+
+
+<dt>AggregationVariablesCA</dt>
+<dd><p>A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "LngtClass", "Sex", "Maturity", "AgeRings"), which is the default when creating a StoX process.</p></dd>
 
 </dl></div>
     <div id="value">
