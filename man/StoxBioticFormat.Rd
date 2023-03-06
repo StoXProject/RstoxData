@@ -7,76 +7,77 @@
 The StoxBiotic data format is defined by StoX as a common format to which data from different biotic sampling formats are converted, guaranteeing consistent interpretation and documentation of all its variables.
 }
 \details{
-The StoxBiotic format is defined according to the \code{\link[=generalSamplingHierarhcy]{general sampling hierarchy of StoX}} which is used as a basis for both the StoxcBiotic and StoxAcoustic format. The variables of the StoxBiotic format are given by the tables below:
+The StoxBiotic format is defined according to the \code{\link[=generalSamplingHierarhcy]{general sampling hierarchy of StoX}} which is used as a basis for both the StoxcBiotic and StoxAcoustic format. The variables of the StoxBiotic format are given by the tables below, where the columns NMDBiotic and ICESBiotic show the origin of variable in BioticData read from NMDBiotic \url{https://www.imr.no/formats/nmdbiotic/} and ICESBiotic \url{https://www.ices.dk/data/data-portals/Pages/acoustic.aspx} files, respectively (see \code{\link{BioticData}}). Variables with non-unique names across tables of the BioticData are written as variableName.tableName, and "-" and "/" denotes concatenation for character type variables with "-" and "/" as separation character, respectively. Units are given with shortname of the \code{\link{StoxUnits}}:
+
 
 \bold{Cruise level}:
-\tabular{lllll}{
-\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab 2021105 \cr
-Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic and LocalID for ICESBiotic) \tab None \tab Character \tab 2021105 \cr
-Platform  \tab Data collection platform identifier \tab None \tab Character \tab 1019 \cr
+\tabular{lllllll}{
+\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab "2021105" \tab \code{cruise/missiontype/startyear/platform/missionnumber} \tab \code{LocalID} \cr
+Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic files and LocalID for ICESBiotic files) \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
+Platform  \tab Data collection platform identifier \tab None \tab Character \tab "1019" \tab \code{platform} \tab \code{Platform} \cr
 }
 
 
 \bold{Station level}:
-\tabular{lllll}{
-\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-StationKey \tab Key of the Station level \tab None \tab 1 \cr
-Station \tab Unique Station identifier \tab None \tab 2021105-1 \cr   
-CatchPlatform \tab Platform performing the actual sampling (can be different from the data collection platform) \tab None \tab Character \tab 1019 \cr
-DateTime \tab UTC time at start of the station \tab ISO 8601 format with milliseconds \tab Character \tab 2020-09-09T01:02:03.456Z \cr
-Longitude \tab Longitude at start of the station \tab Decimal degrees \tab Numeric \tab 62.5 \cr
-Latitude \tab Latitude at start of the station \tab Decimal degrees \tab Numeric \tab 5.1 \cr
-BottomDepth \tab BottomDepth at the station, given directly in ICESBitoic and calculated as the average of bottom depth at start and end of the station in NMDBiotic \tab m \tab Numeric \tab 123.2 \cr
+\tabular{lllllll}{
+\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+StationKey \tab Key of the Station level \tab None \tab Character \tab "1" \tab \code{station} \tab \code{StationName} \cr
+Station \tab Unique Station identifier \tab None \tab Character \tab "2021105-1" \tab \code{CruiseKey-StationKey} \tab \code{CruiseKey-StationKey} \cr   
+CatchPlatform \tab Platform performing the actual sampling (can be different from the data collection platform) \tab None \tab Character \tab "1019" \tab \code{catchplatform} (\code{platform.fishstation} for NMDBiotic 1.1 and 1.4) \tab \code{Platform} \cr
+DateTime \tab UTC time at start of the station, stored as \code{\link{POSIXct}} \tab ISO8601 \tab Character \tab 2020-09-09T01:02:03.456Z \tab \code{stationstartdate + stationstarttime} (\code{startdate.fishstation + starttime.fishstation} for NMDBiotic 1.1 and 1.4) \tab \code{StartTime} \cr
+Longitude \tab Longitude at start of the station \tab degree east \tab Numeric \tab 62.5 \tab \code{longitudestart} \tab \code{StartLongitude} \cr
+Latitude \tab Latitude at start of the station \tab degree north \tab Numeric \tab 5.1 \tab \code{latitudestart} \tab \code{StartLatitude} \cr
+BottomDepth \tab BottomDepth at the station, given directly in ICESBitoic files and calculated as the average of bottom depth at start and end of the station in NMDBiotic files \tab m \tab Numeric \tab 123.2 \tab \code{(bottomdepthstart + bottomdepthstop) / 2} \tab \code{BottomDepth} \cr
 }
 
 
 \bold{Haul level}:
-\tabular{lllll}{
-\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-HaulKey \tab Key of the Haul level \tab None \tab Character \tab 2 \cr
-Haul \tab Unique Haul identifier \tab None \tab Character \tab 2021105-1-2 \cr
-Gear \tab Identifier of the gear \tab None \tab Character \tab 3270 \cr
-TowDistance \tab Distance between start and end of the haul \tab Nautical miles \tab Numeric \tab 1.5 \cr
-EffectiveTowDistance \tab Effective tow distance \tab Nautical miles \tab Numeric \tab 1.5 \cr
-MinHaulDepth \tab Minimum depth of the haul (trawl headline) \tab m \tab Numeric \tab 65 \cr
-MaxHaulDepth \tab Maximum depth of the haul (trawl headline) \tab m \tab Numeric \tab 35 \cr
-VerticalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 23 \cr
-HorizontalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 105 \cr
-TrawlDoorSpread \tab Distance between the trawl doors \tab m \tab Numeric \tab 125 \cr
+\tabular{lllllll}{
+\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+HaulKey \tab Key of the Haul level \tab None \tab Character \tab "2" \tab \code{serialnumber} (\code{serialno} for NMDBiotic 1.1 and 1.4) \tab \code{Number} \cr
+Haul \tab Unique Haul identifier \tab None \tab Character \tab "2021105-1-2" \tab \code{CruiseKey-StationKey-HaulKey} \tab \code{CruiseKey-StationKey-HaulKey} \cr
+Gear \tab Identifier of the gear \tab None \tab Character \tab "3270" \tab \code{gear} \tab \code{Gear} \cr
+TowDistance \tab Distance between start and end of the haul \tab nmi \tab Numeric \tab 1.5 \tab \code{distance} \tab \code{Distance / 1852} \cr
+EffectiveTowDistance \tab Effective tow distance \tab nmi \tab Numeric \tab 1.5 \tab Same as TowDistance. Can be translated. \tab Same as TowDistance. Can be translated. \cr
+MinHaulDepth \tab Minimum depth of the haul (trawl headline) \tab m \tab Numeric \tab 65 \tab \code{fishingdepthmin} \tab \code{MinTrawlDepth} \cr
+MaxHaulDepth \tab Maximum depth of the haul (trawl headline) \tab m \tab Numeric \tab 35 \tab \code{fishingdepthmax} \tab \code{MaxTrawlDepth} \cr
+VerticalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 23 \tab \code{verticaltrawlopening} (\code{trawlopening} for NMDBiotic 1.1 and 1.4) \tab \code{Netopening} \cr
+HorizontalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 105 \tab \code{wingspread} (missing (\code{NA}) for NMDBiotic 1.1 and 1.4) \tab \code{WingSpread} \cr
+TrawlDoorSpread \tab Distance between the trawl doors \tab m \tab Numeric \tab 125 \tab \code{trawldoorspread} (\code{doorspread} for NMDBiotic 1.1 and 1.4) \tab \code{DoorSpread} \cr
 }
 
 
 \bold{SpeciesCategory level}:
-\tabular{lllll}{
-\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab 126417 \cr
-SpeciesCategory \tab The species category \tab None \tab Character \tab Herring \cr
+\tabular{lllllll}{
+\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab "126417" \tab \code{commonname/catchcategory/aphia/scientificname} (\code{noname/species/aphia/group} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCode} \cr
+SpeciesCategory \tab The species category \tab None \tab Character \tab "Herring" \tab Same as SpeciesCategoryKey. Can be translated. \tab Same as SpeciesCategoryKey. Can be translated. \cr
 }
 
 
 \bold{Sample level}:
-\tabular{lllll}{
-\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-SampleKey \tab Key of the Sample level \tab None \tab Character \tab  \cr          
-Sample \tab Unique Sample identifier \tab None \tab Character \tab  \cr             
-CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab Kg \tab Numeric \tab 49.9 \cr
-CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab None \tab Numeric \tab 295 \cr 
-SampleWeight \tab Total weight of the sample for individual measurements \tab Kg \tab Numeric \tab 4.6 \cr       
-SampleNumber \tab Size of the sample for individual measurements \tab None \tab Numeric \tab 100 \cr
+\tabular{lllllll}{
+\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+SampleKey \tab Key of the Sample level \tab None \tab Character \tab "1" \tab \code{catchsampleid} (\code{samplenumber} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategory} \cr          
+Sample \tab Unique Sample identifier \tab None \tab Character \tab "2021105-1-2-126417-1" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \cr             
+CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab kg \tab Numeric \tab 49.9 \tab \code{catchweight} (missing (\code{NA}) if \code{catchproducttype != 1}) (\code{weight} (missing (\code{NA}) if \code{producttype != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryWeight} (taking \code{WeightUnit} into account) \cr
+CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab individuals \tab Numeric \tab 295 \tab \code{catchcount} (\code{count} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryNumber} \cr 
+SampleWeight \tab Total weight of the sample for individual measurements \tab kg \tab Numeric \tab 4.6 \tab \code{lengthsampleweight} (missing (\code{NA}) if \code{sampleproducttype != 1}) \tab \code{SubsampleWeight} (taking \code{WeightUnit} into account) \cr       
+SampleNumber \tab Size of the sample for individual measurements \tab individuals \tab Numeric \tab 100 \tab \code{lengthsamplecount} \tab \code{SubsampledNumber} \cr
 }
 
 
 \bold{Individual level}:
-\tabular{lllll}{
-\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-IndividualKey \tab Key of the Individual level \tab None \tab Character \tab  \cr        
-Individual \tab Unique Individual identifier \tab None \tab Character \tab  \cr           
-IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \cr
-IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \cr
-LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \cr     
-WeightMeasurement \tab \tab None \tab Character \tab  \cr    
-IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \cr        
-IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab F \cr
+\tabular{lllllll}{
+\bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+IndividualKey \tab Key of the Individual level \tab None \tab Character \tab "2" \tab \code{specimenid} (\code{specimenno} for NMDBiotic 1.1 and 1.4) \tab \code{FishID} \cr        
+Individual \tab Unique Individual identifier \tab None \tab Character \tab "2021105-1-2-126417-1-2" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \cr           
+IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \tab \code{individualweight * 1000} (missing (\code{NA}) if \code{individualproducttype != 1}) (\code{weight.individual} (missing (\code{NA}) if \code{producttype.individual != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{IndividualWeight} (taking \code{WeightUnit.Biology} into account) \cr
+IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \tab \code{length * 100}  (missing (\code{NA}) if \code{lengthmeasurement != "E"}) \tab \code{LengthClass.Biology} (taking \code{LengthCode.Biology} into account) \cr
+LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \tab \code{lengthresolution} (\code{lengthunit} for NMDBiotic 1.1 and 1.4) converted to cm \tab  \code{LengthCode.Biology} converted cm \cr     
+WeightMeasurement \tab Specification of how IndividualRoundWeight was measured; one of "IndividualWeight" and "AverageWeight". For data from NMDBiotic files this is always "IndividualWeight". \tab None \tab Character \tab "IndividualWeight" \tab "IndividualWeight" \tab IndividualWeight if \code{IndividualWeight} is given, "AverageWeight" if \code{WeightAtLength} and \code{NumberAtLength} are given \cr    
+IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \tab \code{age} (located in the agedetermination level) for the \code{preferredagereading} \tab \code{IndividualAge} \cr      
+IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab "F" \tab "F" if \code{sex = 1}, "M" if \code{sex = 2} \tab \code{IndividualSex} \cr
 }
 }

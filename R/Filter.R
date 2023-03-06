@@ -180,9 +180,6 @@ filterTables <- function(inputTables, filterExpression, treeStruct, propagateDow
   if (!any(names(inputTables) %in% names(treeStruct)) & length(inputTables)>1){
     stop("Argument 'treeStruct' does not specify a hierarchy for 'inputTables'.")
   }
-  if (length(treeStruct) >0 & !all(names(treeStruct) %in% names(inputTables))){
-    stop("Argument 'treeStruct' does not specify a hierarchy for 'inputTables'.")
-  }
   
   `%notin%` <- Negate(`%in%`)
   
@@ -323,7 +320,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
   getTreestruct <- function(tables){
     #extract treeStruct for xsd
     if (!useXsd){
-      levels <- names(tables)[names(tables) != "metadata"]
+      levels <- setdiff(names(tables), "metadata")
       treeStruct <- as.list(tail(levels,-1))
       names(treeStruct) <- head(levels,-1)
       

@@ -4,6 +4,8 @@
 #'
 #' @return An object of StoX data type \code{\link{StoxAcousticData}}.
 #'
+#' @seealso The definition of the \code{\link[=StoxAcousticFormat]{StoxAcoustic format}} and \code{\link{generalSamplingHierarhcy}}.
+#'
 #' @export
 #' 
 StoxAcoustic <- function(AcousticData){
