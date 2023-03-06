@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0-9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0-9002</span>
       </span>
     </div>
 
@@ -76,6 +76,638 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">getRstoxDataDefinitions</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$CruiseKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$CruiseKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$CruiseKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Cruise$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Cruise$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Platform</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Platform$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Platform$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Log</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Log$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Log$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$EDSU</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$EDSU$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$EDSU$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$DateTime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$DateTime$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "datetime"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$DateTime$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ISO8601"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Longitude</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Longitude$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Longitude$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree east"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Latitude</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Latitude$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Latitude$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree north"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogOrigin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogOrigin$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogOrigin$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Longitude2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Longitude2$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Longitude2$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree east"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Latitude2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Latitude2$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Latitude2$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree north"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogOrigin2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogOrigin2$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogOrigin2$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogDistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogDistance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogDistance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmi"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogDuration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogDuration$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "time"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$LogDuration$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "s"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$EffectiveLogDistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$EffectiveLogDistance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$EffectiveLogDistance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmi"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$BottomDepth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$BottomDepth$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$BottomDepth$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$BeamKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$BeamKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$BeamKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Beam</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Beam$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Beam$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Frequency</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Frequency$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "frequency"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Frequency$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "hertz"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$AcousticCategoryKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$AcousticCategoryKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$AcousticCategoryKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$AcousticCategory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$AcousticCategory$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$AcousticCategory$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceType</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceType$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceType$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceDepth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceDepth$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceDepth$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceTilt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceTilt$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$ChannelReferenceTilt$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$NASCKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$NASCKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$NASCKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Channel</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Channel$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$Channel$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$MaxChannelRange</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$MaxChannelRange$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$MaxChannelRange$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$MinChannelRange</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$MinChannelRange$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$MinChannelRange$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$NASC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$NASC$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NASC"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxAcoustic$NASC$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m^2/nmi^2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CruiseKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CruiseKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CruiseKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Cruise$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Cruise$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Platform</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Platform$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Platform$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$StationKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$StationKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$StationKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Station</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Station$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Station$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchPlatform</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchPlatform$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchPlatform$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$DateTime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$DateTime$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "datetime"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$DateTime$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ISO8601"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Longitude</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Longitude$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Longitude$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree east"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Latitude</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Latitude$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "angle"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Latitude$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "degree north"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$BottomDepth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$BottomDepth$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$BottomDepth$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$HaulKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$HaulKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$HaulKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Haul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Haul$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Haul$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Gear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Gear$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Gear$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$TowDistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$TowDistance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$TowDistance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmi"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$EffectiveTowDistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$EffectiveTowDistance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$EffectiveTowDistance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmi"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$MinHaulDepth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$MinHaulDepth$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$MinHaulDepth$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$MaxHaulDepth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$MaxHaulDepth$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$MaxHaulDepth$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$VerticalNetOpening</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$VerticalNetOpening$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$VerticalNetOpening$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$HorizontalNetOpening</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$HorizontalNetOpening$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "lengthlength"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$HorizontalNetOpening$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$TrawlDoorSpread</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$TrawlDoorSpread$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$TrawlDoorSpread$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SpeciesCategoryKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SpeciesCategoryKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SpeciesCategoryKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SpeciesCategory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SpeciesCategory$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SpeciesCategory$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Sample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Sample$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Sample$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchFractionWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchFractionWeight$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchFractionWeight$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "kg"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchFractionNumber</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchFractionNumber$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cardinality"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$CatchFractionNumber$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "individuals"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleWeight$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleWeight$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "kg"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleNumber</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleNumber$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cardinality"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$SampleNumber$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "individuals"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualKey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualKey$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualKey$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Individual$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$Individual$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualRoundWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualRoundWeight$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualRoundWeight$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "g"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualTotalLength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualTotalLength$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualTotalLength$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cm"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$LengthResolution</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$LengthResolution$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$LengthResolution$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cm"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$WeightMeasurement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$WeightMeasurement$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$WeightMeasurement$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualAge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualAge$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "age"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualAge$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "year"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualSex</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualSex$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$StoxBiotic$IndividualSex$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualTotalLength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualTotalLength$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualTotalLength$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cm"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualRoundWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualRoundWeight$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualRoundWeight$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "g"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$Abundance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$Abundance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cardinality"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$Abundance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "individuals"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$Biomass</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$Biomass$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$Biomass$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "g"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$TowDistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$TowDistance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$TowDistance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmi"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$EffectiveTowDistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$EffectiveTowDistance$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "length"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$EffectiveTowDistance$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmi"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$CatchFractionWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$CatchFractionWeight$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$CatchFractionWeight$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "kg"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$CatchFractionNumber</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$CatchFractionNumber$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cardinality"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$CatchFractionNumber$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "individuals"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$SampleWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$SampleWeight$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$SampleWeight$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "kg"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$SampleNumber</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$SampleNumber$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cardinality"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$SampleNumber$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "individuals"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualAge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualAge$quantity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "age"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits$SuperIndividualsData$IndividualAge$unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "year"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $digits</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -102,8 +734,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     useXsd &lt;- tools::file_path_sans_ext(names(xsdObjects)[hasSelectedXsd])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     return(useXsd)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7fcaa2372cf0&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fcaa23487b8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7fcb09c51fb8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fcb09c57680&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Cruise</span>
