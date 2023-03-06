@@ -29,9 +29,12 @@
 #' @export
 readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = NULL, verbose = FALSE) {
 
-  if (tolower(tools::file_ext(xmlFilePath)) == "zip" & !stream){
-    stop("Zip files can only be read in streaming mode")
-  }
+	# Are we reading a zip?
+	zipped <- tolower(tools::file_ext(xmlFilePath)) == "zip"
+
+	if (zipped & !stream){
+		stop("Zip files can only be read in streaming mode")
+	}
   
 	# Accept only file extension "xml", "zip" (or "txt" for historic reasons):
 	if(! tolower(tools::file_ext(xmlFilePath)) %in% c("xml", "zip", "txt")) {
@@ -63,7 +66,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	
 	# Try to do autodetect anyway
 	found <- autodetectXml(xmlFilePath, xsdObjects, verbose)
-
+	
 	if(is.null(useXsd))
 		useXsd <- found[["xsd"]]
         if(is.null(usePrefix))
@@ -104,6 +107,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	xmlFilePathNative <- enc2native(xmlFilePath)
 	if(stream) {
 		res <- readXmlCppStream(xmlFilePathNative, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
+		
 	} else {
 		res <- readXmlCpp(xmlFilePathNative, xsdObjects, useXsd, found[["encoding"]], verbose, nativeIsUTF8=l10n_info()[["UTF-8"]])
 	}

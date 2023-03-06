@@ -65,7 +65,7 @@ expect_equal(nrow(defaultParseBiotic$fishstation), 2)
 expect_equal(defaultParseBiotic$fishstation$fishingbait[[1]], "1")
 
 #context("test-readXmlFile: useXsd-option")
-RstoxData:::readXmlFile(example, stream = T, useXsd = "nmdbioticv3.1")
+useXsdarseBiotic <- RstoxData:::readXmlFile(example, stream = T, useXsd = "nmdbioticv3.1")
 expect_error(RstoxData:::readXmlFile(example, stream = T, useXsd = "unkown"), "useXsd=unkown is not supported. Supported values:")
 expect_warning(RstoxData:::readXmlFile(example, stream = T, useXsd = "nmdbioticv3"))
 expect_error(RstoxData:::readXmlFile(example, stream = F, useXsd = "nmdbioticv3"))

@@ -1,4 +1,10 @@
-# RstoxData v1.9.0-90010  (2023-01-19	)
+# RstoxData v1.9.0-9002  (2023-03-06)
+* Updated documentation of StoxAcoustic and StoxBiotic with tables defining each variable.
+* Added unit specification of StoxAcoustic and StoxBiotic variables.
+* Removed error when filtering BioticData read from ICESBiotic and ICESAcoustic XML.
+* Fixed snprintf warnnings.
+
+# RstoxData v1.9.0-9001  (2023-01-19)
 * Corrected warning " There are more than one 'serialnumber' ..." to end with "More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):" instead of "Duplicated serialnumber for the following cruise/station (of the fishstation table of the BioticData):".
 * Corrected warning for more NASC in B than in P.
 * Corrected warninig for non-supported NMDEhcosounder format from >= 1.4 to >= 1.1.

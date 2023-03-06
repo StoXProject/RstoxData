@@ -80,7 +80,7 @@ Output &Output::operator<<(unsigned int value)
 {
 	char tmp[50];
 	// sprintf(tmp, "%d", value);
-	snprintf(tmp, sizeof tmp, "%d", value);
+	snprintf(tmp, sizeof tmp, "%u", value);
 	writeString(tmp);
 	return *this;
 }
@@ -89,7 +89,7 @@ Output &Output::operator<<(double value)
 {
 	char tmp[50];
 	// sprintf(tmp, "%g", value);
-	snprintf(tmp, sizeof tmp, "%d", value);
+	snprintf(tmp, sizeof tmp, "%f", value);
 	writeString(tmp);
 	return *this;
 }

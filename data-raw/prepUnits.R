@@ -24,8 +24,8 @@ StoxUnits <- data.table::data.table(id=character(),
 StoxUnits <- rbind(StoxUnits, list("mass-g", "mass", "g", "g", "gram", 1e-3))
 StoxUnits <- rbind(StoxUnits, list("mass-kg", "mass", "kg", "kg", "kilogram", 1))
 StoxUnits <- rbind(StoxUnits, list("mass-ton", "mass", "t", "ton", "metric ton", 1e3))
-StoxUnits <- rbind(StoxUnits, list("mass-kt", "mass", "kt", "kiloton", "kiloton", 1e6))
-StoxUnits <- rbind(StoxUnits, list("mass-Mt", "mass", "Mt", "megaton", "megaton", 1e9))
+StoxUnits <- rbind(StoxUnits, list("mass-kt", "mass", "kt", "kiloton", "metric kiloton", 1e6))
+StoxUnits <- rbind(StoxUnits, list("mass-Mt", "mass", "Mt", "megaton", "metric megaton", 1e9))
 
 StoxUnits <- rbind(StoxUnits, list("length-mm", "length", "mm", "mm", "millimeter", 1e-3))
 StoxUnits <- rbind(StoxUnits, list("length-cm", "length", "cm","cm", "centimeter", 1e-2))
@@ -37,16 +37,28 @@ StoxUnits <- rbind(StoxUnits, list("cardinality-N", "cardinality", "N", "individ
 StoxUnits <- rbind(StoxUnits, list("cardinality-kN", "cardinality", "kN", "10^3 individuals", "thousand individuals", 1e3))
 StoxUnits <- rbind(StoxUnits, list("cardinality-MN", "cardinality", "MN", "10^6 individuals", "million individuals", 1e6))
 
-StoxUnits <- rbind(StoxUnits, list("area_number_density-N/nmi^2", "area_number_density", "N/nmi^2", "individuals/nmi^2", "individuals per sqare nautical mile", 1))
-StoxUnits <- rbind(StoxUnits, list("area_number_density-kN/nmi^2", "area_number_density", "kN/nmi^2", "10^3 individuals/nmi^2", "thousand individuals per sqare nautical mile", 1e3))
-StoxUnits <- rbind(StoxUnits, list("area_number_density-MN/nmi^2", "area_number_density", "MN/nmi^2", "10^6 individuals/nmi^2", "million individuals per sqare nautical mile", 1e6))
+StoxUnits <- rbind(StoxUnits, list("area_number_density-N/nmi^2", "area_number_density", "N/nmi^2", "individuals/nmi^2", "individuals per square nautical mile", 1))
+StoxUnits <- rbind(StoxUnits, list("area_number_density-kN/nmi^2", "area_number_density", "kN/nmi^2", "10^3 individuals/nmi^2", "thousand individuals per square nautical mile", 1e3))
+StoxUnits <- rbind(StoxUnits, list("area_number_density-MN/nmi^2", "area_number_density", "MN/nmi^2", "10^6 individuals/nmi^2", "million individuals per square nautical mile", 1e6))
+
+StoxUnits <- rbind(StoxUnits, list("NASC-m^2/nmi^2", "NASC", "m^2/nmi^2", "m^2/nmi^2", "square meter backscattering cross-section per square nautical mile surveyed area", 1))
 
 StoxUnits <- rbind(StoxUnits, list("fraction-decimal", "fraction", "0.", "fraction", "decimal", 1))
 StoxUnits <- rbind(StoxUnits, list("fraction-percent", "fraction", "%", "%", "percent", 1e-2))
 
+StoxUnits <- rbind(StoxUnits, list("frequency-Hz", "frequency", "Hz", "Hz", "hertz", 1))
+StoxUnits <- rbind(StoxUnits, list("frequency-KHz", "frequency", "kHz", "kHz", "kilohertz", 1000))
+
 # treat age separate from time, as it is not a fixed ratio to actual time units
 StoxUnits <- rbind(StoxUnits, list("age-year", "age", "y", "year", "year", 1))
-StoxUnits <- rbind(StoxUnits, list("time-s", "time", "s", "second", "second", 1))
+StoxUnits <- rbind(StoxUnits, list("time-s", "time", "s", "s", "second", 1))
+StoxUnits <- rbind(StoxUnits, list("datetime-ISO8601", "datetime", "ISO8601", "ISO8601", "ISO8601", 1))
+
+# Degrees:
+StoxUnits <- rbind(StoxUnits, list("longitude-degree_east", "angle", "°N", "degree east", "WGS84 degree east", 1))
+StoxUnits <- rbind(StoxUnits, list("latitude-degree_north", "angle", "°E", "degree north", "WGS84 degree north", 1))
+StoxUnits <- rbind(StoxUnits, list("angle-degree", "angle", "°", "degree", "degree", 1))
+
 
 stopifnot(!any(duplicated(paste(StoxUnits$id))))
 

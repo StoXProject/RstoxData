@@ -355,6 +355,8 @@ checkICESAcousticDefinitions <- function(ICESAcousticDataOne) {
 #' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
 #'
 #' @return List of string matrices in the ICES acoustic CSV format.
+#' 
+#' @return An object of StoX data type \code{\link{WriteICESAcousticData}}.
 #'
 #' @export
 #' 
@@ -888,7 +890,7 @@ changeClassOfNonNA <- function(name, classes, data) {
 #'
 #' @param ICESBioticData A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.
 #'
-#' @return List of string matrices in the ICES acoustic CSV format.
+#' @return #' @return An object of StoX data type \code{\link{WriteICESBioticData}}.
 #'
 #' @export
 WriteICESBiotic <- function(ICESBioticData){
@@ -1906,7 +1908,7 @@ getHighestResolution <- function(table) {
 #'
 #' @inheritParams ModelData
 #'
-#' @return List of string matrices in the ICES Datras CSV format.
+#' @return An object of StoX data type \code{\link{WriteICESDatrasData}}.
 #'
 #' @export
 WriteICESDatras <- function(ICESDatrasData){

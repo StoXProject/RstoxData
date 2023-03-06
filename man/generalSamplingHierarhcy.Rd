@@ -33,3 +33,6 @@ The levels can be interpreted as follows:
 
 (6) The Individual level contains for the StoxBiotic format the individuals selected for specific measurements of individual properties such as length, weight and gender, whereas for StoxAcoustic the indiivdual samples along an acouostic beam.
 }
+\seealso{
+The general sampling hierarcchy is used in the format \code{\link{StoxBioticFormat}} and \code{\link{StoxAcousticFormat}}.
+}
