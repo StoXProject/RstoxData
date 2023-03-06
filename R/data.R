@@ -68,6 +68,8 @@ NULL
 #' 
 #' @name generalSamplingHierarhcy
 #' 
+#' @seealso The general sampling hierarcchy is used in the format \code{\link{StoxBioticFormat}} and \code{\link{StoxAcousticFormat}}.
+#' 
 NULL
 
 
@@ -77,80 +79,161 @@ NULL
 #' 
 #' The StoxBiotic data format is defined by StoX as a common format to which data from different biotic sampling formats are converted, guaranteeing consistent interpretation and documentation of all its variables. 
 #' 
-#' @details The StoxBiotic format is defined according to the \code{\link[=generalSamplingHierarhcy]{general sampling hierarchy of StoX}} which is used as a basis for both the StoxcBiotic and StoxAcoustic format. The variables of the StoxBiotic format are given by the tables below:
+#' @details The StoxBiotic format is defined according to the \code{\link[=generalSamplingHierarhcy]{general sampling hierarchy of StoX}} which is used as a basis for both the StoxcBiotic and StoxAcoustic format. The variables of the StoxBiotic format are given by the tables below, where the columns NMDBiotic and ICESBiotic show the origin of variable in BioticData read from NMDBiotic \url{https://www.imr.no/formats/nmdbiotic/} and ICESBiotic \url{https://www.ices.dk/data/data-portals/Pages/acoustic.aspx} files, respectively (see \code{\link{BioticData}}). Variables with non-unique names across tables of the BioticData are written as variableName.tableName, and "-" and "/" denotes concatenation for character type variables with "-" and "/" as separation character, respectively. Units are given with shortname of the \code{\link{StoxUnits}}:
+#' 
 #' 
 #' \bold{Cruise level}:
-#' \tabular{lllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-#' CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab 2021105 \cr
-#' Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic and LocalID for ICESBiotic) \tab None \tab Character \tab 2021105 \cr
-#' Platform  \tab Data collection platform identifier \tab None \tab Character \tab 1019 \cr
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab "2021105" \tab \code{cruise/missiontype/startyear/platform/missionnumber} \tab \code{LocalID} \cr
+#' Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic files and LocalID for ICESBiotic files) \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
+#' Platform  \tab Data collection platform identifier \tab None \tab Character \tab "1019" \tab \code{platform} \tab \code{Platform} \cr
 #' }
 #' 
 #' 
 #' \bold{Station level}:
-#' \tabular{lllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-#' StationKey \tab Key of the Station level \tab None \tab 1 \cr
-#' Station \tab Unique Station identifier \tab None \tab 2021105-1 \cr   
-#' CatchPlatform \tab Platform performing the actual sampling (can be different from the data collection platform) \tab None \tab Character \tab 1019 \cr
-#' DateTime \tab UTC time at start of the station \tab ISO 8601 format with milliseconds \tab Character \tab 2020-09-09T01:02:03.456Z \cr
-#' Longitude \tab Longitude at start of the station \tab Decimal degrees \tab Numeric \tab 62.5 \cr
-#' Latitude \tab Latitude at start of the station \tab Decimal degrees \tab Numeric \tab 5.1 \cr
-#' BottomDepth \tab BottomDepth at the station, given directly in ICESBitoic and calculated as the average of bottom depth at start and end of the station in NMDBiotic \tab m \tab Numeric \tab 123.2 \cr
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' StationKey \tab Key of the Station level \tab None \tab Character \tab "1" \tab \code{station} \tab \code{StationName} \cr
+#' Station \tab Unique Station identifier \tab None \tab Character \tab "2021105-1" \tab \code{CruiseKey-StationKey} \tab \code{CruiseKey-StationKey} \cr   
+#' CatchPlatform \tab Platform performing the actual sampling (can be different from the data collection platform) \tab None \tab Character \tab "1019" \tab \code{catchplatform} (\code{platform.fishstation} for NMDBiotic 1.1 and 1.4) \tab \code{Platform} \cr
+#' DateTime \tab UTC time at start of the station, stored as \code{\link{POSIXct}} \tab ISO8601 \tab Character \tab 2020-09-09T01:02:03.456Z \tab \code{stationstartdate + stationstarttime} (\code{startdate.fishstation + starttime.fishstation} for NMDBiotic 1.1 and 1.4) \tab \code{StartTime} \cr
+#' Longitude \tab Longitude at start of the station \tab degree east \tab Numeric \tab 62.5 \tab \code{longitudestart} \tab \code{StartLongitude} \cr
+#' Latitude \tab Latitude at start of the station \tab degree north \tab Numeric \tab 5.1 \tab \code{latitudestart} \tab \code{StartLatitude} \cr
+#' BottomDepth \tab BottomDepth at the station, given directly in ICESBitoic files and calculated as the average of bottom depth at start and end of the station in NMDBiotic files \tab m \tab Numeric \tab 123.2 \tab \code{(bottomdepthstart + bottomdepthstop) / 2} \tab \code{BottomDepth} \cr
 #' }
 #' 
 #' 
 #' \bold{Haul level}:
-#' \tabular{lllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-#' HaulKey \tab Key of the Haul level \tab None \tab Character \tab 2 \cr
-#' Haul \tab Unique Haul identifier \tab None \tab Character \tab 2021105-1-2 \cr
-#' Gear \tab Identifier of the gear \tab None \tab Character \tab 3270 \cr
-#' TowDistance \tab Distance between start and end of the haul \tab Nautical miles \tab Numeric \tab 1.5 \cr
-#' EffectiveTowDistance \tab Effective tow distance \tab Nautical miles \tab Numeric \tab 1.5 \cr
-#' MinHaulDepth \tab Minimum depth of the haul (trawl headline) \tab m \tab Numeric \tab 65 \cr
-#' MaxHaulDepth \tab Maximum depth of the haul (trawl headline) \tab m \tab Numeric \tab 35 \cr
-#' VerticalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 23 \cr
-#' HorizontalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 105 \cr
-#' TrawlDoorSpread \tab Distance between the trawl doors \tab m \tab Numeric \tab 125 \cr
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' HaulKey \tab Key of the Haul level \tab None \tab Character \tab "2" \tab \code{serialnumber} (\code{serialno} for NMDBiotic 1.1 and 1.4) \tab \code{Number} \cr
+#' Haul \tab Unique Haul identifier \tab None \tab Character \tab "2021105-1-2" \tab \code{CruiseKey-StationKey-HaulKey} \tab \code{CruiseKey-StationKey-HaulKey} \cr
+#' Gear \tab Identifier of the gear \tab None \tab Character \tab "3270" \tab \code{gear} \tab \code{Gear} \cr
+#' TowDistance \tab Distance between start and end of the haul \tab nmi \tab Numeric \tab 1.5 \tab \code{distance} \tab \code{Distance / 1852} \cr
+#' EffectiveTowDistance \tab Effective tow distance \tab nmi \tab Numeric \tab 1.5 \tab Same as TowDistance. Can be translated. \tab Same as TowDistance. Can be translated. \cr
+#' MinHaulDepth \tab Minimum depth of the haul (trawl headline) \tab m \tab Numeric \tab 65 \tab \code{fishingdepthmin} \tab \code{MinTrawlDepth} \cr
+#' MaxHaulDepth \tab Maximum depth of the haul (trawl headline) \tab m \tab Numeric \tab 35 \tab \code{fishingdepthmax} \tab \code{MaxTrawlDepth} \cr
+#' VerticalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 23 \tab \code{verticaltrawlopening} (\code{trawlopening} for NMDBiotic 1.1 and 1.4) \tab \code{Netopening} \cr
+#' HorizontalNetOpening \tab Vertical span of the net \tab m \tab Numeric \tab 105 \tab \code{wingspread} (missing (\code{NA}) for NMDBiotic 1.1 and 1.4) \tab \code{WingSpread} \cr
+#' TrawlDoorSpread \tab Distance between the trawl doors \tab m \tab Numeric \tab 125 \tab \code{trawldoorspread} (\code{doorspread} for NMDBiotic 1.1 and 1.4) \tab \code{DoorSpread} \cr
 #' }
 #' 
 #' 
 #' \bold{SpeciesCategory level}:
-#' \tabular{lllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-#' SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab 126417 \cr
-#' SpeciesCategory \tab The species category \tab None \tab Character \tab Herring \cr
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab "126417" \tab \code{commonname/catchcategory/aphia/scientificname} (\code{noname/species/aphia/group} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCode} \cr
+#' SpeciesCategory \tab The species category \tab None \tab Character \tab "Herring" \tab Same as SpeciesCategoryKey. Can be translated. \tab Same as SpeciesCategoryKey. Can be translated. \cr
 #' }
 #' 
 #' 
 #' \bold{Sample level}:
-#' \tabular{lllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-#' SampleKey \tab Key of the Sample level \tab None \tab Character \tab  \cr          
-#' Sample \tab Unique Sample identifier \tab None \tab Character \tab  \cr             
-#' CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab Kg \tab Numeric \tab 49.9 \cr
-#' CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab None \tab Numeric \tab 295 \cr 
-#' SampleWeight \tab Total weight of the sample for individual measurements \tab Kg \tab Numeric \tab 4.6 \cr       
-#' SampleNumber \tab Size of the sample for individual measurements \tab None \tab Numeric \tab 100 \cr
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' SampleKey \tab Key of the Sample level \tab None \tab Character \tab "1" \tab \code{catchsampleid} (\code{samplenumber} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategory} \cr          
+#' Sample \tab Unique Sample identifier \tab None \tab Character \tab "2021105-1-2-126417-1" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \cr             
+#' CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab kg \tab Numeric \tab 49.9 \tab \code{catchweight} (missing (\code{NA}) if \code{catchproducttype != 1}) (\code{weight} (missing (\code{NA}) if \code{producttype != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryWeight} (taking \code{WeightUnit} into account) \cr
+#' CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab individuals \tab Numeric \tab 295 \tab \code{catchcount} (\code{count} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryNumber} \cr 
+#' SampleWeight \tab Total weight of the sample for individual measurements \tab kg \tab Numeric \tab 4.6 \tab \code{lengthsampleweight} (missing (\code{NA}) if \code{sampleproducttype != 1}) \tab \code{SubsampleWeight} (taking \code{WeightUnit} into account) \cr       
+#' SampleNumber \tab Size of the sample for individual measurements \tab individuals \tab Numeric \tab 100 \tab \code{lengthsamplecount} \tab \code{SubsampledNumber} \cr
 #' }
 #' 
 #' 
 #' \bold{Individual level}:
-#' \tabular{lllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \cr
-#' IndividualKey \tab Key of the Individual level \tab None \tab Character \tab  \cr        
-#' Individual \tab Unique Individual identifier \tab None \tab Character \tab  \cr           
-#' IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \cr
-#' IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \cr
-#' LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \cr     
-#' WeightMeasurement \tab \tab None \tab Character \tab  \cr    
-#' IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \cr        
-#' IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab F \cr
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' IndividualKey \tab Key of the Individual level \tab None \tab Character \tab "2" \tab \code{specimenid} (\code{specimenno} for NMDBiotic 1.1 and 1.4) \tab \code{FishID} \cr        
+#' Individual \tab Unique Individual identifier \tab None \tab Character \tab "2021105-1-2-126417-1-2" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \cr           
+#' IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \tab \code{individualweight * 1000} (missing (\code{NA}) if \code{individualproducttype != 1}) (\code{weight.individual} (missing (\code{NA}) if \code{producttype.individual != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{IndividualWeight} (taking \code{WeightUnit.Biology} into account) \cr
+#' IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \tab \code{length * 100}  (missing (\code{NA}) if \code{lengthmeasurement != "E"}) \tab \code{LengthClass.Biology} (taking \code{LengthCode.Biology} into account) \cr
+#' LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \tab \code{lengthresolution} (\code{lengthunit} for NMDBiotic 1.1 and 1.4) converted to cm \tab  \code{LengthCode.Biology} converted cm \cr     
+#' WeightMeasurement \tab Specification of how IndividualRoundWeight was measured; one of "IndividualWeight" and "AverageWeight". For data from NMDBiotic files this is always "IndividualWeight". \tab None \tab Character \tab "IndividualWeight" \tab "IndividualWeight" \tab IndividualWeight if \code{IndividualWeight} is given, "AverageWeight" if \code{WeightAtLength} and \code{NumberAtLength} are given \cr    
+#' IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \tab \code{age} (located in the agedetermination level) for the \code{preferredagereading} \tab \code{IndividualAge} \cr      
+#' IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab "F" \tab "F" if \code{sex = 1}, "M" if \code{sex = 2} \tab \code{IndividualSex} \cr
 #' }
 #' 
 #' @name StoxBioticFormat
+#' 
+NULL
+
+##################################################
+##################################################
+#' StoxAcoustic data format.
+#' 
+#' The StoxAcoustic data format is defined by StoX as a common format to which data from different acoustic sampling formats are converted, guaranteeing consistent interpretation and documentation of all its variables. 
+#' 
+#' @details The StoxAcoustic format is defined according to the \code{\link[=generalSamplingHierarhcy]{general sampling hierarchy of StoX}} which is used as a basis for both the StoxcBiotic and StoxAcoustic format. The variables of the StoxAcoustic format are given by the tables below, where the columns NMDEchosounder and ICESAcoustic show the origin of variable in AcousticData read from NMDEchosounder \url{https://www.imr.no/formats/nmdechosounder/} and ICESAcoustic \url{https://www.ices.dk/data/data-portals/Pages/acoustic.aspx} files, respectively (see \code{\link{AcousticData}}). Variables with non-unique names across tables of the BioticData are written as variableName.tableName, and "-" and "/" denotes concatenation for character type variables with "-" and "/" as separation character, respectively. Units are given with shortname of the \code{\link{StoxUnits}}:
+#' 
+#' \bold{Cruise level}:
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab "2021105" \tab \code{cruise} \tab \code{LocalID} \cr
+#' Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic files and LocalID for ICESBiotic files) \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
+#' Platform  \tab Data collection platform identifier \tab None \tab Character \tab "1019" \tab \code{platform} \tab \code{Platform} \cr
+#' }
+#' 
+#' 
+#' \bold{Log level}:
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' LogKey \tab Key of the Log level, given as ISO 8601 date time string \tab ISO8601 \tab Character \tab "2020-04-24T03:51:26.000Z" \tab ISO 8601 formatted \code{start_time} \tab ISO 8601 formatted \code{Time} \cr
+#' Log \tab Sailed distance \tab nmi \tab Numeric \tab 123.1 \tab \code{log_start} \tab \code{Distance} \cr   
+#' EDSU \tab Unique elementary distance sampling unit (EDSU/Log) identifier \tab None \tab Character \tab "2020821/2020-04-24T03:51:26.000Z" \tab \code{CruiseKey-LogKey} \tab \code{CruiseKey-LogKey} \cr   
+#' DateTime \tab UTC time at start of the EDSU, stored as \code{\link{POSIXct}} \tab ISO8601 \tab Character \tab 2020-09-09T01:02:03.456Z \tab \code{start_time} \tab \code{Time} \cr
+#' Longitude \tab Longitude at LogOrigin \tab degree east \tab Numeric \tab 62.5 \tab \code{lon_start} \tab \code{Longitude} \cr
+#' Latitude \tab Latitude at LogOrigin \tab degree north \tab Numeric \tab 5.1 \tab \code{lat_start} \tab \code{Latitude} \cr
+#' LogOrigin \tab Origin of the Longitude/Latitude, one of "start", "middle", "end" \tab None \tab Character \tab "start" \tab "start" \tab \code{LogOrigin} \cr
+#' Longitude2 \tab Longitude at LogOrigin2 \tab degree east \tab Numeric \tab 62.6 \tab \code{lon_stop} \tab \code{Longitude2} \cr
+#' Latitude2 \tab Latitude at LogOrigin2 \tab degree north \tab Numeric \tab 5.2 \tab \code{lat_stop} \tab \code{Latitude2} \cr
+#' LogOrigin2 \tab Origin of the Longitude/Latitude, one of "start", "middle", "end" \tab None \tab Character \tab "end" \tab "end" \tab \code{LogOrigin2} \cr
+#' LogDistance \tab The length of the EDSU \tab nmi \tab Numeric \tab 0.1 \tab \code{integrator_dist} \tab \code{PingAxisInterval} \cr
+#' LogDuration \tab The duration of the EDSU \tab s \tab Numeric \tab 36 \tab \code{stop_time - start_time} \tab \code{NA} \cr
+#' EffectiveLogDistance \tab The effective length of the EDSU \tab nmi \tab Numeric \tab 0.09 \tab Same as LogDistance. \tab Same as LogDistance \cr
+#' BottomDepth \tab BottomDepth at the EDSU \tab m \tab Numeric \tab 123.2 \tab \code{NA} \tab \code{BottomDepth} \cr
+#' }
+#' 
+#' 
+#' \bold{Beam level}:
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' BeamKey \tab Key of the Beam level \tab None \tab Character \tab "38000/2" \tab \code{freq/transceiver} \tab \code{ID.Instrument} \cr
+#' Beam \tab Unique Beam identifier \tab None \tab Character \tab "38000/2" \tab Same as BeamKey. Can be translated. \tab Same as BeamKey. Can be translated. \cr
+#' Gear \tab Identifier of the gear \tab None \tab Character \tab "3270" \tab \code{gear} \tab \code{Gear} \cr
+#' Frequency \tab The acoustic frequency of the Beam \tab hertz \tab Numeric \tab 38000 \tab \code{freq} \tab \code{Frequency} \cr
+#' }
+#' 
+#' 
+#' \bold{AcousticCategory level}:
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' AcousticCategoryKey \tab Key of the AcousticCategory level \tab None \tab Character \tab "HER" \tab \code{acocat} \tab \code{SaCategory} \cr
+#' AcousticCategory \tab The acousic category \tab None \tab Character \tab "Herring" \tab Same as AcousticCategoryKey Can be translated. \tab Same as AcousticCategoryKey Can be translated. \cr
+#' }
+#' 
+#' 
+#' \bold{ChannelReference level}:
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' ChannelReferenceKey \tab Key of the ChannelReference level \tab None \tab Character \tab "P" \tab \code{type} \tab "P" \cr
+#' ChannelReferenceType \tab Unique ChannelReference identifier \tab None \tab Character \tab "P" \tab Same as ChannelReferenceKey \tab Same as ChannelReferenceKey \cr             
+#' ChannelReferenceDepth \tab The depth of the ChannelReference origin. 0 for pelagic channels. Not yet given for bottom channels, as BottomDepth is not yet defined for NMDEchosounder data \tab m \tab Numeric \tab 0 \tab 0 if \code{ChannelReferenceType == "P"}, \code{NA} if \code{ChannelReferenceType == "B"} (see BottomDepth) \tab 0 \cr
+#' ChannelReferenceTilt \tab The tilt angle of the beam, where 180 is vertically downwards and 0 is vertically upwards \tab degree \tab Numeric \tab 180 \tab 180 if \code{ChannelReferenceType == "P"}, 0 if \code{ChannelReferenceType == "B"} \tab Interpreted from \code{TransducerOrientation} \cr 
+#' }
+#' 
+#' 
+#' \bold{NASC level}:
+#' \tabular{lllllll}{
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' NASCKey \tab Key of the NASC level \tab None \tab Character \tab "2" \tab \code{ch} \tab \code{ChannelDepthUpper/ChannelDepthLower} \cr
+#' Channel \tab Unique NASC depth channel identifier \tab None \tab Character \tab "2" \tab Same as NASCKey Can be translated. \tab Same as NASCKey Can be translated. \cr           
+#' MaxChannelRange \tab The maximum range of the channel. Translates to the lower channel depth for vertically downwards oriented echosounder. \tab m \tab Numeric \tab 40 \tab \code{pel_ch_thickness * ch} \tab \code{MaxChannelRange} \cr
+#' MinChannelRange \tab The minimum range of the channel. Translates to the upper channel depth for vertically downwards oriented echosounder. \tab m \tab Numeric \tab 30 \tab \code{pel_ch_thickness * (ch - 1)} \tab \code{MinChannelRange} \cr
+#' NASC \tab The nautical area scattering coefficient. \tab m^2/nmi^2 \tab Numeric \tab 59.24813 \tab \code{sa} \tab \code{Value} \cr
+#' }
+#' 
+#' 
+#' @name StoxAcousticFormat
 #' 
 NULL
 

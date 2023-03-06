@@ -1,7 +1,7 @@
 
 #context("test-stoxLanding")
-landingXML <- ReadLanding(c(system.file("testresources", "landing.xml", package="RstoxData"),system.file("testresources", "landing2.xml", package="RstoxData")))
-flatSL <- StoxLanding(landingXML)$Landing
+landingXML <- RstoxData::ReadLanding(c(system.file("testresources", "landing.xml", package="RstoxData"),system.file("testresources", "landing2.xml", package="RstoxData")))
+flatSL <- RstoxData::StoxLanding(landingXML)$Landing
 expected_colums <- c("Species",
                      "Year",
                      "CatchDate",
@@ -32,10 +32,10 @@ weightPost <- sum(flatSL$RoundWeight)
 expect_equal(weightPre, weightPost)
 
 #context("test-stoxLanding is.StoxLandingData")
-landingXML <- ReadLanding(system.file("testresources", "landing.xml", package="RstoxData"))
-SL <- StoxLanding(landingXML)
-expect_true(is.StoxLandingData(SL))
-expect_false(is.StoxLandingData(landingXML))
+landingXML <- RstoxData::ReadLanding(system.file("testresources", "landing.xml", package="RstoxData"))
+SL <- RstoxData::StoxLanding(landingXML)
+expect_true(RstoxData::is.StoxLandingData(SL))
+expect_false(RstoxData::is.StoxLandingData(landingXML))
 
-expect_false(is.LandingData(SL))
-expect_true(is.LandingData(landingXML))
+expect_false(RstoxData::is.LandingData(SL))
+expect_true(RstoxData::is.LandingData(landingXML))

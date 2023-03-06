@@ -10,7 +10,7 @@ WriteICESDatras(ICESDatrasData)
 \item{ICESDatrasData}{\code{\link{ICESDatrasData}}.}
 }
 \value{
-List of string matrices in the ICES Datras CSV format.
+An object of StoX data type \code{\link{WriteICESDatrasData}}.
 }
 \description{
 Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}

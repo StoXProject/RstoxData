@@ -11,6 +11,8 @@ WriteICESAcoustic(ICESAcousticData)
 }
 \value{
 List of string matrices in the ICES acoustic CSV format.
+
+An object of StoX data type \code{\link{WriteICESAcousticData}}.
 }
 \description{
 Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}

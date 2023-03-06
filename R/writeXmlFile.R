@@ -565,7 +565,7 @@ WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), names
     namespace <- namespaces[[i]]
     
     xsdObject <- NULL
-    for (x in xsdObjects){
+    for (x in RstoxData::xsdObjects){
       if (!is.na(x$targetNamespace) & x$targetNamespace == namespace){
         xsdObject <- x
       }

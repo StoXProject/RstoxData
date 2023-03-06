@@ -16,7 +16,7 @@ expect_equal_read_back_in_xml <- function(data, xsdObject, namespace, writer="wr
     RstoxData:::fWriteLandings(tmp, data, namespace)
   }
 
-  backIn <- readXmlFile(tmp)
+  backIn <- RstoxData::readXmlFile(tmp)
   unlink(tmp)
   
   # force filename to be the same
@@ -44,8 +44,8 @@ expect_equal_read_back_in_xml(example, RstoxData::xsdObjects$landingerv2.xsd, "h
 #context("test biotic 3.1 to 3.0 conversion")
 example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
 tmp <- tempfile(fileext = ".xml")
-RstoxData:::writeXmlFile(tmp, example, xsdObjects$nmdbioticv3.xsd, "http://www.imr.no/formats/nmdbiotic/v3")
-backIn <- readXmlFile(tmp)
+RstoxData:::writeXmlFile(tmp, example, RstoxData::xsdObjects$nmdbioticv3.xsd, "http://www.imr.no/formats/nmdbiotic/v3")
+backIn <- RstoxData::readXmlFile(tmp)
 unlink(tmp)
 expect_true(sum(!is.na(example$fishstation$fishingbait))>0)
 expect_true(is.null(backIn$fishstation$fishingbait))
@@ -61,9 +61,9 @@ expect_equal(example, backIn)
 #context("test convertBioticFile")
 example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
 tmp <- tempfile(fileext = ".xml")
-expect_error(convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.0.xsd"))
-convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.xsd")
-backIn <- readXmlFile(tmp)
+expect_error(RstoxData::convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.0.xsd"))
+RstoxData::convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.xsd")
+backIn <- RstoxData::readXmlFile(tmp)
 unlink(tmp)
 expect_equal(backIn$metadata$useXsd, "nmdbioticv3")
 expect_true(is.null(backIn$fishstation$fishingbait))
@@ -72,8 +72,8 @@ expect_true(all(backIn$fishstation$serialnumber == example$fishstation$serialnum
 
 example <- RstoxData::readXmlFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"))
 tmp <- tempfile(fileext = ".xml")
-convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.1.xsd")
-backIn <- readXmlFile(tmp)
+RstoxData::convertBioticFile(system.file("testresources","biotic3.1_example.xml", package="RstoxData"), tmp, "nmdbioticv3.1.xsd")
+backIn <- RstoxData::readXmlFile(tmp)
 unlink(tmp)
 expect_equal(backIn$metadata$useXsd, "nmdbioticv3.1")
 expect_true(!is.null(backIn$fishstation$fishingbait))

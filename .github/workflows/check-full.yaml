@@ -30,9 +30,9 @@ jobs:
           - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-latest,  r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-20.04,   r: '4.2',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-18.04,   r: '4.1',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-18.04,   r: '4.0',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-18.04,   r: '3.6',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-20.04,   r: '4.1',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-20.04,   r: '4.0',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-20.04,   r: '3.6',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
