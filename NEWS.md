@@ -1,3 +1,9 @@
+# RstoxData v1.9.0-9003  (2023-03-06)
+* Fixed bug in RegroupLengthICESDatras(), where the columns were reordered with ResolutionTableVariables first.
+* Added a warning if there are more than one tag for at least one individual in AddToStoxBiotic() for NMDBiotic >= 3 files.
+* Removed variable names related to the NMCBiotic tables "prey", "preylengthfrequencytable" and "copepodedevstagefrequencytable".
+* Fixed bug in ICESDatras() where distance was first rounded in nautical miles and then multiplied by 1852.
+
 # RstoxData v1.9.0-9002  (2023-03-06)
 * Updated documentation of StoxAcoustic and StoxBiotic with tables defining each variable.
 * Added unit specification of StoxAcoustic and StoxBiotic variables.

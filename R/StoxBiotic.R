@@ -100,7 +100,6 @@ firstPhase <- function(
     simpleTableMap <- tableMap[sapply(tableMap, function(x) length(x[[2]])) == 1]
     originalParentTables <- stoxBioticObject$originalParentTables[[datatype]]
     
-    
     indageHeaders <- stoxBioticObject$indageHeadersList[[datatype]]
     
     # 1. Merge: a) Cruise number with everything b) age reading and individual (specific to data source type)
@@ -111,8 +110,18 @@ firstPhase <- function(
         ## Merge individual and age
     	data$individual <- merge(data$individual, data$agedetermination, by.x = c(indageHeaders, "preferredagereading"), by.y = c(indageHeaders, "agedeterminationid"), all.x = TRUE)
     	
-    	# Merge in the tag:
-    	data$individual <- mergeByIntersect(data$individual, data$tag, all.x = TRUE)
+    	# Merge in the tag, but only if there is at most 1 tag per individual:
+    	# Count the tags:
+    	numberOfTagsPerIndividual <- data$tag[, .N, by = c("serialnumber", "catchsampleid", "specimenid")]$N
+    	if(any(numberOfTagsPerIndividual > 1)) {
+    		warning("Multiple tags detected for some individuals. tagid and tagtype added as NA.")
+    		data$individual[, tagid := NA_character_]
+    		data$individual[, tagtype := NA_character_]
+    	}
+    	else {
+    		data$individual <- mergeByIntersect(data$individual, data$tag, all.x = TRUE)
+    	}
+    	
     	# Store the names of the individual and prey tables:
     	individualNames <- names(data$individual)
     	preyNames <- names(data$prey)

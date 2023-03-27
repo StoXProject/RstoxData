@@ -110,3 +110,23 @@ expect_true(
 	)
 ) 
 
+# Multiple tags should give NA tagid and tagtype
+# Read NMDBiotic data and add repeated tags:
+bioticFilePath <- system.file("testresources", "biotic3.1_example.xml", package = "RstoxData")
+NMDBioticData <- RstoxData::ReadBiotic(bioticFilePath)
+
+# Add fictive tags:
+keys <- c("missiontype", "startyear", "platform", "missionnumber", "serialnumber", "catchsampleid", "specimenid")
+keysOfLastIndividual <- utils::tail(NMDBioticData[[1]]$individual, 1)[, ..keys]
+NMDBioticData[[1]]$tag <- cbind(keysOfLastIndividual, tagid = c(1,2), tagtype = NA)
+StoxBioticData <- RstoxData::StoxBiotic(NMDBioticData)
+StoxBioticDataAdded <- RstoxData::AddToStoxBiotic(BioticData = NMDBioticData, StoxBioticData = StoxBioticData, VariableNames = "tagid")
+
+expect_true(all(is.na(StoxBioticDataAdded$Individual$tagid)))
+
+NMDBioticData[[1]]$tag <- cbind(keysOfLastIndividual, tagid = c(2), tagtype = NA)
+StoxBioticDataAdded <- RstoxData::AddToStoxBiotic(BioticData = NMDBioticData, StoxBioticData = StoxBioticData, VariableNames = "tagid")
+
+expect_equal(StoxBioticDataAdded$Individual$tagid, c(rep(NA, 3), 2))
+
+
