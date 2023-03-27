@@ -1050,7 +1050,9 @@ ICESDatrasOne <- function(
 		"StNo" = serialnumber,
 		# This seems like a bug. The HaulNo should be a "Sequential numbering of hauls during cruise.", so for Norwegian data we use serialnumber also for this one:
 		# "HaulNo" = station,
-		"HaulNo" = serialnumber,
+		# Changing back to "HaulNo" = station for consistency with historical data:
+		#"HaulNo" = serialnumber,
+		"HaulNo" = station,
 		"Year" = getYear(stationstartdate),
 		"Month" = getMonth(stationstartdate),
 		"Day" = getDay(stationstartdate),
@@ -1083,7 +1085,7 @@ ICESDatrasOne <- function(
 		# Before, the function getDistanceMeter() was used, which was inherited from old Datras code. Instead we use the distance that is given by NMDBiotic:
 		#"Distance" = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
 		# Distance is in nautical miles in NMDBiotic and in meters in ICESDatras:
-		"Distance" = round(distance) * 1852,
+		"Distance" = round(distance * 1852),
 		"Warplngt" = round(wirelength),
 		"Warpdia" = NA_real_,
 		"WarpDen" = NA_real_,
@@ -1847,8 +1849,10 @@ RegroupLengthICESDatrasOneTable <- function(table, RegroupMethod, ResolutionTabl
 		ResolutionTable[, newReportingUnit := lengthCode_unit_table$reportingUnit[..atResolution]]
 		ResolutionTable[, ResolutionCode := NULL]
 		
-		# Merge in the resolution information:
+		# Merge in the resolution information (preserve column order):
+		originalColOrder <- names(table)
 		table <- merge(table, ResolutionTable, by = ResolutionTableVariables, all.x = TRUE, sort = FALSE)
+		data.table::setcolorder(table, originalColOrder)
 	}
 	else if(RegroupMethod == "HighestResolution") {
 		# Get the highest resolution by the GroupingVariables:

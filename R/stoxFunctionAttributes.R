@@ -1087,8 +1087,8 @@ processPropertyFormats <- list(
 	variableNames_AddToStoxBiotic = list(
 		class = "vector", 
 		title = "One or more variables to add to the StoxBioticData from BioticData", 
-		possibleValues = function(BioticData) {
-			sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
+		possibleValues = function(BioticData, tablesToExclude = c("prey", "preylengthfrequencytable", "copepodedevstagefrequencytable")) {
+			sort(unique(unlist(lapply(BioticData[setdiff(names(BioticData), tablesToExclude)], function(x) lapply(x, names)))))
 		}, 
 		variableTypes = "character"
 	), 

@@ -1149,7 +1149,6 @@ getNAByType <- function(type = c("numeric", "double", "integer", "character")) {
 #' @export
 #' 
 do.call_robust <- function(what, args, quote = FALSE, envir = parent.frame(), keep.unnamed = FALSE) {
-	
 	# Get the function if given as a full address (with double colon):
 	if(is.character(what) && grepl("::", what, fixed = TRUE)) {
 		whatSplit <- as.list(strsplit(what, "::")[[1]])
@@ -1160,10 +1159,16 @@ do.call_robust <- function(what, args, quote = FALSE, envir = parent.frame(), ke
 	f <-  formals(what)
 	# Keep only the relevant args:
 	if(length(f) && is.list(args)) {
-		keep <- which(names(args) %in% names(f))
-		if(keep.unnamed) {
-			keep  <- sort(c(keep, which(names(args) == "")))
+		if("..." %in% names(f)) {
+			keep <- seq_along(args)
 		}
+		else {
+			keep <- which(names(args) %in% names(f))
+			if(keep.unnamed) {
+				keep  <- sort(c(keep, which(names(args) == "")))
+			}
+		}
+		
 		args <- args[keep]
 	}
 	
