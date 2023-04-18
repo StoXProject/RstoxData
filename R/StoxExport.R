@@ -890,7 +890,7 @@ changeClassOfNonNA <- function(name, classes, data) {
 #'
 #' @param ICESBioticData A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.
 #'
-#' @return #' @return An object of StoX data type \code{\link{WriteICESBioticData}}.
+#' @return An object of StoX data type \code{\link{WriteICESBioticData}}.
 #'
 #' @export
 WriteICESBiotic <- function(ICESBioticData){

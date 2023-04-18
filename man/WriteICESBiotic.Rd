@@ -10,7 +10,7 @@ WriteICESBiotic(ICESBioticData)
 \item{ICESBioticData}{A \code{\link{ICESBioticData}} object obtained from an ICES acoustic XML format file.}
 }
 \value{
-#' @return An object of StoX data type \code{\link{WriteICESBioticData}}.
+An object of StoX data type \code{\link{WriteICESBioticData}}.
 }
 \description{
 Writes \code{\link{ICESBioticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESBioticData}}
