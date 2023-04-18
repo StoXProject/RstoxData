@@ -68,7 +68,7 @@ NULL
 #' 
 #' @name generalSamplingHierarhcy
 #' 
-#' @seealso The general sampling hierarcchy is used in the format \code{\link{StoxBioticFormat}} and \code{\link{StoxAcousticFormat}}.
+#' @seealso The general sampling hierarchy is used in the format \code{\link{StoxBioticFormat}} and \code{\link{StoxAcousticFormat}}.
 #' 
 NULL
 
