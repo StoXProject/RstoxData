@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0-9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9.0</span>
       </span>
     </div>
 
@@ -47,6 +47,34 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.9.0" id="rstoxdata-v190-2023-04-18">RstoxData v1.9.0 (2023-04-18)<a class="anchor" aria-label="anchor" href="#rstoxdata-v190-2023-04-18"></a></h2>
+<div class="section level3">
+<h3 id="summary-1-9-0">Summary<a class="anchor" aria-label="anchor" href="#summary-1-9-0"></a></h3>
+<ul><li>This release contains improvements and bug-fixes in the ICESDatras() and the RegroupLengthICESDatras() functions.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="genaral-changes-1-9-0">Genaral changes<a class="anchor" aria-label="anchor" href="#genaral-changes-1-9-0"></a></h3>
+<ul><li>Updated documentation of StoxAcoustic and StoxBiotic with tables defining each variable.</li>
+<li>Removed variable names related to the NMCBiotic tables “prey”, “preylengthfrequencytable” and “copepodedevstagefrequencytable”.</li>
+<li>Added unit specification of StoxAcoustic and StoxBiotic variables.</li>
+<li>Changed RegroupLengthICESDatras() to regroup lengths both in the HL and the CA table, and also to support recalculating both HLNoAtLngt and CANoAtLngt. Also added the parameters ResolutionTableVariables and ResolutionTable to support specices specific (or other variables) regrouping.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-9-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-9-0"></a></h3>
+<ul><li>Fixed bug in RegroupLengthICESDatras(), where the columns were reordered with ResolutionTableVariables first.</li>
+<li>Fixed bug in ICESDatras() where distance was first rounded in nautical miles and then multiplied by 1852.</li>
+<li>Fixed bug in translateOneTranslationOneTable() used by Translate-functions, where type conversion was applied before applying the translation, which for a function such as IndividualAge &gt; 9 resulted in 10, 11, … to be comared as text and thus not translated.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="warnings-1-9-0">Warnings<a class="anchor" aria-label="anchor" href="#warnings-1-9-0"></a></h3>
+<ul><li>Fixed snprintf warnnings.</li>
+<li>Added a warning if there are more than one tag for at least one individual in AddToStoxBiotic() for NMDBiotic &gt;= 3 files.</li>
+<li>Corrected warning ” There are more than one ‘serialnumber’ …” to end with “More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):” instead of “Duplicated serialnumber for the following cruise/station (of the fishstation table of the BioticData):”.</li>
+<li>Corrected warning for more NASC in B than in P.</li>
+<li>Corrected warninig for non-supported NMDEhcosounder format from &gt;= 1.4 to &gt;= 1.1.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.0-9003" id="rstoxdata-v190-9003-2023-03-06">RstoxData v1.9.0-9003 (2023-03-06)<a class="anchor" aria-label="anchor" href="#rstoxdata-v190-9003-2023-03-06"></a></h2>
 <ul><li>Fixed bug in RegroupLengthICESDatras(), where the columns were reordered with ResolutionTableVariables first.</li>
@@ -273,9 +301,9 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.2" id="rstoxdata-v152-2022-01-22">RstoxData v1.5.2 (2022-01-22)<a class="anchor" aria-label="anchor" href="#rstoxdata-v152-2022-01-22"></a></h2>
-<ul><li>Added warnings for when (catch)producttype != 1, (sample)producttype != 1, (individual)producttype != 1, or lengthmeasurement != ‘E’.</li>
-<li>Added support for NMDBiotic files of mixed version (&lt;= and &gt; 1.4) in AddToStoxBiotic() (removing the prey table and other unused tables, as consistent link to the individual table is not provided by the XML schema.).</li>
-<li>Fixed bug causing stream = TRUE to fail on MacOS Monterey in readXmlFile().</li>
+<ul><li><p>Added warnings for when (catch)producttype != 1, (sample)producttype != 1, (individual)producttype != 1, or lengthmeasurement != ‘E’.</p></li>
+<li><p>Added support for NMDBiotic files of mixed version (&lt;= and &gt; 1.4) in AddToStoxBiotic() (removing the prey table and other unused tables, as consistent link to the individual table is not provided by the XML schema.).</p></li>
+<li><p>Fixed bug causing stream = TRUE to fail on MacOS Monterey in readXmlFile().</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.5" id="rstoxdata-v135-2022-01-09">RstoxData v1.3.5 (2022-01-09)<a class="anchor" aria-label="anchor" href="#rstoxdata-v135-2022-01-09"></a></h2>
@@ -580,6 +608,10 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.10.9001" id="rstoxdata-v08109001-2020-06-02">RstoxData v0.8.10.9001 (2020-06-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v08109001-2020-06-02"></a></h2>
 <ul><li>Appveyor: test logic.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.8.10" id="rstoxdata-v0810-2020-06-02">RstoxData v0.8.10 (2020-06-02)<a class="anchor" aria-label="anchor" href="#rstoxdata-v0810-2020-06-02"></a></h2>
+<ul><li>New minor release.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.9" id="rstoxdata-v089-2020-05-28">RstoxData v0.8.9 (2020-05-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v089-2020-05-28"></a></h2>
