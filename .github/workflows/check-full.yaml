@@ -19,16 +19,20 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
+          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
+          # Disccarded due to the following missing packages on Mac for R 3.6: tinytest, Rcpp, xml2, units, stringi, data.table:
+          #- {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
+          - {os: windows-latest, r: '4.3',     pkgext: '.zip'}
           - {os: windows-latest, r: '4.2',     pkgext: '.zip'}
           - {os: windows-latest, r: '4.1',     pkgext: '.zip'}
           - {os: windows-latest, r: '4.0',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
           - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-latest,  r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-20.04,   r: '4.3',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-20.04,   r: '4.2',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-20.04,   r: '4.1',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-20.04,   r: '4.0',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
@@ -177,7 +181,7 @@ jobs:
       #     name: ${{ runner.os }}-${{ matrix.config.r }}-pkg
       #     path: '${{ github.workspace }}/*${{ matrix.config.pkgext }}'
 
-      # We include 'release' in order to always test the altest release, but mac and Windows binaries are not deployed to the drat repo:
+      # We include 'release' in order to always test the latest release, but (mac and Windows) binaries are not deployed to the drat repo:
       - name: Upload to DRAT repo
         if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
