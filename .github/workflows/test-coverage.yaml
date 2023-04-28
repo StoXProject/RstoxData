@@ -31,7 +31,7 @@ jobs:
       - name: Install MacOS dependencies
         if: runner.os == 'macOS'
         run: |
-          rm '/usr/local/bin/gfortran'
+          #rm '/usr/local/bin/gfortran'
           brew install udunits
         shell: bash
 
