@@ -23,7 +23,8 @@ jobs:
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
+          # Disccarded due to the following missing packages on Mac for R 3.6: tinytest, Rcpp, xml2, units, stringi, data.table:
+          #- {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: '4.3',     pkgext: '.zip'}
           - {os: windows-latest, r: '4.2',     pkgext: '.zip'}
