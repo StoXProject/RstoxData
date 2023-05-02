@@ -34,7 +34,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          getOption("repos")
+          options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
+          # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
+          remotes::install_deps(dependencies = TRUE, type = "both")
+          
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
 
