@@ -132,6 +132,11 @@ jobs:
           remotes::install_cran("sessioninfo")
         shell: Rscript {0}
         
+      - name: Show .Platform$pkgType
+        run: |
+          .Platform$pkgType
+        shell: Rscript {0}
+
       - name: Session info
         run: |
           options(width = 100)
