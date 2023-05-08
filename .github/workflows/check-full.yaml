@@ -109,10 +109,7 @@ jobs:
           getOption("repos")
           
           # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
-          options(install.packages.compile.from.source = "always") # Install from source here to support "1.0.10":
-          if(packageVersion("Rcpp") <= "1.0.10") {
-          	install.packages("Rcpp")
-          }
+          install.packages("Rcpp")
           
           # Install the rest of the dependencies:
           options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
