@@ -49,8 +49,8 @@ jobs:
       - name: Do autorelease increment, tagging, and environment setup
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
-          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/master/scripts/checktag-actions.sh" --output testingRepo_checktag.sh
-          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/master/scripts/deploy-actions.sh" --output testingRepo_deploy.sh
+          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/checktag-actions.sh" --output testingRepo_checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/deploy-actions.sh" --output testingRepo_deploy.sh
           chmod +x ./testingRepo_checktag.sh ./testingRepo_deploy.sh
           . testingRepo_checktag.sh
           curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/checktag-actions.sh" --output repo_checktag.sh
