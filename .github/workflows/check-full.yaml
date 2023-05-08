@@ -49,10 +49,14 @@ jobs:
       - name: Do autorelease increment, tagging, and environment setup
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
-          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/checktag-actions.sh" --output checktag.sh
-          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/deploy-actions.sh" --output deploy.sh
-          chmod +x ./checktag.sh ./deploy.sh
-          . checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/master/scripts/checktag-actions.sh" --output testingRepo_checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/master/scripts/deploy-actions.sh" --output testingRepo_deploy.sh
+          chmod +x ./testingRepo_checktag.sh ./testingRepo_deploy.sh
+          . testingRepo_checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/checktag-actions.sh" --output repo_checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/repo/master/scripts/deploy-actions.sh" --output repo_deploy.sh
+          chmod +x ./repo_checktag.sh ./repo_deploy.sh
+          . repo_checktag.sh
           echo "PRERELEASE=${PRERELEASE}" >> $GITHUB_ENV
           echo "FINAL_TAG=${FINAL_TAG}" >> $GITHUB_ENV
           echo "PKG_FILE_PREFIX=${PKG_FILE_PREFIX}" >> $GITHUB_ENV
@@ -69,7 +73,7 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Query dependencies
+      - name: Query R package dependencies
         run: |
           install.packages('remotes')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
@@ -92,25 +96,28 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "18.04"))')
 
-      - name: Install dependencies on Linux
+      - name: Install R package dependencies on Linux
         if: runner.os == 'Linux'
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
-      - name: Install dependencies
+      - name: Install R package dependencies
         if: runner.os != 'Linux'
         run: |
+          # Show the repos:
           getOption("repos")
-          options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
-          # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
-          remotes::install_deps(dependencies = TRUE, type = "both")
           
           # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
           options(install.packages.compile.from.source = "always") # Install from source here to support "1.0.10":
           if(packageVersion("Rcpp") <= "1.0.10") {
           	install.packages("Rcpp")
           }
+          
+          # Install the rest of the dependencies:
+          options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
+          # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
+          remotes::install_deps(dependencies = TRUE, type = "both")
         shell: Rscript {0}
 
       - name: Prepare for CRANdependencies on Linux
@@ -162,27 +169,22 @@ jobs:
           file.copy(Sys.getenv("PKG_FILE"), Sys.getenv("PKG_FREL"))
         shell: Rscript {0}
 
-      # - name: Upload package source as artifact
-      #   if: runner.os == 'Linux' && matrix.config.r == 'release'
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: ${{ env.PKG_FILE }}
-      #     path: '${{ github.workspace }}/${{ env.PKG_FILE }}'
-
-      # - name: Upload package binary as artifact
-      #   if: runner.os == 'Windows' || runner.os == 'macOS'
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: ${{ runner.os }}-${{ matrix.config.r }}-pkg
-      #     path: '${{ github.workspace }}/*${{ matrix.config.pkgext }}'
-
       # We include 'release' in order to always test the latest release, but (mac and Windows) binaries are not deployed to the drat repo:
       - name: Upload to DRAT repo
         if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
-        run: . deploy.sh
+        run: . repo_deploy.sh
+        shell: bash
+
+      # We include 'release' in order to always test the latest release, but (mac and Windows) binaries are not deployed to the drat repo:
+      - name: Upload to DRAT testingRepo
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          BUILD_NUMBER: ${{ github.sha  }}
+          DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
+        run: . testingRepo_deploy.sh
         shell: bash
 
       - name: Create release and upload files
