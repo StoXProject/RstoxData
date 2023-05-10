@@ -128,7 +128,10 @@ jobs:
         run: |
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("git2r")
-          remotes::install_cran("drat")
+          #remotes::install_cran("drat")
+          # Test using the modfied drat:
+          remotes::install_github(repo = "stoxproject/drat", dependencies = FALSE)
+          
           remotes::install_cran("sessioninfo")
         shell: Rscript {0}
         
