@@ -151,7 +151,7 @@ firstPhase <- function(
 	    data <- mergeDataTables(data, toMerge)
 	  } 
     else if(datatype == "icesBiotic") {
-
+    	
     	# Merge Cruise and Survey name
 	    data[["Cruise"]][, Survey := tail(data[["Survey"]], 1)]
     	
@@ -246,7 +246,7 @@ firstPhase <- function(
 	    
 	    # Order by the keys:
 	    data.table::setorderv(data$Biology, byVars)
-	    
+
 	    
 	    # Sanity check (old Biology row number must be the same with the merged product, _if there is no WeightMeasurement == FALSE_)
 	    if(nrowC != nrow(data$Biology[WeightMeasurement == TRUE,])) {
