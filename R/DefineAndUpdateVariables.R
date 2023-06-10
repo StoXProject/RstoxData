@@ -70,9 +70,9 @@ RedefineStoxBiotic <- function(
 #' This function defines the translation table used as input to \code{\link{TranslateStoxBiotic}} and similar functions to translate values of one or more columns to new values given by a table or read from a CSV file.
 #' 
 #' @inheritParams general_arguments
-#' @param VariableName The name of the variable to translate.
+#' @param VariableName The name of the variable to translate. This will be the name of the first column of the TranslationTable when generated from the StoX GUI.
 #' @param Conditional Logical: If TRUE condition the translation on values of other variables.
-#' @param ConditionalVariableNames The names of the variables to condition the translation on. Must be given if \code{Conditional == TRUE}.
+#' @param ConditionalVariableNames The names of the variables to condition the translation on. Must be given if \code{Conditional == TRUE}. This will be the name(s) of the third column and onwards of the TranslationTable when generated from the StoX GUI.
 #' @param DefinitionMethod  Character: A string naming the method to use, one of "ResourceFile", for reading the table from the file given by \code{FileName}; and "Table", for defining the \code{TranslationTable} directly as an input.
 #' @param FileName The csv file holding a table with the \code{TranslationTable}. Required columns are given by \code{ValueColumn} and \code{NewValueColumn}, and, in the case that Conditional == TRUE, \code{ConditionalValueColumns}.
 #' @param ValueColumn,NewValueColumn The name of the columns of \code{FileName} representing the current values and the values to translate to, respectively.
@@ -296,7 +296,7 @@ translateVariables <- function(
 translateOneTable <- function(table, translationList, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
 	
 	# Apply the translation, one line at the time:
-	lapply(
+	matches <- lapply(
 		translationList, 
 		translateOneTranslationOneTable, 
 		table = table, 
@@ -304,6 +304,27 @@ translateOneTable <- function(table, translationList, translate.keys = FALSE, Pr
 		PreserveClass = PreserveClass, 
 		warnMissingTranslation = warnMissingTranslation
 	)
+	
+	# Change the type after matching and before translating to avoid type conversion warnings:
+	if(!PreserveClass) {
+		for(ind in seq_along(translationList)) {
+			variableToTranslate <- names(translationList[[ind]])[1]
+			newClass <- class(translationList[[ind]]$NewValue)
+			setColumnClasses(table, structure(list(newClass), names = variableToTranslate))
+		}
+		
+	}
+	
+	# Replace. This assumes that there is exactly one row in each element of the translationList:
+	for(ind in seq_along(matches)) {
+		if(length(matches[[ind]])) {
+			variableToTranslate <- names(translationList[[ind]])[1]
+			replacement <- translationList[[ind]]$NewValue
+			table[matches[[ind]], eval(variableToTranslate) := ..replacement]
+		}
+	}
+	
+	return(TRUE)
 }
 
 getMissingCombinations <- function(translation, table, variableKeys) {
@@ -416,23 +437,27 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 		# Replace by the new value:
 		if(variableToTranslate %in% names(table)) {
 			varsToMatch <- setdiff(names(translationListOne), "NewValue")
-			mathces <- lapply(varsToMatch, mathcVariable, list = translationListOne, table = table)
-			mathces <- apply(do.call(cbind, mathces), 1, all)
+			matches <- lapply(varsToMatch, matchVariable, list = translationListOne, table = table)
+			matches <- apply(do.call(cbind, matches), 1, all)
 			
-			# Change the type after matching and before translating to avoid type conversion warninigs:
-			if(!PreserveClass) {
-				setColumnClasses(table, structure(list(class(translationListOne$NewValue)), names = variableToTranslate))
-			}
+			### # Change the type after matching and before translating to avoid type conversion warninigs:
+			### if(!PreserveClass) {
+			### 	setColumnClasses(table, structure(list(class(translationListOne$NewValue)), names = variableToTranslate))
+			### }
+			### 
+			### # Replace:
+			### replacement <- translationListOne$NewValue
+			### table[matches, eval(variableToTranslate) := ..replacement]
 			
-			# Replace:
-			replacement <- translationListOne$NewValue
-			table[mathces, eval(variableToTranslate) := ..replacement]
+			return(matches)
 		}
 	}
+	
+	return(NULL)
 }
 
 # Function to match a condition given in the element 'variableName' of 'list' to the corresponding element in 'table', either as an evaluable function expression string, or an evaluable string:
-mathcVariable <- function(variableName, list, table) {
+matchVariable <- function(variableName, list, table) {
 	# Special case for NA:
 	if(is.na(list[[variableName]]) || identical(list[[variableName]], "NA")) {
 		is.na(table[[variableName]])
