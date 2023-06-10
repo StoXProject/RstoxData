@@ -20,11 +20,11 @@ TranslateBiotic(
 
 \item{TranslationDefinition}{The method to use for defining the Translation, one of \code{FunctionParameter} to define the Translation on the fly in this function using the \code{TranslationTable}, or \code{FunctionInput} to import \code{\link{Translation}} process data from a previously run process using the function \code{\link{DefineTranslation}}. When reading the translation from a file \code{FunctionInput} must be used.}
 
-\item{VariableName}{The name of the variable to translate.}
+\item{VariableName}{The name of the variable to translate. This will be the name of the first column of the TranslationTable when generated from the StoX GUI.}
 
 \item{Conditional}{Logical: If TRUE condition the translation on values of other variables.}
 
-\item{ConditionalVariableNames}{The names of the variables to condition the translation on. Must be given if \code{Conditional == TRUE}.}
+\item{ConditionalVariableNames}{The names of the variables to condition the translation on. Must be given if \code{Conditional == TRUE}. This will be the name(s) of the third column and onwards of the TranslationTable when generated from the StoX GUI.}
 
 \item{TranslationTable}{A table holding the following columns: The first column holds the values to translate FROM, the second column holds the values to translate TO, and the remaining zero or more columns holds the values for the conditional variables specified in \code{ConditionalVariableNames}. I.e., if \code{VariableName} = "IndividualAge" and \code{ConditionalVariableNames} = "IndividualSex", and the \code{TranslationTable} has values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4. Use NA to translate missing values (shown as "-" in Preview in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions of functions of the variable specified by the column name. See details of \code{\link{DefineTranslation}}.}
 

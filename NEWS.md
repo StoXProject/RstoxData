@@ -1,3 +1,12 @@
+# RstoxData v1.10.0-9003  (2023-06-01)
+
+* Improved warning when variables that cannot be converted to numeric as requested by the XSD are set to NA in ReadAcoustic()/ReadBiotic().
+
+# RstoxData v1.10.0-9001  (2023-05-22)
+
+* Fixed bug when translating with PreserveClass = FALSE, in which case the class change could corrupt the condition of the translation (e.g., translating a copy of the DateTime in the Log table of the StoxAcousticData would convert that to string after the first line of the TranslationTable, and then any time condition will fail, as the class is no longer POSIX).
+
+
 # RstoxData v1.9.0  (2023-04-18)
 
 ## Summary

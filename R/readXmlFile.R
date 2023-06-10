@@ -124,9 +124,9 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	tableHeaders <- xsdObjects[[xsd]][["tableHeaders"]]
 	
 	tableTypes <- xsdObjects[[xsd]][["tableTypes"]]
-
+	
 	# Finishing touch
-	final <- lapply(names(result), applyNameType, result, tableHeaders, tableTypes)
+	final <- lapply(names(result), applyNameType, result, tableHeaders, tableTypes, xsd)
 	names(final) <- names(result)
 
 	# Add metadata
@@ -226,7 +226,7 @@ icesBioticPreprocess <- function(xsdObject) {
 }
 
 # Process column names and types
-applyNameType <- function(x, result, tableHeaders, tableTypes) {
+applyNameType <- function(x, result, tableHeaders, tableTypes, xsd) {
 	
 	# Known atomic data types
 	knownTypes <- list( "xsd:ID"="character", "xsd:float"="double", "xs:string"="character",
@@ -269,7 +269,19 @@ applyNameType <- function(x, result, tableHeaders, tableTypes) {
 		for(i in seq_len(ncol(z))) {
 			# Map the types
 			doConv <- eval(parse(text = paste0("as.", knownTypes[[tableType[i]]])))
-			z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
+			#z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
+			
+			# Throw a proper warning when conversion fails:
+			tryCatch(
+				z[, tableHeader[i] := doConv(z[[tableHeader[i]]])], 
+				error = function(e) {
+					e
+				}, 
+				warning = function(w) {
+					modifiedWarning <- paste0("The following variable could not converted to numeric as required by the XSD ", xsd, ", and were set to NA: ", paste(cn[i]))
+					warning(modifiedWarning)
+				}
+			)
 		}
 	}
 	return(z)
