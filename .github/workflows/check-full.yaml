@@ -131,6 +131,7 @@ jobs:
           #remotes::install_cran("drat")
           # Test using the modfied drat:
           #remotes::install_github(repo = "stoxproject/drat", dependencies = FALSE)
+          remotes::install_github(repo = 'eddelbuettel/drat', dependencies = FALSE)
           
           remotes::install_cran("sessioninfo")
         shell: Rscript {0}
