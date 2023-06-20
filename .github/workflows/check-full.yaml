@@ -44,7 +44,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Do autorelease increment, tagging, and environment setup
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -68,8 +68,8 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
-          rtools-version: ${{ matrix.config.rtools }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
+          #rtools-version: ${{ matrix.config.rtools }} # Not present in the matrix...
+          #http-user-agent: ${{ matrix.config.http-user-agent }} # Not present in the matrix...
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -102,7 +102,7 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
-      - name: Install R package dependencies
+      - name: Install R package dependencies on Windows and macOS
         if: runner.os != 'Linux'
         run: |
           # Show the repos:
@@ -128,12 +128,11 @@ jobs:
         run: |
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("git2r")
+          remotes::install_cran("sessioninfo")
           #remotes::install_cran("drat")
-          # Test using the modfied drat:
+          # Using the modfied drat that supports big sur:
           #remotes::install_github(repo = "stoxproject/drat", dependencies = FALSE)
           remotes::install_github(repo = 'eddelbuettel/drat', dependencies = FALSE)
-          
-          remotes::install_cran("sessioninfo")
         shell: Rscript {0}
         
       - name: Show .Platform$pkgType
