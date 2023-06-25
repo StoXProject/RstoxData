@@ -14,7 +14,7 @@ The StoxBiotic format is defined according to the \code{\link[=generalSamplingHi
 \tabular{lllllll}{
 \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
 CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab "2021105" \tab \code{cruise/missiontype/startyear/platform/missionnumber} \tab \code{LocalID} \cr
-Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic files and LocalID for ICESBiotic files) \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
+Cruise \tab Unique Cruise identifier \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
 Platform  \tab Data collection platform identifier \tab None \tab Character \tab "1019" \tab \code{platform} \tab \code{Platform} \cr
 }
 
@@ -75,7 +75,7 @@ IndividualKey \tab Key of the Individual level \tab None \tab Character \tab "2"
 Individual \tab Unique Individual identifier \tab None \tab Character \tab "2021105-1-2-126417-1-2" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \cr           
 IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \tab \code{individualweight * 1000} (missing (\code{NA}) if \code{individualproducttype != 1}) (\code{weight.individual} (missing (\code{NA}) if \code{producttype.individual != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{IndividualWeight} (taking \code{WeightUnit.Biology} into account) \cr
 IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \tab \code{length * 100}  (missing (\code{NA}) if \code{lengthmeasurement != "E"}) \tab \code{LengthClass.Biology} (taking \code{LengthCode.Biology} into account) \cr
-LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \tab \code{lengthresolution} (\code{lengthunit} for NMDBiotic 1.1 and 1.4) converted to cm \tab  \code{LengthCode.Biology} converted cm \cr     
+LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \tab \code{lengthresolution} (\code{lengthunit} for NMDBiotic 1.1 and 1.4) converted to cm \tab \code{LengthCode.Biology} converted to cm \cr     
 WeightMeasurement \tab Specification of how IndividualRoundWeight was measured; one of "IndividualWeight" and "AverageWeight". For data from NMDBiotic files this is always "IndividualWeight". \tab None \tab Character \tab "IndividualWeight" \tab "IndividualWeight" \tab IndividualWeight if \code{IndividualWeight} is given, "AverageWeight" if \code{WeightAtLength} and \code{NumberAtLength} are given \cr    
 IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \tab \code{age} (located in the agedetermination level) for the \code{preferredagereading} \tab \code{IndividualAge} \cr      
 IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab "F" \tab "F" if \code{sex = 1}, "M" if \code{sex = 2} \tab \code{IndividualSex} \cr

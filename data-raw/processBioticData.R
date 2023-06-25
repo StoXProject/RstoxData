@@ -233,9 +233,19 @@ getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, speci
 
 
 getBottomDepth_NMDBiotic <- function(bottomdepthstart, bottomdepthstop) {
-	hasInvalid <- is.na(bottomdepthstart) | is.na(bottomdepthstop)
+	missingStart <- is.na(bottomdepthstart)
+	missingStop <- is.na(bottomdepthstop)
+	hasInvalid <- missingStart | missingStop
 	if(any(hasInvalid)) {
-		warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. At least one of these are missing (NA) in ", sum(hasInvalid), " out of ", length(hasInvalid), " stations. RedefineStoxBiotic can be used to define the BottomDepth as e.g. bottomdepthstart in the case that this is present.")
+		if(!any(missingStop)) {
+			warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. bottomdepthstart is missing (NA) in ", sum(missingStart), " out of ", length(missingStart), " stations. Please consider applying RedefineStoxBiotic to define the BottomDepth as bottomdepthstop instead.")
+		}
+		else if(!any(missingStart)) {
+			warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. bottomdepthstop is missing (NA) in ", sum(missingStop), " out of ", length(missingStop), " stations. Please consider applying RedefineStoxBiotic to define the BottomDepth as bottomdepthstart instead.")
+		}
+		else {
+			warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. bottomdepthstart is missing (NA) in ", sum(missingStart), ", bottomdepthstop is missing (NA) in ", sum(missingStop), " and both are missing in ", sum(missingStart & missingStop), " out of ", length(missingStart), " stations.")
+		}
 	}
 	ifelse(hasInvalid, NA_real_, (bottomdepthstart + bottomdepthstop) / 2)
 }
