@@ -13,7 +13,7 @@ The StoxAcoustic format is defined according to the \code{\link[=generalSampling
 \tabular{lllllll}{
 \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
 CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab "2021105" \tab \code{cruise} \tab \code{LocalID} \cr
-Cruise \tab Unique Cruise identifier ("/" separated concatenation of cruise, missiontype, startyear, platform and missionnumber for NMDBiotic files and LocalID for ICESBiotic files) \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
+Cruise \tab Unique Cruise identifier \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
 Platform  \tab Data collection platform identifier \tab None \tab Character \tab "1019" \tab \code{platform} \tab \code{Platform} \cr
 }
 
@@ -43,7 +43,6 @@ BottomDepth \tab BottomDepth at the EDSU \tab m \tab Numeric \tab 123.2 \tab \co
 \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
 BeamKey \tab Key of the Beam level \tab None \tab Character \tab "38000/2" \tab \code{freq/transceiver} \tab \code{ID.Instrument} \cr
 Beam \tab Unique Beam identifier \tab None \tab Character \tab "38000/2" \tab Same as BeamKey. Can be translated. \tab Same as BeamKey. Can be translated. \cr
-Gear \tab Identifier of the gear \tab None \tab Character \tab "3270" \tab \code{gear} \tab \code{Gear} \cr
 Frequency \tab The acoustic frequency of the Beam \tab hertz \tab Numeric \tab 38000 \tab \code{freq} \tab \code{Frequency} \cr
 }
 
