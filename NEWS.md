@@ -1,3 +1,7 @@
+# RstoxData v1.10.1  (2023-06-27)
+* Introducing to skip versions after per-releases to avoid R from considering the pre-releases as newer than the relese.
+
+
 # RstoxData v1.10.0  (2023-06-27)
 * Version for StoX 3.6.2.
 
