@@ -22,7 +22,8 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
+          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz', runtime: osx-arm64}
+          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz', runtime: osx-x64}
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'}
