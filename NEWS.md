@@ -1,5 +1,8 @@
-# RstoxData v1.10.0-9006  (2023-06-25)
+# RstoxData v1.10.0  (2023-06-27)
+* Version for StoX 3.6.2.
 
+
+# RstoxData v1.10.0-9006  (2023-06-25)
 * Added better warning when at least one of bottomdepthstart and bottomdepthstop are missing.
 
 
