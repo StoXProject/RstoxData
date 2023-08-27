@@ -1,3 +1,43 @@
+#' @noRd
+check_landing_duplicates <- function(LandingData, warn=T, fix=F){
+  
+  for (f in names(LandingData)){
+    if ("metadata" %in% names(LandingData[[f]]) && "useXsd" %in% names(LandingData[[1]][["metadata"]])){
+      xsdobj <- paste(LandingData[[f]]$metadata$useXsd, "xsd", sep=".")
+      if (xsdobj %in% names(RstoxData::xsdObjects) && xsdobj == "landingerv2.xsd"){
+        xsdobj <- RstoxData::xsdObjects[[xsdobj]]
+        
+        ids<-apply(LandingData[[f]]$Seddellinje[,1:xsdobj$prefixLens[["Seddellinje"]]],1,paste, collapse=".")
+        duplicated <- ids[duplicated(ids)]
+        
+        if (length(duplicated)>0 && warn){
+          warning(paste("Landings in", f, "contain duplicate key records. Consider the option ForceUnique or correct this in some other way."))
+        }
+        
+        if (fix){
+          highestLinjeNummer <- max(LandingData[[f]]$Seddellinje$Linjenummer)
+          newLinjeNummerSeq <- (highestLinjeNummer+1):(highestLinjeNummer+sum(ids %in% duplicated))
+          
+          for (g in names(LandingData[[f]])){
+            if (g != "Landingsdata" && g %in% names(xsdobj$prefixLens)){
+              stopifnot(xsdobj$prefixLens[[g]]==xsdobj$prefixLens[["Seddellinje"]])
+              LandingData[[f]][[g]]$Linjenummer[ids %in% duplicated] <- newLinjeNummerSeq
+            }
+          }
+        }
+      }
+      else{
+        warning("Could not check for duplicates in Landings. Missing format defintion.")
+      }  
+    }
+    return(LandingData)
+  }
+  
+  
+  
+  browser()
+}
+
 ##################################################
 ##################################################
 #' Read biotic XML files
@@ -91,9 +131,17 @@ ReadAcoustic <- function(FileNames = character()) {
 #' This function reads multiple landing files (sales-notes) to a list with a list of tables for each file.
 #' 
 #' @details
-#' This sales notes are expected to be XML-formatted with elements defined by the namespace: http://www.imr.no/formats/landinger/v2
+#' This sales notes are expected to be XML-formatted with elements defined by the namespace: http://www.imr.no/formats/landinger/v2.
+#' 
+#' Occasionally landing sets contain data that where rows are not uniquely identified by the key columns in that format.
+#' In these cases a warning is issued, and it is important to handle those duplicates to avoid problems in later processing.
+#' Uniqueness of keys are checked for in some typical downstream StoX processes, such as \code{\link[RstoxData]{StoxLanding}},
+#' so the problem may potentially disappear after filtering. Otherways, the parameter 'ForceUnique' may be considered, if
+#' one is confident these records does in fact represent separate landings.
 #' 
 #' @param FileNames The paths of the landing files.
+#' @param ForceUnique Manipulate the field 'Linjenummer' with arbitrary changes to ensure that key columns uniquely identify rows.
+#' 
 #' 
 #' @return
 #' An object of StoX data type \code{\link{LandingData}}).
@@ -107,7 +155,7 @@ ReadAcoustic <- function(FileNames = character()) {
 #' 
 #' @export
 #' 
-ReadLanding <- function(FileNames = character()) {
+ReadLanding <- function(FileNames = character(), ForceUnique=F) {
   
 	if(!length(FileNames)) {
 		stop("FileNames must be given.")
@@ -124,6 +172,14 @@ ReadLanding <- function(FileNames = character()) {
   
   # Add names as the file names:
   names(LandingData) <- basename(FileNames)
+  
+  if (ForceUnique){
+    LandingData <- check_landing_duplicates(LandingData, warn = F, fix = T)  
+  }
+  else{
+    check_landing_duplicates(LandingData, warn=T, fix=F)  
+  }
+  
   
   return(LandingData)
 }

@@ -4,10 +4,12 @@
 \alias{ReadLanding}
 \title{Read landing XML files}
 \usage{
-ReadLanding(FileNames = character())
+ReadLanding(FileNames = character(), ForceUnique = F)
 }
 \arguments{
 \item{FileNames}{The paths of the landing files.}
+
+\item{ForceUnique}{Manipulate the field 'Linjenummer' with arbitrary changes to ensure that key columns uniquely identify rows.}
 }
 \value{
 An object of StoX data type \code{\link{LandingData}}).
@@ -16,7 +18,13 @@ An object of StoX data type \code{\link{LandingData}}).
 This function reads multiple landing files (sales-notes) to a list with a list of tables for each file.
 }
 \details{
-This sales notes are expected to be XML-formatted with elements defined by the namespace: http://www.imr.no/formats/landinger/v2
+This sales notes are expected to be XML-formatted with elements defined by the namespace: http://www.imr.no/formats/landinger/v2.
+
+Occasionally landing sets contain data that where rows are not uniquely identified by the key columns in that format.
+In these cases a warning is issued, and it is important to handle those duplicates to avoid problems in later processing.
+Uniqueness of keys are checked for in some typical downstream StoX processes, such as \code{\link[RstoxData]{StoxLanding}},
+so the problem may potentially disappear after filtering. Otherways, the parameter 'ForceUnique' may be considered, if
+one is confident these records does in fact represent separate landings.
 }
 \examples{
 exampleFile <- system.file(
