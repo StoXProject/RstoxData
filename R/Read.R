@@ -30,12 +30,8 @@ check_landing_duplicates <- function(LandingData, warn=T, fix=F){
         warning("Could not check for duplicates in Landings. Missing format defintion.")
       }  
     }
-    return(LandingData)
   }
-  
-  
-  
-  browser()
+  return(LandingData)
 }
 
 ##################################################
