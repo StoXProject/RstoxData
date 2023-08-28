@@ -305,10 +305,16 @@ readErsFile <- function(file, encoding="Latin-1"){
 #'  When converting from lss:
 #'  All columns of 'lssLandings' are converted, except 'salgsdato' and 'versjonstidspunkt'.
 #'  All columns of \code{\link[RstoxData]{LandingData}} are filled, except 'DokumentFormulardato' and 'DokumentElektroniskDato'.
+#'  
+#' Occasionally landing sets contain data that where rows are not uniquely identified by the key columns in that format.
+#' In these cases a warning is issued, and it is important to handle those duplicates to avoid problems in later processing.
+#' The parameter 'ForceUnique' may be considered, if one is confident these records does in fact represent separate landings.
+#'  
 #' @param lssLandings landings in the format provided by \code{\link[RstoxData]{readLssFile}}
+#' @param ForceUnique Manipulate the field 'Linjenummer' with arbitrary changes to ensure that key columns uniquely identify rows.
 #' @return \code{\link[RstoxData]{LandingData}} the converted landings
 #' @export
-convertToLandingData <- function(lssLandings){
+convertToLandingData <- function(lssLandings, ForceUnique=F){
   xsdObject <- RstoxData::xsdObjects$landingerv2.xsd
   
   #name mapping between lss and landingerv2.xsd
@@ -524,6 +530,13 @@ convertToLandingData <- function(lssLandings){
   
   output <- list()
   output$ConvertedData <- ConvertedData
+  
+  if (ForceUnique){
+    output <- check_landing_duplicates_landingerv2(output, warn=F, fix=T)
+  }
+  else{
+    check_landing_duplicates_landingerv2(output, warn=T, fix=F)
+  }
   
   return(output)
 }

@@ -1,11 +1,7 @@
 #' @noRd
-check_landing_duplicates <- function(LandingData, warn=T, fix=F){
-  
+check_landing_duplicates_landingerv2 <- function(LandingData, warn=T, fix=F){
   for (f in names(LandingData)){
-    if ("metadata" %in% names(LandingData[[f]]) && "useXsd" %in% names(LandingData[[1]][["metadata"]])){
-      xsdobj <- paste(LandingData[[f]]$metadata$useXsd, "xsd", sep=".")
-      if (xsdobj %in% names(RstoxData::xsdObjects) && xsdobj == "landingerv2.xsd"){
-        xsdobj <- RstoxData::xsdObjects[[xsdobj]]
+        xsdobj <- RstoxData::xsdObjects[["landingerv2.xsd"]]
         
         ids<-apply(LandingData[[f]]$Seddellinje[,1:xsdobj$prefixLens[["Seddellinje"]]],1,paste, collapse=".")
         duplicated <- ids[duplicated(ids)]
@@ -26,11 +22,27 @@ check_landing_duplicates <- function(LandingData, warn=T, fix=F){
           }
         }
       }
-      else{
+  return(LandingData)
+}
+
+#' @noRd
+check_landing_duplicates <- function(LandingData, warn=T, fix=F){
+
+  ok <- TRUE  
+  for (f in names(LandingData)){
+    if ("metadata" %in% names(LandingData[[f]]) && "useXsd" %in% names(LandingData[[1]][["metadata"]])){
+      xsdobj <- paste(LandingData[[f]]$metadata$useXsd, "xsd", sep=".")
+      if (!(xsdobj %in% names(RstoxData::xsdObjects)) || xsdobj != "landingerv2.xsd"){
         warning("Could not check for duplicates in Landings. Missing format defintion.")
-      }  
+        ok<-FALSE
+      }
     }
   }
+  
+  if (ok){
+    LandingData <- check_landing_duplicates_landingerv2(LandingData, warn, fix)
+  }
+  
   return(LandingData)
 }
 
@@ -151,7 +163,7 @@ ReadAcoustic <- function(FileNames = character()) {
 #' 
 #' @export
 #' 
-ReadLanding <- function(FileNames = character(), ForceUnique=F) {
+ReadLanding <- function(FileNames = character(), ForceUnique=FALSE) {
   
 	if(!length(FileNames)) {
 		stop("FileNames must be given.")
