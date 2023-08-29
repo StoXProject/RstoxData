@@ -6,8 +6,9 @@
 \usage{
 PrepareNmdBioticTable(
   BioticData,
-  TargetTable = c("Mission", "Station", "Sample", "Individual", "Prey", "Tag",
-    "MultipleReadings", "PreyLengthFrequencies", "PreyDevstageFrequencies"),
+  TargetTable = c("Mission", "FishStation", "CatchSample", "Individual", "Prey",
+    "MultipleTags", "MultipleReadings", "PreyLengthFrequencies",
+    "PreyDevstageFrequencies"),
   addIds = FALSE
 )
 }
@@ -32,28 +33,28 @@ A detailed description of the format can be found at https://www.imr.no/formats/
 Different tables are prepared as specified by the argument 'TargetTable':
 \describe{
 \item{Mission}{The table 'mission'}
-\item{Station}{The table 'fishstaion', merged with 'mission'}
-\item{Sample}{The table 'catcsample', merged with 'fishstaton' and 'mission'}
-\item{Individual}{The table 'individual', merged with 'catchsample', 'fishstaton', 'mission' and 'agedetermination'. Only the preferred age reading for each individual is kept from the table 'agedetermination' (see the field 'preferredagereading')}
+\item{FishStation}{The table 'fishstaion', merged with 'mission'}
+\item{CatchSample}{The table 'catcsample', merged with 'fishstaton' and 'mission'}
+\item{Individual}{The table 'individual', merged with 'catchsample', 'fishstaton', 'mission', 'agedetermination' and 'tag'. Only the preferred age reading for each individual is kept from the table 'agedetermination' (see the field 'preferredagereading'). If an individual has multiple tags, a warning issued and no tags are added to the table for that individual.}
 \item{Prey}{The table 'prey', merged with individual', 'catchsample', 'fishstaton', 'mission' and 'agedetermination'. Only the preferred age reading for each individual is kept from the table 'agedetermination' (see the field 'preferredagereading')}
-\item{Tag}{The table 'tag', merged with individual', 'catchsample', 'fishstaton', 'mission' and 'agedetermination'. Only the preferred age reading for each individual is kept from the table 'agedetermination' (see the field 'preferredagereading')}
+\item{MultipleTags}{The table 'tag', merged with individual', 'catchsample', 'fishstaton', and 'mission.'}
 \item{MultipleReadings}{The table 'agedetermination', merged with 'individual', 'catchsample', 'fishstaton' and 'mission'}
 \item{PreyLengthFrequencies}{The table 'preylengthfrequencytable', merged with 'prey', 'individual', 'catchsample', 'fishstaton', 'mission' and 'agedetermination'. Only the preferred age reading for each individual is kept from the table 'agedetermination' (see the field 'preferredagereading')}
 \item{PreyDevstageFrequencies}{The table 'copepodedevstagefrequencytable', merged with 'prey', 'individual', 'catchsample', 'fishstaton', 'mission' and 'agedetermination'. Only the preferred age reading for each individual is kept from the table 'agedetermination' (see the field 'preferredagereading')}
 }
-Table names above refer to fields in the detailed description of the nmdbiotic format mentioned above.
+Table names above refer to fields in the detailed description of the nmdbiotic format (https://www.imr.no/formats/nmdbiotic/v3/).
 
 Note that not all tables have corresponding registrations in lower tables. For instance a fishstation does not have to have any records on the individual-table.
 Preparing e.g. the table 'Individual' will discard any stations or catches that does not contain records for in the individual-table.
 
-If preferred age reading is not indicated, it will be assumed for individuals with only one age reading record. If several age reading records are present, the function will halt with an error.
+If several age reading records are present for an individual, and the preferred age reading is not indicated in the data, the function will halt with an error.
 
 The different levels in NMDbiotic are addressable by a combination of fields. The id for an individual for instance, is only guaranteed to be unique within the sample (catchsample) it belongs to.
 Often it is convenient to construct identifiers that are unqiue across the entire data-set. This is provided by the argument 'addIds'. If 'addIds' is TRUE
-the columns CruiseKey (identifying mission), Station (identifying station), Haul (identifying fishstation), Sample (identifying catchsample), Individual (identifying individual) are added in the same
-manner that these fields are constructed when biotic data is converted to StoxBiotic (\code{\link[RstoxData]{StoxBiotic}}). 'Haul' identifies station via serialnumber, which strictly speaking identifies a fishing operation,
+the columns CruiseKey (identifying mission), Station (identifying station) and Fishstation (identifying fishstation or haul) are added in the same
+manner that these fields are constructed when biotic data is converted to StoxBiotic (\code{\link[RstoxData]{StoxBiotic}}).
+'FishStation' identifies station via serialnumber, which strictly speaking identifies a fishing operation,
 but which is conventionally used to identify a station, since most stations have only one fishing operation.
 'Station' is a similar unique identifier that identifies actual stations in data sets where the field 'station' is used to distinguish station from fishing operation.
-
-In addition 'addIds' may add the columns Prey, Tag, AgeReading, PreyLengthBin, or PreyDevstageBin, which does not have a correspondance in StoxBiotic.
+In addition 'addIds' may add the columns 'CatchSample', 'Individual', 'Prey', 'Tag', 'AgeReading', 'PreyLengthBin', or 'PreyDevstageBin', which does not have a correspondance in StoxBiotic.
 }

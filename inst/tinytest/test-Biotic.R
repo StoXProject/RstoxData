@@ -23,12 +23,12 @@ Mission <- RstoxData::PrepareNmdBioticTable(biodata, "Mission")
 expect_equal(nrow(Mission), nrow(biodata$biotic3.1_example.xml$mission))
 
 # test prep station
-Station <- RstoxData::PrepareNmdBioticTable(biodata, "Station")
+Station <- RstoxData::PrepareNmdBioticTable(biodata, "FishStation")
 expect_equal(nrow(Station), nrow(biodata$biotic3.1_example.xml$fishstation))
 expect_true(ncol(Station)>ncol(biodata$biotic3.1_example.xml$fishstation))
 
 # test prep sample
-Sample <- RstoxData::PrepareNmdBioticTable(biodata, "Sample")
+Sample <- RstoxData::PrepareNmdBioticTable(biodata, "CatchSample")
 expect_equal(nrow(Sample), nrow(biodata$biotic3.1_example.xml$catchsample))
 expect_true(ncol(Sample)>ncol(biodata$biotic3.1_example.xml$catchsample))
 
@@ -106,10 +106,18 @@ expect_equal(nrow(PreyDsFreq), nrow(biodata$biotic3.1_w_preyfreqTables.xml$copep
 expect_true(ncol(PreyDsFreq)>ncol(biodata$biotic3.1_w_preyfreqTables.xml$copepodedevstagefrequencytable))
 
 #test adding Ids
-warning("Test adding ids")
-Station <- RstoxData::PrepareNmdBioticTable(biodata, "Station", addIds=T)
+Station <- RstoxData::PrepareNmdBioticTable(biodata, "FishStation", addIds=T)
+expect_true(all(c("Station", "FishStation") %in% names(Station)))
 Individual <- RstoxData::PrepareNmdBioticTable(biodata, "Individual", addIds=T)
+expect_true(all(c("Station", "FishStation", "CatchSample", "Individual") %in% names(Individual)))
+PreyDsFreq <- RstoxData::PrepareNmdBioticTable(biodata, "PreyDevstageFrequencies", addIds=T)
+expect_true(all(c("Station", "FishStation", "CatchSample", "Individual", "Prey", "PreyDevstageBin") %in% names(PreyDsFreq)))
 
-warning("Add test that checks that ids match what StoxBiotic assigns")
+#test that reserved names are checked:
 
-warning("Check that no reserved names occur as column names, if addIds is true")
+biodata$biotic3.1_w_preyfreqTables.xml$fishstation$AgeReading <- 1
+expect_error(RstoxData::PrepareNmdBioticTable(biodata, "FishStation", addIds=T), "Cannot add identifiers since the data already contains columns with names reserved for identifiers: AgeReading")
+biodata$biotic3.1_w_preyfreqTables.xml$fishstation$FishStation <- 1
+biodata$biotic3.1_w_preyfreqTables.xml$fishstation$CatchSample <- 1
+biodata$biotic3.1_w_preyfreqTables.xml$fishstation$Station <- 1
+expect_error(RstoxData::PrepareNmdBioticTable(biodata, "FishStation", addIds=T), "Cannot add identifiers since the data already contains columns with names reserved for identifiers: Station, FishStation, CatchSample, AgeReading")
