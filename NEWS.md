@@ -1,5 +1,10 @@
+# RstoxData v1.10.2-9001  (2023-08-30)
+* Moved functions for setting precision to RstoxFramework, which actually assumed an sp object. 
+* Changed definition of CatchFractionNumber and SampleNumber to numeric instead of integer, as this was the result from runProcess() used in runModel(). 
+* Added comments to 'stox-biotic-final-phase.csv'.
+
 # RstoxData v1.10.1  (2023-06-27)
-* Introducing to skip versions after per-releases to avoid R from considering the pre-releases as newer than the relese.
+* Introducing to skip versions after per-releases to avoid R from considering the pre-releases as newer than the release.
 
 
 # RstoxData v1.10.0  (2023-06-27)
