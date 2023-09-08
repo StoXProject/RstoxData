@@ -5,7 +5,7 @@ date: "2023-08-30"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Working with IMR data}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{rmarkdown::render}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -32,28 +32,28 @@ Some key resources for data documentation at IMR is tabulated below:
 |https://www.hi.no/hi/nettrapporter?query=&serie=toktrapport|Cruise reports. Contain important information about the execution of specific surveys|public resource|
 
 ## Analysis and processing with other StoX packages
-RstoxData provides support for reading and filtering various data formats, but not much in terms of analysis or plotting. StoX and the StoX R-packages provide facilities for many kinds of common analysis of data at IMR. The StoX R-packages that proivde functionality for StoX are mostly also usable as independent libraries for R-scirpting. For fisheries independent analysis, consider the vignettes in RstoxFDA (https://stoxproject.github.io/RstoxFDA/), for analysis of acoustic surveys or swept-area surveys consider RstoxBase (https://stoxproject.github.io/RstoxBase/).
+RstoxData provides support for reading and filtering various data formats, but not much in terms of analysis or plotting. StoX and the StoX R-packages provide facilities for many kinds of common analysis of data at IMR. The StoX R-packages that provide functionality for StoX are mostly also usable as independent libraries for R-scripting. For fisheries independent analysis, consider the vignettes in RstoxFDA (https://stoxproject.github.io/RstoxFDA/), for analysis of acoustic surveys or swept-area surveys consider RstoxBase (https://stoxproject.github.io/RstoxBase/).
 
 ## Extendable reference lists
-Most formats at IMR use extendable reference-list, which means that most categorical variables may be subject to extensions at any time. This is important to keep in mind, when considering re-usability of code for analysis. Current referencelist may be viewed or downloaded for referenceeditor (https://referenceeditor.hi.no/apps/referenceeditor). Historical codes that are no longer used are kept in the reference lists, but their expiry wil be indicated either in the field 'deprecated' or in the field 'validTo'.
+Most formats at IMR use extendable reference-list, which means that most categorical variables may be subject to extensions at any time. This is important to keep in mind, when considering re-usability of code for analysis. Current reference lists may be viewed or downloaded with referenceeditor (https://referenceeditor.hi.no/apps/referenceeditor). Historical codes that are no longer used are kept in the reference lists, but their expiry will be indicated either in the field 'deprecated' or in the field 'validTo'.
 
 ## Fish and invertebrate data (NMDbiotic)
-The main source of biological data for fish and invertebrates is the data archiving system NMDbiotic. NMDbiotic serves biological data from a wide range of data collection programs, both fishery dependent and fishery independent surveys. The data is archived as data sets, typically corresponding to a cruise on a single vessel, or one delivery form a sampling program. Each data set is versioned, so that it is possible to obtain versions from previous dates if data has been updated. The data format is documented on https://www.imr.no/formats/nmdbiotic/v3/ .
+The main source of biological data for fish and invertebrates at IMR is the data archiving system NMDbiotic. NMDbiotic serves biological data from a wide range of data collection programs, both fishery dependent and fishery independent surveys. The data is archived as data sets, typically corresponding to a cruise on a single vessel, or one delivery form a sampling program. Each data set is versioned, so that it is possible to obtain versions from previous dates if data has been updated. The data format is documented on https://www.imr.no/formats/nmdbiotic/v3/ .
 
 ### Data organization and access
-An overarching classification is provided by the assignment of mission-types that distinguishes the data set in terms of sampling frame and methodology (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/missionType). Like all reference lists for NMDbiotic, the lists of mission-types is extendable, but at present the missiontypes 4,5 and 21 are used for fishery independent surveys. Most of the rest is various fishery dependent data collection. Particularly fishery-dependent data sets are often among several NMDbiotic data sets delivered from a cruise, which again may be part of a cruise time series. The connection between data sets, cruise and cruise time series is provided in the referencetable cruiseseries (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/cruiseseries).
+An overarching classification is provided by the assignment of mission-types that distinguishes the data sets in terms of sampling frame and methodology (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/missionType). Like all reference lists for NMDbiotic, the lists of mission-types is extendable, but at present the missiontypes 4,5 and 21 are used for fishery independent surveys. Most of the rest is various fishery dependent data collection. Particularly fishery-dependent data sets are often among several NMDbiotic data sets delivered from a cruise, which again may be part of a cruise time series. The connection between data sets, cruise and cruise time series is provided in the referencetable cruiseseries (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/cruiseseries).
 
 #### Manual download
 This classification by missiontypes, cruise or cruise-series is used to organize the data in datasetexplorer (https://datasetexplorer.hi.no/), which provide access to manual download of data by data-set. It also contains tools to pull all data from a year (see tools at https://datasetexplorer.hi.no/apps/datasetexplorer/v2/tools).
 
 #### API-access
-More customized extratcs from NMDbiotic can be made programatically by using the APIs (https://confluence.imr.no/display/API/API+Documentation). The Biotic API provides various services for downloading biotic-data sets, and the cruise API allows lookup of relations between biotic data-sets and cruises. There is currently no API for cruise-timeseries, but a semi-automatic approach can be realized by downloading the cruiseseries table and reading in that.
+More customized extracts from NMDbiotic can be made programatically by using the APIs (https://confluence.imr.no/display/API/API+Documentation). The Biotic API provides various services for downloading biotic-data sets, and the cruise API allows lookup of relations between biotic data-sets and cruises. There is currently no API for cruise-timeseries, but a semi-automatic approach can be realized by downloading the cruiseseries table and reading in that.
 
 #### Three ways to get the data you need
 Depending on the volume of data to be analyzed, there are three ways to obtain data.
 
 * Locate the data sets in datasetexplorer and download them one by one.
-* Use the tools in datasetexplorer to fetch all data for each year of interest. Manual download by year, and then subsequent filtering in R.
+* Use the tools in datasetexplorer to fetch all data for each year of interest. Manual download by year, and then do subsequent filtering in R.
 * Write scripts to use the cruiseseries table and APIs to download the data sets you need. See Example 1: pull cruise series data using API
 
 ### Data Format
@@ -69,21 +69,31 @@ NMDbiotic is a hierarchical data format with extendable reference lists (see not
                     * preylengthfrequencytable
                     * copepodedevstagefrequencytable
 
-Not all levels are mandatory, but records cannot be recorded without the parent record. For instance, an 'individual' is always linke to a 'catchsample', but not all 'catchsample' records have any individual records. A record is identified with by the fields listed as 'keys' in the format documentation, along its parent record. When read with RstoxData these records are organized in data.tables corresponding to each level, and keys from all records higher in the hierarchy is included as well.
+Not all levels are mandatory, but records cannot be recorded without the parent record. For instance, an 'individual' is always linked to a 'catchsample', but not all 'catchsample' records have any individual records. A record is identified by the fields listed as 'keys' in the format documentation, along with its parent record. When read with RstoxData these records are organized in data.tables corresponding to each level, and keys from all records higher in the hierarchy is included as well.
 
-Analysts often prefer the records they need into one big table. Since the hierarchy branches off below individual, it is not possible to construct one general table for analysis. Also note that key parameters like age- and tag- parameters are in a many to one relationship with individuals, so it is often necessary to do some selective filtering of lower levels if these are to be used in a table with one individual for each row.
+Analysts often prefer to merge the records they need into one big table. Since the hierarchy branches off below individual, it is not possible to construct one general table for analysis. Also note that key parameters like age- and tag- parameters are in a many to one relationship with individuals, so it is often necessary to do some selective filtering of lower levels if these are to be used in a table with one individual for each row.
 
 RstoxData provides functions for fast parsing of XML and filtering of hierarchical data, along with functions to prepare common combinations of the tables above. See Example 3: Read and filter biotic data with RstoxData.
 
 #### Conditional reference lists
+NMDbiotic makes use of some conditional reference lists. Most reference list simply list the options of values for a categorical variable. Conditional reference lists have different options depending on some other variable. For instance lists for specialstage depend on the value of species and sex. In fact all of the conditional reference list is conditioned on species, so in the format documentation for NMDbiotic these fields are listed as linked to the taxa, and the exact link to the reference list in question can be located by navigating the reference list 'taxa' (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/taxa).
 
-NMDbiotic makes use of some conditional reference lists. Most reference list simply list the options of values for a categorical variable. Conditional reference lists have different options depending on some other variable. For instance lists for specialstage depend on the value of species and sex. In fact all of the conditional reference list is condition on species, so in the format documentation for NMDbiotic these are listed as linked to the taxa, and the exact link to the reference list in question can be located by navigating the taxa record.
+#### Reference list: Taxa
+The taxa list is a particularly complex reference list, and once that is particularly central to analysis of biotic data. Some features that are not entirely self-explanatory and will be clarified here.
+
+The records in taxa is identified by the field 'tsn'. The name may suggest that this is the ITIS taxonomical serialnumber, but this is not universally the case. In some cases it is only an internal identifier, and will not correctly identify the taxon in ITIS. The field 'IMR' indicates its status. Whenever IMR is TRUE the corresponding 'tsn' value is not identifying the correct taxon in ITIS. The field 'AphiaId' identifies the taxa in the World Register of Marine Species (Worms), when provided.
+
+The sublist 'synonyms' provide alternative names for a taxon in several languages. It has an option to mark which synonym is preferred, but that flag is not interpreted by all clients (including at the moment referenceeditor).
+
+The sublist 'lists' contain references to various taxa-dependent referencelists, such as specialstage, agingstructure, etc.
+
+The sublist 'restrictions' contain parameters used for quality checking when recording data: Max length, condition factor ranges, etc. These are soft restrictions meant to prompt double checking of measurments, and not meant to reflect absolute biological limits.
 
 ### Examples NMDbiotic
 
 Below are provided some code examples for how to fetch, read and filter NMDbioticdata. Support for fetching data is not within the scope of RstoxData, but a suggestion for how to implement solutions for that is included below. These suggestions make use of the NMDbiotic API, so we will define some useful auxiliary functions for that first. Since these depend on internal resources, this vignette does not actually execute these functions, but their usage is explained in the examples below.
 
-We define one function to fetch a data set from NMDbiotic. A data set is identified by missiontype, year, platform and missionnumber. We will fetch the latest snapshop. That means that data may be a day old, but it is faster and causes less load on the server, which is not dimensioned for intensive use. The main disadvantage with snapshots is that they are archived in the version of biotic that was current at the time of snapshot creation. That means that one may get some heterogeneity in formats. Since snapshots were introduced after biotic 3, we can utilize backwards compatible parsers in RstoxData to get around that issue. As long as all snapshots are some variant of biotic 3, we can compile them in a file that declares the namespace to be the latest biotic 3 format. In the functions below the namespace is hard coded as biotic 3.1.
+We define one function to fetch a data set from NMDbiotic. We will fetch the latest snapshop, rather than extract from the live database. That means that data may be as day old, but it is faster and causes less load on the server, which is not dimensioned for intensive use. The main disadvantage with snapshots is that they are archived in the version of biotic that was current at the time of snapshot creation. That means that one may get some heterogeneity in formats. Since snapshots were introduced after biotic 3, we can utilize backwards compatible parsers in RstoxData to get around that issue. As long as all snapshots are some variant of biotic 3, we can compile them in a file that declares the namespace to be the latest biotic 3 format. In the functions below the namespace is hard coded as biotic 3.1.
 
 ```{r pullData}
 
@@ -185,6 +195,7 @@ getCruisePaths <- function(vessel, cruise, url="http://tomcat7.imr.no", port=808
 To get paths for data sets that are not organized as cruises we can use the fact that these typically have a sensible organisation by mission type and use NMDbiotic API to list out all available data sets:
 
 ```{r}
+#' Find data set paths for all data sets within a set of missiontypes and years
 #' @param years vector fo years to find paths for
 #' @param missiontypenames vector of missiontypenames to find paths for
 #' @param url address to cruise API (defaults to production address pr. Aug 2023)
@@ -244,7 +255,7 @@ getMissionTypePaths <- function(missiontypenames, years, url="http://tomcat7.imr
 ```
 
 
-We will also define a function that pulls data for a set of paths and compiles them into one xml file:
+We will also define a function that pulls data for a set of paths and compiles them into one NMDbiotic v3.1 xml file:
 
 ```{r}
 #' Fetches biotic-data for a set of paths and compiles them into one data file
@@ -280,19 +291,19 @@ So in order to get the data we want using the functions defined above, we first 
 
 #### Example 1: pull cruise series data using API
 
-A particular useful example is data that is assigned a cruise number, and organised in cruise time series. We can get at those by downloading an excel file from referenceeditor. Search for 'cruiseseries' at https://referenceeditor.hi.no/apps/referenceeditor/v2/tables and select download. Read that in sheet 3 with your favourite excel-file parser and and filter out the cruise series you dont want ('Cruiseseries code'). The cruise series name and description can be found either at sheet 1 or simply at referenceeditor (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/cruiseseries). The parameters that need to be fed to getCruisePaths can be found in the columns "Ship name" and "Cruisenr". Feed these paths to pullBioticData. Finally, you may read in these data using RstoxData::ReadBiotic. I have done this for the cruise series "Barents Sea NOR-RUS ecosystem cruise in autumn" and downloaded the data for years 2021-2022 in the file 'ecosystemsurvey.xml'. The resulting data is available as a data object in this package (ecosystemsurvey_example).
+A particular useful example is data that is assigned a cruise number, and organised in cruise time series. We can get at those by downloading an excel file from referenceeditor. Search for 'cruiseseries' at https://referenceeditor.hi.no/apps/referenceeditor/v2/tables and select download. Read in sheet 3 from that file with your favourite excel-file parser and and filter out the cruise series you dont want ('Cruiseseries code'). The cruise series name and description can be found either at sheet 1 or simply at referenceeditor (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/cruiseseries). The parameters that need to be fed to getCruisePaths can be found in the columns "Ship name" and "Cruisenr". Obtain paths, and feed these paths to pullBioticData. Finally, you may read in these data using RstoxData::ReadBiotic. I have done this for the cruise series "Barents Sea NOR-RUS ecosystem cruise in autumn" and downloaded the data for years 2021-2022 in the a file called 'ecosystemsurvey.xml'. The resulting data is available as a data object in this package (\code{\link[RstoxData]{ecosystemsurvey_example}).
 
 Occasionally, the cruisetimeseries table contains errors. It is worth plotting the survey area and time period for each year, and follow up if any years contain activity outside the typical temporal or spatial range of the survey.
 
 #### Example 2: pull fisheries dependent data using API
 
-This works similarly as for the example pulling cruise series, but since fisheries dependet data are organized by mission type and are not assigned cruise numbers, you will obtain paths with getMissionTypePaths in stead. For instance getMissionTypePaths(c("Referanseflåten-Hav", "Referanseflåten-Kyst), c(2020, 2021)) will compile a set of paths for all data sets for both reference fleets in the years 2020 and 2021, and getMissionTypePaths("Fiskerisampling - Lotteri", 2018:2023) will obtain paths for the catch sampling lottery for the years 201-2023. As for cruise data, you can pass this set of paths to pullBioticData and read the downloaded file in with RstoxData::ReadBiotic.
+This works similarly as for the example pulling cruise series, but since fisheries dependent data are organized by mission type and are not assigned cruise numbers, you will obtain paths with getMissionTypePaths in stead. For instance getMissionTypePaths(c("Referanseflåten-Hav", "Referanseflåten-Kyst"), c(2020, 2021)) will compile a set of paths for all data sets for both reference fleets in the years 2020 and 2021, and getMissionTypePaths("Fiskerisampling - Lotteri", 2018:2023) will obtain paths for the catch sampling lottery for the years 201-2023. As for cruise data, you can pass this set of paths to pullBioticData and read the downloaded file in with RstoxData::ReadBiotic.
 
 Specify the data sources of interest based on the reference table https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/missionType .
 
 #### Example 3: Read and filter biotic data with RstoxData.
 
-RstoxData::ReadBiotic reads all the data in the biotic file. Usually it is desirable to filter and reformat a bit for analysis. In StoX, biotic data is typically converted to the StoxBiotic format. This is convenient if you want to write scripts that use the same functions that are available in the StoX user interface, and particularly if you want to integrate with data provided in other formats that StoX supports (such as the biotic format provided in the ICES acoustic database). It cannot not, however represent all data that is available in NMDbiotic. You may also opt to transform the biotic data to flat 2-dimensional tables using RstoxData::PrepareNmdBioticTable. This function support data extracts for all data that is available in NMDbiotic 3.
+RstoxData::ReadBiotic reads all the data in the biotic file. Usually it is desirable to filter and reformat a bit for analysis. In StoX, biotic data is typically converted to the StoxBiotic format. This is convenient to do if you want to write scripts that use the same functions that are available in the StoX user interface, and particularly if you want to integrate with data provided in other formats that StoX supports (such as the biotic format provided in the ICES acoustic database). It cannot not however, represent all data that is available in NMDbiotic. You may also opt to transform the biotic data to flat 2-dimensional tables using RstoxData::PrepareNmdBioticTable. This function support data extracts for all data that is available in NMDbiotic 3.
 
 ##### Working with StoxBiotic
 StoxBiotic is a somewhat simpler data format that unifies the different formats for biotic data that StoX supports. See the function documentation for RstoxData::StoxBiotic for an explanation of the format, and a description of how it relates to NMDbiotic and ICESbiotic.
@@ -312,13 +323,13 @@ Having inspected warnings, we may move on to use some standard StoX functions in
 If we want to integrate StoX functions into an analysis that also needs some parameter not included in StoxBiotic, you may be able to do that with the funciton RstoxData::addToStoxBiotic. For instance, you may be interested in getting start and end positions of a station, even if StoxBiotic only includes one position:
 
 ```{r}
-ecosystem_sb_pos<-RstoxData::AddToStoxBiotic(ecosystem_sb, RstoxData::ecosystemsurvey_example, c("latitudestart", "latitudeend", "longitudestart", "longitudeend"))
+ecosystem_sb_pos <- RstoxData::AddToStoxBiotic(ecosystem_sb, RstoxData::ecosystemsurvey_example, c("latitudestart", "latitudeend", "longitudestart", "longitudeend"))
 ```
 
 You will find these extra position columns added to the Station table of StoxBiotic. In StoxBiotic, haul and station is distinguished, and both of them partially correspond to the fishstation table of NMDbiotic. If you would rather have the positions appended to the Haul level, you may specify that as well via the SplitTableAllocation argument:
 
 ```{r}
-ecosystem_sb_pos_haul<-RstoxData::AddToStoxBiotic(ecosystem_sb, RstoxData::ecosystemsurvey_example, c("latitudestart", "latitudeend", "longitudestart", "longitudeend"), "Lowest")
+ecosystem_sb_pos_haul <- RstoxData::AddToStoxBiotic(ecosystem_sb, RstoxData::ecosystemsurvey_example, c("latitudestart", "latitudeend", "longitudestart", "longitudeend"), "Lowest")
 ```
 
 This is particularly useful in the cases where there are several hauls at some stations.
@@ -336,20 +347,22 @@ ecosystem_sb_sample <- RstoxData::MergeStoxBiotic(ecosystem_sb_pos_haul, "Sample
 ```
 
 ##### Working with PrepareNmdBioticTable
-If you need to access tables that are not supported by StoxBiotic, or you want a close correspondance in variable naming and record identification to the NMDbiotic format, you may prepare similar 2-dimensional tables with the function RstoxData::PrepareNmdBioticTable. NMDbiotic is a bit more complex than StoxBiotic, in that the hierarchy branches at certain points and there are some potential pitfalls to correctly merging in ages or tagids to individuals for instance. You may for instance create a table resembling the table of individuals we created for StoxBiotic:
+If you need to access tables that are not supported by StoxBiotic, or you want a close correspondance in variable naming and record identification to the NMDbiotic format, you may prepare similar 2-dimensional tables with the function RstoxData::PrepareNmdBioticTable. NMDbiotic is a bit more complex than StoxBiotic, in that the hierarchy branches at certain points and there are some potential pitfalls to correctly merging in ages or tagids to individuals for instance. The function RstoxData::PrepareNmdBioticTable helps you get this right. You may for instance create a table resembling the table of individuals we created for StoxBiotic:
 
 ```{r}
 ecosystem_nmdb_individual <- RstoxData::PrepareNmdBioticTable(RstoxData::ecosystemsurvey_example, "Individual")
 ```
 
+This table also contains parameters from the agrereading table and tag table that are conceptually below the individual table in the hierarchy, and which may contain more than one record for each individual. 
+
 Records in NMDbiotic are identified via several key columns on some tables, and via parent records. It is often convenient to extract record identifiers in a single column. PrepareNmdBioticTable offers that with the argument 'addIds':
 
 ```{r}
 ecosystem_nmdb_individual_ids <- RstoxData::PrepareNmdBioticTable(RstoxData::ecosystemsurvey_example, "Individual", T)
-length(unique(ecosystem_nmdb_individual_ids$Individual))
-nrow(ecosystem_nmdb_individual)
+print(paste("Individual ids:",length(unique(ecosystem_nmdb_individual_ids$Individual))))
+print(paste("Number of rows:", nrow(ecosystem_nmdb_individual)))
 ```
-More specialiced analysis may consider extracting a table of age-readings, for records where several readings are recorded for some individuals. There are none in our example data set, but it can be obtained with the argument TargetTable = "MultipleReadings". A more relevant extract for this example, that is not available in StoxBiotic is to extract fish diet or preydata:
+For more specialized analysis may consider extracting a table of age-readings, for records where several readings are recorded for some individuals. There are none in our example data set, but it can be obtained with the argument TargetTable = "MultipleReadings". A more relevant extract for this example, that is not available in StoxBiotic is to extract fish diet data (prey data):
 
 ```{r}
 ecosystem_nmdb_prey_ids <- RstoxData::PrepareNmdBioticTable(RstoxData::ecosystemsurvey_example, "Prey", T)
@@ -358,7 +371,7 @@ ecosystem_nmdb_prey_ids <- RstoxData::PrepareNmdBioticTable(RstoxData::ecosystem
 These ectracts contain all data from parent tables, so this table has a total of 183 columns. 
 
 ##### Hierarchical filtering
-In some cases it is desirable to filter data before converting it to one 2-dimensional tables. For instance, you may want to remove species that are not of interst before conversion, in order to reduce the number of warnings that needs to be checked. RstoxData provides functions for specifying these kinds of filters for all the hierarchical data formats it supports. See for instance RstoxData::FilterBiotic or RstoxData::FilterStoxBiotic.
+In some cases it is desirable to filter data before converting it to one 2-dimensional tables. For instance, you may want to remove species that are not of interest before conversion, in order to reduce the number of warnings that needs to be checked. RstoxData provides functions for specifying these kinds of filters for all the hierarchical data formats it supports. See for instance RstoxData::FilterBiotic or RstoxData::FilterStoxBiotic.
 
 We first specify the filters we want for each table in a lists of lists that is names exactly like the BioticData. We will specify a filter that retains all cod (commonname 'torsk') that is longer than 20 cm. 
 ```{r}
@@ -368,12 +381,12 @@ filterExpression[["ecosystemsurvey.xml"]][["catchsample"]] <- c("commonname == '
 filterExpression[["ecosystemsurvey.xml"]][["individual"]] <- c("length > .20")
 ```
 
-We then apply the filter
+We then apply the filter:
 
 ```{r}
 filteredData <- RstoxData::FilterBiotic(RstoxData::ecosystemsurvey_example, filterExpression)
 ```
-We have retained only catchsamples with cod:
+Whenever a filter returns some empty tables, we get a warning as above. The filter has retained only catchsamples with cod:
 
 ```{r}
 table(filteredData$ecosystemsurvey.xml$catchsample$commonname)

@@ -42,8 +42,9 @@ Imports:
 Suggests: 
     tinytest (>= 1.2.0),
     knitr,
-    Rmarkdown
+    rmarkdown,
+    httr
 LinkingTo: 
     Rcpp
 RoxygenNote: 7.2.3
-VignetteBuilder: knitr
+VignetteBuilder: rmarkdown
