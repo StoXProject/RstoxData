@@ -79,7 +79,7 @@ RstoxData provides functions for fast parsing of XML and filtering of hierarchic
 NMDbiotic makes use of some conditional reference lists. Most reference list simply list the options of values for a categorical variable. Conditional reference lists have different options depending on some other variable. For instance lists for specialstage depend on the value of species and sex. In fact all of the conditional reference list is conditioned on species, so in the format documentation for NMDbiotic these fields are listed as linked to the taxa, and the exact link to the reference list in question can be located by navigating the reference list 'taxa' (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/taxa).
 
 #### Reference list: Taxa
-The taxa list is a particularly complex reference list, and once that is particularly central to analysis of biotic data. Some features that are not entirely self-explanatory and will be clarified here.
+The taxa list is a particularly complex reference list, and one that is particularly central to analysis of biotic data. Some features that are not entirely self-explanatory and will be clarified here.
 
 The records in taxa is identified by the field 'tsn'. The name may suggest that this is the ITIS taxonomical serialnumber, but this is not universally the case. In some cases it is only an internal identifier, and will not correctly identify the taxon in ITIS. The field 'IMR' indicates its status. Whenever IMR is TRUE the corresponding 'tsn' value is not identifying the correct taxon in ITIS. The field 'AphiaId' identifies the taxa in the World Register of Marine Species (Worms), when provided.
 
@@ -154,6 +154,7 @@ pullDataSet <- function(targetfile, path, url="http://tomcat7.imr.no", port=8080
 The data set path that needs to be passed to the function above is constructed based on the following convention in terms on NMDbiotic variables:
 * For cruise data: /missiontypename/startyear/platformname/cruise
 * For other data, e.g. fisheries dependent data: /missiontypename/startyear/platformname/missionnumber
+
 Note that the same variables may have different names in other systems. E.g. the cruise API uses missiontype for what NMDbiotic calls missiontypename.
 
 The cruiseseries reference table (https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/cruiseseries) relates cruises to cruise series by ship name and cruise number. We can use the cruise API to look up paths for these cruises that also work in NMDbiotic:
@@ -314,7 +315,7 @@ Working from the example data obtained above, we use the function RstoxData::Sto
 ecosystem_sb <- RstoxData::StoxBiotic(RstoxData::ecosystemsurvey_example)
 ```
 
-Notice the warnings. StoxBiotic does only support one kind of length measurement (total length), and only one kind of weight measurement (Live weigt / Round weigth), so warnings are issued for all other kinds of measurements. Some of these are data errors (missing producttype), but some are legitimate data not supported by StoxBiotic (length measurements A,B,...).
+Notice the warnings. StoxBiotic does only support one kind of length measurement (total length), and only one kind of weight measurement (Live weight / Round weight), so warnings are issued for all other kinds of measurements. Some of these are data errors (missing producttype), but some are legitimate data not supported by StoxBiotic (length measurements A,B,...).
 
 If our analysis is only concerned with catch weights, and not length measurements and sample weights, we may address only the issue with catchproducttype and move on. Commonly, we may also be interested in only particular species, and the errors may not occur at all for the species of interest. In that case, we may filter before converting to StoX and see if the warnings disappear. See the section on hierarchical filtering. Otherwise, we may have to do necessary data cleaning before converting to StoX. E.g. Estimating live weights or total lengths.
 
@@ -371,7 +372,7 @@ ecosystem_nmdb_prey_ids <- RstoxData::PrepareNmdBioticTable(RstoxData::ecosystem
 These ectracts contain all data from parent tables, so this table has a total of 183 columns. 
 
 ##### Hierarchical filtering
-In some cases it is desirable to filter data before converting it to one 2-dimensional tables. For instance, you may want to remove species that are not of interest before conversion, in order to reduce the number of warnings that needs to be checked. RstoxData provides functions for specifying these kinds of filters for all the hierarchical data formats it supports. See for instance RstoxData::FilterBiotic or RstoxData::FilterStoxBiotic.
+In some cases it is desirable to filter data before converting it to one 2-dimensional table. For instance, you may want to remove species that are not of interest before conversion, in order to reduce the number of warnings that needs to be checked. RstoxData provides functions for specifying these kinds of filters for all the hierarchical data formats it supports. See for instance RstoxData::FilterBiotic or RstoxData::FilterStoxBiotic.
 
 We first specify the filters we want for each table in a lists of lists that is names exactly like the BioticData. We will specify a filter that retains all cod (commonname 'torsk') that is longer than 20 cm. 
 ```{r}
