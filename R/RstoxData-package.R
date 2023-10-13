@@ -11,11 +11,11 @@
 # Global variables
 utils::globalVariables(c(
 	 ".", "..Country", "..NAToInsert", "..Organisation", "..SurveyName", "..atResolution",
-	 "..colList", "..columns", "..digits", "..groupingVariables", "..keep", "..parameterNames",
-	 "..relevantColumns", "..replacement", "..signifDigits", "..sourceColumns",
-	 "..targetAndSourceVariables", "..toKeep", "..valueVariablesInTranslation", "..varToExtract",
-	 "..variableKeys", "..variablesInTable", "..x", "AcousticCategory", "Addition", "BeamKey",
-	 "CANoAtLngt", "Channel", "ChannelDepthLower", "ChannelDepthUpper", "ChannelReferenceKey",
+	 "..colList", "..columns", "..groupingVariables", "..keep", "..parameterNames",
+	 "..relevantColumns", "..replacement", "..sourceColumns", "..targetAndSourceVariables",
+	 "..toKeep", "..valueVariablesInTranslation", "..varToExtract", "..variableKeys",
+	 "..variablesInTable", "..x", "AcousticCategory", "Addition", "BeamKey", "CANoAtLngt",
+	 "Channel", "ChannelDepthLower", "ChannelDepthUpper", "ChannelReferenceKey",
 	 "ChannelReferenceType", "Constant", "Country", "Cruise", "CruiseKey", "DateTime", "DoorType",
 	 "EDSU", "EchoType", "EffectiveTowDistance", "FishID", "Frequency", "Gear", "GearEx",
 	 "HLNoAtLngt", "HaulNo", "ID", "LngtClass", "LngtCode", "LocalID", "LogKey", "N", "NewValue",

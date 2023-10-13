@@ -134,9 +134,9 @@ NULL
 #' SampleKey \tab Key of the Sample level \tab None \tab Character \tab "1" \tab \code{catchsampleid} (\code{samplenumber} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategory} \cr          
 #' Sample \tab Unique Sample identifier \tab None \tab Character \tab "2021105-1-2-126417-1" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \cr             
 #' CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab kg \tab Numeric \tab 49.9 \tab \code{catchweight} (missing (\code{NA}) if \code{catchproducttype != 1}) (\code{weight} (missing (\code{NA}) if \code{producttype != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryWeight} (taking \code{WeightUnit} into account) \cr
-#' CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab individuals \tab Numeric \tab 295 \tab \code{catchcount} (\code{count} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryNumber} \cr 
+#' CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab individuals \tab Integer \tab 295 \tab \code{catchcount} (\code{count} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryNumber} \cr 
 #' SampleWeight \tab Total weight of the sample for individual measurements \tab kg \tab Numeric \tab 4.6 \tab \code{lengthsampleweight} (missing (\code{NA}) if \code{sampleproducttype != 1}) \tab \code{SubsampleWeight} (taking \code{WeightUnit} into account) \cr       
-#' SampleNumber \tab Size of the sample for individual measurements \tab individuals \tab Numeric \tab 100 \tab \code{lengthsamplecount} \tab \code{SubsampledNumber} \cr
+#' SampleNumber \tab Size of the sample for individual measurements \tab individuals \tab Integer \tab 100 \tab \code{lengthsamplecount} \tab \code{SubsampledNumber} \cr
 #' }
 #' 
 #' 

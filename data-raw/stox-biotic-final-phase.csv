@@ -34,9 +34,11 @@ SpeciesCategoryKey,Sample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryK
 SampleKey,Sample,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
 Sample,Sample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, sep = '-')",,character
 CatchFractionWeight,Sample,"getCatchFractionWeight(catchweight, catchproducttype, catchcategory, CruiseKey)","getCatchFractionWeight(catchweight, catchproducttype, catchcategory, CruiseKey)","getCatchFractionWeight(weight, producttype, species, CruiseKey)","getCatchFractionWeight(weight, producttype, species, CruiseKey)","SpeciesCategoryWeight * convertWt(WeightUnit, 'kg')",,numeric
-CatchFractionNumber,Sample,catchcount,catchcount,count,count,SpeciesCategoryNumber,,integer
+# Make sure CatchFractionNumber is numeric as per the definition of StoxBioticData (not integer as defined in the NMDBiotic formats). Note that SpeciesCategoryNumber in ICESBiotic is already defined as nnumeric:
+CatchFractionNumber,Sample,as.numeric(catchcount),as.numeric(catchcount),as.numeric(count),as.numeric(count),SpeciesCategoryNumber,,numeric
 SampleWeight,Sample,"getSampleWeight(lengthsampleweight, sampleproducttype, catchcategory, CruiseKey)","getSampleWeight(lengthsampleweight, sampleproducttype, catchcategory, CruiseKey)","getSampleWeight(lengthsampleweight, sampleproducttype, species, CruiseKey)","getSampleWeight(lengthsampleweight, sampleproducttype, species, CruiseKey)","SubsampleWeight * convertWt(WeightUnit, 'kg')",,numeric
-SampleNumber,Sample,lengthsamplecount,lengthsamplecount,lengthsamplecount,lengthsamplecount,SubsampledNumber,,integer
+# Make sure SampleNumber is numeric as per the definition of StoxBioticData (not integer as defined in the NMDBiotic and ICESBiotic formats):
+SampleNumber,Sample,as.numeric(lengthsamplecount),as.numeric(lengthsamplecount),as.numeric(lengthsamplecount),as.numeric(lengthsamplecount),as.numeric(SubsampledNumber),,numeric
 CruiseKey,Individual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,Individual,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 HaulKey,Individual,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
