@@ -4,6 +4,7 @@
 * Added comments to 'stox-biotic-final-phase.csv'.
 *  Fixed bug in getNumberOfCores() where the number of cores was not restricted by the number of available cores.
 
+
 # RstoxData v1.10.1  (2023-06-27)
 * Introducing to skip versions after per-releases to avoid R from considering the pre-releases as newer than the release.
 
