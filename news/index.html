@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.10.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.10.2-9001</span>
       </span>
     </div>
 
@@ -48,8 +48,15 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.10.2-9001" id="rstoxdata-v1102-9001-2023-10-13">RstoxData v1.10.2-9001 (2023-10-13)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1102-9001-2023-10-13"></a></h2>
+<ul><li>Moved functions for setting precision to RstoxFramework, which actually assumed an sp object.</li>
+<li>Changed definition of CatchFractionNumber and SampleNumber to numeric instead of integer, as this was the result from runProcess() used in runModel().</li>
+<li>Added comments to ‘stox-biotic-final-phase.csv’.</li>
+<li>Fixed bug in getNumberOfCores() where the number of cores was not restricted by the number of available cores.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.1" id="rstoxdata-v1101-2023-06-27">RstoxData v1.10.1 (2023-06-27)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1101-2023-06-27"></a></h2>
-<ul><li>Introducing to skip versions after per-releases to avoid R from considering the pre-releases as newer than the relese.</li>
+<ul><li>Introducing to skip versions after per-releases to avoid R from considering the pre-releases as newer than the release.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.0" id="rstoxdata-v1100-2023-06-27">RstoxData v1.10.0 (2023-06-27)<a class="anchor" aria-label="anchor" href="#rstoxdata-v1100-2023-06-27"></a></h2>
@@ -736,7 +743,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Edvin Fuglebakk, Ibrahim Umar, Sindre Vatnehol, Arne Johannes Holmin, Espen Johnsen, Norwegian Institute of Marine Research.</p>
+  <p></p><p>Developed by Edvin Fuglebakk, Arne Johannes Holmin, Ibrahim Umar, Sindre Vatnehol, Anthony Hennessey, Espen Johnsen, Norwegian Institute of Marine Research.</p>
 </div>
 
 <div class="pkgdown">
