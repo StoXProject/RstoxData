@@ -235,10 +235,11 @@ get_os <- function() {
 #' 
 getNumberOfCores <- function(NumberOfCores = NULL, n = NULL) {
 	# Detect number of cores if not given:
+	availableNumberOfCores <- parallel::detectCores()
 	if(!length(NumberOfCores)) {
 		NumberOfCores <- as.integer(getOption("mc.cores"))
 		if (!length(NumberOfCores) || is.na(NumberOfCores)) {
-			NumberOfCores <- parallel::detectCores()
+			NumberOfCores <- availableNumberOfCores
 			if (is.na(NumberOfCores)) {
 				return(1)
 			}
@@ -247,7 +248,7 @@ getNumberOfCores <- function(NumberOfCores = NULL, n = NULL) {
 	
 	# Do not use more cores than the number of elemens:
 	if(length(n)) {
-		NumberOfCores <- min(n, NumberOfCores)
+		NumberOfCores <- min(n, NumberOfCores, availableNumberOfCores)
 	}
 	
 	return(NumberOfCores)
