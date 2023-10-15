@@ -137,12 +137,9 @@ jobs:
       - name: Install CRANdependencies
         run: |
           remotes::install_cran("rcmdcheck")
-          remotes::install_cran("git2r")
+          #remotes::install_cran("git2r")
           remotes::install_cran("sessioninfo")
-          #remotes::install_cran("drat")
-          # Using the modfied drat that supports big sur:
-          #remotes::install_github(repo = "stoxproject/drat", dependencies = FALSE)
-          remotes::install_github(repo = 'eddelbuettel/drat', dependencies = FALSE)
+          remotes::install_cran("drat")
         shell: Rscript {0}
         
       - name: Session info
