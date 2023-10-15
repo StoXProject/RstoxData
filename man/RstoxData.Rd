@@ -24,9 +24,10 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Arne Johannes Holmin
   \item Ibrahim Umar
   \item Sindre Vatnehol
-  \item Arne Johannes Holmin
+  \item Anthony Hennessey
   \item Espen Johnsen
 }
 
