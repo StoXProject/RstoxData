@@ -112,10 +112,19 @@ jobs:
           # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
           install.packages("Rcpp")
           
-          # Install the rest of the dependencies:
-          options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
           # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
-          remotes::install_deps(dependencies = TRUE, type = "both")
+              
+          # First try binary and then possibly source:
+          options(install.packages.check.source = "no")
+          remotes::install_deps(dependencies = TRUE, type = "binary")
+          installed <- utils::installed.packages()[, "Package"]
+          needed <- remotes::dev_package_deps()
+          missing <- setdiff(needed$package, installed)
+          if(length(missing)) {
+            message("Installing the following packages using default type:\n", paste0(missing, collapse = ", "))
+            utils::install.packages(missing, dependencies = TRUE)
+          }
+
         shell: Rscript {0}
 
       - name: Prepare for CRANdependencies on Linux
