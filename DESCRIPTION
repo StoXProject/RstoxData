@@ -1,20 +1,23 @@
 Package: RstoxData
-Version: 1.11.0-9001
-Date: 2023-08-28
+Version: 1.10.2-9001
+Date: 2023-10-13
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
   person(given = "Edvin", 
     family = "Fuglebakk", 
     role = c("cre", "aut"), 
     email = "edvin.fuglebakk@hi.no"), 
+  person(given = "Arne Johannes", 
+    family = "Holmin", 
+    role = "aut"), 
   person(given = "Ibrahim", 
     family = "Umar", 
     role = "aut"), 
   person(given = "Sindre", 
     family = "Vatnehol", 
     role = "aut"), 
-  person(given = "Arne Johannes", 
-    family = "Holmin", 
+  person(given = "Anthony", 
+    family = "Hennessey", 
     role = "aut"), 
   person(given = "Espen", 
     family = "Johnsen", 
