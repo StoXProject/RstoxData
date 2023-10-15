@@ -95,7 +95,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "18.04"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Install R package dependencies on Linux
         if: runner.os == 'Linux'
@@ -106,12 +106,6 @@ jobs:
       - name: Install R package dependencies on Windows and macOS
         if: runner.os != 'Linux'
         run: |
-          # Show the repos:
-          getOption("repos")
-          
-          # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
-          install.packages("Rcpp")
-          
           # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
               
           # First try binary and then possibly source:
