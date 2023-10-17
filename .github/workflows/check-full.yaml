@@ -74,12 +74,6 @@ jobs:
           rtools-version: ${{ matrix.config.rtools }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
 
-      - name: Anticipate Bintray shutdown
-        if: runner.os == 'macOS'
-        run: |
-          brew update
-        shell: bash
-
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Query R package dependencies
@@ -126,6 +120,7 @@ jobs:
             message("Installing the following packages using default type:\n", paste0(missing, collapse = ", "))
             utils::install.packages(missing, dependencies = TRUE, type = "source")
           }
+          utils::install.packages("evaluate")
 
         shell: Rscript {0}
 
