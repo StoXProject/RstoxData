@@ -21,6 +21,7 @@ named list with three members:
 }
 \description{
 Parses the InterCatch exchange format v 1.0 for Commercial Catch and Sample Data.
+ Parses HI,SI and SD recrods
 }
 \details{
 The InterCatch exchange format is a jagged comma-separated format, 

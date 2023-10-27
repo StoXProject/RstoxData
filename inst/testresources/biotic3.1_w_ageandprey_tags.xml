@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<missions xmlns="http://www.imr.no/formats/nmdbiotic/v3.1">
+    <mission missiontype="9" startyear="2020" platform="9000" missionnumber="1">
+        <callsignal></callsignal>
+        <fishstation serialnumber="1">
+            <station>1</station>
+            <catchsample catchsampleid="1">
+                <commonname>torsk</commonname>
+                <catchcategory>164712</catchcategory>
+                <catchpartnumber>1</catchpartnumber>
+                <aphia>126436</aphia>
+                <scientificname>Gadus morhua</scientificname>
+                <individual specimenid="1">
+			  <preferredagereading>1</preferredagereading>
+			  <agedetermination agedeterminationid="1">
+				  <age>9</age>
+			  </agedetermination>
+                </individual>
+            </catchsample>
+        </fishstation>
+        <fishstation serialnumber="2">
+            <station>2</station>
+            <catchsample catchsampleid="1">
+                <commonname>torsk</commonname>
+                <catchcategory>164712</catchcategory>
+                <catchpartnumber>1</catchpartnumber>
+                <aphia>126436</aphia>
+                <scientificname>Gadus morhua</scientificname>
+                <individual specimenid="1">
+			  <preferredagereading>1</preferredagereading>
+			  <agedetermination agedeterminationid="1">
+				  <age>10</age>
+			  </agedetermination>
+			  <prey preysampleid="30">
+			                       <preypartnumber>1</preypartnumber>
+			                       <preycategory>85258</preycategory>
+			                       <source>1</source>
+			                       <preydigestion>4</preydigestion>
+			  </prey>
+			  <tag tagid="1" />
+                </individual>
+            </catchsample>
+        </fishstation>
+</missions>

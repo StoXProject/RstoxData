@@ -23,7 +23,6 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'}
@@ -72,7 +71,9 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
-          
+          rtools-version: ${{ matrix.config.rtools }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Query R package dependencies
@@ -96,7 +97,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "18.04"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Install R package dependencies on Linux
         if: runner.os == 'Linux'
@@ -107,16 +108,20 @@ jobs:
       - name: Install R package dependencies on Windows and macOS
         if: runner.os != 'Linux'
         run: |
-          # Show the repos:
-          getOption("repos")
-          
-          # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
-          install.packages("Rcpp")
-          
-          # Install the rest of the dependencies:
-          options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
           # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
-          remotes::install_deps(dependencies = TRUE, type = "both")
+              
+          # First try binary and then possibly source:
+          options(install.packages.check.source = "no")
+          remotes::install_deps(dependencies = TRUE, type = "binary")
+          installed <- utils::installed.packages()[, "Package"]
+          needed <- remotes::dev_package_deps()
+          missing <- setdiff(needed$package, installed)
+          if(length(missing)) {
+            message("Installing the following packages using default type:\n", paste0(missing, collapse = ", "))
+            utils::install.packages(missing, dependencies = TRUE, type = "source")
+          }
+          utils::install.packages("evaluate")
+
         shell: Rscript {0}
 
       - name: Prepare for CRANdependencies on Linux
@@ -129,12 +134,9 @@ jobs:
       - name: Install CRANdependencies
         run: |
           remotes::install_cran("rcmdcheck")
-          remotes::install_cran("git2r")
+          #remotes::install_cran("git2r")
           remotes::install_cran("sessioninfo")
-          #remotes::install_cran("drat")
-          # Using the modfied drat that supports big sur:
-          #remotes::install_github(repo = "stoxproject/drat", dependencies = FALSE)
-          remotes::install_github(repo = 'eddelbuettel/drat', dependencies = FALSE)
+          remotes::install_cran("drat")
         shell: Rscript {0}
         
       - name: Session info
