@@ -1953,3 +1953,199 @@ WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
 	return(ICESDatrasCSVDataOne)
 }
 
+
+
+
+
+
+#' Convert BioticData to ICESDatsuSC format
+#'
+#' Given an \code{\link{BioticData}} object, this function converts to ICESDatsuSC format. Note that this function only supports
+#' \code{\link{BioticData}} NMDBiotic version > 3 XML files.
+#'
+#' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#'
+#' @return An \code{\link{ICESDatsuscData}} object.
+#'
+#' @export
+#' 
+ICESDatsusc <- function(
+    BioticData
+) {
+  
+  # Run for each file:
+  ICESDatsuscData <- lapply(
+    BioticData, 
+    ICESDatsuscOne
+  )
+  
+  # Remove empty data (from invavlid files, non NMDBiotic >= 3)
+  ICESDatsuscData <- ICESDatsuscData[lengths(ICESDatsuscData) > 0]
+  
+  # Rbind accross files:
+  ICESDatsuscData <- rbindlist_StoxFormat(ICESDatsuscData)
+  
+  return(ICESDatsuscData)
+}
+
+
+ICESDatsuscOne <- function(
+    BioticDataOne
+) {
+  
+  # Check input is a NMD Biotic v3 data
+  if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
+    warning("StoX: Currently, only NMD Biotic version 3 and 3.1 data can be written by ICESDatras")
+    return(matrix(1, 0, 0))
+  }
+  
+  '%ni%' <- Negate('%in%')
+  
+  ## 1. FI ##
+  finalFI <-data.table::data.table('Country'=NA_character_,
+                                   'Reporting_organisation'=NA_character_, 
+                                   'CruiseID'= NA_character_)
+  
+  ## 2. HH ##
+  finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation)
+  
+  # Make HH records
+  finalHH[, `:=`(
+    "Ship" = platformname,  #%Mandatory
+    "Gear" = gear,   #%Mandatory
+    "HaulNo" = station,  #%Mandatory
+    "StationNumber" = serialnumber,  #%Mandatory
+    "Year" = getYear(stationstartdate),  #%Mandatory
+    "Month" = getMonth(stationstartdate),  #%Mandatory
+    "Day" = getDay(stationstartdate),  #%Mandatory
+    "Time" = getTimeShot(stationstarttime),  #%Mandatory
+    "ShootLat" = round(latitudestart, digits = 4),   #%Mandatory
+    "ShootLong" = round(longitudestart, digits = 4),   #%Mandatory
+    "HaulLat" = round(latitudeend, digits = 4),  #%Optional
+    "HaulLong" = round(longitudeend, digits = 4),  #%Optional
+    "ICESrectangle" = NA_character_,  #%Optional
+    "Depth" = round(bottomdepthstart),  #%Optional
+    "Survey" = NA_character_,          #%Optional
+    "ICESDatabase" = NA_character_     #%Optional
+  )]
+  
+  HHraw <- data.table::copy(finalHH[, c(
+     "Ship", "Gear","HaulNo","StationNumber","Year", "Month", 
+     "Day", "Time", "ShootLat", "ShootLong","HaulLat","HaulLong",
+     "ICESrectangle","Depth","Survey","ICESDatabase")]
+  )
+  
+  
+  
+  ## 3. PI ##
+  finalPI <- merge(BioticDataOne$mission,BioticDataOne$fishstation)
+  finalPI <- merge(BioticDataOne$catchsample,finalPI)
+  finalPI <- merge(BioticDataOne$individual,finalPI)
+  finalPI <- merge(BioticDataOne$agedetermination,finalPI)
+  
+  # Make HH records
+  finalPI[, `:=`(
+    "Ship" = platformname,
+    "Gear" = gear,
+    "HaulNo" = station,
+    "StationNumber" = serialnumber,
+    "Year" = getYear(stationstartdate),
+    "Month" = getMonth(stationstartdate),
+    "Day" = getDay(stationstartdate),
+    "Time" = getTimeShot(stationstarttime),
+    "FishID" = NA_character_,        
+    "AphiaIDPredator" = aphia, 
+    "IndWgt" = individualweight, 
+    "Number" = NA_character_, 
+    "MeasurementIncrement" = lengthresolution, 
+    "Length" = length, 
+    "AgeSource" = agingstructureread, 
+    "Age" = age, 
+    "Sex" = sex, 
+    "MaturityScale" = NA_character_,           #Need to be set by user
+    "MaturityStage" = maturationstage, 
+    "PreservationMethod" = NA_character_,            #Elise? 
+    "Regurgitated" = NA_character_,            #Elise? 
+    "StomachFullness" = NA_character_,            #Elise? 
+    "FullStomWgt" = NA_character_,            #Elise? 
+    "EmptyStomWgt" = NA_character_,            #Elise? 
+    "StomachEmpty" = NA_character_,            #Elise? 
+    "GenSamp" = NA_character_,            #Elise? 
+    "Notes" = NA_character_           #Elise? 
+  )]
+  
+  PIraw <- data.table::copy(finalPI[, c(
+    "Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
+    "FishID","AphiaIDPredator","IndWgt","Number","MeasurementIncrement","Length",
+    "AgeSource","Age","Sex","MaturityScale","MaturityStage","PreservationMethod",
+    "Regurgitated","StomachFullness","FullStomWgt","EmptyStomWgt","StomachEmpty",
+    "GenSamp","Notes"
+    )]
+  )
+  
+  
+  ## 4. PP ##
+  finalPP <-  merge(BioticDataOne$prey, BioticDataOne$preylengthfrequencytable)
+  finalPP <-  merge(BioticDataOne$individual,finalPP)
+  finalPP <-  merge(BioticDataOne$catchsample,finalPP)
+  finalPP <-  merge(BioticDataOne$fishstation,finalPP)
+  finalPP <-  merge(BioticDataOne$mission,finalPP)
+  # Make PP records
+  finalPP[, `:=`(
+    "Ship" = platformname,
+    "Gear" = gear, 
+    "HaulNo" = station,
+    "StationNumber" = serialnumber,
+    "Year" = getYear(stationstartdate),
+    "Month" = getMonth(stationstartdate),
+    "Day" = getDay(stationstartdate),
+    "Time" = getTimeShot(stationstarttime),
+    "FishID" = NA_character_,        #Special handle
+    "AphiaIDPredator" = aphia, 
+    "AphiaIDPrey" = preycategory,           #Elise? 
+    "IdentMet" = NA_character_,            #Elise? 
+    "DigestionStage" = preydigestion,            #Elise? 
+    "GravMethod" = NA_character_,            #Elise? 
+    "SubFactor" = NA_character_,            #Elise? 
+    "PreySequence" = NA_character_,            #Elise? 
+    "Count" = totalcount,            #Elise? 
+    "UnitWgt" = weightresolution,            #Elise? 
+    "Weight"= totalweight,            #Elise? 
+    "Length" = NA_character_,            #Elise? 
+    "OtherItems" = NA_character_,            #Elise? 
+    "OtherCount" = NA_character_,            #Elise? 
+    "OtherWgt" = NA_character_,            #Elise? 
+    "AnalysingOrg" = NA_character_,            #Elise? 
+    "Notes" = NA_character_
+  )]
+  
+  PPraw <- data.table::copy(finalPP[, c("Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
+    "FishID","AphiaIDPredator","AphiaIDPrey","IdentMet","DigestionStage",
+    "GravMethod","SubFactor","PreySequence","Count","UnitWgt","Weight","Length",
+    "OtherItems","OtherCount","OtherWgt","AnalysingOrg","Notes"
+  )])
+  
+  
+  ICESDatsuscData <- list(FI = finalFI, HH = HHraw, PI = PIraw, PP = PPraw)
+  
+  return(ICESDatsuscData)
+}
+
+
+WriteICESDatsuscOne <- function(ICESDatsuscOne, na = "-9"){
+  # Convert all tables to string matrix with header and record, and rbind:
+  ICESDatsuscCSVDatsuscOne<- convertToRecordTypeMatrix(ICESDatsuscData)
+  # Replace NAs:
+  if(length(na)) {
+    ICESDatsuscCSVDatsuscOne <- lapply(ICESDatrasCSVDatsuscOne, function(x) {x[is.na(x)] <- na; x})
+  }
+  # Convert each line of each table to comma separated:
+  ICESDatsuscCSVDatsuscOne <- lapply(ICESDatsuscCSVDatsuscOne, apply, 1, paste, collapse = ",")
+  # Join to one vector, to be written to one file:
+  ICESDatsuscCSVDatsuscOne <- unlist(ICESDatsuscCSVDatsuscOne)
+}
+
+
+
+
+
