@@ -2002,12 +2002,13 @@ ICESDatsuscOne <- function(
   '%ni%' <- Negate('%in%')
   
   ## 1. FI ##
-  finalFI <-data.table::data.table('Country'=NA_character_,
+  
+  finalFI <-data.table::data.table('Country'=BioticDataOne$fishstation$nation,
                                    'Reporting_organisation'=NA_character_, 
                                    'CruiseID'= NA_character_)
   
   ## 2. HH ##
-  finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation)
+  finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation, all = TRUE, sort = FALSE)
   
   # Make HH records
   finalHH[, `:=`(
@@ -2038,10 +2039,11 @@ ICESDatsuscOne <- function(
   
   
   ## 3. PI ##
-  finalPI <- merge(BioticDataOne$mission,BioticDataOne$fishstation)
-  finalPI <- merge(BioticDataOne$catchsample,finalPI)
-  finalPI <- merge(BioticDataOne$individual,finalPI)
-  finalPI <- merge(BioticDataOne$agedetermination,finalPI)
+  finalPI <- merge(BioticDataOne$mission,BioticDataOne$fishstation, all= TRUE, sort = FALSE)
+  finalPI <- merge(BioticDataOne$catchsample,finalPI, all = TRUE, sort = FALSE)
+  finalPI <- merge(BioticDataOne$individual,finalPI, all = TRUE, sort = FALSE)
+  finalPI <- merge(BioticDataOne$agedetermination,finalPI, all = TRUE, sort = FALSE)
+  
   
   # Make HH records
   finalPI[, `:=`(
@@ -2053,7 +2055,7 @@ ICESDatsuscOne <- function(
     "Month" = getMonth(stationstartdate),
     "Day" = getDay(stationstartdate),
     "Time" = getTimeShot(stationstarttime),
-    "FishID" = NA_character_,        
+    "FishID" = paste0(serialnumber,'_',catchsampleid,'_',specimenid),        
     "AphiaIDPredator" = aphia, 
     "IndWgt" = individualweight, 
     "Number" = NA_character_, 
@@ -2063,12 +2065,12 @@ ICESDatsuscOne <- function(
     "Age" = age, 
     "Sex" = sex, 
     "MaturityScale" = NA_character_,           #Need to be set by user
-    "MaturityStage" = maturationstage, 
-    "PreservationMethod" = NA_character_,            #Elise? 
+    "MaturityStage" = specialstage, 
+    "PreservationMethod" = stomach,            
     "Regurgitated" = NA_character_,            #Elise? 
     "StomachFullness" = NA_character_,            #Elise? 
-    "FullStomWgt" = NA_character_,            #Elise? 
-    "EmptyStomWgt" = NA_character_,            #Elise? 
+    "FullStomWgt" = stomachweight,            #Elise? 
+    "EmptyStomWgt" = -9,            #Elise? 
     "StomachEmpty" = NA_character_,            #Elise? 
     "GenSamp" = NA_character_,            #Elise? 
     "Notes" = NA_character_           #Elise? 
@@ -2085,11 +2087,11 @@ ICESDatsuscOne <- function(
   
   
   ## 4. PP ##
-  finalPP <-  merge(BioticDataOne$prey, BioticDataOne$preylengthfrequencytable)
-  finalPP <-  merge(BioticDataOne$individual,finalPP)
-  finalPP <-  merge(BioticDataOne$catchsample,finalPP)
-  finalPP <-  merge(BioticDataOne$fishstation,finalPP)
-  finalPP <-  merge(BioticDataOne$mission,finalPP)
+  finalPP <-  merge(BioticDataOne$prey, BioticDataOne$preylengthfrequencytable, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$individual,finalPP, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$catchsample,finalPP, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$fishstation,finalPP, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$mission,finalPP, all= TRUE, sort = FALSE)
   # Make PP records
   finalPP[, `:=`(
     "Ship" = platformname,
@@ -2100,28 +2102,29 @@ ICESDatsuscOne <- function(
     "Month" = getMonth(stationstartdate),
     "Day" = getDay(stationstartdate),
     "Time" = getTimeShot(stationstarttime),
-    "FishID" = NA_character_,        #Special handle
+    "FishID" = paste0(serialnumber,'_',catchsampleid,'_',specimenid),    
     "AphiaIDPredator" = aphia, 
-    "AphiaIDPrey" = preycategory,           #Elise? 
-    "IdentMet" = NA_character_,            #Elise? 
-    "DigestionStage" = preydigestion,            #Elise? 
-    "GravMethod" = NA_character_,            #Elise? 
-    "SubFactor" = NA_character_,            #Elise? 
-    "PreySequence" = NA_character_,            #Elise? 
-    "Count" = totalcount,            #Elise? 
-    "UnitWgt" = weightresolution,            #Elise? 
-    "Weight"= totalweight,            #Elise? 
-    "Length" = NA_character_,            #Elise? 
-    "OtherItems" = NA_character_,            #Elise? 
-    "OtherCount" = NA_character_,            #Elise? 
-    "OtherWgt" = NA_character_,            #Elise? 
-    "AnalysingOrg" = NA_character_,            #Elise? 
+    "AphiaIDPrey" = preycategory,           
+    "IdentMet" = NA_character_,            
+    "DigestionStage" = preydigestion,            
+    "GravMethod" = NA_character_,            
+    "SubFactor" = -9,           
+    "PreySequence" = preysampleid,            
+    "Count" = totalcount,            
+    "UnitWgt" = weightresolution,            
+    "Weight"= totalweight,       
+    "UnitLngt"= NA_character_,
+    "Length" = NA_character_,            
+    "OtherItems" = NA_character_,           
+    "OtherCount" = NA_character_,            
+    "OtherWgt" = NA_character_,           
+    "AnalysingOrg" = NA_character_,           
     "Notes" = NA_character_
   )]
   
   PPraw <- data.table::copy(finalPP[, c("Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
     "FishID","AphiaIDPredator","AphiaIDPrey","IdentMet","DigestionStage",
-    "GravMethod","SubFactor","PreySequence","Count","UnitWgt","Weight","Length",
+    "GravMethod","SubFactor","PreySequence","Count","UnitWgt","Weight","UnitLngt","Length",
     "OtherItems","OtherCount","OtherWgt","AnalysingOrg","Notes"
   )])
   
@@ -2132,12 +2135,12 @@ ICESDatsuscOne <- function(
 }
 
 
-WriteICESDatsuscOne <- function(ICESDatsuscOne, na = "-9"){
+WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
   # Convert all tables to string matrix with header and record, and rbind:
   ICESDatsuscCSVDatsuscOne<- convertToRecordTypeMatrix(ICESDatsuscData)
   # Replace NAs:
   if(length(na)) {
-    ICESDatsuscCSVDatsuscOne <- lapply(ICESDatrasCSVDatsuscOne, function(x) {x[is.na(x)] <- na; x})
+    ICESDatsuscCSVDatsuscOne <- lapply(ICESDatsuscCSVDatsuscOne, function(x) {x[is.na(x)] <- na; x})
   }
   # Convert each line of each table to comma separated:
   ICESDatsuscCSVDatsuscOne <- lapply(ICESDatsuscCSVDatsuscOne, apply, 1, paste, collapse = ",")
