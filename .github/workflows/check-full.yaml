@@ -2,27 +2,29 @@ on:
   push:
     branches:
       - master
+      - testing
       - develop
   pull_request:
     branches:
       - master
+      - testing
       - develop
       
 name: R-CMD-check
 
 jobs:
   R-CMD-check:
+  
+    # 0. Define the systems to run on:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
-    # We include 'release' in order to always test the altest release, but mac and Windows binaries are not deployed to the drat repo:
     strategy:
       fail-fast: false
       matrix:
         config:
           - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
@@ -48,11 +50,20 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      
+      ###################
+      #### 1. Setup: ####
+      ###################
+      
       - uses: actions/checkout@v3
 
-      - name: Do autorelease increment, tagging, and environment setup
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Prepare for deployment at push
+        if: github.event_name == 'push'
         run: |
+          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/checktag-actions.sh" --output unstableRepo_checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/deploy-actions.sh" --output unstableRepo_deploy.sh
+          chmod +x ./unstableRepo_checktag.sh ./unstableRepo_deploy.sh
+          . unstableRepo_checktag.sh
           curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/checktag-actions.sh" --output testingRepo_checktag.sh
           curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/deploy-actions.sh" --output testingRepo_deploy.sh
           chmod +x ./testingRepo_checktag.sh ./testingRepo_deploy.sh
@@ -75,6 +86,13 @@ jobs:
           
       - uses: r-lib/actions/setup-pandoc@v2
 
+
+      
+      #############################################################################
+      #### 2. R package installation (with system and R package dependencies): ####
+      #############################################################################
+      
+      ## 2a. Cache R packages:
       - name: Query R package dependencies
         run: |
           install.packages('remotes')
@@ -90,34 +108,15 @@ jobs:
           key: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
           restore-keys: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-
 
+      
+      ## 2b. System dependencies:
       - name: Install system dependencies on Linux
         if: runner.os == 'Linux'
         run: |
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "18.04"))')
-
-      - name: Install R package dependencies on Linux
-        if: runner.os == 'Linux'
-        run: |
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
-
-      - name: Install R package dependencies on Windows and macOS
-        if: runner.os != 'Linux'
-        run: |
-          # Show the repos:
-          getOption("repos")
-          
-          # Make sure Rcpp is >= 1.0.10 due to deprecation of sprintf in c++:
-          install.packages("Rcpp")
-          
-          # Install the rest of the dependencies:
-          options(install.packages.compile.from.source = "never") # Avoid installing sources which need compilation
-          # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
-          remotes::install_deps(dependencies = TRUE, type = "both")
-        shell: Rscript {0}
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Prepare for CRANdependencies on Linux
         if: runner.os == 'Linux'
@@ -126,17 +125,42 @@ jobs:
           sudo apt-get install -y libudunits2-dev
         shell: bash
       
+      
+      ## 2c. R packages needed for this yaml script (not related to the Rstox package itself):
       - name: Install CRANdependencies
         run: |
-          remotes::install_cran("rcmdcheck")
-          remotes::install_cran("git2r")
-          remotes::install_cran("sessioninfo")
-          #remotes::install_cran("drat")
-          # Using the modfied drat that supports big sur:
-          #remotes::install_github(repo = "stoxproject/drat", dependencies = FALSE)
+          install.packages(c("rcmdcheck", "git2r", "sessioninfo"))
+          
+          # Using the latest drat that supports big sur (after inputs from us). 
+          # When the next drat appears on CRAN this can be changed to install from CRAN:
           remotes::install_github(repo = 'eddelbuettel/drat', dependencies = FALSE)
+          
+          # Additional installs to secure specific versions:
+          
         shell: Rscript {0}
         
+      
+      ## 2d. Rstox packages and dependencies:
+      - name: Install R package dependencies from the unstableRepo
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          remotes::install_deps(dependencies = TRUE, repos = c("https://stoxproject.github.io/unstableRepo/", "https://cloud.r-project.org/"))
+        shell: Rscript {0}
+
+      - name: Install R package dependencies from the testingRepo
+        if: github.ref == 'refs/heads/testing'
+        run: |
+          remotes::install_deps(dependencies = TRUE, repos = c("https://stoxproject.github.io/testingRepo/", "https://cloud.r-project.org/"))
+        shell: Rscript {0}
+
+      - name: Install R package dependencies from the official repo
+        if: github.ref == 'refs/heads/master'
+        run: |
+          remotes::install_deps(dependencies = TRUE, repos = c("https://stoxproject.github.io/repo/", "https://cloud.r-project.org/"))
+        shell: Rscript {0}
+
+
+      ## 2e. Session info:
       - name: Session info
         run: |
           options(width = 100)
@@ -144,6 +168,11 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
+
+      #####################################
+      #### 3. Check the Rstox package: ####
+      #####################################
+      
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
@@ -157,15 +186,21 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
 
-      - name: Build package source archive
-        if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+
+      #######################################################
+      #### 4. Build the package source and binary files: ####
+      #######################################################
+      
+      - name: Build package source archive from branches testing and master
+        if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/testing')
         run: |
           pkgbuild::build(".", dest_path = ".", binary = FALSE)
           system(paste0("PKG_FREL=", Sys.getenv("PKG_FILE"), " >> ", Sys.getenv("GITHUB_ENV")))
         shell: Rscript {0}
 
-      - name: Build package binary archive
-        if: (runner.os == 'Windows' || runner.os == 'macOS') && github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Build package binary archive  from branches testing and master for Windows and macOS (this builds also on matrix.config.r = release, which can or can not be a duplicate)
+        if: (runner.os == 'Windows' || runner.os == 'macOS') && github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/testing')
         run: |
           pkgbuild::build(".", dest_path = ".", binary = TRUE)
           print("PKG_FILE")
@@ -175,8 +210,14 @@ jobs:
           file.copy(Sys.getenv("PKG_FILE"), Sys.getenv("PKG_FREL"))
         shell: Rscript {0}
 
-      # We include 'release' in order to always test the latest release, but (mac and Windows) binaries are not deployed to the drat repo:
-      - name: Upload to DRAT repo
+
+
+      ######################################
+      #### 5. Deploy to the drat repos: ####
+      ######################################
+      
+      ## 5a. Upload to the official (DRAT) repo, but only from the master branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
+      - name: Upload to the official (DRAT) repo
         if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
@@ -184,16 +225,44 @@ jobs:
         run: . repo_deploy.sh
         shell: bash
 
-      # We include 'release' in order to always test the latest release, but (mac and Windows) binaries are not deployed to the drat repo:
-      - name: Upload to DRAT testingRepo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+      ## 5b. Upload to the (DRAT) testingRepo, but only from the testing branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
+      - name: Upload to the testing (DRAT) repo
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/testing'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
         run: . testingRepo_deploy.sh
         shell: bash
 
-      - name: Create release and upload files
+
+      ## 5c. Upload to the (DRAT) unstableRepo, but only from the develop branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
+      - name: Upload to the unstable (DRAT) repo
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        env:
+          BUILD_NUMBER: ${{ github.sha  }}
+          DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
+        run: . unstableRepo_deploy.sh
+        shell: bash
+
+
+
+      ###############################
+      #### 6. Release on GitHub: ####
+      ###############################
+      
+      - name: Create release on GitHub and upload files for testing branch
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/testing'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          commit: testing
+          tag: ${{ env.FINAL_TAG }}
+          name: ${{ env.FINAL_TAG }}
+          artifacts: ${{ env.PKG_REPO }}/${{ env.PKG_FREL }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release on GitHub and upload files for master branch
         if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: ncipollo/release-action@v1
         with:

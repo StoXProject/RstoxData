@@ -1,3 +1,9 @@
+# RstoxData v1.10.2-9002  (2023-11-06)
+* Added parameter format class "folderPath".
+* Added branch "testing" which will deploy to the testingRepo.
+* Structured the check-full.yaml.
+
+
 # RstoxData v1.10.2-9001  (2023-10-13)
 * Moved functions for setting precision to RstoxFramework, which actually assumed an sp object. 
 * Changed definition of CatchFractionNumber and SampleNumber to numeric instead of integer, as this was the result from runProcess() used in runModel(). 

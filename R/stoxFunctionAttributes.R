@@ -954,6 +954,10 @@ processPropertyFormats <- list(
 		class = "single", 
 		title = "The path to a single file"
 	), 
+	folderPath = list(
+		class = "single", 
+		title = "The path to a single folder"
+	), 
 	filePaths = list(
 		class = "vector", 
 		title = "The path to one or more files", 
