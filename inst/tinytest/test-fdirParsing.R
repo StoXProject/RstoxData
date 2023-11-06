@@ -33,6 +33,16 @@ expect_equal(sum(landings$ConvertedData$Produkt$Rundvekt), sum(data$Rundvekt))
 sl <- RstoxData::StoxLanding(landings)
 expect_true(RstoxData::is.StoxLandingData(sl))
 
+#context("Test convertLandings with duplicates")
+lss_w_duplicates <- system.file("testresources","lss_duplicates.psv", package="RstoxData")
+dupdata <- RstoxData::readLssFile(lss_w_duplicates)
+expect_warning(landings_dup<-RstoxData:::convertToLandingData(dupdata))
+landings_fixed <- RstoxData:::convertToLandingData(dupdata, ForceUnique = T)
+expect_equal(sum(landings_fixed$ConvertedData$Produkt$Rundvekt), sum(landings_dup$ConvertedData$Produkt$Rundvekt))
+expect_equal(sum(duplicated(paste(landings_fixed$ConvertedData$Seddellinje$Dokumentnummer, landings_fixed$ConvertedData$Seddellinje$Linjenummer))),0)
+expect_equal(sum(duplicated(paste(landings_dup$ConvertedData$Seddellinje$Dokumentnummer, landings_dup$ConvertedData$Seddellinje$Linjenummer))),1)
+
+
 #context("Test convertToLssData")
 lss <- RstoxData:::convertToLssData(landings)
 lss <- lss[order(lss$Dokumentnummer),]

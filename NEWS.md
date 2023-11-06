@@ -2,7 +2,10 @@
 * Added parameter format class "folderPath".
 * Added branch "testing" which will deploy to the testingRepo.
 * Structured the check-full.yaml.
-
+* Fixed issue with parsing some valid variants of the xml landings format (landingerv2)
+* Fixed issue with parsing some valid variants of the InterCatch Exchange format
+* Added functions for extracting some standard tables from NMD biotic
+* Added vignette for guiding data users at IMR to locate and parse biological samples.
 
 # RstoxData v1.10.2-9001  (2023-10-13)
 * Moved functions for setting precision to RstoxFramework, which actually assumed an sp object. 
