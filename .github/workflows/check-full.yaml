@@ -141,23 +141,10 @@ jobs:
         shell: Rscript {0}
         
       
-      ## 2d. Rstox packages and dependencies:
-      - name: Install R package dependencies from the unstableRepo
-        if: github.ref == 'refs/heads/develop'
+      ## 2d. Install dependencies:
+      - name: Install R package dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE, repos = c("https://stoxproject.github.io/unstableRepo/", "https://cloud.r-project.org/"))
-        shell: Rscript {0}
-
-      - name: Install R package dependencies from the testingRepo
-        if: github.ref == 'refs/heads/testing'
-        run: |
-          remotes::install_deps(dependencies = TRUE, repos = c("https://stoxproject.github.io/testingRepo/", "https://cloud.r-project.org/"))
-        shell: Rscript {0}
-
-      - name: Install R package dependencies from the official repo
-        if: github.ref == 'refs/heads/master'
-        run: |
-          remotes::install_deps(dependencies = TRUE, repos = c("https://stoxproject.github.io/repo/", "https://cloud.r-project.org/"))
+          remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org/")
         shell: Rscript {0}
 
 
