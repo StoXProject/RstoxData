@@ -28,6 +28,7 @@ jobs:
           - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
+          # Skipping this due to sprintf warning in Rcpp which is turnerd into an error in the check:
           - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'}
           # Disccarded due to the following missing packages on Mac for R 3.6: tinytest, Rcpp, xml2, units, stringi, data.table:
           #- {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
@@ -129,7 +130,7 @@ jobs:
       ## 2c. R packages needed for this yaml script (not related to the Rstox package itself):
       - name: Install CRANdependencies
         run: |
-          install.packages(c("rcmdcheck", "git2r", "sessioninfo"))
+          install.packages(c("rcmdcheck", "git2r", "sessioninfo", "knitr"))
           
           # Using the latest drat that supports big sur (after inputs from us). 
           # When the next drat appears on CRAN this can be changed to install from CRAN:
