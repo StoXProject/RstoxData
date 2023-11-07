@@ -61,8 +61,8 @@ jobs:
       - name: Prepare for deployment at push
         if: github.event_name == 'push'
         run: |
-          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/checktag-actions.sh" --output unstableRepo_checktag.sh
-          curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/deploy-actions.sh" --output unstableRepo_deploy.sh
+          curl "https://raw.githubusercontent.com/StoXProject/unstableRepo/main/scripts/checktag-actions.sh" --output unstableRepo_checktag.sh
+          curl "https://raw.githubusercontent.com/StoXProject/unstableRepo/main/scripts/deploy-actions.sh" --output unstableRepo_deploy.sh
           chmod +x ./unstableRepo_checktag.sh ./unstableRepo_deploy.sh
           . unstableRepo_checktag.sh
           curl "https://raw.githubusercontent.com/StoXProject/testingRepo/main/scripts/checktag-actions.sh" --output testingRepo_checktag.sh
