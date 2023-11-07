@@ -111,6 +111,14 @@ jobs:
 
       
       ## 2b. System dependencies:
+      - name: Install system dependencies on macOS
+        if: runner.os == 'macOS'
+        run: |
+          # The units package failed on R 4.0 and 4.1 on 2023-11-07:
+          export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=false # This prevents Homebrew from re-installing R, which will lead to .Platform$pkgType = "source".
+          brew install gdal udunits
+        shell: bash
+      
       - name: Install system dependencies on Linux
         if: runner.os == 'Linux'
         run: |
