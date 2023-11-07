@@ -1,4 +1,7 @@
-# RstoxData v1.10.2-9002  (2023-10-13)
+# RstoxData v1.10.2-9002  (2023-11-06)
+* Added parameter format class "folderPath".
+* Added branch "testing" which will deploy to the testingRepo.
+* Structured the check-full.yaml.
 * Fixed issue with parsing some valid variants of the xml landings format (landingerv2)
 * Fixed issue with parsing some valid variants of the InterCatch Exchange format
 * Added functions for extracting some standard tables from NMD biotic
