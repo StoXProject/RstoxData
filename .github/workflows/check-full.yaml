@@ -166,7 +166,8 @@ jobs:
         run: |
           pkgs <- installed.packages()[, "Package"]
           s <-  sessioninfo::session_info(pkgs, include_base = TRUE)
-          if(is.na(subset(s$packages, package == "stringi")$ondiskversion)) {
+          onlyStringi <- subset(s$packages, package == "stringi")
+          if("stringi"  %in% as.data.frame(s$packages)$package && is.na(subset(s$packages, package == "stringi")$ondiskversion)) {
           	remotes::install_github("gagolews/stringi")
           }
         shell: Rscript {0}
