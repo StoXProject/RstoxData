@@ -28,7 +28,6 @@ jobs:
           - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
           - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'}
-          # Skipping this due to sprintf warning in Rcpp which is turnerd into an error in the check:
           - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'}
           # Disccarded due to the following missing packages on Mac for R 3.6: tinytest, Rcpp, xml2, units, stringi, data.table:
           #- {os: macOS-latest,   r: '3.6',     pkgext: '.tgz'}
@@ -189,14 +188,14 @@ jobs:
       #######################################################
       
       - name: Build package source archive from branches testing and master
-        if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/testing' || github.ref == 'refs/heads/develop')
+        if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'testing' || github.ref_name == 'develop')
         run: |
           pkgbuild::build(".", dest_path = ".", binary = FALSE)
           system(paste0("PKG_FREL=", Sys.getenv("PKG_FILE"), " >> ", Sys.getenv("GITHUB_ENV")))
         shell: Rscript {0}
 
       - name: Build package binary archive  from branches testing and master for Windows and macOS (this builds also on matrix.config.r = release, which can or can not be a duplicate)
-        if: (runner.os == 'Windows' || runner.os == 'macOS') && github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/testing' || github.ref == 'refs/heads/develop')
+        if: (runner.os == 'Windows' || runner.os == 'macOS') && github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'testing' || github.ref_name == 'develop')
         run: |
           pkgbuild::build(".", dest_path = ".", binary = TRUE)
           print("PKG_FILE")
@@ -214,7 +213,7 @@ jobs:
       
       ## 5a. Upload to the official (DRAT) repo, but only from the master branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
       - name: Upload to the official (DRAT) repo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'master'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
@@ -224,7 +223,7 @@ jobs:
 
       ## 5b. Upload to the (DRAT) testingRepo, but only from the testing branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
       - name: Upload to the testing (DRAT) repo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/testing'
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'testing'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
@@ -234,7 +233,7 @@ jobs:
 
       ## 5c. Upload to the (DRAT) unstableRepo, but only from the develop branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
       - name: Upload to the unstable (DRAT) repo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'develop'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
@@ -248,7 +247,7 @@ jobs:
       ###############################
       
       - name: Create release on GitHub and upload files for testing branch
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/testing'
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'testing'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -259,7 +258,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release on GitHub and upload files for master branch
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'master'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true

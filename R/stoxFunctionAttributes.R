@@ -954,10 +954,7 @@ processPropertyFormats <- list(
 		class = "single", 
 		title = "The path to a single file"
 	), 
-	folderPath = list(
-		class = "single", 
-		title = "The path to a single folder"
-	), 
+	# The StoX GUI assumes an additional directoryPath, which us used by RstoxFDA
 	filePaths = list(
 		class = "vector", 
 		title = "The path to one or more files", 
