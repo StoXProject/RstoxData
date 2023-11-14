@@ -2003,7 +2003,8 @@ ICESDatsuscOne <- function(
   
   ## 1. FI ##
   
-  finalFI <-data.table::data.table('Country'=BioticDataOne$fishstation$nation,
+  #TODO: Is this the best way of handling nation? what if we have multiple nation?
+  finalFI <-data.table::data.table('Country'=unique(BioticDataOne$fishstation$nation),
                                    'Reporting_organisation'=NA_character_, 
                                    'CruiseID'= NA_character_)
   
@@ -2024,7 +2025,7 @@ ICESDatsuscOne <- function(
     "ShootLong" = round(longitudestart, digits = 4),   #%Mandatory
     "HaulLat" = round(latitudeend, digits = 4),  #%Optional
     "HaulLong" = round(longitudeend, digits = 4),  #%Optional
-    "ICESrectangle" = NA_character_,  #%Optional
+    "ICESrectangle" = NA_character_,  #TODO: do we need to fix this? 
     "Depth" = round(bottomdepthstart),  #%Optional
     "Survey" = NA_character_,          #%Optional
     "ICESDatabase" = NA_character_     #%Optional
@@ -2055,10 +2056,10 @@ ICESDatsuscOne <- function(
     "Month" = getMonth(stationstartdate),
     "Day" = getDay(stationstartdate),
     "Time" = getTimeShot(stationstarttime),
-    "FishID" = paste0(serialnumber,'_',catchsampleid,'_',specimenid),        
+    "FishID" = specimenid,        
     "AphiaIDPredator" = aphia, 
     "IndWgt" = individualweight, 
-    "Number" = NA_character_, 
+    "Number" = NA_character_, #Number of species taken for stomach analyses (pooled samples)
     "MeasurementIncrement" = lengthresolution, 
     "Length" = length, 
     "AgeSource" = agingstructureread, 
@@ -2067,24 +2068,15 @@ ICESDatsuscOne <- function(
     "MaturityScale" = NA_character_,           #Need to be set by user
     "MaturityStage" = specialstage, 
     "PreservationMethod" = stomach,            
-    "Regurgitated" = NA_character_,            #Elise? 
-    "StomachFullness" = NA_character_,            #Elise? 
-    "FullStomWgt" = stomachweight,            #Elise? 
-    "EmptyStomWgt" = -9,            #Elise? 
-    "StomachEmpty" = NA_character_,            #Elise? 
-    "GenSamp" = NA_character_,            #Elise? 
-    "Notes" = NA_character_           #Elise? 
+    "Regurgitated" = NA_character_,           
+    "StomachFullness" = stomachfillfield,           
+    "FullStomWgt" = stomachweight,            
+    "EmptyStomWgt" = -9,            
+    "StomachEmpty" = NA_character_,            
+    "GenSamp" = NA_character_,          
+    "Notes" = NA_character_           
   )]
-  
-  PIraw <- data.table::copy(finalPI[, c(
-    "Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
-    "FishID","AphiaIDPredator","IndWgt","Number","MeasurementIncrement","Length",
-    "AgeSource","Age","Sex","MaturityScale","MaturityStage","PreservationMethod",
-    "Regurgitated","StomachFullness","FullStomWgt","EmptyStomWgt","StomachEmpty",
-    "GenSamp","Notes"
-    )]
-  )
-  
+ 
   
   ## 4. PP ##
   finalPP <-  merge(BioticDataOne$prey, BioticDataOne$preylengthfrequencytable, all= TRUE, sort = FALSE)
@@ -2102,25 +2094,73 @@ ICESDatsuscOne <- function(
     "Month" = getMonth(stationstartdate),
     "Day" = getDay(stationstartdate),
     "Time" = getTimeShot(stationstarttime),
-    "FishID" = paste0(serialnumber,'_',catchsampleid,'_',specimenid),    
+    "FishID" = specimenid,    
     "AphiaIDPredator" = aphia, 
     "AphiaIDPrey" = preycategory,           
     "IdentMet" = NA_character_,            
     "DigestionStage" = preydigestion,            
-    "GravMethod" = NA_character_,            
-    "SubFactor" = -9,           
+    "GravMethod" = stomach,            
+    "SubFactor" = NA_character_,           
     "PreySequence" = preysampleid,            
-    "Count" = totalcount,            
+    "Count" = lengthintervalcount,            
     "UnitWgt" = weightresolution,            
-    "Weight"= totalweight,       
-    "UnitLngt"= NA_character_,
-    "Length" = NA_character_,            
+    "Weight"= totalweight,     
+    "UnitLngt"= interval,   
+    "Length" = lengthintervalstart,            
     "OtherItems" = NA_character_,           
     "OtherCount" = NA_character_,            
     "OtherWgt" = NA_character_,           
     "AnalysingOrg" = NA_character_,           
-    "Notes" = NA_character_
+    "Notes" = NA_character_,           
+    "preyforeignobject" = preyforeignobject
   )]
+  
+  #___________________________________________________________________________#
+  #Special handling
+  
+  
+  
+  #Handling the foreign object. 
+  #TODO: needs revision
+  finalPP[!is.na(finalPP$preyforeignobject),]$OtherItems<-finalPP[!is.na(finalPP$preyforeignobject),]$preyforeignobject
+  finalPP[!is.na(finalPP$preyforeignobject),]$OtherCount<-finalPP[!is.na(finalPP$preyforeignobject),]$Count
+  finalPP[!is.na(finalPP$preyforeignobject),]$OtherWgt<-finalPP[!is.na(finalPP$preyforeignobject),]$Weight
+  finalPP[!is.na(finalPP$preyforeignobject),]$Count<-NA_character_
+  finalPP[!is.na(finalPP$preyforeignobject),]$Weight<-NA_character_
+  
+  #Handling the weight when having multiple lenght frequencies
+  finalPP[, TotalCount := sum(Count), 
+       by = .(Ship, Gear,HaulNo,StationNumber,Year,Month,Day,Time,FishID,
+              AphiaIDPredator,AphiaIDPrey,IdentMet,DigestionStage,GravMethod,
+              SubFactor,PreySequence)]
+  finalPP[!is.na(finalPP$TotalCount)]$Notes<-'Computed using: total weight * count in length group / count for all length group'
+  finalPP$Weight=finalPP$Weight*finalPP$Count/finalPP$TotalCount
+  
+  #Handling number of unique species in pray sampled in each individual fish
+  #TODO: Needs to be checked
+  replace<-finalPP[!is.na(finalPP$AphiaIDPrey), .(replace_number = uniqueN(AphiaIDPredator)), 
+              by = .(Ship,Gear,HaulNo,StationNumber,Year,Month,Day,Time)]#,FishID,
+                     # AphiaIDPredator)]
+  finalPI[replace, Number := i.replace_number, 
+     on = .(Ship,Gear,HaulNo,StationNumber,Year,Month,Day,
+            Time)]#,FishID,AphiaIDPredator)]
+  
+  
+  # Move values from StomachFullness to Regurgitated where StomachFullness is 6
+  # Move  values from StomachFullness to StomachEmpty where StomachFullness is 1
+  finalPI[StomachFullness == '6', c("Regurgitated", "StomachFullness") := .(StomachFullness, NA)]
+  finalPI[StomachFullness == '1', c("StomachEmpty", "StomachFullness") := .(StomachFullness, NA)]
+  
+  
+  PIraw <- data.table::copy(finalPI[, c(
+    "Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
+    "FishID","AphiaIDPredator","IndWgt","Number","MeasurementIncrement","Length",
+    "AgeSource","Age","Sex","MaturityScale","MaturityStage","PreservationMethod",
+    "Regurgitated","StomachFullness","FullStomWgt","EmptyStomWgt","StomachEmpty",
+    "GenSamp","Notes"
+  )]
+  )
+  
   
   PPraw <- data.table::copy(finalPP[, c("Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
     "FishID","AphiaIDPredator","AphiaIDPrey","IdentMet","DigestionStage",
