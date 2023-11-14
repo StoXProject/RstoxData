@@ -142,9 +142,6 @@ jobs:
           # Using the latest drat that supports big sur (after inputs from us). 
           # When the next drat appears on CRAN this can be changed to install from CRAN:
           remotes::install_github(repo = 'eddelbuettel/drat', dependencies = FALSE)
-          
-          # Additional installs to secure specific versions:
-          
         shell: Rscript {0}
         
       
@@ -162,6 +159,17 @@ jobs:
           pkgs <- installed.packages()[, "Package"]
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
+
+
+      ## 2f. Additional installs to secure specific versions to patch incompatibilities with older R versions:
+      - name: Additional installs to secure specific versions
+        run: |
+          if(is.na(subset(s$packages, package == "stringi")$ondiskversion)) {
+          	remotes::install_github("gagolews/stringi")
+          }
+        shell: Rscript {0}
+
+
 
 
       #####################################
