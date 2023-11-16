@@ -1,4 +1,4 @@
-getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
+getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
 	if(!missing(BioticData)) {
 		sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
 	}
@@ -11,6 +11,9 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	else if(!missing(ICESDatrasData)) {
 		sort(unique(unlist(lapply(ICESDatrasData, names))))
 	}
+  else if(!missing(ICESDatsuscData)) {
+    sort(unique(unlist(lapply(ICESDatsuscData, names))))
+  }
 	else if(!missing(AcousticData)) {
 		sort(unique(unlist(lapply(AcousticData, function(x) lapply(x, names)))))
 	}
@@ -166,6 +169,13 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
+	FilterICESDatsusc  = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData", 
+	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
 	
 	# Copy:
 	CopyBiotic = list(
@@ -222,6 +232,13 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(
 			FromVariable = "fromVariable_StoxData"
 		), 
+		CopyICESDatsusc = list(
+		  functionType = "modelData", 
+		  functionCategory = "baseline", 
+		  functionOutputDataType = "ICESDatsuscData", 
+		  functionParameterFormat = list(
+		    FromVariable = "fromVariable_StoxData"
+		  ), 
 		functionArgumentHierarchy = list(
 			preserveClass = list(
 				overwrite = TRUE
@@ -355,6 +372,11 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESDatrasData"
 	),
+	ICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData"
+	),
 	
 	WriteICESAcoustic = list(
 		functionType = "modelData", 
@@ -370,6 +392,11 @@ stoxFunctionAttributes <- list(
 		functionType = "modelData", 
 		functionCategory = "report", 
 		functionOutputDataType = "WriteICESDatrasData"
+	),
+	WriteICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "report", 
+	  functionOutputDataType = "WriteICESDatsuscData"
 	),
 	
 	RegroupLengthICESDatras = list(
@@ -770,6 +797,39 @@ stoxFunctionAttributes <- list(
 				Conditional = TRUE
 			)
 		)
+	),
+	
+	TranslateICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData", 
+	  functionParameterFormat = list(
+	    TranslationTable = "translationTable", 
+	    VariableName = "variableName_translate", 
+	    ConditionalVariableNames = "conditionalVariableNames_translate"
+	  ), 
+	  functionArgumentHierarchy = list(
+	    Translation = list(
+	      TranslationDefinition = "FunctionInput"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    TranslationTable = list(
+	      TranslationDefinition = "FunctionParameter"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    Conditional = list(
+	      TranslationDefinition = "FunctionParameter"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    VariableName = list(
+	      TranslationDefinition = "FunctionParameter"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    ConditionalVariableNames = list(
+	      TranslationDefinition = "FunctionParameter",
+	      Conditional = TRUE
+	    )
+	  )
 	)
 )
 

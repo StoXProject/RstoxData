@@ -263,9 +263,11 @@ NULL
 #' @param ICESBioticData \code{\link{ICESBioticData}}.
 #' @param ICESAcousticData \code{\link{ICESAcousticData}}.
 #' @param ICESDatrasData \code{\link{ICESDatrasData}}.
+#' @param ICESDatsuscData \code{\link{ICESDatsuscData}}.
 #' @param WriteICESBioticData \code{\link{WriteICESBioticData}}.
 #' @param WriteICESAcousticData \code{\link{WriteICESAcousticData}}.
 #' @param WriteICESDatrasData \code{\link{WriteICESDatrasData}}.
+#' @param WriteICESDatsuscData \code{\link{WriteICESDatsucData}}.
 #'
 #' @name ModelData
 #' 
@@ -477,6 +479,21 @@ NULL
 #' 
 NULL
 
+##################################################
+##################################################
+#' StoX data type ICESDatsuscData
+#' 
+#' Biotic data stored in the ICESDatsusc (CSV) format.
+#' 
+#' @details
+#' This StoX data type is produced by \code{\link{ICESDatsusc}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESDatusc}}, each holding the tables HH, HL and CA, in that hierarchical order.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name ICESDatsuscData
+#' 
+NULL
+
 
 
 ##################################################
@@ -521,6 +538,21 @@ NULL
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
 #' @name WriteICESDatrasData
+#' 
+NULL
+
+##################################################
+##################################################
+#' Rbind \code{\link{ICESDatsuscData}} to a string matrix. 
+#' 
+#' The output of this function is suited for submission to \url{https://www.ices.dk/data/data-portals/Pages/Stomach-content.aspx}.
+#' 
+#' @details
+#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatsuscData}}, where column names are inclcuded as header rows.
+#' 
+#' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
+#' 
+#' @name WriteICESDatsuscData
 #' 
 NULL
 

@@ -2062,7 +2062,7 @@ ICESDatsuscOne <- function(
     "Number" = NA_character_, #Number of species taken for stomach analyses (pooled samples)
     "MeasurementIncrement" = lengthresolution, 
     "Length" = length, 
-    "AgeSource" = agingstructureread, 
+    "AgeSource" = agingstructure, 
     "Age" = age, 
     "Sex" = sex, 
     "MaturityScale" = NA_character_,           #Need to be set by user
@@ -2186,6 +2186,56 @@ WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
   ICESDatsuscCSVDatsuscOne <- lapply(ICESDatsuscCSVDatsuscOne, apply, 1, paste, collapse = ",")
   # Join to one vector, to be written to one file:
   ICESDatsuscCSVDatsuscOne <- unlist(ICESDatsuscCSVDatsuscOne)
+}
+
+
+
+
+#' Write ICESDatras to CSV fille
+#'
+#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#'
+#' @inheritParams ModelData
+#'
+#' @return An object of StoX data type \code{\link{WriteICESDatrasData}}.
+#'
+#' @export
+WriteICESDatras <- function(ICESDatrasData){
+  
+  #WriteICESDatrasData <- lapply(
+  #	ICESDatrasData, 
+  #	WriteICESDatrasOne, 
+  #	na = "-9"
+  #)
+  
+  WriteICESDatrasData <- WriteICESDatrasOne(ICESDatrasData, na = "-9")
+  
+  return(WriteICESDatrasData)
+}
+
+
+WriteICESDatsuscOne <- function(ICESDatsuscDataOne, na = "-9"){
+  
+  # Convert all tables to string matrix with header and record, and rbind:
+  ICESDatsuscCSVDataOne <- convertToRecordTypeMatrix(ICESDatsuscDataOne)
+  
+  # Replace NAs:
+  # if(length(na)) {
+  #   ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+  # }
+  
+  #ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
+  
+  # Stack all matrices:
+  #ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
+  
+  # Convert each line of each table to comma separated:
+  ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, apply, 1, paste, collapse = ",")
+  
+  # Join to one vector, to be written to one file:
+  ICESDatsuscCSVDataOne <- unlist(ICESDatsuscCSVDataOne)
+  
+  return(ICESDatsuscCSVDataOne)
 }
 
 
