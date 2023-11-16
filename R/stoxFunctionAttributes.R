@@ -232,19 +232,26 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(
 			FromVariable = "fromVariable_StoxData"
 		), 
-		CopyICESDatsusc = list(
-		  functionType = "modelData", 
-		  functionCategory = "baseline", 
-		  functionOutputDataType = "ICESDatsuscData", 
-		  functionParameterFormat = list(
-		    FromVariable = "fromVariable_StoxData"
-		  ), 
 		functionArgumentHierarchy = list(
 			preserveClass = list(
 				overwrite = TRUE
 			)
 		)
 	),
+	CopyICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData", 
+	  functionParameterFormat = list(
+	    FromVariable = "fromVariable_StoxData"
+	  ), 
+	  functionArgumentHierarchy = list(
+	    preserveClass = list(
+	      overwrite = TRUE
+	    )
+	  )
+	),
+	  
 	CopyAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
