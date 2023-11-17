@@ -34,9 +34,9 @@ jobs:
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: '4.3',     pkgext: '.zip'}
           - {os: windows-latest, r: '4.2',     pkgext: '.zip'}
-          - {os: windows-latest, r: '4.1',     pkgext: '.zip'}
-          - {os: windows-latest, r: '4.0',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
-          - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"}
+          # - {os: windows-latest, r: '4.1',     pkgext: '.zip'} # Disabled due to stringi failure
+          # - {os: windows-latest, r: '4.0',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"} # Disabled due to stringi failure
+          # - {os: windows-latest, r: '3.6',     pkgext: '.zip',    rspm: "https://cloud.r-project.org"} # Disabled due to stringi failure
           - {os: ubuntu-latest,  r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-20.04,   r: '4.3',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-20.04,   r: '4.2',     pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
