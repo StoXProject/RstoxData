@@ -113,10 +113,21 @@ jobs:
       - name: Install system dependencies on macOS
         if: runner.os == 'macOS'
         run: |
+          # gfortran may not exist in a period after a new R minor release:
+          gfortranFile='/usr/local/bin/gfortran'
+          if [ -f "$gfortranFile" ] ; then
+            rm "$gfortranFile"
+          fi
           rm '/usr/local/bin/2to3'
           rm '/usr/local/bin/2to3-3.11'
-          
-          # The units package failed on R 4.0 and 4.1 on 2023-11-07:
+          rm '/usr/local/bin/idle3.11'
+          rm '/usr/local/bin/idle3'
+          rm '/usr/local/bin/pydoc3'
+          rm '/usr/local/bin/python3'
+          rm '/usr/local/bin/python3-config'
+          rm '/usr/local/bin/pydoc3.11'
+          rm '/usr/local/bin/python3.11'
+          rm '/usr/local/bin/python3.11-config'
           export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=false # This prevents Homebrew from re-installing R, which will lead to .Platform$pkgType = "source".
           brew install gdal udunits
         shell: bash
