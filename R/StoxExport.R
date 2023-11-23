@@ -2173,19 +2173,6 @@ ICESDatsuscOne <- function(
 }
 
 
-WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
-  # Convert all tables to string matrix with header and record, and rbind:
-  ICESDatsuscCSVDatsuscOne<- convertToRecordTypeMatrix(ICESDatsuscData)
-  # Replace NAs:
-  if(length(na)) {
-    ICESDatsuscCSVDatsuscOne <- lapply(ICESDatsuscCSVDatsuscOne, function(x) {x[is.na(x)] <- na; x})
-  }
-  # Convert each line of each table to comma separated:
-  ICESDatsuscCSVDatsuscOne <- lapply(ICESDatsuscCSVDatsuscOne, apply, 1, paste, collapse = ",")
-  # Join to one vector, to be written to one file:
-  ICESDatsuscCSVDatsuscOne <- unlist(ICESDatsuscCSVDatsuscOne)
-}
-
 
 
 
@@ -2198,7 +2185,7 @@ WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
 #' @return An object of StoX data type \code{\link{WriteICESDatrasData}}.
 #'
 #' @export
-WriteICESDatras <- function(ICESDatrasData){
+WriteICESDatsusc <- function(ICESDatsuscData){
   
   #WriteICESDatrasData <- lapply(
   #	ICESDatrasData, 
@@ -2206,32 +2193,23 @@ WriteICESDatras <- function(ICESDatrasData){
   #	na = "-9"
   #)
   
-  WriteICESDatrasData <- WriteICESDatrasOne(ICESDatrasData, na = "-9")
+  WriteICESDatsuscData <- WriteICESDatrasOne(ICESDatsuscData, na = "-9")
   
-  return(WriteICESDatrasData)
+  return(WriteICESDatsuscData)
 }
 
 
-WriteICESDatsuscOne <- function(ICESDatsuscDataOne, na = "-9"){
-  
-  # Convert all tables to string matrix with header and record, and rbind:
-  ICESDatsuscCSVDataOne <- convertToRecordTypeMatrix(ICESDatsuscDataOne)
-  
-  # Replace NAs:
-  # if(length(na)) {
-  #   ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
-  # }
-  
-  #ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
-  
-  # Stack all matrices:
-  #ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
-  
-  # Convert each line of each table to comma separated:
-  ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, apply, 1, paste, collapse = ",")
-  
-  # Join to one vector, to be written to one file:
-  ICESDatsuscCSVDataOne <- unlist(ICESDatsuscCSVDataOne)
+WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
+	# Convert all tables to string matrix with header and record, and rbind:
+	ICESDatsuscCSVDataOne<- convertToRecordTypeMatrix(ICESDatsuscData)
+	# Replace NAs:
+	if(length(na)) {
+		ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+	}
+	# Convert each line of each table to comma separated:
+	ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, apply, 1, paste, collapse = ",")
+	# Join to one vector, to be written to one file:
+	ICESDatsuscCSVDataOne <- unlist(ICESDatsuscCSVDataOne)
   
   return(ICESDatsuscCSVDataOne)
 }

@@ -5,19 +5,13 @@
 \title{Write ICESDatras to CSV fille}
 \usage{
 WriteICESDatras(ICESDatrasData)
-
-WriteICESDatras(ICESDatrasData)
 }
 \arguments{
 \item{ICESDatrasData}{\code{\link{ICESDatrasData}}.}
 }
 \value{
 An object of StoX data type \code{\link{WriteICESDatrasData}}.
-
-An object of StoX data type \code{\link{WriteICESDatrasData}}.
 }
 \description{
-Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
-
 Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
 }
