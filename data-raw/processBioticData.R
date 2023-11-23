@@ -150,8 +150,8 @@ convertLenRes_NMDBiotic <- function(x) {
 getCatchFractionWeight_NMDBiotic3 <- function(catchweight, catchproducttype, catchcategory, CruiseKey) {
 	hasInvalid <- !catchproducttype %in% 1 & !is.na(catchweight)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(catchcategory[hasInvalid]))
-		invalid <- sort(setdiff(unique(catchproducttype), 1))
+		affectedSpecies <- sort(unique(catchcategory[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(catchproducttype), 1), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are catchproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing catchweight. This results in missing CatchFractionWeight in StoxBiotic() for the following catchcategory of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -160,8 +160,8 @@ getCatchFractionWeight_NMDBiotic3 <- function(catchweight, catchproducttype, cat
 getCatchFractionWeight_NMDBiotic1 <- function(weight, producttype, species, CruiseKey) {
 	hasInvalid <- !producttype %in% 1 & !is.na(weight)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(species[hasInvalid]))
-		invalid <- sort(setdiff(unique(producttype), 1))
+		affectedSpecies <- sort(unique(species[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(producttype), 1), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are producttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing weight (in the catchsample table). This results in missing CatchFractionWeight in StoxBiotic() for the following species of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -171,8 +171,8 @@ getCatchFractionWeight_NMDBiotic1 <- function(weight, producttype, species, Crui
 getSampleWeight_NMDBiotic3 <- function(lengthsampleweight, sampleproducttype, catchcategory, CruiseKey) {
 	hasInvalid <- !sampleproducttype %in% 1 & !is.na(lengthsampleweight)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(catchcategory[hasInvalid]))
-		invalid <- sort(setdiff(unique(sampleproducttype), 1))
+		affectedSpecies <- sort(unique(catchcategory[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(sampleproducttype), 1), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing lengthsampleweight. This results in missing SampleWeight in StoxBiotic() for the following catchcategory of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -181,8 +181,8 @@ getSampleWeight_NMDBiotic3 <- function(lengthsampleweight, sampleproducttype, ca
 getSampleWeight_NMDBiotic1 <- function(lengthsampleweight, sampleproducttype, species, CruiseKey) {
 	hasInvalid <- !sampleproducttype %in% 1 & !is.na(lengthsampleweight)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(species[hasInvalid]))
-		invalid <- sort(setdiff(unique(sampleproducttype), 1))
+		affectedSpecies <- sort(unique(species[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(sampleproducttype), 1), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are sampleproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing lengthsampleweight. This results in missing SampleWeight in StoxBiotic() for the following species of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -192,8 +192,8 @@ getSampleWeight_NMDBiotic1 <- function(lengthsampleweight, sampleproducttype, sp
 getIndividualRoundWeight_NMDBiotic3 <- function(individualweight, individualproducttype, catchcategory, CruiseKey) {
 	hasInvalid <- !individualproducttype %in% 1 & !is.na(individualweight)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(catchcategory[hasInvalid]))
-		invalid <- sort(setdiff(unique(individualproducttype), 1))
+		affectedSpecies <- sort(unique(catchcategory[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(individualproducttype), 1), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are individualproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing individualweight. This results in missing IndividualRoundWeight in StoxBiotic() for the following catchcategory of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -202,8 +202,8 @@ getIndividualRoundWeight_NMDBiotic3 <- function(individualweight, individualprod
 getIndividualRoundWeight_NMDBiotic1 <- function(weight.individual, producttype.individual, species, CruiseKey) {
 	hasInvalid <- !producttype.individual %in% 1 & !is.na(weight.individual)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(species[hasInvalid]))
-		invalid <- sort(setdiff(unique(producttype.individual), 1))
+		affectedSpecies <- sort(unique(species[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(producttype.individual), 1), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are producttype.individual that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing weight (in the individual table). This results in missing IndividualRoundWeight in StoxBiotic() for the following species of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -213,8 +213,8 @@ getIndividualRoundWeight_NMDBiotic1 <- function(weight.individual, producttype.i
 getIndividualTotalLength_NMDBiotic3 <- function(length, lengthmeasurement, catchcategory, CruiseKey) {
 	hasInvalid <- !lengthmeasurement %in% 'E' & !is.na(length)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(catchcategory[hasInvalid]))
-		invalid <- sort(setdiff(unique(lengthmeasurement), 'E'))
+		affectedSpecies <- sort(unique(catchcategory[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(lengthmeasurement), 'E'), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic() for the following catchcategory of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}
@@ -223,8 +223,8 @@ getIndividualTotalLength_NMDBiotic3 <- function(length, lengthmeasurement, catch
 getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, species, CruiseKey) {
 	hasInvalid <- !lengthmeasurement %in% 'E' & !is.na(length)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(species[hasInvalid]))
-		invalid <- sort(setdiff(unique(lengthmeasurement), 'E'))
+		affectedSpecies <- sort(unique(species[hasInvalid]), na.last = TRUE)
+		invalid <- sort(setdiff(unique(lengthmeasurement), 'E'), na.last = TRUE)
 		cruise <- sub("\\/.*", "", CruiseKey[1])
 		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic() for the following species of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
 	}

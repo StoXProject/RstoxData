@@ -1026,8 +1026,6 @@ ICESDatrasOne <- function(
 	}
 
 	## 1. HH ##
-	'%ni%' <- Negate('%in%')
-
 	finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation)
 
 	# Make HH records

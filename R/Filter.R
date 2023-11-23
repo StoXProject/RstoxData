@@ -181,9 +181,11 @@ filterTables <- function(inputTables, filterExpression, treeStruct, propagateDow
     stop("Argument 'treeStruct' does not specify a hierarchy for 'inputTables'.")
   }
   
+	
+  # Special operators defined for filter operations. These are also supported in RstoxFramework:
   `%notin%` <- Negate(`%in%`)
-  
   `%notequal%` <- function(x, table) is.na(x) | x %notin% table
+  
   
   processFilter <- function(filters) {
     # Do not accept system calls in filters:
@@ -349,7 +351,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
     zeroed <- intersect(names(rowsPre[rowsPre>0]), names(rowsPost[rowsPost==0]))
     
     if (length(zeroed)>0 & warn){
-      warning("StoX: Filter returned empty tables \"", paste(zeroed, collapse=","), "\"")
+      warning("StoX: Filter returned empty tables \"", paste(zeroed, collapse=", "), "\"")
     }
     return(table)
   }
@@ -371,7 +373,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	 zeroed <- intersect(names(rowsPre[rowsPre>0]), names(rowsPost[rowsPost==0]))
 	    
 	 if (length(zeroed)>0){
-	      warning("StoX: Filter on data from ", fileName, " returned empty tables \"", paste(zeroed, collapse=","), "\"")
+	      warning("StoX: Filter on data from ", fileName, " returned empty tables \"", paste(zeroed, collapse=", "), "\"")
 	 }  
 	 return(tables)
 	}
