@@ -11,9 +11,9 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	else if(!missing(ICESDatrasData)) {
 		sort(unique(unlist(lapply(ICESDatrasData, names))))
 	}
-  else if(!missing(ICESDatsuscData)) {
-    sort(unique(unlist(lapply(ICESDatsuscData, names))))
-  }
+	else if(!missing(ICESDatsucsData)) {
+		sort(unique(unlist(lapply(ICESDatsucsData, names))))
+	}
 	else if(!missing(AcousticData)) {
 		sort(unique(unlist(lapply(AcousticData, function(x) lapply(x, names)))))
 	}
