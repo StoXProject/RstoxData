@@ -2,18 +2,18 @@
 % Please edit documentation in R/Filter.R
 \name{FilterICESDatsusc}
 \alias{FilterICESDatsusc}
-\title{Filter ICESDatras data}
+\title{Filter ICESDatsusc data}
 \usage{
 FilterICESDatsusc(ICESDatsuscData, FilterExpression = list())
 }
 \arguments{
-\item{FilterExpression}{Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.}
+\item{ICESDatsuscData}{Input \code{\link{ICESDatsuscData}} data.}
 
-\item{ICESDatrasData}{Input \code{\link{ICESDatrasData}} data.}
+\item{FilterExpression}{Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.}
 }
 \value{
 An object of filtered data in the same format as the input data.
 }
 \description{
-Filters \code{\link{ICESDatrasData}}.
+Filters \code{\link{ICESDatsuscData}}.
 }

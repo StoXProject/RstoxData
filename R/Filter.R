@@ -696,11 +696,11 @@ FilterICESDatras <- function(ICESDatrasData, FilterExpression = list()) {
 	return(ICESDatrasData)
 }
 
-#' Filter ICESDatras data
+#' Filter ICESDatsusc data
 #'
-#' Filters \code{\link{ICESDatrasData}}.
+#' Filters \code{\link{ICESDatsuscData}}.
 #' 
-#' @param ICESDatrasData  Input \code{\link{ICESDatrasData}} data.
+#' @param ICESDatsuscData  Input \code{\link{ICESDatsuscData}} data.
 #' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #'
 #' @return An object of filtered data in the same format as the input data.

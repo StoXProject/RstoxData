@@ -7,7 +7,7 @@
 The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
 }
 \details{
-The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are inclcuded as header rows.
+The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are included as header rows.
 }
 \seealso{
 \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}

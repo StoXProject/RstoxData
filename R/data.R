@@ -267,7 +267,7 @@ NULL
 #' @param WriteICESBioticData \code{\link{WriteICESBioticData}}.
 #' @param WriteICESAcousticData \code{\link{WriteICESAcousticData}}.
 #' @param WriteICESDatrasData \code{\link{WriteICESDatrasData}}.
-#' @param WriteICESDatsuscData \code{\link{WriteICESDatsucData}}.
+#' @param WriteICESDatsuscData \code{\link{WriteICESDatsuscData}}.
 #'
 #' @name ModelData
 #' 
@@ -486,7 +486,7 @@ NULL
 #' Biotic data stored in the ICESDatsusc (CSV) format.
 #' 
 #' @details
-#' This StoX data type is produced by \code{\link{ICESDatsusc}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESDatusc}}, each holding the tables HH, HL and CA, in that hierarchical order.
+#' This StoX data type is produced by \code{\link{ICESDatsusc}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESDatsusc}}, each holding the tables HH, HL and CA, in that hierarchical order.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -503,7 +503,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
 #' 
 #' @details
-#' The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are inclcuded as header rows.
+#' The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are included as header rows.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -518,7 +518,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
 #' 
 #' @details
-#' The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are inclcuded as header rows.
+#' The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are included as header rows.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -533,13 +533,14 @@ NULL
 #' The output of this function is suited for submission to \url{https://www.ices.dk/data/data-portals/Pages/DATRAS.aspx}.
 #' 
 #' @details
-#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatrasData}}, where column names are inclcuded as header rows.
+#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatrasData}}, where column names are included as header rows.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
 #' @name WriteICESDatrasData
 #' 
 NULL
+
 
 ##################################################
 ##################################################
@@ -548,7 +549,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://www.ices.dk/data/data-portals/Pages/Stomach-content.aspx}.
 #' 
 #' @details
-#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatsuscData}}, where column names are inclcuded as header rows.
+#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatsuscData}}, where column names are included as header rows.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
