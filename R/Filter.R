@@ -696,3 +696,28 @@ FilterICESDatras <- function(ICESDatrasData, FilterExpression = list()) {
 	return(ICESDatrasData)
 }
 
+#' Filter ICESDatsusc data
+#'
+#' Filters \code{\link{ICESDatsuscData}}.
+#' 
+#' @param ICESDatsuscData  Input \code{\link{ICESDatsuscData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterICESDatsusc <- function(ICESDatsuscData, FilterExpression = list()) {
+  # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+  #FilterExpression <- expandFilterExpressionList(FilterExpression)
+  
+  ICESDatsuscData <- filterData(
+    ICESDatsuscData, 
+    filterExpression = FilterExpression, 
+    propagateDownwards = TRUE, 
+    propagateUpwards = FALSE
+  )
+  
+  return(ICESDatsuscData)
+}
+
