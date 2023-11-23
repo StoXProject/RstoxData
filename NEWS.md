@@ -1,3 +1,9 @@
+# RstoxData v1.10.2-9002  (2023-10-13)
+* Fixed issue with parsing some valid variants of the xml landings format (landingerv2)
+* Fixed issue with parsing some valid variants of the InterCatch Exchange format
+* Added functions for extracting some standard tables from NMD biotic
+* Added vignette for guiding data users at IMR to locate and parse biological samples.
+
 # RstoxData v1.10.2-9001  (2023-10-13)
 * Moved functions for setting precision to RstoxFramework, which actually assumed an sp object. 
 * Changed definition of CatchFractionNumber and SampleNumber to numeric instead of integer, as this was the result from runProcess() used in runModel(). 

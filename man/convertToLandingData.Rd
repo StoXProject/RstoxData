@@ -4,10 +4,12 @@
 \alias{convertToLandingData}
 \title{Convert landings}
 \usage{
-convertToLandingData(lssLandings)
+convertToLandingData(lssLandings, ForceUnique = F)
 }
 \arguments{
 \item{lssLandings}{landings in the format provided by \code{\link[RstoxData]{readLssFile}}}
+
+\item{ForceUnique}{Manipulate the field 'Linjenummer' with arbitrary changes to ensure that key columns uniquely identify rows.}
 }
 \value{
 \code{\link[RstoxData]{LandingData}} the converted landings
@@ -19,4 +21,8 @@ Convert landings to \code{\link[RstoxData]{LandingData}}.
 When converting from lss:
  All columns of 'lssLandings' are converted, except 'salgsdato' and 'versjonstidspunkt'.
  All columns of \code{\link[RstoxData]{LandingData}} are filled, except 'DokumentFormulardato' and 'DokumentElektroniskDato'.
+ 
+Occasionally landing sets contain data that where rows are not uniquely identified by the key columns in that format.
+In these cases a warning is issued, and it is important to handle those duplicates to avoid problems in later processing.
+The parameter 'ForceUnique' may be considered, if one is confident these records does in fact represent separate landings.
 }

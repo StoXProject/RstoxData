@@ -35,10 +35,31 @@ parseNumeric <- function(chr){
   }
 }
 
+#' Adds any missing non-mandatory charachter fields to intercatch tables
+#' @param row data.table with parsed headerless rows
+#' @param lastNeededPosition last position of the table that is either mandatory or non-character
+#' @param headers for the parsed table
+#' @noRd
+appendFields <- function(row, lastNeededPosition, headers){
+  if (ncol(row) != length(headers)){
+    if (ncol(row)>length(headers)){
+      stop("Malformed InterCatch 1.0 file.")
+    }
+    if (ncol(row) < lastNeededPosition){
+      stop("Malformed InterCatch 1.0 file.")
+    }
+    row <- cbind(row, rep(NA, length(headers)-ncol(row)))
+  }
+  return(row)
+}
+
 #' @noRd
 processHI <- function(vec, output){
   stopifnot(vec[1]=="HI")
   row <- data.table::data.table(t(vec[2:length(vec)]))
+  
+  row <- appendFields(row, 11, names(output$HI))
+
   names(row) <- names(output$HI)
   
   #characters may be encoded as NA for missing values
@@ -56,6 +77,9 @@ processHI <- function(vec, output){
 processSI <- function(vec, output){
   stopifnot(vec[1]=="SI")
   row <- data.table::data.table(t(vec[2:length(vec)]))
+  
+  row <- appendFields(row, 21, names(output$SI))
+  
   names(row) <- names(output$SI)
   
   #characters may be encoded as NA for missing values
@@ -77,6 +101,9 @@ processSI <- function(vec, output){
 processSD <- function(vec, output){
   stopifnot(vec[1]=="SD")
   row <- data.table::data.table(t(vec[2:length(vec)]))
+  
+  row <- appendFields(row, 33, names(output$SD))
+  
   names(row) <- names(output$SD)
   
   #characters may be encoded as NA for missing values
@@ -107,6 +134,7 @@ processSD <- function(vec, output){
 #' Parses InterCatch
 #' @description 
 #'  Parses the InterCatch exchange format v 1.0 for Commercial Catch and Sample Data.
+#'  Parses HI,SI and SD recrods
 #' @details 
 #'  The InterCatch exchange format is a jagged comma-separated format, 
 #'  where the number of fields on a line is determined by a record-type identifier in position 1.
@@ -127,7 +155,7 @@ parseInterCatch <- function(file, encoding="UTF-8"){
   
   output <- initIC()
   
-  stream <- file(file, open="r", encoding = encoding)
+  stream <- file(file, encoding = encoding)
   lines <- readLines(stream)
   close(stream)
   
