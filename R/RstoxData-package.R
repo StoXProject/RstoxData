@@ -19,8 +19,8 @@ utils::globalVariables(c(
 	 "ChannelReferenceKey", "ChannelReferenceType", "Constant", "Count", "Country", "Cruise",
 	 "CruiseKey", "DateTime", "Day", "DigestionStage", "DoorType", "EDSU", "EchoType",
 	 "EffectiveTowDistance", "FishID", "Frequency", "Gear", "GearEx", "GravMethod", "HLNoAtLngt",
-	 "HaulNo", "ICESDatsucsData", "ID", "IdentMet", "LngtClass", "LngtCode", "LocalID", "LogKey",
-	 "Month", "N", "NewValue", "Number", "NumberAtLength", "NumberOfIndividualsToGenerate",
+	 "HaulNo", "ID", "IdentMet", "LngtClass", "LngtCode", "LocalID", "LogKey", "Month", "N",
+	 "NewValue", "Number", "NumberAtLength", "NumberOfIndividualsToGenerate",
 	 "NumberOfSampledIndividuals", "PreySequence", "Quarter", "ReplaceBy", "ResolutionCode",
 	 "SaCategory", "Scaling", "Ship", "SpecVal", "SpeciesCategoryNumber", "SpeciesCategoryWeight",
 	 "SpeciesCode", "StatRec", "StationNumber", "StomachFullness", "SubFactor", "SubsampleWeight",
@@ -44,7 +44,7 @@ utils::globalVariables(c(
 	 "stomachweight", "stoxBioticObject", "subFactor", "subWeight", "suffixes", "sum_sa.x",
 	 "sum_sa.y", "sweeplength", "tagid", "tagtype", "target", "threshold", "tissuesample",
 	 "totalNo", "totalweight", "transceiver", "translationListOne", "trawldoorarea",
-	 "trawldoorspread", "trawldoortype", "trawldoorweight", "uniqueN", "variableToTranslate",
+	 "trawldoorspread", "trawldoortype", "trawldoorweight", "variableToTranslate",
 	 "verticaltrawlopening", "vesselspeed", "weightresolution", "winddirection", "windspeed",
 	 "wingspread", "wiredensity", "wirediameter", "wirelength", "xsdObjects"))
 
