@@ -185,7 +185,7 @@ readVariableTranslation <- function(FileName, VariableName, ValueColumn, NewValu
 	tanslation[, NewValue := get(NewValueColumn)]
 	
 	if(Conditional) {
-		if(!length(ConditionalValueColumns) || !nchar(ConditionalValueColumns)) {
+		if(!length(ConditionalValueColumns) || any(nchar(ConditionalValueColumns) == 0)) {
 			stop("ConditionalValueColumns must be given as the name of the column giving the values to be translated to.")
 		}
 		else {

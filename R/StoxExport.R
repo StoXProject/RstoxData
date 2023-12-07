@@ -2136,7 +2136,7 @@ ICESDatsuscOne <- function(
   
   #Handling number of unique species in pray sampled in each individual fish
   #TODO: Needs to be checked
-  replace<-finalPP[!is.na(finalPP$AphiaIDPrey), .(replace_number = uniqueN(AphiaIDPredator)), 
+  replace<-finalPP[!is.na(finalPP$AphiaIDPrey), .(replace_number = data.table::uniqueN(AphiaIDPredator)), 
               by = .(Ship,Gear,HaulNo,StationNumber,Year,Month,Day,Time)]#,FishID,
                      # AphiaIDPredator)]
   finalPI[replace, Number := i.replace_number, 

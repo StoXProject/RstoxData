@@ -11,8 +11,8 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	else if(!missing(ICESDatrasData)) {
 		sort(unique(unlist(lapply(ICESDatrasData, names))))
 	}
-	else if(!missing(ICESDatsucsData)) {
-		sort(unique(unlist(lapply(ICESDatsucsData, names))))
+	else if(!missing(ICESDatsuscData)) {
+		sort(unique(unlist(lapply(ICESDatsuscData, names))))
 	}
 	else if(!missing(AcousticData)) {
 		sort(unique(unlist(lapply(AcousticData, function(x) lapply(x, names)))))
@@ -1119,19 +1119,19 @@ processPropertyFormats <- list(
 		variableTypes = "character"
 	), 
 	variableName_translate = list(
-		class = "vector", 
+		class = "single", 
 		title = "Select one variable to translate.", 
 		possibleValues = getVariableNamesStoxData, 
 		variableTypes = "character"
 	), 
 	valueColumn = list(
-		class = "vector", 
+		class = "single", 
 		title = "The name of the column in the input file giving the values to tranlate.", 
 		variableTypes = "character", 
 		possibleValues = getValueColumns
 	), 
 	newValueColumn = list(
-		class = "vector", 
+		class = "single", 
 		title = "The name of the column in the input file giving the (new) values to tranlate to.", 
 		variableTypes = "character", 
 		possibleValues = getValueColumns
@@ -1161,7 +1161,7 @@ processPropertyFormats <- list(
 		variableTypes = "character"
 	), 
 	fromVariable_StoxData = list(
-		class = "vector", 
+		class = "single", 
 		title = "Select one variable to copy", 
 		possibleValues = getVariableNamesStoxData, 
 		variableTypes = "character"
