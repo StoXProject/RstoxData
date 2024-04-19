@@ -316,7 +316,7 @@ firstPhase <- function(
     	
     	numDup <- length(stationsWithMoreThanOneSerialnumber)
     	
-    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
+    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssign all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
     }
     
     # 3. One to one mapping and keys
