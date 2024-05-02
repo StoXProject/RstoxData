@@ -494,7 +494,8 @@ FilterBiotic <- function(BioticData, FilterExpression = list(), FilterUpwards = 
 #' @export
 #' 
 FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpwards = FALSE) {
-    # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
     FilterExpression <- expandFilterExpressionList(FilterExpression)
     
     filterData(
@@ -520,6 +521,9 @@ FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpward
 #' @export
 #' 
 FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards = FALSE) {
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	FilterExpression <- expandFilterExpressionList(FilterExpression)
+	
 	filterData(
 		LandingData, 
 		filterExpression = FilterExpression, 
