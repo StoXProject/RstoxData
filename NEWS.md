@@ -1,3 +1,6 @@
+# RstoxData v1.10.2-9002  (2024-04-25)
+* Fixed more bugs in writeLevel() and exported sanitizeExpression.
+
 # RstoxData v1.10.2-9002  (2023-11-06)
 * Added parameter format class "folderPath".
 * Added branch "testing" which will deploy to the testingRepo.
