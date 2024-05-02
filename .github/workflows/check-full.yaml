@@ -24,9 +24,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
+          - {os: macOS-13,   r: 'release', pkgext: '.tgz'}
+          - {os: macOS-13,   r: '4.3',     pkgext: '.tgz'}
+          - {os: macOS-13,   r: '4.2',     pkgext: '.tgz'}
           # - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'} # Disabled due to units failure
           # - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'} # Failing in Install system dependencies on macOS
           # Disccarded due to the following missing packages on Mac for R 3.6: tinytest, Rcpp, xml2, units, stringi, data.table:
