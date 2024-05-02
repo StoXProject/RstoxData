@@ -161,6 +161,14 @@ jobs:
       
       ## 2d. Install dependencies:
       - name: Install R package dependencies
+        if: runner.os == 'macOS'
+        run: |
+          remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org/", type = "source")
+        shell: Rscript {0}
+
+
+      - name: Install R package dependencies
+        if: runner.os != 'macOS'
         run: |
           remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org/")
         shell: Rscript {0}
