@@ -24,9 +24,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.3',     pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.2',     pkgext: '.tgz'}
+          - {os: macOS-13,   r: 'release', pkgext: '.tgz'}
+          - {os: macOS-13,   r: '4.3',     pkgext: '.tgz'}
+          - {os: macOS-13,   r: '4.2',     pkgext: '.tgz'}
           # - {os: macOS-latest,   r: '4.1',     pkgext: '.tgz'} # Disabled due to units failure
           # - {os: macOS-latest,   r: '4.0',     pkgext: '.tgz'} # Failing in Install system dependencies on macOS
           # Disccarded due to the following missing packages on Mac for R 3.6: tinytest, Rcpp, xml2, units, stringi, data.table:
@@ -92,23 +92,6 @@ jobs:
       #### 2. R package installation (with system and R package dependencies): ####
       #############################################################################
       
-      ## 2a. Cache R packages:
-      - name: Query R package dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-
-
-      
       ## 2b. System dependencies:
       - name: Install system dependencies on macOS
         if: runner.os == 'macOS'
@@ -151,7 +134,7 @@ jobs:
       ## 2c. R packages needed for this yaml script (not related to the Rstox package itself):
       - name: Install CRANdependencies
         run: |
-          install.packages(c("rcmdcheck", "git2r", "sessioninfo", "knitr"))
+          install.packages(c("rcmdcheck", "git2r", "sessioninfo", "knitr", "remotes"))
           
           # Using the latest drat that supports big sur (after inputs from us). 
           # When the next drat appears on CRAN this can be changed to install from CRAN:
