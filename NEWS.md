@@ -1,3 +1,6 @@
+# RstoxData v1.10.2-9007  (2024-05-02)
+* Fixed bug in FilterLanding() by aadding expandFilterExpressionList().
+
 # RstoxData v1.10.2-9002  (2024-04-25)
 * Fixed more bugs in writeLevel() and exported sanitizeExpression.
 
