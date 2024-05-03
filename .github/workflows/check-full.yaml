@@ -134,7 +134,7 @@ jobs:
       ## 2c. R packages needed for this yaml script (not related to the Rstox package itself):
       - name: Install CRANdependencies
         run: |
-          install.packages(c("rcmdcheck", "git2r", "sessioninfo", "knitr"))
+          install.packages(c("rcmdcheck", "git2r", "sessioninfo", "knitr", "remotes"))
           
           # Using the latest drat that supports big sur (after inputs from us). 
           # When the next drat appears on CRAN this can be changed to install from CRAN:
