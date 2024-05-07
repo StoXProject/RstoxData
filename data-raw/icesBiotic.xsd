@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.5">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.6">
   <xsd:include schemaLocation="Types.xsd"/>
   <xsd:include schemaLocation="Cruise.xsd"/>
   <xsd:element name="Biotic" type="Biotic"/>
@@ -31,6 +31,7 @@
       <xsd:element name="LengthCode" type="LengthCode" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="LengthType" type="LengthType" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="StockCode" type="StockCode" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="GeneticPopulationCode" type="GeneticPopulationCode" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="WeightUnit" type="WeightUnit" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="Maturity" type="Maturity" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="MaturityScale" type="MaturityScale" minOccurs="0" maxOccurs="1"/>
@@ -40,7 +41,6 @@
       <xsd:element name="Stratum" type="BioticStratum" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
-
 
   <!--Cruise-->
   <xsd:complexType name="BioticCruise">
@@ -83,18 +83,18 @@
       <xsd:element name="DoorWeight" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="DoorSpread" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="WingSpread" type="float" minOccurs="0" nillable="true"/>
-      <xsd:element name="Buoyancy" type="int"  minOccurs="0" nillable="true"/>
+      <xsd:element name="Buoyancy" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="KiteArea" type="float" minOccurs="0" nillable="true"/>
-      <xsd:element name="GroundRopeWeight" type="int"  minOccurs="0" nillable="true"/>
+      <xsd:element name="GroundRopeWeight" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="Rigging" type="string" minOccurs="0" nillable="true"/>
-      <xsd:element name="Tickler" type="int"  minOccurs="0" nillable="true"/>
+      <xsd:element name="Tickler" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="HydrographicStationID" type="string" minOccurs="0" nillable="true"/>
-      <xsd:element name="TowDirection" type="int"  minOccurs="0" nillable="true"/>
+      <xsd:element name="TowDirection" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="SpeedGround" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="SpeedWater" type="float" minOccurs="0" nillable="true"/>
-      <xsd:element name="WindDirection" type="int"  minOccurs="0" nillable="true"/>
-      <xsd:element name="WindSpeed" type="int"  minOccurs="0" nillable="true"/>
-      <xsd:element name="SwellDirection" type="int"  minOccurs="0" nillable="true"/>
+      <xsd:element name="WindDirection" type="int" minOccurs="0" nillable="true"/>
+      <xsd:element name="WindSpeed" type="int" minOccurs="0" nillable="true"/>
+      <xsd:element name="SwellDirection" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="SwellHeight" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="LogDistance" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="Stratum" type="IDREFType" minOccurs="0" nillable="true"/>
@@ -113,7 +113,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/Gear.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/Gear.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -128,11 +128,10 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/StatRec.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/StatRec.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
-  </xsd:complexType>
-  
+  </xsd:complexType>  
 
   <xsd:complexType name="HaulValidity">
     <xsd:sequence>
@@ -144,7 +143,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_HaulValidity.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_HaulValidity.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -159,11 +158,10 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_GearExceptions.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_GearExceptions.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
-
   
   <xsd:complexType name="DoorType">
     <xsd:sequence>
@@ -175,7 +173,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_DoorType.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_DoorType.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -190,7 +188,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_Stratum.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_Stratum.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -203,15 +201,15 @@
       <xsd:element name="SpeciesValidity" type="IDREFType" />
       <xsd:element name="SpeciesCategory" type="int"/>
       <xsd:element name="SpeciesCategoryNumber" type="float" minOccurs="0" nillable="true"/>
-      <xsd:element name="WeightUnit" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="SpeciesCategoryWeight" type="float"  minOccurs="0" nillable="true"/>
-      <xsd:element name="SpeciesSex" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="SubsampledNumber" type="int"  minOccurs="0" nillable="true"/>
-      <xsd:element name="SubsamplingFactor" type="float"  minOccurs="0" nillable="true"/>
+      <xsd:element name="WeightUnit" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="SpeciesCategoryWeight" type="float" minOccurs="0" nillable="true"/>
+      <xsd:element name="SpeciesSex" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="SubsampledNumber" type="int" minOccurs="0" nillable="true"/>
+      <xsd:element name="SubsamplingFactor" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="SubsampleWeight" type="float" minOccurs="0" nillable="true"/>
-      <xsd:element name="LengthCode"  type="IDREFType"   minOccurs="0" nillable="true"/>
+      <xsd:element name="LengthCode"  type="IDREFType" minOccurs="0" nillable="true"/>
       <xsd:element name="LengthClass" type="int" minOccurs="0" nillable="true"/>
-      <xsd:element name="LengthType" type="IDREFType"  minOccurs="0" nillable="true"/>
+      <xsd:element name="LengthType" type="IDREFType" minOccurs="0" nillable="true"/>
       <xsd:element name="NumberAtLength" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="WeightAtLength" type="float" minOccurs="0" nillable="true"/>
       <xsd:element name="Biology" type="Biology" minOccurs="0" maxOccurs="unbounded"/>
@@ -229,7 +227,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_CatchDataType.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_CatchDataType.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -244,7 +242,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/SpecWoRMS.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -259,7 +257,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_SpeciesValidity.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_SpeciesValidity.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -274,7 +272,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_WeightUnit.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_WeightUnit.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -289,7 +287,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_Sex.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_Sex.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -304,7 +302,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_LengthCode.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_LengthCode.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -319,37 +317,36 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_LengthMeasurementType.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_LengthMeasurementType.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
-  </xsd:complexType>
-  
+  </xsd:complexType>  
 
   <!--Biology-->
   <xsd:complexType name="Biology">
     <xsd:sequence>
-      <xsd:element name="StockCode" type="IDREFType"  minOccurs="0" nillable="true"/>
+      <xsd:element name="StockCode" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="GeneticPopulationCode" type="IDREFType" minOccurs="0" nillable="true"/>
       <xsd:element name="FishID" type="int" />
       <xsd:element name="LengthCode" type="IDREFType"/>
       <xsd:element name="LengthClass" type="int"/>
-      <xsd:element name="WeightUnit" type="IDREFType"  minOccurs="0" nillable="true"/>
+      <xsd:element name="WeightUnit" type="IDREFType" minOccurs="0" nillable="true"/>
       <xsd:element name="IndividualWeight" type="float" minOccurs="0" nillable="true"/>
-      <xsd:element name="IndividualSex" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="IndividualMaturity" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="MaturityScale" type="IDREFType"  minOccurs="0" nillable="true"/>
+      <xsd:element name="IndividualSex" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="IndividualMaturity" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="MaturityScale" type="IDREFType" minOccurs="0" nillable="true"/>
       <xsd:element name="IndividualAge" type="int" minOccurs="0" nillable="true"/>
       <xsd:element name="IndividualGrowthRings" type="int" minOccurs="0" nillable="true"/>
-      <xsd:element name="AgePlusGroup" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="AgeSource" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="GeneticSamplingFlag" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="StomachSamplingFlag" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="ParasiteSamplingFlag" type="IDREFType"  minOccurs="0" nillable="true"/>
-      <xsd:element name="IndividualVertebraeCount" type="int"  minOccurs="0" nillable="true"/>
+      <xsd:element name="AgePlusGroup" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="AgeSource" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="GeneticSamplingFlag" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="StomachSamplingFlag" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="ParasiteSamplingFlag" type="IDREFType" minOccurs="0" nillable="true"/>
+      <xsd:element name="IndividualVertebraeCount" type="int" minOccurs="0" nillable="true"/>
     </xsd:sequence>
   </xsd:complexType>
  
   <!--Vocabulary-->
-
   <xsd:complexType name="StockCode">
     <xsd:sequence>
       <xsd:element name="Code" type="StockCodeVocabulary" minOccurs="0" maxOccurs="unbounded" />
@@ -360,11 +357,25 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/ICES_StockCode.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/ICES_StockCode.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
 
+  <xsd:complexType name="GeneticPopulationCode">
+    <xsd:sequence>
+      <xsd:element name="Code" type="GeneticPopulationCodeVocabulary" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GeneticPopulationCodeVocabulary">
+    <xsd:simpleContent>
+      <xsd:extension base="nonEmptyString">
+        <xsd:attribute name="ID" type="xsd:ID" use="required"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/GeneticPopulation.xml"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
   
   <xsd:complexType name="Maturity">
     <xsd:sequence>
@@ -376,7 +387,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_MaturityCode.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_MaturityCode.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -391,7 +402,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_MaturityScale.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_MaturityScale.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -406,7 +417,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_AgePlusGroup.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_AgePlusGroup.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -421,7 +432,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_AgeSource.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_AgeSource.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -436,7 +447,7 @@
     <xsd:simpleContent>
       <xsd:extension base="nonEmptyString">
         <xsd:attribute name="ID" type="xsd:ID" use="required"/>
-        <xsd:attribute name="CodeType" type="nonEmptyString" use="required"   fixed="https://acoustic.ices.dk/Services/Schema/XML/AC_SamplingFlag.xml"/>
+        <xsd:attribute name="CodeType" type="nonEmptyString" use="required" fixed="https://acoustictest.ices.dk/Services/Schema/XML/AC_SamplingFlag.xml"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>

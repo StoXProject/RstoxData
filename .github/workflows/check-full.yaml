@@ -92,6 +92,23 @@ jobs:
       #### 2. R package installation (with system and R package dependencies): ####
       #############################################################################
       
+      ## 2a. Cache R packages:
+      #- name: Query R package dependencies
+      #  run: |
+      #    install.packages('remotes')
+      #    saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+      #    writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+      #  shell: Rscript {0}
+
+      #- name: Cache R packages
+      #  if: runner.os != 'Windows'
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: ${{ env.R_LIBS_USER }}
+      #    key: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
+      #    restore-keys: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-
+
+      
       ## 2b. System dependencies:
       - name: Install system dependencies on macOS
         if: runner.os == 'macOS'
