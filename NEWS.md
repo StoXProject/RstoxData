@@ -1,3 +1,6 @@
+# RstoxData v1.10.2-9008  (2024-05-08)
+* Added the ICESBioic format 1.6 that includes the new GeneticPopulationCode field.
+
 # RstoxData v1.10.2-9007  (2024-05-02)
 * Fixed bug in FilterLanding() by aadding expandFilterExpressionList().
 
