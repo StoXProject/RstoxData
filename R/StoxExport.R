@@ -1992,8 +1992,8 @@ ICESDatsuscOne <- function(
 ) {
   
   # Check input is a NMD Biotic v3 data
-  if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3", "nmdbioticv3.1"))) {
-    warning("StoX: Currently, only NMD Biotic version 3 and 3.1 data can be written by ICESDatras")
+  if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3.1"))) {
+    warning("StoX: Currently, only NMD Biotic version 3.1 data can be written by ICESDatras")
     return(matrix(1, 0, 0))
   }
   
