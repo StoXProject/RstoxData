@@ -1,3 +1,7 @@
+# RstoxData v1.10.2-9009  (2024-05-22)
+* Fixed bug in rbindlist_StoxFormat() where elements with 0 rows produced an error, and are nonw skipped.
+* Corrected warning in ICESDatsusc() where NMDBiotic v3 did not result in a warning.
+
 # RstoxData v1.10.2-9008  (2024-05-08)
 * Added the ICESBioic format 1.6 that includes the new GeneticPopulationCode field.
 
