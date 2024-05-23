@@ -73,6 +73,12 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 
 # Function to rbind each table of the StoX format. The input is a list of either StoxBiotic or StoxAcoustic formats (not mixed in the same list):
 rbindlist_StoxFormat <- function(x) {
+	# Skip elements with 0 rows:
+	x <- x[sapply(x, NROW) > 0]
+	if(!length(x)) {
+		return(x)
+	}
+	
 	# Rbind for each StoX format table:
 	tableNames <- names(x[[1]])
 	x <- lapply(
