@@ -1,5 +1,8 @@
+# RstoxData v1.10.2-9010  (2024-07-02)
+* Renamed backwardCompatibility to backwardCompatibility_RstoxData to avoid the same name to be used across Rstox packages, and restructured functions in that list to use inputs projectDescription, modelName, processIndex and not projectDescriptionOne, allowing for using information from the entire project.
+
 # RstoxData v1.10.2-9009  (2024-05-22)
-* Fixed bug in rbindlist_StoxFormat() where elements with 0 rows produced an error, and are nonw skipped.
+* Fixed bug in rbindlist_StoxFormat() where elements with 0 rows produced an error, and are now skipped.
 * Corrected warning in ICESDatsusc() where NMDBiotic v3 did not result in a warning.
 
 # RstoxData v1.10.2-9008  (2024-05-08)

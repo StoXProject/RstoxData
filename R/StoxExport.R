@@ -2126,7 +2126,7 @@ ICESDatsuscOne <- function(
   finalPP[!is.na(finalPP$preyforeignobject),]$Count<-NA_character_
   finalPP[!is.na(finalPP$preyforeignobject),]$Weight<-NA_character_
   
-  #Handling the weight when having multiple lenght frequencies
+  #Handling the weight when having multiple length frequencies
   finalPP[, TotalCount := sum(Count), 
        by = .(Ship, Gear,HaulNo,StationNumber,Year,Month,Day,Time,FishID,
               AphiaIDPredator,AphiaIDPrey,IdentMet,DigestionStage,GravMethod,
