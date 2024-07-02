@@ -56,7 +56,7 @@ oldToNewTranslationList <- function(translationList) {
 
 #' Backward compabitibility actions:
 #' @export
-backwardCompatibility <- list(
+backwardCompatibility_RstoxData <- list(
 	
 	addParameter = list(
 		list(
@@ -354,8 +354,8 @@ backwardCompatibility <- list(
 				list(), 
 				"VariableName"
 			), # Empty value was allowed in 3.3.0, implying that VariableName was given in the file to read, but will no longer be allowed.
-			newValue = function(projectDescriptionOne) {
-				projectDescriptionOne$processData$Translation[[1]]$VariableName
+			newValue = function(projectDescription, modelName, processIndex) {
+				projectDescription[[modelName]][[processIndex]]$processData$Translation[[1]]$VariableName
 			}
 		), 
 		list(
@@ -368,10 +368,10 @@ backwardCompatibility <- list(
 				list(), 
 				"ConditionalVariableName"
 			), # Empty value was allowed in 3.3.0, implying that ConditionalVariableNames was given in the file to read, but will no longer be allowed.
-			newValue = function(projectDescriptionOne) {
-				if(isTRUE(projectDescriptionOne$functionParameters$Conditional)) {
+			newValue = function(projectDescription, modelName, processIndex) {
+				if(isTRUE(projectDescription[[modelName]][[processIndex]]$functionParameters$Conditional)) {
 					# Has not yet been renamed from ConditionalVariableName to ConditionalVariableNames as per the order defiend in RstoxFramework::getRstoxFrameworkDefinitions("backwardCompatibilityActionNames"):
-					projectDescriptionOne$processData$Translation[[1]]$ConditionalVariableName
+					projectDescription[[modelName]][[processIndex]]$processData$Translation[[1]]$ConditionalVariableName
 				}
 				else {
 					list()
@@ -386,11 +386,9 @@ backwardCompatibility <- list(
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
 			parameterName = "TranslationTable",
-			newValue = function(projectDescriptionOne) {
+			newValue = function(projectDescription, modelName, processIndex) {
 				# Return the reshaped parameter:
-				projectDescriptionOne$functionParameters$TranslationTable <- RstoxData::oldToNewTranslationList(projectDescriptionOne$functionParameters$TranslationTable)
-				# Return the projectDescriptionOne:
-				return(projectDescriptionOne)
+				RstoxData::oldToNewTranslationList(projectDescription[[modelName]][[processIndex]]$functionParameters$TranslationTable)
 			}
 		)
 	), 
@@ -411,10 +409,8 @@ backwardCompatibility <- list(
 			functionName = "DefineTranslation", 
 			modelName = "baseline", 
 			processDataName = "Translation",
-			newProcessData = function(projectDescriptionOne) {
-				projectDescriptionOne$processData$Translation <- RstoxData::oldToNewTranslationList(projectDescriptionOne$processData$Translation)
-				# Return the processData:
-				return(projectDescriptionOne)
+			newProcessData = function(projectDescription, modelName, processIndex) {
+				RstoxData::oldToNewTranslationList(projectDescription[[modelName]][[processIndex]]$processData$Translation)
 			}
 		)
 	)
