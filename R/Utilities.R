@@ -960,8 +960,8 @@ match_arg_informative <- function (arg, choices, several.ok = FALSE, arg_name = 
 	}
 	i <- pmatch(fold_case(arg), fold_case(choices), nomatch = 0L, duplicates.ok = TRUE)
 	if (all(i == 0L))
-		stop(gettextf("%s should be one of %s", arg_name_string, paste(dQuote(choices),
-																	   collapse = ", ")), domain = NA)
+		stop(gettextf("%s should be one of %s", arg_name_string, paste0(paste(dQuote(choices),
+																	   collapse = ", "), " (was ", dQuote(arg), ")")), domain = NA)
 	i <- i[i > 0L]
 	
 	if (!several.ok && length(i) > 1)

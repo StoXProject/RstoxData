@@ -317,30 +317,71 @@ checkAndCreateICESAcousticCSV <- function(ICESAcousticDataOne) {
 }
 
 
-checkICESAcousticDefinitions <- function(ICESAcousticDataOne) {
-	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(ICESAcousticDataOne$DataAcquisition$SoftwareName))
-	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(ICESAcousticDataOne$Survey$Code))
-	compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml')
-	compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml')
-	compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml')
-	compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml')
-	compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml')
-	compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml')
-	compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml')
-	compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml')
-	compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml')
-	compareICES("Cruise", "Country", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml')
-	compareICES("Cruise", "Platform", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml')
-	compareICES("Cruise", "Organisation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml')
-	compareICES("Cruise", "Survey", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml')
-	compareICES("Log", "Origin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml')
-	compareICES("Log", "Validity", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml')
-	compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml')
-	compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml')
-	compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml')
-	compareICES("Data", "SaCategory", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml')
-	compareICES("Data", "Type", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml')
-	compareICES("Data", "Unit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml')
+is_online <- function(site = "https://raw.githubusercontent.com/StoXProject/repo/master/README.md") {
+	tryCatch({
+		readLines(site, n = 1)
+		TRUE
+	},
+	warning = function(w) invokeRestart("muffleWarning"),
+	error = function(e) FALSE)
+}
+
+
+testICESURL <- function(baseURL = "https://acoustic.ices.dk/Services/Schema/XML", testSchema = "AC_TransducerLocation") {
+	testURL <- getICESURL(testSchema, baseURL = baseURL)
+	if(!is_online()) {
+		warning("Internet connecion does not work, or is too slow to read a small file within the timeout of ", options("timeout")$timeout, ".")
+		return(FALSE)
+	}
+	else if(!is_online(testURL)) {
+		warning("The URL ", testURL, " failed to download within the timeout of ", options("timeout")$timeout, ".")
+		return(FALSE)
+	}
+	else {
+		return(TRUE)
+	}
+}
+
+# Get the URL to ICES schema:
+
+getICESURL <- function(schema, baseURL) {
+	paste(baseURL, paste(schema, "xml", sep = "."), sep = "/")
+}
+
+
+
+checkICESAcousticDefinitions <- function(
+	ICESAcousticDataOne, 
+	baseURL = "https://acoustic.ices.dk/Services/Schema/XML", 
+	testSchema = "AC_TransducerLocation"
+) {
+	# Test the internet connection:
+	if(testICESURL(baseURL = baseURL, testSchema = testSchema)) {
+		compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, getICESURL("AC_TransducerLocation"))
+		compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, getICESURL("AC_TransducerBeamType"))
+		compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, getICESURL("AC_AcquisitionMethod"))
+		compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, getICESURL("AC_ProcessingMethod"))
+		compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, getICESURL("AC_DataAcquisitionSoftwareName"))
+		compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, getICESURL("AC_StoredDataFormat"))
+		compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, getICESURL("AC_DataProcessingSoftwareName"))
+		compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, getICESURL("AC_TriwaveCorrection"))
+		compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, getICESURL("AC_OnAxisGainUnit"))
+		compareICES("Cruise", "Country", ICESAcousticDataOne, getICESURL("ISO_3166"))
+		compareICES("Cruise", "Platform", ICESAcousticDataOne, getICESURL("SHIPC"))
+		compareICES("Cruise", "Organisation", ICESAcousticDataOne, getICESURL("EDMO"))
+		compareICES("Cruise", "Survey", ICESAcousticDataOne, getICESURL("AC_Survey"))
+		compareICES("Log", "Origin", ICESAcousticDataOne, getICESURL("AC_LogOrigin"))
+		compareICES("Log", "Validity", ICESAcousticDataOne, getICESURL("AC_LogValidity"))
+		compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalType"))
+		compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalUnit"))
+		compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalOrigin"))
+		compareICES("Data", "SaCategory", ICESAcousticDataOne, getICESURL("AC_SaCategory"))
+		compareICES("Data", "Type", ICESAcousticDataOne, getICESURL("AC_AcousticDataType"))
+		compareICES("Data", "Unit", ICESAcousticDataOne, getICESURL("AC_DataUnit"))
+	}
+	else {
+		warning("Reference data for ICESAcoustic was not checked!!!")
+	}
 }
 
 
@@ -780,29 +821,44 @@ BioticData_NMDToICESBioticOne <- function(
 		IndividualVertebraeCount = NA_integer_
 	)]
 	
-	if(AllowRemoveSpecies) {
-		# Check for valid aphias, mark other as invalid
-		xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
-		validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
-		
-		notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
-		notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
-		
-		if(length(notPresentInCatch)) {
-			warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
-			
+	if(!testICESURL()) {
+		if(AllowRemoveSpecies) {
+			warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set to TRUE.")
 		}
-		if(length(notPresentInBiology)) {
-			warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
-			
+		else {
+			warning("Reference data for ICESAcoustic cannot be checked!!!")
 		}
 		
-		Catch <- Catch[SpeciesCode %in% validCodes, ]
-		Biology <- Biology[SpeciesCode %in% validCodes, ]
-	} else {
-		message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
-		compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$SpeciesCode))
 	}
+	else {
+		if(AllowRemoveSpecies) {
+			# Check for valid aphias, mark other as invalid
+			xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+			validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
+			
+			notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
+			notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
+			
+			if(length(notPresentInCatch)) {
+				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
+				
+			}
+			if(length(notPresentInBiology)) {
+				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
+				
+			}
+			
+			Catch <- Catch[SpeciesCode %in% validCodes, ]
+			Biology <- Biology[SpeciesCode %in% validCodes, ]
+		} else {
+			message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
+			compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$SpeciesCode))
+		}
+	}
+	
+	
+	
+	
 	
 	ICESBioticCSV <- list(
 		Cruise = Cruise, 
