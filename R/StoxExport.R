@@ -317,30 +317,71 @@ checkAndCreateICESAcousticCSV <- function(ICESAcousticDataOne) {
 }
 
 
-checkICESAcousticDefinitions <- function(ICESAcousticDataOne) {
-	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml',unique(ICESAcousticDataOne$DataAcquisition$SoftwareName))
-	#compareICES('https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml',unique(ICESAcousticDataOne$Survey$Code))
-	compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml')
-	compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml')
-	compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml')
-	compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml')
-	compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml')
-	compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml')
-	compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml')
-	compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml')
-	compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml')
-	compareICES("Cruise", "Country", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml')
-	compareICES("Cruise", "Platform", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml')
-	compareICES("Cruise", "Organisation", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml')
-	compareICES("Cruise", "Survey", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml')
-	compareICES("Log", "Origin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml')
-	compareICES("Log", "Validity", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml')
-	compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml')
-	compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml')
-	compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml')
-	compareICES("Data", "SaCategory", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml')
-	compareICES("Data", "Type", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml')
-	compareICES("Data", "Unit", ICESAcousticDataOne, 'https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml')
+is_online <- function(site = "https://raw.githubusercontent.com/StoXProject/repo/master/README.md") {
+	tryCatch({
+		readLines(site, n = 1)
+		TRUE
+	},
+	warning = function(w) invokeRestart("muffleWarning"),
+	error = function(e) FALSE)
+}
+
+
+testICESURL <- function(baseURL = "https://acoustic.ices.dk/Services/Schema/XML", testSchema = "AC_TransducerLocation") {
+	testURL <- getICESURL(testSchema, baseURL = baseURL)
+	if(!is_online()) {
+		warning("Internet connecion does not work, or is too slow to read a small file within the timeout of ", options("timeout")$timeout, ".")
+		return(FALSE)
+	}
+	else if(!is_online(testURL)) {
+		warning("The URL ", testURL, " failed to download within the timeout of ", options("timeout")$timeout, ".")
+		return(FALSE)
+	}
+	else {
+		return(TRUE)
+	}
+}
+
+# Get the URL to ICES schema:
+
+getICESURL <- function(schema, baseURL) {
+	paste(baseURL, paste(schema, "xml", sep = "."), sep = "/")
+}
+
+
+
+checkICESAcousticDefinitions <- function(
+	ICESAcousticDataOne, 
+	baseURL = "https://acoustic.ices.dk/Services/Schema/XML", 
+	testSchema = "AC_TransducerLocation"
+) {
+	# Test the internet connection:
+	if(testICESURL(baseURL = baseURL, testSchema = testSchema)) {
+		compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, getICESURL("AC_TransducerLocation"))
+		compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, getICESURL("AC_TransducerBeamType"))
+		compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, getICESURL("AC_AcquisitionMethod"))
+		compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, getICESURL("AC_ProcessingMethod"))
+		compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, getICESURL("AC_DataAcquisitionSoftwareName"))
+		compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, getICESURL("AC_StoredDataFormat"))
+		compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, getICESURL("AC_DataProcessingSoftwareName"))
+		compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, getICESURL("AC_TriwaveCorrection"))
+		compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, getICESURL("AC_OnAxisGainUnit"))
+		compareICES("Cruise", "Country", ICESAcousticDataOne, getICESURL("ISO_3166"))
+		compareICES("Cruise", "Platform", ICESAcousticDataOne, getICESURL("SHIPC"))
+		compareICES("Cruise", "Organisation", ICESAcousticDataOne, getICESURL("EDMO"))
+		compareICES("Cruise", "Survey", ICESAcousticDataOne, getICESURL("AC_Survey"))
+		compareICES("Log", "Origin", ICESAcousticDataOne, getICESURL("AC_LogOrigin"))
+		compareICES("Log", "Validity", ICESAcousticDataOne, getICESURL("AC_LogValidity"))
+		compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalType"))
+		compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalUnit"))
+		compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalOrigin"))
+		compareICES("Data", "SaCategory", ICESAcousticDataOne, getICESURL("AC_SaCategory"))
+		compareICES("Data", "Type", ICESAcousticDataOne, getICESURL("AC_AcousticDataType"))
+		compareICES("Data", "Unit", ICESAcousticDataOne, getICESURL("AC_DataUnit"))
+	}
+	else {
+		warning("Reference data for ICESAcoustic was not checked!!!")
+	}
 }
 
 
@@ -780,29 +821,44 @@ BioticData_NMDToICESBioticOne <- function(
 		IndividualVertebraeCount = NA_integer_
 	)]
 	
-	if(AllowRemoveSpecies) {
-		# Check for valid aphias, mark other as invalid
-		xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
-		validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
-		
-		notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
-		notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
-		
-		if(length(notPresentInCatch)) {
-			warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
-			
+	if(!testICESURL()) {
+		if(AllowRemoveSpecies) {
+			warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set to TRUE.")
 		}
-		if(length(notPresentInBiology)) {
-			warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
-			
+		else {
+			warning("Reference data for ICESAcoustic cannot be checked!!!")
 		}
 		
-		Catch <- Catch[SpeciesCode %in% validCodes, ]
-		Biology <- Biology[SpeciesCode %in% validCodes, ]
-	} else {
-		message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
-		compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$SpeciesCode))
 	}
+	else {
+		if(AllowRemoveSpecies) {
+			# Check for valid aphias, mark other as invalid
+			xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+			validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
+			
+			notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
+			notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
+			
+			if(length(notPresentInCatch)) {
+				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
+				
+			}
+			if(length(notPresentInBiology)) {
+				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
+				
+			}
+			
+			Catch <- Catch[SpeciesCode %in% validCodes, ]
+			Biology <- Biology[SpeciesCode %in% validCodes, ]
+		} else {
+			message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
+			compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$SpeciesCode))
+		}
+	}
+	
+	
+	
+	
 	
 	ICESBioticCSV <- list(
 		Cruise = Cruise, 
@@ -1026,8 +1082,6 @@ ICESDatrasOne <- function(
 	}
 
 	## 1. HH ##
-	'%ni%' <- Negate('%in%')
-
 	finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation)
 
 	# Make HH records
@@ -1952,4 +2006,271 @@ WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
 	
 	return(ICESDatrasCSVDataOne)
 }
+
+
+
+
+
+
+#' Convert BioticData to ICESDatsuSC format
+#'
+#' Given an \code{\link{BioticData}} object, this function converts to ICESDatsuSC format. Note that this function only supports
+#' \code{\link{BioticData}} NMDBiotic version > 3 XML files.
+#'
+#' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#'
+#' @return An \code{\link{ICESDatsuscData}} object.
+#'
+#' @export
+#' 
+ICESDatsusc <- function(
+    BioticData
+) {
+  
+  # Run for each file:
+  ICESDatsuscData <- lapply(
+    BioticData, 
+    ICESDatsuscOne
+  )
+  
+  # Remove empty data (from invavlid files, non NMDBiotic >= 3)
+  ICESDatsuscData <- ICESDatsuscData[lengths(ICESDatsuscData) > 0]
+  
+  # Rbind accross files:
+  ICESDatsuscData <- rbindlist_StoxFormat(ICESDatsuscData)
+  
+  return(ICESDatsuscData)
+}
+
+
+ICESDatsuscOne <- function(
+    BioticDataOne
+) {
+  
+  # Check input is a NMD Biotic v3 data
+  if(!(BioticDataOne$metadata$useXsd %in% c("nmdbioticv3.1"))) {
+    warning("StoX: Currently, only NMD Biotic version 3.1 data can be written by ICESDatras")
+    return(matrix(1, 0, 0))
+  }
+  
+  '%ni%' <- Negate('%in%')
+  
+  ## 1. FI ##
+  
+  #TODO: Is this the best way of handling nation? what if we have multiple nation?
+  finalFI <-data.table::data.table('Country'=unique(BioticDataOne$fishstation$nation),
+                                   'Reporting_organisation'=NA_character_, 
+                                   'CruiseID'= NA_character_)
+  
+  ## 2. HH ##
+  finalHH <- merge(BioticDataOne$mission, BioticDataOne$fishstation, all = TRUE, sort = FALSE)
+  
+  # Make HH records
+  finalHH[, `:=`(
+    "Ship" = platformname,  #%Mandatory
+    "Gear" = gear,   #%Mandatory
+    "HaulNo" = station,  #%Mandatory
+    "StationNumber" = serialnumber,  #%Mandatory
+    "Year" = getYear(stationstartdate),  #%Mandatory
+    "Month" = getMonth(stationstartdate),  #%Mandatory
+    "Day" = getDay(stationstartdate),  #%Mandatory
+    "Time" = getTimeShot(stationstarttime),  #%Mandatory
+    "ShootLat" = round(latitudestart, digits = 4),   #%Mandatory
+    "ShootLong" = round(longitudestart, digits = 4),   #%Mandatory
+    "HaulLat" = round(latitudeend, digits = 4),  #%Optional
+    "HaulLong" = round(longitudeend, digits = 4),  #%Optional
+    "ICESrectangle" = NA_character_,  #TODO: do we need to fix this? 
+    "Depth" = round(bottomdepthstart),  #%Optional
+    "Survey" = NA_character_,          #%Optional
+    "ICESDatabase" = NA_character_     #%Optional
+  )]
+  
+  HHraw <- data.table::copy(finalHH[, c(
+     "Ship", "Gear","HaulNo","StationNumber","Year", "Month", 
+     "Day", "Time", "ShootLat", "ShootLong","HaulLat","HaulLong",
+     "ICESrectangle","Depth","Survey","ICESDatabase")]
+  )
+  
+  
+  
+  ## 3. PI ##
+  finalPI <- merge(BioticDataOne$mission,BioticDataOne$fishstation, all= TRUE, sort = FALSE)
+  finalPI <- merge(BioticDataOne$catchsample,finalPI, all = TRUE, sort = FALSE)
+  finalPI <- merge(BioticDataOne$individual,finalPI, all = TRUE, sort = FALSE)
+  finalPI <- merge(BioticDataOne$agedetermination,finalPI, all = TRUE, sort = FALSE)
+  
+  
+  # Make HH records
+  finalPI[, `:=`(
+    "Ship" = platformname,
+    "Gear" = gear,
+    "HaulNo" = station,
+    "StationNumber" = serialnumber,
+    "Year" = getYear(stationstartdate),
+    "Month" = getMonth(stationstartdate),
+    "Day" = getDay(stationstartdate),
+    "Time" = getTimeShot(stationstarttime),
+    "FishID" = specimenid,        
+    "AphiaIDPredator" = aphia, 
+    "IndWgt" = individualweight, 
+    "Number" = NA_character_, #Number of species taken for stomach analyses (pooled samples)
+    "MeasurementIncrement" = lengthresolution, 
+    "Length" = length, 
+    "AgeSource" = agingstructure, 
+    "Age" = age, 
+    "Sex" = sex, 
+    "MaturityScale" = NA_character_,           #Need to be set by user
+    "MaturityStage" = specialstage, 
+    "PreservationMethod" = stomach,            
+    "Regurgitated" = NA_character_,           
+    "StomachFullness" = stomachfillfield,           
+    "FullStomWgt" = stomachweight,            
+    "EmptyStomWgt" = -9,            
+    "StomachEmpty" = NA_character_,            
+    "GenSamp" = NA_character_,          
+    "Notes" = NA_character_           
+  )]
+ 
+  
+  ## 4. PP ##
+  finalPP <-  merge(BioticDataOne$prey, BioticDataOne$preylengthfrequencytable, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$individual,finalPP, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$catchsample,finalPP, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$fishstation,finalPP, all= TRUE, sort = FALSE)
+  finalPP <-  merge(BioticDataOne$mission,finalPP, all= TRUE, sort = FALSE)
+  # Make PP records
+  finalPP[, `:=`(
+    "Ship" = platformname,
+    "Gear" = gear, 
+    "HaulNo" = station,
+    "StationNumber" = serialnumber,
+    "Year" = getYear(stationstartdate),
+    "Month" = getMonth(stationstartdate),
+    "Day" = getDay(stationstartdate),
+    "Time" = getTimeShot(stationstarttime),
+    "FishID" = specimenid,    
+    "AphiaIDPredator" = aphia, 
+    "AphiaIDPrey" = preycategory,           
+    "IdentMet" = NA_character_,            
+    "DigestionStage" = preydigestion,            
+    "GravMethod" = stomach,            
+    "SubFactor" = NA_character_,           
+    "PreySequence" = preysampleid,            
+    "Count" = lengthintervalcount,            
+    "UnitWgt" = weightresolution,            
+    "Weight"= totalweight,     
+    "UnitLngt"= interval,   
+    "Length" = lengthintervalstart,            
+    "OtherItems" = NA_character_,           
+    "OtherCount" = NA_character_,            
+    "OtherWgt" = NA_character_,           
+    "AnalysingOrg" = NA_character_,           
+    "Notes" = NA_character_,           
+    "preyforeignobject" = preyforeignobject
+  )]
+  
+  #___________________________________________________________________________#
+  #Special handling
+  
+  
+  
+  #Handling the foreign object. 
+  #TODO: needs revision
+  finalPP[!is.na(finalPP$preyforeignobject),]$OtherItems<-finalPP[!is.na(finalPP$preyforeignobject),]$preyforeignobject
+  finalPP[!is.na(finalPP$preyforeignobject),]$OtherCount<-finalPP[!is.na(finalPP$preyforeignobject),]$Count
+  finalPP[!is.na(finalPP$preyforeignobject),]$OtherWgt<-finalPP[!is.na(finalPP$preyforeignobject),]$Weight
+  finalPP[!is.na(finalPP$preyforeignobject),]$Count<-NA_character_
+  finalPP[!is.na(finalPP$preyforeignobject),]$Weight<-NA_character_
+  
+  #Handling the weight when having multiple length frequencies
+  finalPP[, TotalCount := sum(Count), 
+       by = .(Ship, Gear,HaulNo,StationNumber,Year,Month,Day,Time,FishID,
+              AphiaIDPredator,AphiaIDPrey,IdentMet,DigestionStage,GravMethod,
+              SubFactor,PreySequence)]
+  finalPP[!is.na(finalPP$TotalCount)]$Notes<-'Computed using: total weight * count in length group / count for all length group'
+  finalPP$Weight=finalPP$Weight*finalPP$Count/finalPP$TotalCount
+  
+  #Handling number of unique species in pray sampled in each individual fish
+  #TODO: Needs to be checked
+  replace<-finalPP[!is.na(finalPP$AphiaIDPrey), .(replace_number = data.table::uniqueN(AphiaIDPredator)), 
+              by = .(Ship,Gear,HaulNo,StationNumber,Year,Month,Day,Time)]#,FishID,
+                     # AphiaIDPredator)]
+  finalPI[replace, Number := i.replace_number, 
+     on = .(Ship,Gear,HaulNo,StationNumber,Year,Month,Day,
+            Time)]#,FishID,AphiaIDPredator)]
+  
+  
+  # Move values from StomachFullness to Regurgitated where StomachFullness is 6
+  # Move  values from StomachFullness to StomachEmpty where StomachFullness is 1
+  finalPI[StomachFullness == '6', c("Regurgitated", "StomachFullness") := .(StomachFullness, NA)]
+  finalPI[StomachFullness == '1', c("StomachEmpty", "StomachFullness") := .(StomachFullness, NA)]
+  
+  
+  PIraw <- data.table::copy(finalPI[, c(
+    "Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
+    "FishID","AphiaIDPredator","IndWgt","Number","MeasurementIncrement","Length",
+    "AgeSource","Age","Sex","MaturityScale","MaturityStage","PreservationMethod",
+    "Regurgitated","StomachFullness","FullStomWgt","EmptyStomWgt","StomachEmpty",
+    "GenSamp","Notes"
+  )]
+  )
+  
+  
+  PPraw <- data.table::copy(finalPP[, c("Ship", "Gear","HaulNo","StationNumber","Year", "Month", "Day", "Time", 
+    "FishID","AphiaIDPredator","AphiaIDPrey","IdentMet","DigestionStage",
+    "GravMethod","SubFactor","PreySequence","Count","UnitWgt","Weight","UnitLngt","Length",
+    "OtherItems","OtherCount","OtherWgt","AnalysingOrg","Notes"
+  )])
+  
+  
+  ICESDatsuscData <- list(FI = finalFI, HH = HHraw, PI = PIraw, PP = PPraw)
+  
+  return(ICESDatsuscData)
+}
+
+
+
+
+
+#' Write ICESDatras to CSV fille
+#'
+#' Writes \code{\link{ICESDatrasData}} to a csv file for each input acoustic file used to create the \code{\link{ICESDatras}}
+#'
+#' @inheritParams ModelData
+#'
+#' @return An object of StoX data type \code{\link{WriteICESDatrasData}}.
+#'
+#' @export
+WriteICESDatsusc <- function(ICESDatsuscData){
+  
+  #WriteICESDatrasData <- lapply(
+  #	ICESDatrasData, 
+  #	WriteICESDatrasOne, 
+  #	na = "-9"
+  #)
+  
+  WriteICESDatsuscData <- WriteICESDatrasOne(ICESDatsuscData, na = "-9")
+  
+  return(WriteICESDatsuscData)
+}
+
+
+WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
+	# Convert all tables to string matrix with header and record, and rbind:
+	ICESDatsuscCSVDataOne<- convertToRecordTypeMatrix(ICESDatsuscData)
+	# Replace NAs:
+	if(length(na)) {
+		ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+	}
+	# Convert each line of each table to comma separated:
+	ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, apply, 1, paste, collapse = ",")
+	# Join to one vector, to be written to one file:
+	ICESDatsuscCSVDataOne <- unlist(ICESDatsuscCSVDataOne)
+  
+  return(ICESDatsuscCSVDataOne)
+}
+
+
+
+
 

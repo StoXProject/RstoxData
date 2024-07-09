@@ -2,8 +2,8 @@
 % Please edit documentation in R/RstoxData-package.R
 \docType{package}
 \name{RstoxData}
-\alias{RstoxData}
 \alias{RstoxData-package}
+\alias{RstoxData}
 \title{Tools to Read and Manipulate Fisheries Data}
 \description{
 Set of tools to read and manipulate various data formats for fisheries. Mainly catered towards scientific trawl survey sampling ('biotic') data, acoustic trawl data, and commercial fishing catch ('landings') data. Among the supported data formats are the data products from the Norwegian Institute Marine Research (IMR) and the International Council for the Exploration of the Sea (ICES).

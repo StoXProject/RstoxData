@@ -153,6 +153,39 @@ CopyICESDatras <- function(
 	return(ICESDatrasDataCopy)
 }
 
+##################################################
+#' Copy a variable of ICESDatrasData
+#' 
+#' This function copies a variable to another (possibly existing) variable of \code{\link{ICESDatrasData}} .
+#' 
+#' @inheritParams ModelData
+#' @inheritParams copy_arguments
+#' 
+#' @return
+#' A \code{\link{ICESDatrasData}} object.
+#' 
+#' @export
+#' 
+CopyICESDatsusc <- function(
+    ICESDatsuscData, 
+    FromVariable = character(), 
+    ToVariable = character(), 
+    Overwrite = FALSE, 
+    PreserveClass = TRUE
+) {
+  # Make a copy, as we are copying by reference:
+  ICESDatsuscDataCopy <- data.table::copy(ICESDatsuscData)
+  
+  copyData(
+    data = ICESDatsuscDataCopy, 
+    fromVariable = FromVariable,
+    toVariable = ToVariable,
+    overwrite = Overwrite,
+    preserveClass = PreserveClass
+  )
+  
+  return(ICESDatsuscDataCopy)
+}
 
 ##################################################
 #' Copy a variable of AcousticData

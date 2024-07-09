@@ -185,7 +185,7 @@ readVariableTranslation <- function(FileName, VariableName, ValueColumn, NewValu
 	tanslation[, NewValue := get(NewValueColumn)]
 	
 	if(Conditional) {
-		if(!length(ConditionalValueColumns) || !nchar(ConditionalValueColumns)) {
+		if(!length(ConditionalValueColumns) || any(nchar(ConditionalValueColumns) == 0)) {
 			stop("ConditionalValueColumns must be given as the name of the column giving the values to be translated to.")
 		}
 		else {
@@ -945,6 +945,47 @@ TranslateICESDatras <- function(
 	return(ICESDatrasDataCopy)
 }
 
+##################################################
+#' Translate ICESDatsuscData
+#' 
+#' This function translates one or more columns of \code{\link{ICESDatsuscData}} to new values given by the input \code{Translation}.
+#' 
+#' @inheritParams DefineTranslation
+#' @inheritParams ModelData
+#' @inheritParams ProcessData
+#' @inheritParams TranslateStoxBiotic
+#' 
+#' @return
+#' A \code{\link{ICESDatsuscData}} object.
+#' 
+#' @export
+#' 
+TranslateICESDatsusc <- function(
+    ICESDatsuscData, 
+    TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
+    VariableName = character(),
+    Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+    ConditionalVariableNames = character(),
+    TranslationTable = data.table::data.table(), 
+    Translation,  
+    PreserveClass = TRUE
+) {
+  # Make a copy, as we are translating by reference:
+  ICESDatsuscDataCopy <- data.table::copy(ICESDatsuscData)
+  
+  translateVariables(
+    data = ICESDatsuscDataCopy, 
+    TranslationDefinition = TranslationDefinition, 
+    TranslationTable = TranslationTable, 
+    VariableName = VariableName,
+    Conditional = Conditional,
+    ConditionalVariableNames = ConditionalVariableNames,
+    Translation = Translation,  
+    PreserveClass = PreserveClass
+  )
+  
+  return(ICESDatsuscDataCopy)
+}
 
 
 

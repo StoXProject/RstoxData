@@ -26,6 +26,7 @@ data <- RstoxData::ReadAcoustic(example)
 #modify to get rid of warnings
 data$ICES_Acoustic_1.xml$Survey$Code <- data$ICES_Acoustic_1.xml$Survey$Code[1]
 data$ICES_Acoustic_1.xml$Data$SaCategory <- "MAC"
+# TEMPORARILY DISABLED DUE TO ICES BEING HACKED. UN-COMMENT THIS WHEN THE ICES PROBLEM IS FIXED:
 ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
 ICESAcousticCSV2 <- RstoxData::WriteICESAcoustic(ICESAcoustic2)
 expect_equal(dim(ICESAcousticCSV2), c(19, 28))
@@ -36,6 +37,7 @@ data <- RstoxData::ReadAcoustic(example)
 #modify to get rid of warnings
 data$ICES_Acoustic_2.xml$Survey$Code <- data$ICES_Acoustic_2.xml$Survey$Code[1]
 
+# TEMPORARILY DISABLED DUE TO ICES BEING HACKED. UN-COMMENT THIS WHEN THE ICES PROBLEM IS FIXED:
 ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
 ICESAcousticCSV2 <- RstoxData::WriteICESAcoustic(ICESAcoustic2)
 expect_equal(dim(ICESAcousticCSV2), c(23, 28))

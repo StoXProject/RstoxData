@@ -903,7 +903,14 @@ setColumnClasses <- function(DT, classes = NULL) {
 
 
 
-
+#' Sanitize an expression given in a string
+#' 
+#' If the input contains "system" or "system2", an error is issued.
+#'
+#' @param x A string
+#'
+#' @export
+#' 
 sanitizeExpression <- function(x) {
 	# Detect one or more "system" followed by 0 or one "2" and 0 or more spaces and then one or more parenthesis start:
 	usesSystem <- grepl("system+2? *\\(+", x)
@@ -953,8 +960,8 @@ match_arg_informative <- function (arg, choices, several.ok = FALSE, arg_name = 
 	}
 	i <- pmatch(fold_case(arg), fold_case(choices), nomatch = 0L, duplicates.ok = TRUE)
 	if (all(i == 0L))
-		stop(gettextf("%s should be one of %s", arg_name_string, paste(dQuote(choices),
-																	   collapse = ", ")), domain = NA)
+		stop(gettextf("%s should be one of %s", arg_name_string, paste0(paste(dQuote(choices),
+																	   collapse = ", "), " (was ", dQuote(arg), ")")), domain = NA)
 	i <- i[i > 0L]
 	
 	if (!several.ok && length(i) > 1)
@@ -982,7 +989,12 @@ deparse_onestring <- function(...) {
 #' 
 applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionArguments, return.only.names = TRUE) {
 	
-	# Loop through the arguments given by parent tags in the functionArgumentHierarchy, and set toShow to FALSE if not any of the criterias are fulfilled:
+	# Support an expression at the top level:
+	if(inherits(functionArgumentHierarchy, "expression")) {
+		functionArgumentHierarchy <- eval(functionArgumentHierarchy)
+	}
+	
+	# Loop through the arguments given by parent tags in the functionArgumentHierarchy, and set toShow to FALSE if not any of the criteria are fulfilled:
 	toShow <- logical(length(functionArguments))
 	names(toShow) <- names(functionArguments)
 	for(argumentName in names(toShow)) {
@@ -1003,7 +1015,7 @@ applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionAr
 						}
 					}
 					else {
-						# Added requirement that functionArguments[[conditionName]] has positie length:
+						# Added requirement that functionArguments[[conditionName]] has positive length:
 						if(length(functionArguments[[conditionName]]) && functionArguments[[conditionName]] %in% eval(functionArgumentHierarchy[[atArgumentName[ind]]][[conditionName]])) {
 							hitsAnd[conditionName] <- TRUE
 						}

@@ -16,8 +16,10 @@ initiateRstoxData <- function(){
 		data(xsdObjects, package="RstoxData", envir = environment())
 	}
 	
-	# Define the time zone used by Stox formats:
+	# Define the time zone used by StoX formats:
 	StoxTimeZone <- "UTC"
+	# The time format used in StoX:
+	StoxDateTimeFormat <- "%Y-%m-%dT%H:%M:%OS"
 	
 	# Get the path to the extdata folder:
 	fpath <- system.file("extdata", package = "RstoxData")

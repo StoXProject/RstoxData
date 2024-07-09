@@ -73,6 +73,12 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 
 # Function to rbind each table of the StoX format. The input is a list of either StoxBiotic or StoxAcoustic formats (not mixed in the same list):
 rbindlist_StoxFormat <- function(x) {
+	# Skip elements with 0 rows:
+	x <- x[sapply(x, NROW) > 0]
+	if(!length(x)) {
+		return(x)
+	}
+	
 	# Rbind for each StoX format table:
 	tableNames <- names(x[[1]])
 	x <- lapply(
@@ -316,7 +322,7 @@ firstPhase <- function(
     	
     	numDup <- length(stationsWithMoreThanOneSerialnumber)
     	
-    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssing all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
+    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssign all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
     }
     
     # 3. One to one mapping and keys

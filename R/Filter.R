@@ -181,9 +181,11 @@ filterTables <- function(inputTables, filterExpression, treeStruct, propagateDow
     stop("Argument 'treeStruct' does not specify a hierarchy for 'inputTables'.")
   }
   
+	
+  # Special operators defined for filter operations. These are also supported in RstoxFramework:
   `%notin%` <- Negate(`%in%`)
-  
   `%notequal%` <- function(x, table) is.na(x) | x %notin% table
+  
   
   processFilter <- function(filters) {
     # Do not accept system calls in filters:
@@ -349,7 +351,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
     zeroed <- intersect(names(rowsPre[rowsPre>0]), names(rowsPost[rowsPost==0]))
     
     if (length(zeroed)>0 & warn){
-      warning("StoX: Filter returned empty tables \"", paste(zeroed, collapse=","), "\"")
+      warning("StoX: Filter returned empty tables \"", paste(zeroed, collapse=", "), "\"")
     }
     return(table)
   }
@@ -371,7 +373,7 @@ filterData <- function(inputData, filterExpression, propagateDownwards = TRUE, p
 	 zeroed <- intersect(names(rowsPre[rowsPre>0]), names(rowsPost[rowsPost==0]))
 	    
 	 if (length(zeroed)>0){
-	      warning("StoX: Filter on data from ", fileName, " returned empty tables \"", paste(zeroed, collapse=","), "\"")
+	      warning("StoX: Filter on data from ", fileName, " returned empty tables \"", paste(zeroed, collapse=", "), "\"")
 	 }  
 	 return(tables)
 	}
@@ -459,7 +461,7 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
 #' Filters \code{\link{BioticData}}.
 #'
 #' @param BioticData  Input \code{\link{BioticData}} data.
-#' @param FilterExpression Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \code{\%in\%} or the special operator \code{\%notin\%}, which is defined in RstoxData.
+#' @param FilterExpression Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \code{\%in\%} or the special operator \code{\%notin\%}, which is defined in RstoxData. For a numeric filter, in the current StoX GUI, NA must be added manually in the text field of the "Expression table dialog" (the "Query builder dialog" will only show numeric values and will show an empty fields if the filter contains NA).
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE. Use this option with caution, particularly for swept-area survey estimates, where setting \code{FilterUpwards} to TRUE could affect the estimated mean density.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -492,7 +494,8 @@ FilterBiotic <- function(BioticData, FilterExpression = list(), FilterUpwards = 
 #' @export
 #' 
 FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpwards = FALSE) {
-    # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
     FilterExpression <- expandFilterExpressionList(FilterExpression)
     
     filterData(
@@ -518,6 +521,9 @@ FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpward
 #' @export
 #' 
 FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards = FALSE) {
+	# For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+	FilterExpression <- expandFilterExpressionList(FilterExpression)
+	
 	filterData(
 		LandingData, 
 		filterExpression = FilterExpression, 
@@ -692,5 +698,30 @@ FilterICESDatras <- function(ICESDatrasData, FilterExpression = list()) {
 	)
 	
 	return(ICESDatrasData)
+}
+
+#' Filter ICESDatsusc data
+#'
+#' Filters \code{\link{ICESDatsuscData}}.
+#' 
+#' @param ICESDatsuscData  Input \code{\link{ICESDatsuscData}} data.
+#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
+#'
+#' @return An object of filtered data in the same format as the input data.
+#'
+#' @export
+#' 
+FilterICESDatsusc <- function(ICESDatsuscData, FilterExpression = list()) {
+  # For filtering directly on the input data, we need to split the list filter expression to one level for the file and one for the table:
+  #FilterExpression <- expandFilterExpressionList(FilterExpression)
+  
+  ICESDatsuscData <- filterData(
+    ICESDatsuscData, 
+    filterExpression = FilterExpression, 
+    propagateDownwards = TRUE, 
+    propagateUpwards = FALSE
+  )
+  
+  return(ICESDatsuscData)
 }
 

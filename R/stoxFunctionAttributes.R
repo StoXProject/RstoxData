@@ -1,4 +1,4 @@
-getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
+getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
 	if(!missing(BioticData)) {
 		sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
 	}
@@ -10,6 +10,9 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	}
 	else if(!missing(ICESDatrasData)) {
 		sort(unique(unlist(lapply(ICESDatrasData, names))))
+	}
+	else if(!missing(ICESDatsuscData)) {
+		sort(unique(unlist(lapply(ICESDatsuscData, names))))
 	}
 	else if(!missing(AcousticData)) {
 		sort(unique(unlist(lapply(AcousticData, function(x) lapply(x, names)))))
@@ -166,6 +169,13 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(FilterExpression = "filterExpressionList")
 	),
 	
+	FilterICESDatsusc  = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData", 
+	  functionParameterFormat = list(FilterExpression = "filterExpressionList")
+	),
+	
 	
 	# Copy:
 	CopyBiotic = list(
@@ -228,6 +238,20 @@ stoxFunctionAttributes <- list(
 			)
 		)
 	),
+	CopyICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData", 
+	  functionParameterFormat = list(
+	    FromVariable = "fromVariable_StoxData"
+	  ), 
+	  functionArgumentHierarchy = list(
+	    preserveClass = list(
+	      overwrite = TRUE
+	    )
+	  )
+	),
+	  
 	CopyAcoustic = list(
 		functionType = "modelData", 
 		functionCategory = "baseline", 
@@ -355,6 +379,11 @@ stoxFunctionAttributes <- list(
 		functionCategory = "baseline", 
 		functionOutputDataType = "ICESDatrasData"
 	),
+	ICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData"
+	),
 	
 	WriteICESAcoustic = list(
 		functionType = "modelData", 
@@ -370,6 +399,11 @@ stoxFunctionAttributes <- list(
 		functionType = "modelData", 
 		functionCategory = "report", 
 		functionOutputDataType = "WriteICESDatrasData"
+	),
+	WriteICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "report", 
+	  functionOutputDataType = "WriteICESDatsuscData"
 	),
 	
 	RegroupLengthICESDatras = list(
@@ -770,6 +804,39 @@ stoxFunctionAttributes <- list(
 				Conditional = TRUE
 			)
 		)
+	),
+	
+	TranslateICESDatsusc = list(
+	  functionType = "modelData", 
+	  functionCategory = "baseline", 
+	  functionOutputDataType = "ICESDatsuscData", 
+	  functionParameterFormat = list(
+	    TranslationTable = "translationTable", 
+	    VariableName = "variableName_translate", 
+	    ConditionalVariableNames = "conditionalVariableNames_translate"
+	  ), 
+	  functionArgumentHierarchy = list(
+	    Translation = list(
+	      TranslationDefinition = "FunctionInput"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    TranslationTable = list(
+	      TranslationDefinition = "FunctionParameter"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    Conditional = list(
+	      TranslationDefinition = "FunctionParameter"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    VariableName = list(
+	      TranslationDefinition = "FunctionParameter"
+	    ), 
+	    # These two are joined with AND, and must both be fulfilled:
+	    ConditionalVariableNames = list(
+	      TranslationDefinition = "FunctionParameter",
+	      Conditional = TRUE
+	    )
+	  )
 	)
 )
 
@@ -954,6 +1021,7 @@ processPropertyFormats <- list(
 		class = "single", 
 		title = "The path to a single file"
 	), 
+	# The StoX GUI assumes an additional directoryPath, which us used by RstoxFDA
 	filePaths = list(
 		class = "vector", 
 		title = "The path to one or more files", 
@@ -1051,19 +1119,19 @@ processPropertyFormats <- list(
 		variableTypes = "character"
 	), 
 	variableName_translate = list(
-		class = "vector", 
+		class = "single", 
 		title = "Select one variable to translate.", 
 		possibleValues = getVariableNamesStoxData, 
 		variableTypes = "character"
 	), 
 	valueColumn = list(
-		class = "vector", 
+		class = "single", 
 		title = "The name of the column in the input file giving the values to tranlate.", 
 		variableTypes = "character", 
 		possibleValues = getValueColumns
 	), 
 	newValueColumn = list(
-		class = "vector", 
+		class = "single", 
 		title = "The name of the column in the input file giving the (new) values to tranlate to.", 
 		variableTypes = "character", 
 		possibleValues = getValueColumns
@@ -1093,7 +1161,7 @@ processPropertyFormats <- list(
 		variableTypes = "character"
 	), 
 	fromVariable_StoxData = list(
-		class = "vector", 
+		class = "single", 
 		title = "Select one variable to copy", 
 		possibleValues = getVariableNamesStoxData, 
 		variableTypes = "character"

@@ -14,93 +14,365 @@ writeXmlDeclaration <- function(stream, version, encoding, standalone){
   cat(paste0("<?xml version=\"", version, "\" encoding=\"", encoding, "\" standalone=\"", standalone, "\"?>\n"), file=stream)
 }
 
+
+
+
+
 #' @noRd
-openTag <- function(stream, tagname, attributes=NULL, indent=""){
-  
-  tagstring <- paste0(indent, "<",tagname)
-  if (length(attributes)){
-    #stopifnot(nrow(attributes)==1)
-    
-    for (n in names(attributes)){
-      if (!is.na(attributes[[n]][[1]])){
-        tagstring <- paste(tagstring, paste0(n,"=\"",attributes[[n]][[1]],"\""))
-      }
-    }
-  }
-  tagstring <- paste0(tagstring, ">")
-  writeLines(tagstring, con=stream, useBytes = T)
+openTag <- function(stream, tagname, attributes = NULL, indent = ""){
+	
+	#print("openTag")
+	#browser()
+	# Exclude NAs:
+	notNA <- !sapply(attributes, is.na)
+	
+	# Build a string to write:
+	tagstring <- paste0(
+		indent, 
+		"<",
+		tagname, 
+		" ",
+		paste(paste0(names(attributes[notNA]), "=\"", attributes[notNA], "\""), collapse = " "), 
+		">"
+	)
+	
+	writeLines(tagstring, con = stream, useBytes = TRUE)
+	
 }
 
 #' @noRd
 closeTag <- function(stream, tagname, indent=""){
-  tagstring <- paste0(indent, "</",tagname, ">")
-  writeLines(tagstring, con=stream, useBytes = T)
+	tagstring <- paste0(indent, "</",tagname, ">")
+	writeLines(tagstring, con = stream, useBytes = TRUE)
 }
 
 #' @noRd
 writeSimpleTags <- function(stream, tags, indent=""){
-  string <- ""
-  for (n in names(tags)){
-    if (!is.na(tags[[n]][[1]])){
-      string <- paste0(string, "<",n,">",tags[[n]][[1]],"</",n,">")
-    }
-  }
-  writeLines(paste0(indent, string), con=stream, useBytes = T)
+	
+	#print("writeSimpleTags")
+	#browser()
+	# Write only if non-empty:
+	if(NROW(tags)) {
+		# Create a list instead of a one row data table:
+		tags <- as.list(tags)
+		
+		# Exclude NAs:
+		notNA <- !sapply(tags, is.na)
+		
+		# And write only if any non-missing:
+		if(any(notNA)) {
+			
+			# The string to write:
+			string <- tags[notNA]
+			namesString <- names(string)
+			
+			if(length(namesString)) {
+				# The string to write:
+				string <- paste0(
+					"<",
+					namesString, 
+					">",
+					string, 
+					"</",
+					namesString, 
+					">"	
+				)
+			}
+			
+			writeLines(paste0(indent, string), con=stream, useBytes = T)
+		}
+		
+	}
 }
+
+
+
 
 
 writeLevel <- function(stream, data, level, parentKeys, xsdObject, indent = "", namespace = "", keepEmptyLevels = FALSE){
-  
-  # Get the data to write:
-  leveldata <- data[[level]]
-  if (NROW(leveldata) && length(parentKeys)){
-    leveldata <- leveldata[as.list(parentKeys), on = names(parentKeys), nomatch = NULL]
-  }
-  
-  # Identify children:
-  children <- xsdObject$treeStruct[[level]]
-  
-  # get keys
-  keys <- names(leveldata)[seq_len(xsdObject$prefixLens[[level]])]
-  attribsNames <- keys
-  if (!is.null(parentKeys)){
-    attribsNames <- attribsNames[!(attribsNames %in% names(parentKeys))]
-  }
-  
-  if(level == xsdObject$root) {
-    rootAttribs <- c(xmlns = namespace)
-  }
-  else {
-    rootAttribs <- NULL
-  }
-  # write opening tag and attributes
-  if(NROW(leveldata)) {
-    for (i in seq_len(nrow(leveldata))){
-      openTag(stream, level, c(leveldata[i,.SD, .SDcols = attribsNames], rootAttribs), indent)
-      
-      # write simple element tags
-      simpletags <- xsdObject$tableHeaders[[level]][!(xsdObject$tableHeaders[[level]] %in% keys)]
-      writeSimpleTags(stream, leveldata[i, .SD, .SDcols = simpletags], paste0(indent, "\t"))
-      
-      # write complex element tags
-      for (ch in children){
-        writeLevel(stream, data, ch, leveldata[i, .SD, .SDcols = keys], xsdObject, paste0(indent, "\t"), keepEmptyLevels = keepEmptyLevels)
-      }
-      
-      # write closing tag
-      closeTag(stream, level, indent)
-    }
-  }
-  else if(keepEmptyLevels || length(rootAttribs)){
-    openTag(stream, level, rootAttribs, indent)
-    for (sub in xsdObject$treeStruct[[level]]){
-      writeLevel(stream, data, sub, NULL, xsdObject, paste0(indent, "\t"), keepEmptyLevels = keepEmptyLevels)
-    }
-    closeTag(stream, level, indent)
-    #return()
-  }
-  
+	
+	if(level == xsdObject$root) {
+		rootAttribs <- c(xmlns = namespace)
+	}
+	else {
+		rootAttribs <- NULL
+	}
+	
+	# get keys
+	keys <- names(data[[level]])[seq_len(xsdObject$prefixLens[[level]])]
+	attribsNames <- setdiff(keys, names(parentKeys))
+	
+	# Identify children:
+	children <- xsdObject$treeStruct[[level]]
+	
+	# Get the current data. If no parentKeys are given, keep the full table:
+	leveldata <- data[[level]]
+	if (NROW(leveldata)){
+		if(length(parentKeys)) {
+			leveldata <- leveldata[parentKeys, on = names(parentKeys), nomatch = NULL]
+		}
+	}
+	
+	# write opening tag and attributes
+	if(NROW(leveldata)) {
+		
+		for (i in seq_len(nrow(leveldata))){
+			
+			# Write the opening tag:
+			thisAttributes <- c(
+				leveldata[i, ..attribsNames],
+				rootAttribs
+			)
+			
+			openTag(
+				stream = stream, 
+				tagname = level, 
+				attributes = thisAttributes, 
+				indent = indent
+			)
+			
+			# write simple element tags
+			simpletags <- setdiff(xsdObject$tableHeaders[[level]], keys)
+			
+			writeSimpleTags(
+				stream = stream, 
+				tags = leveldata[i, ..simpletags], 
+				indent = paste0(indent, "\t")
+			)
+			
+			
+			# write complex element tags
+			for (ch in children){
+				writeLevel(
+					stream = stream, 
+					data = data, 
+					level = ch, 
+					parentKeys = leveldata[i, ..keys], 
+					xsdObject = xsdObject, 
+					indent = paste0(indent, "\t"), 
+					keepEmptyLevels = keepEmptyLevels
+				)
+			}
+			
+			# write closing tag
+			closeTag(stream, level, indent)
+		}
+	}
+	# Write empty levels, but not empty rows:
+	else if((keepEmptyLevels && !NROW(data[[level]])) || length(rootAttribs)){
+		openTag(stream, level, rootAttribs, indent)
+		for (sub in xsdObject$treeStruct[[level]]){
+			writeLevel(
+				stream = stream, 
+				data = data, 
+				level = sub, 
+				parentKeys = parentKeys, 
+				xsdObject = xsdObject, 
+				indent = paste0(indent, "\t"), 
+				keepEmptyLevels = keepEmptyLevels
+			)
+		}
+		closeTag(stream, level, indent)
+		#return()
+	}
+	else {
+		return()
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+#' @noRd
+openTag_DF <- function(stream, tagname, attributes=NULL, indent=""){
+	
+	# Exclude NAs:
+	notNA <- !sapply(attributes, is.na)
+	
+	# Build a string to write:
+	tagstring <- paste0(
+		indent, 
+		"<",
+		tagname, 
+		" ",
+		paste(paste0(names(attributes[notNA]), "=\"", attributes[notNA], "\""), collapse = " "), 
+		">"
+	)
+	
+	writeLines(tagstring, con=stream, useBytes = TRUE)
+	
+}
+
+#' @noRd
+closeTag_DF <- function(stream, tagname, indent=""){
+	tagstring <- paste0(indent, "</",tagname, ">")
+	writeLines(tagstring, con=stream, useBytes = T)
+}
+
+#' @noRd
+writeSimpleTags_DF <- function(stream, tags, indent=""){
+	
+	# Write only if non-empty:
+	if(NROW(tags)) {
+		# Create a list instead of a one row data table:
+		tags <- as.list(tags)
+		
+		# Exclude NAs:
+		notNA <- !sapply(tags, is.na)
+		
+		# And write only if any non-missing:
+		if(any(notNA)) {
+			
+			# The string to write:
+			string <- tags[notNA]
+			namesString <- names(string)
+			
+			if(length(namesString)) {
+				# The string to write:
+				string <- paste0(
+					"<",
+					namesString, 
+					">",
+					string, 
+					"</",
+					namesString, 
+					">"	
+				)
+			}
+			
+			writeLines(paste0(indent, string), con=stream, useBytes = T)
+		}
+		
+	}
+}
+
+
+
+
+
+writeLevel_DF <- function(stream, data, level, parentKeys, xsdObject, indent = "", namespace = "", keepEmptyLevels = FALSE){
+	
+	if(level == xsdObject$root) {
+		rootAttribs <- c(xmlns = namespace)
+	}
+	else {
+		rootAttribs <- NULL
+	}
+	
+	# get keys
+	keys <- names(data[[level]])[seq_len(xsdObject$prefixLens[[level]])]
+	attribsNames <- setdiff(keys, names(parentKeys))
+	
+	# Identify children:
+	children <- xsdObject$treeStruct[[level]]
+	
+	# Get the current data. If no parentKeys are given, keep the full table:
+	leveldata <- data[[level]]
+	if (NROW(leveldata)){
+		if(length(parentKeys)) {
+			#leveldata <- leveldata[as.list(parentKeys), on = names(parentKeys), nomatch = NULL]
+			#	at <- do.call("&", lapply(names(parentKeys), function(x) leveldata[[x]] == parentKeys[[x]] ))
+			
+			at <- apply(
+				sapply(names(parentKeys), function(x) if(is.na(parentKeys[[x]])) !logical(NROW(leveldata)) else leveldata[[x]] == parentKeys[[x]]), 
+				1, 
+				all
+			)
+			
+			leveldata <- subset(leveldata, at)
+		}
+	}
+	
+	# write opening tag and attributes
+	if(NROW(leveldata)) {
+		
+		# Use subset in the for loop, as it is faster than []:
+		#subsetVector <- logical(nrow(leveldata))
+		
+		for (i in seq_len(nrow(leveldata))){
+			
+			#thisSubsetVector <- subsetVector
+			#thisSubsetVector[i] <- TRUE
+			
+			# Write the opening tag:
+			thisAttributes <- c(
+				leveldata[i, attribsNames, drop = FALSE],
+				#subset(leveldata, subset = thisSubsetVector, select = attribsNames), 
+				rootAttribs
+			)
+			
+			openTag_DF(
+				stream = stream, 
+				tagname = level, 
+				attributes = thisAttributes, 
+				indent = indent
+			)
+			
+			# write simple element tags
+			simpletags <- setdiff(xsdObject$tableHeaders[[level]], keys)
+			
+			writeSimpleTags_DF(
+				stream = stream, 
+				#tags = subset(leveldata, subset = thisSubsetVector, select = simpletags), 
+				tags = leveldata[i, simpletags, drop = FALSE], 
+				indent = paste0(indent, "\t")
+			)
+			
+			
+			# write complex element tags
+			for (ch in children){
+				writeLevel_DF(
+					stream = stream, 
+					data = data, 
+					level = ch, 
+					#parentKeys = subset(leveldata, subset = thisSubsetVector, select = keys), 
+					parentKeys = leveldata[i, keys, drop = FALSE], 
+					xsdObject = xsdObject, 
+					indent = paste0(indent, "\t"), 
+					keepEmptyLevels = keepEmptyLevels
+				)
+			}
+			
+			# write closing tag
+			closeTag_DF(stream, level, indent)
+		}
+	}
+	# Write empty levels, but not empty rows:
+	else if((keepEmptyLevels && !NROW(data[[level]])) || length(rootAttribs)){
+		openTag_DF(stream, level, rootAttribs, indent)
+		for (sub in xsdObject$treeStruct[[level]]){
+			writeLevel_DF(
+				stream = stream, 
+				data = data, 
+				level = sub, 
+				parentKeys = parentKeys, 
+				xsdObject = xsdObject, 
+				indent = paste0(indent, "\t"), 
+				keepEmptyLevels = keepEmptyLevels
+			)
+		}
+		closeTag_DF(stream, level, indent)
+		#return()
+	}
+	else {
+		return()
+	}
+	
+}
+
+
+
+
+
+
+
+
 
 
 #' converts everything to UTF-8 character before XML writing
@@ -284,14 +556,72 @@ writeXmlFile <- function(fileName, dataTables, xsdObject, namespace, encoding="U
 	
   dataTables <- insertcdata(dataTables, xsdObject)
   dataTables <- typeConvert(dataTables, xsdObject)
+  
   # Disabled this on 2022-09-01, as it reorders so that what is written and read back in differs from the original:
   #dataTables <- setKeysDataTables(dataTables, xsdObject)
+  for (dt in names(dataTables)){
+  	if (length(xsdObject$tableHeaders[[dt]])>0){
+  		data.table::setkeyv(dataTables[[dt]], xsdObject$tableHeaders[[dt]][1:xsdObject$prefixLens[[dt]]])
+  	}
+  }
   
   stream = file(fileName, open="w", encoding="native.enc")
   writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
-  writeLevel(stream, dataTables, xsdObject$root, NULL, xsdObject, "", namespace, keepEmptyLevels = keepEmptyLevels)    
+  
+  writeLevel(
+  	stream = stream, 
+  	data = dataTables, 
+  	level = xsdObject$root, 
+  	parentKeys = NULL, 
+  	xsdObject = xsdObject, 
+  	indent = "", 
+  	namespace = namespace, 
+  	keepEmptyLevels = keepEmptyLevels
+  )
+  
     close(stream)
   
+}
+
+
+
+
+
+writeXmlFile_DF <- function(fileName, dataTables, xsdObject, namespace, encoding="UTF-8", xmlStandard="1.0", keepEmptyLevels = FALSE){
+	
+	# Notes for development:
+	# consider adding XML version to xsdObjects
+	# consider adding information about which columns are attributes / elements in xsdObjects
+	# consider adding ordering information about all elements in xsdObjects
+	# (including the relative ordering of complex and simple elements)
+	# consider adding information about key structure in xsdObjects
+	
+	if (encoding != "UTF-8"){
+		stop(paste("Encoding", encoding, "is not supported."))
+	}
+	
+	
+	dataTables <- insertcdata(dataTables, xsdObject)
+	dataTables <- typeConvert(dataTables, xsdObject)
+	# Disabled this on 2022-09-01, as it reorders so that what is written and read back in differs from the original:
+	#dataTables <- setKeysDataTables(dataTables, xsdObject)
+	
+	stream = file(fileName, open="w", encoding="native.enc")
+	writeXmlDeclaration(stream, version=xmlStandard, encoding=encoding, standalone=T)
+	dataTables <- lapply(dataTables, function(x) if(NROW(x)) as.data.frame(x) else x)
+	writeLevel(
+		stream = stream, 
+		data = dataTables, 
+		level = xsdObject$root, 
+		parentKeys = NULL, 
+		xsdObject = xsdObject, 
+		indent = "", 
+		namespace = namespace, 
+		keepEmptyLevels = keepEmptyLevels
+	)
+	
+	close(stream)
+	
 }
 
 #' write landings xml with data.table-routines for writing tabular data
@@ -579,7 +909,7 @@ WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), names
       stop(paste("File", FileName, "already exists."))
     }
     
-    writeXmlFile(FileName, thisData, xsdObject, namespace, encoding, keepEmptyLevels = namespace == "http://www.imr.no/formats/nmdechosounder/v1")    
+    writeXmlFile(FileName, thisData, xsdObject, namespace, encoding, keepEmptyLevels = namespace == "http://www.imr.no/formats/nmdechosounder/v1")
   }
   
 }

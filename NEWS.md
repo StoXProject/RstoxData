@@ -1,3 +1,35 @@
+# RstoxData v2.0.0  (2024-07-09)
+* Final release for StoX 4.0.0.
+
+# RstoxData v1.10.2-9011  (2024-07-08)
+* Made comparison to ICES vocabularies more robust, and re-introduced the test for ICESExport.
+
+# RstoxData v1.10.2-9010  (2024-07-02)
+* Renamed backwardCompatibility to backwardCompatibility_RstoxData to avoid the same name to be used across Rstox packages, and restructured functions in that list to use inputs projectDescription, modelName, processIndex and not projectDescriptionOne, allowing for using information from the entire project.
+* Temporarily disabled test for ICESExport.
+
+# RstoxData v1.10.2-9009  (2024-05-22)
+* Fixed bug in rbindlist_StoxFormat() where elements with 0 rows produced an error, and are now skipped.
+* Corrected warning in ICESDatsusc() where NMDBiotic v3 did not result in a warning.
+
+# RstoxData v1.10.2-9008  (2024-05-08)
+* Added the ICESBioic format 1.6 that includes the new GeneticPopulationCode field.
+
+# RstoxData v1.10.2-9007  (2024-05-02)
+* Fixed bug in FilterLanding() by aadding expandFilterExpressionList().
+
+# RstoxData v1.10.2-9002  (2024-04-25)
+* Fixed more bugs in writeLevel() and exported sanitizeExpression.
+
+# RstoxData v1.10.2-9002  (2023-11-06)
+* Added parameter format class "folderPath".
+* Added branch "testing" which will deploy to the testingRepo.
+* Structured the check-full.yaml.
+* Fixed issue with parsing some valid variants of the xml landings format (landingerv2)
+* Fixed issue with parsing some valid variants of the InterCatch Exchange format
+* Added functions for extracting some standard tables from NMD biotic
+* Added vignette for guiding data users at IMR to locate and parse biological samples.
+
 # RstoxData v1.10.2-9001  (2023-10-13)
 * Moved functions for setting precision to RstoxFramework, which actually assumed an sp object. 
 * Changed definition of CatchFractionNumber and SampleNumber to numeric instead of integer, as this was the result from runProcess() used in runModel(). 
