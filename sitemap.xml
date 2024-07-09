@@ -1,378 +1,140 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/AcousticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/AddToStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/BioticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CompensateEffectiveTowDistanceForFishingDepthCount.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ConvertAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ConvertBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ConvertStoxAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ConvertStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyICESAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyICESBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyICESDatras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyStoxAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CopyStoxLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DataTypes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DefineTranslation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterICESAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterICESBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterICESDatras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterStoxAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FilterStoxLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ICESAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ICESAcousticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ICESBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ICESBioticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ICESDatras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ICESDatrasData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LandingData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MergeAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MergeStoxAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MergeStoxAcousticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MergeStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MergeStoxBioticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ModelData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ProcessData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ReadAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ReadBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ReadLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/RedefineStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/RegroupLengthICESDatras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/RstoxData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxAcousticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxAcousticFormat.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxBioticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxBioticFormat.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxLandingData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StoxUnits.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateICESAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateICESBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateICESDatras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateStoxAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateStoxBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TranslateStoxLanding.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Translation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteICESAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteICESAcousticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteICESBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteICESBioticData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteICESDatras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WriteICESDatrasData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/applyFunctionArgumentHierarchy.html</loc>
-  </url>
-  <url>
-    <loc>/reference/backwardCompatibility.html</loc>
-  </url>
-  <url>
-    <loc>/reference/convertBioticFile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/convertToLandingData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/convertToLssData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/copy_arguments.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createOrderKey.html</loc>
-  </url>
-  <url>
-    <loc>/reference/do.call_robust.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filterData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filterTables.html</loc>
-  </url>
-  <url>
-    <loc>/reference/findUnit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/firstClass.html</loc>
-  </url>
-  <url>
-    <loc>/reference/generalSamplingHierarhcy.html</loc>
-  </url>
-  <url>
-    <loc>/reference/general_arguments.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getNumberOfCores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getRstoxDataDefinitions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getStoxKeys.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUnit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUnitOptions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hasUnit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.LandingData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.StoxLandingData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/lapplyOnCores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mapplyOnCores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/match_arg_informative.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mergeByIntersect.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mergeByStoxKeys.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mergeDataTables.html</loc>
-  </url>
-  <url>
-    <loc>/reference/oldToNewTranslationList.html</loc>
-  </url>
-  <url>
-    <loc>/reference/orderRowsByKeys.html</loc>
-  </url>
-  <url>
-    <loc>/reference/parseInterCatch.html</loc>
-  </url>
-  <url>
-    <loc>/reference/printErrorIDs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/processPropertyFormats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readErsFile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readLssFile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readXmlFile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/setColumnClasses.html</loc>
-  </url>
-  <url>
-    <loc>/reference/setUnit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/setorderv_numeric.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stoxBioticObject.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stoxFunctionAttributes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unMergeAcoustic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unMergeBiotic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/xsdObjects.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/imrdata.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/AcousticData.html</loc></url>
+<url><loc>/reference/AddToStoxBiotic.html</loc></url>
+<url><loc>/reference/BioticData.html</loc></url>
+<url><loc>/reference/CompensateEffectiveTowDistanceForFishingDepthCount.html</loc></url>
+<url><loc>/reference/ConvertAcoustic.html</loc></url>
+<url><loc>/reference/ConvertBiotic.html</loc></url>
+<url><loc>/reference/ConvertStoxAcoustic.html</loc></url>
+<url><loc>/reference/ConvertStoxBiotic.html</loc></url>
+<url><loc>/reference/CopyAcoustic.html</loc></url>
+<url><loc>/reference/CopyBiotic.html</loc></url>
+<url><loc>/reference/CopyICESAcoustic.html</loc></url>
+<url><loc>/reference/CopyICESBiotic.html</loc></url>
+<url><loc>/reference/CopyICESDatras.html</loc></url>
+<url><loc>/reference/CopyICESDatsusc.html</loc></url>
+<url><loc>/reference/CopyLanding.html</loc></url>
+<url><loc>/reference/CopyStoxAcoustic.html</loc></url>
+<url><loc>/reference/CopyStoxBiotic.html</loc></url>
+<url><loc>/reference/CopyStoxLanding.html</loc></url>
+<url><loc>/reference/DataTypes.html</loc></url>
+<url><loc>/reference/DefineTranslation.html</loc></url>
+<url><loc>/reference/FilterAcoustic.html</loc></url>
+<url><loc>/reference/FilterBiotic.html</loc></url>
+<url><loc>/reference/FilterICESAcoustic.html</loc></url>
+<url><loc>/reference/FilterICESBiotic.html</loc></url>
+<url><loc>/reference/FilterICESDatras.html</loc></url>
+<url><loc>/reference/FilterICESDatsusc.html</loc></url>
+<url><loc>/reference/FilterLanding.html</loc></url>
+<url><loc>/reference/FilterStoxAcoustic.html</loc></url>
+<url><loc>/reference/FilterStoxBiotic.html</loc></url>
+<url><loc>/reference/FilterStoxLanding.html</loc></url>
+<url><loc>/reference/ICESAcoustic.html</loc></url>
+<url><loc>/reference/ICESAcousticData.html</loc></url>
+<url><loc>/reference/ICESBiotic.html</loc></url>
+<url><loc>/reference/ICESBioticData.html</loc></url>
+<url><loc>/reference/ICESDatras.html</loc></url>
+<url><loc>/reference/ICESDatrasData.html</loc></url>
+<url><loc>/reference/ICESDatsusc.html</loc></url>
+<url><loc>/reference/ICESDatsuscData.html</loc></url>
+<url><loc>/reference/LandingData.html</loc></url>
+<url><loc>/reference/MergeAcoustic.html</loc></url>
+<url><loc>/reference/MergeStoxAcoustic.html</loc></url>
+<url><loc>/reference/MergeStoxAcousticData.html</loc></url>
+<url><loc>/reference/MergeStoxBiotic.html</loc></url>
+<url><loc>/reference/MergeStoxBioticData.html</loc></url>
+<url><loc>/reference/ModelData.html</loc></url>
+<url><loc>/reference/PrepareNmdBioticTable.html</loc></url>
+<url><loc>/reference/ProcessData.html</loc></url>
+<url><loc>/reference/ReadAcoustic.html</loc></url>
+<url><loc>/reference/ReadBiotic.html</loc></url>
+<url><loc>/reference/ReadLanding.html</loc></url>
+<url><loc>/reference/RedefineStoxBiotic.html</loc></url>
+<url><loc>/reference/RegroupLengthICESDatras.html</loc></url>
+<url><loc>/reference/RstoxData.html</loc></url>
+<url><loc>/reference/StoxAcoustic.html</loc></url>
+<url><loc>/reference/StoxAcousticData.html</loc></url>
+<url><loc>/reference/StoxAcousticFormat.html</loc></url>
+<url><loc>/reference/StoxBiotic.html</loc></url>
+<url><loc>/reference/StoxBioticData.html</loc></url>
+<url><loc>/reference/StoxBioticFormat.html</loc></url>
+<url><loc>/reference/StoxLanding.html</loc></url>
+<url><loc>/reference/StoxLandingData.html</loc></url>
+<url><loc>/reference/StoxUnits.html</loc></url>
+<url><loc>/reference/TranslateAcoustic.html</loc></url>
+<url><loc>/reference/TranslateBiotic.html</loc></url>
+<url><loc>/reference/TranslateICESAcoustic.html</loc></url>
+<url><loc>/reference/TranslateICESBiotic.html</loc></url>
+<url><loc>/reference/TranslateICESDatras.html</loc></url>
+<url><loc>/reference/TranslateICESDatsusc.html</loc></url>
+<url><loc>/reference/TranslateLanding.html</loc></url>
+<url><loc>/reference/TranslateStoxAcoustic.html</loc></url>
+<url><loc>/reference/TranslateStoxBiotic.html</loc></url>
+<url><loc>/reference/TranslateStoxLanding.html</loc></url>
+<url><loc>/reference/Translation.html</loc></url>
+<url><loc>/reference/WriteAcoustic.html</loc></url>
+<url><loc>/reference/WriteBiotic.html</loc></url>
+<url><loc>/reference/WriteICESAcoustic.html</loc></url>
+<url><loc>/reference/WriteICESAcousticData.html</loc></url>
+<url><loc>/reference/WriteICESBiotic.html</loc></url>
+<url><loc>/reference/WriteICESBioticData.html</loc></url>
+<url><loc>/reference/WriteICESDatras.html</loc></url>
+<url><loc>/reference/WriteICESDatrasData.html</loc></url>
+<url><loc>/reference/WriteICESDatsusc.html</loc></url>
+<url><loc>/reference/WriteICESDatsuscData.html</loc></url>
+<url><loc>/reference/applyFunctionArgumentHierarchy.html</loc></url>
+<url><loc>/reference/backwardCompatibility_RstoxData.html</loc></url>
+<url><loc>/reference/convertBioticFile.html</loc></url>
+<url><loc>/reference/convertToLandingData.html</loc></url>
+<url><loc>/reference/convertToLssData.html</loc></url>
+<url><loc>/reference/copy_arguments.html</loc></url>
+<url><loc>/reference/createOrderKey.html</loc></url>
+<url><loc>/reference/do.call_robust.html</loc></url>
+<url><loc>/reference/ecosystemsurvey_example.html</loc></url>
+<url><loc>/reference/filterData.html</loc></url>
+<url><loc>/reference/filterTables.html</loc></url>
+<url><loc>/reference/findUnit.html</loc></url>
+<url><loc>/reference/firstClass.html</loc></url>
+<url><loc>/reference/generalSamplingHierarhcy.html</loc></url>
+<url><loc>/reference/general_arguments.html</loc></url>
+<url><loc>/reference/getNumberOfCores.html</loc></url>
+<url><loc>/reference/getRstoxDataDefinitions.html</loc></url>
+<url><loc>/reference/getStoxKeys.html</loc></url>
+<url><loc>/reference/getUnit.html</loc></url>
+<url><loc>/reference/getUnitOptions.html</loc></url>
+<url><loc>/reference/hasUnit.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/is.LandingData.html</loc></url>
+<url><loc>/reference/is.StoxLandingData.html</loc></url>
+<url><loc>/reference/lapplyOnCores.html</loc></url>
+<url><loc>/reference/mapplyOnCores.html</loc></url>
+<url><loc>/reference/match_arg_informative.html</loc></url>
+<url><loc>/reference/mergeByIntersect.html</loc></url>
+<url><loc>/reference/mergeByStoxKeys.html</loc></url>
+<url><loc>/reference/mergeDataTables.html</loc></url>
+<url><loc>/reference/oldToNewTranslationList.html</loc></url>
+<url><loc>/reference/orderRowsByKeys.html</loc></url>
+<url><loc>/reference/parseInterCatch.html</loc></url>
+<url><loc>/reference/printErrorIDs.html</loc></url>
+<url><loc>/reference/processPropertyFormats.html</loc></url>
+<url><loc>/reference/readErsFile.html</loc></url>
+<url><loc>/reference/readLssFile.html</loc></url>
+<url><loc>/reference/readXmlFile.html</loc></url>
+<url><loc>/reference/sanitizeExpression.html</loc></url>
+<url><loc>/reference/setColumnClasses.html</loc></url>
+<url><loc>/reference/setUnit.html</loc></url>
+<url><loc>/reference/setorderv_numeric.html</loc></url>
+<url><loc>/reference/stoxBioticObject.html</loc></url>
+<url><loc>/reference/stoxFunctionAttributes.html</loc></url>
+<url><loc>/reference/unMergeAcoustic.html</loc></url>
+<url><loc>/reference/unMergeBiotic.html</loc></url>
+<url><loc>/reference/xsdObjects.html</loc></url>
 </urlset>
+
