@@ -1,6 +1,6 @@
 Package: RstoxData
-Version: 1.10.2-9010
-Date: 2024-07-02
+Version: 1.10.2-9012
+Date: 2024-08-19
 Title: Tools to Read and Manipulate Fisheries Data
 Authors@R: c(
   person(given = "Edvin", 
@@ -24,7 +24,7 @@ Authors@R: c(
     role = "aut"), 
   person(given = "Norwegian Institute of Marine Research", 
     role = c("cph", "fnd")))
-Depends: R (>= 3.6)
+Depends: R (>= 4.0)
 Description: Set of tools to read and manipulate various data formats for fisheries. Mainly
   catered towards scientific trawl survey sampling ('biotic') data, acoustic
   trawl data, and commercial fishing catch ('landings') data. Among the
@@ -50,4 +50,4 @@ Suggests:
     tinytest (>= 1.2.0)
 LinkingTo: 
     Rcpp
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
