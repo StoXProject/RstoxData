@@ -21,6 +21,8 @@ StoxUnits <- data.table::data.table(id=character(),
                                     name=character(),
                                     conversion=numeric())
 
+StoxUnits <- rbind(StoxUnits, list("mass-mcg", "mass", "mcg", "mcg", "microgram", 1e-9))
+StoxUnits <- rbind(StoxUnits, list("mass-mg", "mass", "mg", "mg", "milligram", 1e-6))
 StoxUnits <- rbind(StoxUnits, list("mass-g", "mass", "g", "g", "gram", 1e-3))
 StoxUnits <- rbind(StoxUnits, list("mass-kg", "mass", "kg", "kg", "kilogram", 1))
 StoxUnits <- rbind(StoxUnits, list("mass-ton", "mass", "t", "ton", "metric ton", 1e3))
@@ -67,3 +69,5 @@ StoxUnits <- StoxUnits[,c("id", "conversion", "quantity", "symbol", "shortname",
 
 usethis::use_data(StoxUnits, overwrite = T)
 
+setwd("..")
+setwd("..")

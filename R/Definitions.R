@@ -41,7 +41,9 @@ initiateRstoxData <- function(){
 		"SpeciesCategoryKey", 
 		"SampleKey", 
 		"IndividualKey", 
-		"SubIndividualKey"
+		"PreySpeciesCategoryKey", 
+		"PreySampleKey", 
+		"PreyIndividualKey"
 	)
 	# StoxBioticKeys: 
 	StoxAcousticKeys <- c(
@@ -68,11 +70,14 @@ initiateRstoxData <- function(){
 	
 	#### Data type units: ####
 	dataTypeUnits <- list(
+		
 		## StoxAcousticData
+		
 		# Cruise level:
 		list(dataType = "StoxAcousticData", variableName = "CruiseKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "Cruise", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "Platform", quantity = "NA", unit = "NA"), 
+		
 		# Log level:
 		list(dataType = "StoxAcousticData", variableName = "LogKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "Log", quantity = "NA", unit = "NA"), 
@@ -88,29 +93,37 @@ initiateRstoxData <- function(){
 		list(dataType = "StoxAcousticData", variableName = "LogDuration", quantity = "time", unit = "s"), 
 		list(dataType = "StoxAcousticData", variableName = "EffectiveLogDistance", quantity = "length", unit = "nmi"), 
 		list(dataType = "StoxAcousticData", variableName = "BottomDepth", quantity = "length", unit = "m"), 
+		
 		# Beam level:
 		list(dataType = "StoxAcousticData", variableName = "BeamKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "Beam", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "Frequency", quantity = "frequency", unit = "hertz"), 
+		
 		# AcousticCategory level:
 		list(dataType = "StoxAcousticData", variableName = "AcousticCategoryKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "AcousticCategory", quantity = "NA", unit = "NA"), 
+		
 		# ChannelReference level:
 		list(dataType = "StoxAcousticData", variableName = "ChannelReferenceKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "ChannelReferenceType", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "ChannelReferenceDepth", quantity = "length", unit = "m"), 
 		list(dataType = "StoxAcousticData", variableName = "ChannelReferenceTilt", quantity = "angle", unit = "degree"), 
+		
 		# NASC level:
 		list(dataType = "StoxAcousticData", variableName = "NASCKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "Channel", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxAcousticData", variableName = "MaxChannelRange", quantity = "length", unit = "m"), 
 		list(dataType = "StoxAcousticData", variableName = "MinChannelRange", quantity = "length", unit = "m"), 
 		list(dataType = "StoxAcousticData", variableName = "NASC", quantity = "NASC", unit = "m^2/nmi^2"),
+		
+		
 		## StoxBioticData
+		
 		# Cruise level:
 		list(dataType = "StoxBioticData", variableName = "CruiseKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "Cruise", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "Platform", quantity = "NA", unit = "NA"), 
+		
 		# Station level:
 		list(dataType = "StoxBioticData", variableName = "StationKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "Station", quantity = "NA", unit = "NA"), 
@@ -119,6 +132,7 @@ initiateRstoxData <- function(){
 		list(dataType = "StoxBioticData", variableName = "Longitude", quantity = "angle", unit = "degree east"), 
 		list(dataType = "StoxBioticData", variableName = "Latitude", quantity = "angle", unit = "degree north"), 
 		list(dataType = "StoxBioticData", variableName = "BottomDepth", quantity = "length", unit = "m"), 
+		
 		# Haul level:
 		list(dataType = "StoxBioticData", variableName = "HaulKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "Haul", quantity = "NA", unit = "NA"), 
@@ -130,9 +144,11 @@ initiateRstoxData <- function(){
 		list(dataType = "StoxBioticData", variableName = "VerticalNetOpening", quantity = "length", unit = "m"), 
 		list(dataType = "StoxBioticData", variableName = "HorizontalNetOpening", quantity = "lengthlength", unit = "m"), 
 		list(dataType = "StoxBioticData", variableName = "TrawlDoorSpread", quantity = "length", unit = "m"), 
+		
 		# SpeciesCategory level:
 		list(dataType = "StoxBioticData", variableName = "SpeciesCategoryKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "SpeciesCategory", quantity = "NA", unit = "NA"), 
+		
 		# Sample level:
 		list(dataType = "StoxBioticData", variableName = "SampleKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "Sample", quantity = "NA", unit = "NA"), 
@@ -140,6 +156,7 @@ initiateRstoxData <- function(){
 		list(dataType = "StoxBioticData", variableName = "CatchFractionNumber", quantity = "cardinality", unit = "individuals"), 
 		list(dataType = "StoxBioticData", variableName = "SampleWeight", quantity = "mass", unit = "kg"), 
 		list(dataType = "StoxBioticData", variableName = "SampleNumber", quantity = "cardinality", unit = "individuals"), 
+		
 		# Individual level:
 		list(dataType = "StoxBioticData", variableName = "IndividualKey", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "Individual", quantity = "NA", unit = "NA"), 
@@ -148,7 +165,23 @@ initiateRstoxData <- function(){
 		list(dataType = "StoxBioticData", variableName = "LengthResolution", quantity = "length", unit = "cm"), 
 		list(dataType = "StoxBioticData", variableName = "WeightMeasurement", quantity = "NA", unit = "NA"), 
 		list(dataType = "StoxBioticData", variableName = "IndividualAge", quantity = "age", unit = "year"), 
-		list(dataType = "StoxBioticData", variableName = "IndividualSex", quantity = "NA", unit = "NA")
+		list(dataType = "StoxBioticData", variableName = "IndividualSex", quantity = "NA", unit = "NA"), 
+		
+		# PreySpeciesCategory level:
+		list(dataType = "StoxBioticData", variableName = "PreySpeciesCategoryKey", quantity = "NA", unit = "NA"), 
+		list(dataType = "StoxBioticData", variableName = "PreySpeciesCategory", quantity = "NA", unit = "NA"), 
+		
+		# PreySample level:
+		list(dataType = "StoxBioticData", variableName = "PreySampleKey", quantity = "NA", unit = "NA"), 
+		list(dataType = "StoxBioticData", variableName = "PreySample", quantity = "NA", unit = "NA"), 
+		list(dataType = "StoxBioticData", variableName = "PreySampleWeight", quantity = "mass", unit = "g"), 
+		list(dataType = "StoxBioticData", variableName = "PreyWeightResolution", quantity = "mass", unit = "g"), 
+		
+		# PreyIndividual level:
+		list(dataType = "StoxBioticData", variableName = "PreyIndividualKey", quantity = "NA", unit = "NA"), 
+		list(dataType = "StoxBioticData", variableName = "PreyIndividual", quantity = "NA", unit = "NA"), 
+		list(dataType = "StoxBioticData", variableName = "PreyIndividualTotalLength", quantity = "length", unit = "cm"), 
+		list(dataType = "StoxBioticData", variableName = "PreyLengthResolution", quantity = "length", unit = "cm")
 	)
 	dataTypeUnits <- data.table::rbindlist(dataTypeUnits)
 	
