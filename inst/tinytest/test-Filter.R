@@ -120,7 +120,7 @@ expect_equal(all(out$`biotic_v3_example.xml`$agedetermination$serialnumber != c(
 
 
 ## StoxBiotic
-suppressWarnings(st <- RstoxData:::StoxBiotic(inputData))
+suppressWarnings(st <- RstoxData::StoxBiotic(inputData))
 
 filterExpressionSt <- list()
 filterExpressionSt$Individual <- c(
