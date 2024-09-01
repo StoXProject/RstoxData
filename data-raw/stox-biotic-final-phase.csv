@@ -48,7 +48,40 @@ IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey
 Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')",,character
 IndividualRoundWeight,Individual,"getIndividualRoundWeight(individualweight, individualproducttype, catchcategory, CruiseKey)","getIndividualRoundWeight(individualweight, individualproducttype, catchcategory, CruiseKey)","getIndividualRoundWeight(weight.individual, producttype.individual, species, CruiseKey)","getIndividualRoundWeight(weight.individual, producttype.individual, species, CruiseKey)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",,numeric
 IndividualTotalLength,Individual,"getIndividualTotalLength(length, lengthmeasurement, catchcategory, CruiseKey)","getIndividualTotalLength(length, lengthmeasurement, catchcategory, CruiseKey)","getIndividualTotalLength(length, lengthmeasurement, species, CruiseKey)","getIndividualTotalLength(length, lengthmeasurement, species, CruiseKey)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",,numeric
-LengthResolution,Individual,convertLenRes(lengthresolution),convertLenRes(lengthresolution),convertLenRes(lengthunit),convertLenRes(lengthunit),convertLenRes(LengthCode.Biology),,numeric
+LengthResolution,Individual,"convertLenRes(lengthresolution, scale = 100)","convertLenRes(lengthresolution, scale = 100)","convertLenRes(lengthunit, scale = 100)","convertLenRes(lengthunit, scale = 100)","convertLenRes(LengthCode.Biology)",,numeric
 WeightMeasurement,Individual,'IndividualWeight','IndividualWeight','IndividualWeight','IndividualWeight',"ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",,character
 IndividualAge,Individual,age,age,age,age,IndividualAge,,numeric
 IndividualSex,Individual,"ifelse(sex %in% 1, 'F', ifelse(sex %in% 2, 'M', NA_character_))","ifelse(sex %in% 1, 'F', ifelse(sex %in% 2, 'M', NA_character_))","ifelse(sex %in% 1, 'F', ifelse(sex %in% 2, 'M', NA_character_))","ifelse(sex %in% 1, 'F', ifelse(sex %in% 2, 'M', NA_character_))",IndividualSex,,character
+CruiseKey,PreySpeciesCategory,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
+StationKey,PreySpeciesCategory,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
+HaulKey,PreySpeciesCategory,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
+SpeciesCategoryKey,PreySpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y,character
+SampleKey,PreySpeciesCategory,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
+IndividualKey,PreySpeciesCategory,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y,character
+PreySpeciesCategoryKey,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,Y,character
+PreySpeciesCategory,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,,character
+CruiseKey,PreySample,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
+StationKey,PreySample,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
+HaulKey,PreySample,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
+SpeciesCategoryKey,PreySample,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y,character
+SampleKey,PreySample,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
+IndividualKey,PreySample,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y,character
+PreySpeciesCategoryKey,PreySample,PreySpeciesCategoryKey,PreySpeciesCategoryKey,NA,NA,NA,Y,character
+PreySampleKey,PreySample,PreySampleKey,PreySampleKey,NA,NA,NA,Y,character
+PreySample,PreySample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, sep = '-')",NA,NA,NA,,character
+# The scale = 1e6 corresponds to the unit of the PreySampleWeight, which is defined as mg here:
+PreyCatchFractionNumber,PreySample,totalcount,totalcount,NA,NA,NA,,numeric
+PreyCatchFractionWeightResolution,PreySample,"convertWeightRes(weightresolution, scale = 1e6)","convertWeightRes(weightresolution, scale = 1e6)",NA,NA,NA,,character
+PreyCatchFractionWeight,PreySample,"getPreyCatchFractionWeight(totalweight, PreyCatchFractionWeightResolution)","getPreyCatchFractionWeight(totalweight, PreyCatchFractionWeightResolution)",NA,NA,NA,,numeric
+#CruiseKey,PreyIndividual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
+#StationKey,PreyIndividual,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
+#HaulKey,PreyIndividual,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
+#SpeciesCategoryKey,PreyIndividual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y,character
+#SampleKey,PreyIndividual,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
+#IndividualKey,PreyIndividual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y,character
+#PreySpeciesCategoryKey,PreyIndividual,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,Y,character
+#PreySampleKey,PreyIndividual,PreySampleKey,PreySampleKey,PreySampleKey,PreySampleKey,PreySampleKey,Y,character
+#PreyIndividualKey,PreyIndividual,PreyIndividualKey,PreyIndividualKey,PreyIndividualKey,PreyIndividualKey,PreyIndividualKey,Y,character
+#PreyIndividual,PreyIndividual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, PreyIndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, PreyIndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, PreyIndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, PreyIndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, PreyIndividualKey, sep = '-')",,character
+#PreyIndividualTotalLength,PreyIndividual,NA,NA,NA,NA,NA,,numeric
+#PreyLengthResolution,PreyIndividual,1,1,1,1,NA,,numeric # Borrow "interval" from prey
