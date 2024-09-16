@@ -9,6 +9,11 @@
 * Added tables PreySpeciesCategory and PreySample in StoxBiotic, and prepared for adding PreyIndividual. 
 * Fixed bug where reports could be run even though the Baseline model had been rerun."
 
+# RstoxData v2.0.0  (2024-07-09)
+* Final release for StoX 4.0.0.
+
+# RstoxData v1.10.2-9011  (2024-07-08)
+* Made comparison to ICES vocabularies more robust, and re-introduced the test for ICESExport.
 
 # RstoxData v1.10.2-9010  (2024-07-02)
 * Renamed backwardCompatibility to backwardCompatibility_RstoxData to avoid the same name to be used across Rstox packages, and restructured functions in that list to use inputs projectDescription, modelName, processIndex and not projectDescriptionOne, allowing for using information from the entire project.

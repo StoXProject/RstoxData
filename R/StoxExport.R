@@ -823,7 +823,7 @@ BioticData_NMDToICESBioticOne <- function(
 	
 	if(!testICESURL()) {
 		if(AllowRemoveSpecies) {
-			warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set ´to TRUE.")
+			warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set to TRUE.")
 		}
 		else {
 			warning("Reference data for ICESAcoustic cannot be checked!!!")
