@@ -152,9 +152,7 @@ convertWeightRes_NMDBiotic <- function(x, scale) {
 	# Change this to use the NMD-R-packages in the future!!!!!!!!!!
 	
 	# This is a hard coded copy of the reference data https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/weightresolution:
-	# Multiply by 100 to give these in cm: 
 	z <- c(1, 1e-3, 1e-6, 1e-9) * scale
-	# The letters here are deprecated, but used in historical data:
 	names(z) <- as.character(1:4)
 	return(z[x])
 }
@@ -258,8 +256,8 @@ getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, speci
 
 
 getPreyCatchFractionWeight_NMDBiotic3 <- function(totalweight, PreyCatchFractionWeightResolution){
-	# Multiply by 1e6 since the weight of prey is given in mg in StoxBiotic (while kg in NMDBiotic), and divide by the resolution, which is also given in mg. Thus, if the reolution is g we divide by 1000, which seems reasonable:
-	totalweight * 1e6 / PreyCatchFractionWeightResolution
+	# Multiply by 1e6 since the weight of prey is given in mg in StoxBiotic (while kg in NMDBiotic), and divide by the resolution, which is also given in mg. Thus, if the resolution is g we divide by 1000, which seems reasonable:
+	ifelse(totalweight == 0, 0, totalweight * 1e6 / PreyCatchFractionWeightResolution)
 	
 }
 

@@ -434,6 +434,25 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 
 
 
+# Function to remove rows with duplicated keys in StoxBioticData:
+#' @importFrom data.table .I
+warningMissingKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
+	
+	stoxDataFormat <- match_arg_informative(stoxDataFormat)
+	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
+	
+	presentKeys <- lapply(StoxData, function(x) intersect(names(x), StoxKeys))
+	atMaxNumberOfKeys <- which.max(lengths(presentKeys))
+	hasmissingKeys <- StoxData[[atMaxNumberOfKeys]][, any(unlist(lapply(.SD, is.na))), .SDcols = presentKeys[[atMaxNumberOfKeys]]]
+	
+	# Warn if any keys have missing values:
+	if(any(hasmissingKeys)) {
+		warning("The Stox", stoxDataFormat, "Data has missing keys! Please translate fields in the Read", stoxDataFormat, "process to avoid this. ")
+	}
+}
+
+
+
 AddToStoxData <- function(
 	StoxData, 
 	RawData, 
@@ -989,6 +1008,7 @@ deparse_onestring <- function(...) {
 #' 
 applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionArguments, return.only.names = TRUE) {
 	
+	
 	# Support an expression at the top level:
 	if(inherits(functionArgumentHierarchy, "expression")) {
 		functionArgumentHierarchy <- eval(functionArgumentHierarchy)
@@ -1030,6 +1050,7 @@ applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionAr
 			toShow[[argumentName]] <- TRUE
 		}
 	}
+	
 	
 	# Return only the names of the arguments to show:
 	if(return.only.names) {

@@ -1,3 +1,15 @@
+# RstoxData v2.0.1-9002  (2024-09-16)
+* Added documentation of PreySpeciesCategory and PreySample in StoxBiotic.
+* Fixed bug where PreyCatchfractionWeight = 0 was set to NA if PreyCatchFractionWeightResolution was missing. Now returning 0.
+* Fixed inaccuracies in the documentation of the StoxBiotic format.
+* Added warning when there are missing values in keys in StoxBiotic.
+
+
+# RstoxData v2.0.1-9001  (2024-09-01)
+* Added tables PreySpeciesCategory and PreySample in StoxBiotic, and prepared for adding PreyIndividual. 
+* Fixed bug where reports could be run even though the Baseline model had been rerun."
+
+
 # RstoxData v1.10.2-9010  (2024-07-02)
 * Renamed backwardCompatibility to backwardCompatibility_RstoxData to avoid the same name to be used across Rstox packages, and restructured functions in that list to use inputs projectDescription, modelName, processIndex and not projectDescriptionOne, allowing for using information from the entire project.
 * Temporarily disabled test for ICESExport.

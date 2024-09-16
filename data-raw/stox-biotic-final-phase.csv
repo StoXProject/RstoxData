@@ -58,8 +58,8 @@ HaulKey,PreySpeciesCategory,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
 SpeciesCategoryKey,PreySpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCategoryKey,Y,character
 SampleKey,PreySpeciesCategory,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
 IndividualKey,PreySpeciesCategory,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y,character
-PreySpeciesCategoryKey,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,Y,character
-PreySpeciesCategory,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,PreySpeciesCategoryKey,,character
+PreySpeciesCategoryKey,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,NA,NA,NA,Y,character
+PreySpeciesCategory,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,NA,NA,NA,Y,character
 CruiseKey,PreySample,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,PreySample,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 HaulKey,PreySample,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
@@ -70,9 +70,9 @@ PreySpeciesCategoryKey,PreySample,PreySpeciesCategoryKey,PreySpeciesCategoryKey,
 PreySampleKey,PreySample,PreySampleKey,PreySampleKey,NA,NA,NA,Y,character
 PreySample,PreySample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, sep = '-')",NA,NA,NA,,character
 # The scale = 1e6 corresponds to the unit of the PreySampleWeight, which is defined as mg here:
-PreyCatchFractionNumber,PreySample,totalcount,totalcount,NA,NA,NA,,numeric
-PreyCatchFractionWeightResolution,PreySample,"convertWeightRes(weightresolution, scale = 1e6)","convertWeightRes(weightresolution, scale = 1e6)",NA,NA,NA,,character
 PreyCatchFractionWeight,PreySample,"getPreyCatchFractionWeight(totalweight, PreyCatchFractionWeightResolution)","getPreyCatchFractionWeight(totalweight, PreyCatchFractionWeightResolution)",NA,NA,NA,,numeric
+PreyCatchFractionWeightResolution,PreySample,"convertWeightRes(weightresolution, scale = 1e6)","convertWeightRes(weightresolution, scale = 1e6)",NA,NA,NA,,character
+PreyCatchFractionNumber,PreySample,totalcount,totalcount,NA,NA,NA,,numeric
 #CruiseKey,PreyIndividual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 #StationKey,PreyIndividual,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 #HaulKey,PreyIndividual,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character
