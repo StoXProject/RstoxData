@@ -70,7 +70,7 @@ PreySpeciesCategoryKey,PreySample,PreySpeciesCategoryKey,PreySpeciesCategoryKey,
 PreySampleKey,PreySample,PreySampleKey,PreySampleKey,NA,NA,NA,Y,character
 PreySample,PreySample,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, PreySpeciesCategoryKey, PreySampleKey, sep = '-')",NA,NA,NA,,character
 # The scale = 1e6 corresponds to the unit of the PreySampleWeight, which is defined as mg here:
-PreyCatchFractionWeight,PreySample,"getPreyCatchFractionWeight(totalweight, PreyCatchFractionWeightResolution)","getPreyCatchFractionWeight(totalweight, PreyCatchFractionWeightResolution)",NA,NA,NA,,numeric
+PreyCatchFractionWeight,PreySample,"getPreyCatchFractionWeight(totalweight)","getPreyCatchFractionWeight(totalweight)",NA,NA,NA,,numeric
 PreyCatchFractionWeightResolution,PreySample,"convertWeightRes(weightresolution, scale = 1e6)","convertWeightRes(weightresolution, scale = 1e6)",NA,NA,NA,,character
 PreyCatchFractionNumber,PreySample,totalcount,totalcount,NA,NA,NA,,numeric
 #CruiseKey,PreyIndividual,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character

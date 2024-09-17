@@ -255,9 +255,9 @@ getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, speci
 }
 
 
-getPreyCatchFractionWeight_NMDBiotic3 <- function(totalweight, PreyCatchFractionWeightResolution){
-	# Multiply by 1e6 since the weight of prey is given in mg in StoxBiotic (while kg in NMDBiotic), and divide by the resolution, which is also given in mg. Thus, if the resolution is g we divide by 1000, which seems reasonable:
-	ifelse(totalweight == 0, 0, totalweight * 1e6 / PreyCatchFractionWeightResolution)
+getPreyCatchFractionWeight_NMDBiotic3 <- function(totalweight){
+	# Multiply by 1e6 since the weight of prey is given in mg in StoxBiotic (while kg in NMDBiotic):
+	totalweight * 1e6
 	
 }
 
