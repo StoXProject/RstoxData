@@ -16,6 +16,12 @@ StoxBiotic <- function(BioticData) {
 	# Extract the StoxBiotic data and rbind across files:
 	StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = 1L)
 	
+	# Warn if there are keys with missing values:
+	warningMissingKeys(
+		StoxData = StoxBioticData, 
+		stoxDataFormat = "Biotic"
+	)
+	
 	# Remove rows of duplicated keys:
 	#StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
 	StoxBioticData <- removeRowsOfDuplicatedKeys(
