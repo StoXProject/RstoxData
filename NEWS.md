@@ -1,9 +1,13 @@
 # RstoxData v2.0.1-9002  (2024-09-16)
+* Fixed a bug where certain lengths (the first 7 are 29, 57, 58, 113, 114, 115, 116) were shifted one cm down in ICESBiotic().
+* Added SpeedGround as vesselspeed from NMDBiotic in ICESBiotic().
+* Fixed bug in RedefineStoxBiotic(), where duplicated keys in the input BioticData were warned but not removed.
 * Added documentation of PreySpeciesCategory and PreySample in StoxBiotic.
 * Fixed bug where PreyCatchfractionWeight = 0 was set to NA if PreyCatchFractionWeightResolution was missing. Now returning 0.
 * Fixed inaccuracies in the documentation of the StoxBiotic format.
 * Added warning when there are missing values in keys in StoxBiotic.
-
+* Changed mapplyOnCores() to using sockets both for Windows and macOS, which solved the problem that the memory of the parent R session was copied to all cores, potentially causing memory issues
+* Added the argument ignore.condition to applyFunctionArgumentHierarchy() which is now used by RstoxFramework to get functions inputs that are hidden by UseProcessData. See news of RstoxFramework. 
 
 # RstoxData v2.0.1-9001  (2024-09-01)
 * Added tables PreySpeciesCategory and PreySample in StoxBiotic, and prepared for adding PreyIndividual. 

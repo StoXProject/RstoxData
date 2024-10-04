@@ -315,15 +315,17 @@ mapplyOnCores <- function(FUN, NumberOfCores = 1L, ..., MoreArgs = NULL, SIMPLIF
 	}
 	# Run in parallel on Windows and other platforms:
 	else if(NumberOfCores > 1){
+		# The parallel processing was conducted differently on Windows and macOS/Linux before StoX 4.1.0 (for some historic reason), with sockets for the former and forks for the latter. This was a potential memory problem since forking copies the R workspace to all the cores. Instead, sockets are now used for all platforms:
+		
 		# On Windows run special args to speed up:
-		if(get_os() == "win") {
+		#if(get_os() == "win") {
 			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
 			out <- parallel::clusterMap(cl, FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 			parallel::stopCluster(cl)
-		} 
-		else {
-			out <- parallel::mcmapply(FUN, mc.cores = NumberOfCores, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
-		}
+		#} 
+		#else {
+		#	out <- parallel::mcmapply(FUN, mc.cores = NumberOfCores, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
+		#}
 	}
 	else {
 		out <- NULL
@@ -442,12 +444,14 @@ warningMissingKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic"
 	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
 	
 	presentKeys <- lapply(StoxData, function(x) intersect(names(x), StoxKeys))
+	
 	atMaxNumberOfKeys <- which.max(lengths(presentKeys))
-	hasmissingKeys <- StoxData[[atMaxNumberOfKeys]][, any(unlist(lapply(.SD, is.na))), .SDcols = presentKeys[[atMaxNumberOfKeys]]]
+	hasmissingKeys <- StoxData[[atMaxNumberOfKeys]][, lapply(.SD, is.na), .SDcols = presentKeys[[atMaxNumberOfKeys]]]
+	hasmissingKeys <- lapply(hasmissingKeys, any)
 	
 	# Warn if any keys have missing values:
-	if(any(hasmissingKeys)) {
-		warning("The Stox", stoxDataFormat, "Data has missing keys! Please translate fields in the Read", stoxDataFormat, "process to avoid this. ")
+	if(any(unlist(hasmissingKeys))) {
+		warning("The Stox", stoxDataFormat, "Data has missing keys (", paste(names(StoxData)[unlist(hasmissingKeys)], names(hasmissingKeys)[unlist(hasmissingKeys)], sep = ": ", collapse = ", "), ")! Please translate fields in the Read", stoxDataFormat, "process to avoid this. ")
 	}
 }
 
@@ -484,6 +488,7 @@ AddToStoxData <- function(
 			RawData[[RawDataName]] <- subset(RawData[[RawDataName]], ! names(RawData[[RawDataName]]) %in% c("missionlog", "prey", "preylength", "copepodedevstage", "tag"))
 		}
 	}
+	
 	
 	# Convert from BioticData to the general sampling hierarchy:
 	StoxDataFormat <- match_arg_informative(StoxDataFormat)
@@ -528,6 +533,12 @@ AddToStoxData <- function(
 	
 	# Merge with the present StoxBioticData:
 	StoxData <- mapply(mergeAndOverwriteDataTable, StoxData, toAdd, all.x = TRUE, sort = FALSE)
+	
+	# Remove rows of duplicated keys. This is particularly relevant for NMDBiotic files where the station variable has bee used, in which case removeRowsOfDuplicatedKeys selects only the first row (keeping only the first station information):
+	StoxBioticData <- removeRowsOfDuplicatedKeys(
+		StoxData = StoxData, 
+		stoxDataFormat = "Biotic"
+	)
 	
 	return(StoxData)
 }
@@ -698,7 +709,7 @@ createOrderKey <- function(x, split = "/") {
 		}
 		firstNonNA <- x[min(which(!is.na(x)))]
 	}
-	# If the first element is coercable to numierc, try converting the entire vector to numeric, and check that no NAs were generated:
+	# If the first element is coercible to numeric, try converting the entire vector to numeric, and check that no NAs were generated:
 	if(!is.na(suppressWarnings(as.numeric(x[1])))) {
 		numberOfNAs <- sum(is.na(x))
 		xnumeric <- suppressWarnings(as.numeric(x))
@@ -1003,10 +1014,17 @@ deparse_onestring <- function(...) {
 #' @param functionArgumentHierarchy The function argument hierarchy defined in the stoxFunctionAttributes.
 #' @param functionArguments A list of the arguments to the function (both function inputs and function parameters).
 #' @param return.only.names Logical: If TRUE return only the names of the arguments to show.
+#' @param ignore.condition Character: A vector of strings naming parameters to ignore in the hierarchy. Current use is "UseProcessData" to identify function inputs hidden by that parameter.
 #'
 #' @export
 #' 
-applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionArguments, return.only.names = TRUE) {
+applyFunctionArgumentHierarchy <- function(
+	functionArgumentHierarchy, 
+	functionArguments, 
+	return.only.names = TRUE, 
+	#ignore = "UseProcessData"
+	ignore.condition = NULL
+) {
 	
 	
 	# Support an expression at the top level:
@@ -1024,8 +1042,8 @@ applyFunctionArgumentHierarchy <- function(functionArgumentHierarchy, functionAr
 			# Loop through the occurrences of the argumentName in the functionArgumentHierarchy, applying &&:
 			hitsOr <- logical(length(atArgumentName))
 			for(ind in seq_along(atArgumentName)) {
-				# Loop through the conditions and set hitsAnd to TRUE if at least one condition is fullfilled:
-				conditionNames <- names(functionArgumentHierarchy[[atArgumentName[ind]]])
+				# Loop through the conditions (except the ones given by 'ignore.condition') and set hitsAnd to TRUE if at least one condition is fullfilled:
+				conditionNames <- setdiff(names(functionArgumentHierarchy[[atArgumentName[ind]]]), ignore.condition)
 				hitsAnd <- logical(length(conditionNames))
 				names(hitsAnd) <- conditionNames
 				for(conditionName in conditionNames) {

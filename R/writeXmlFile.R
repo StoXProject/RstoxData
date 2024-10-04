@@ -885,6 +885,7 @@ WriteBioticOrAcoustic <- function(Data, DataType, FileNames = character(), names
   
   Data <- createBioticOrAcousticData(data = Data, namespace = namespaces) 
   
+  
   #
   # write files
   #
@@ -973,6 +974,8 @@ createBioticOrAcousticData <- function(data = list(), namespace = character()) {
   
   return(data)
 }
+
+
 createBioticOrAcousticDataOne <- function(dataOne = list(), namespace = character()) {
   namespace <- getNamespace(namespace)
   
@@ -988,6 +991,8 @@ createBioticOrAcousticDataOne <- function(dataOne = list(), namespace = characte
   
   return(dataOne)
 }
+
+
 createOneTable <- function(tableName, data, namespace) {
   
   data <- data[[tableName]]
