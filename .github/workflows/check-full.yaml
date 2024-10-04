@@ -212,7 +212,7 @@ jobs:
       #### 4. Build the package source and binary files: ####
       #######################################################
       
-      - name: Build package source archive from branches develop, testing and master
+      - name: Build package source archive from branches develop, testing and master (on Linux for some reason)
         if: runner.os == 'Linux' && matrix.config.r == 'release' && github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'testing' || github.ref_name == 'develop')
         run: |
           pkgbuild::build(".", dest_path = ".", binary = FALSE)

@@ -377,7 +377,7 @@ firstPhase <- function(
             if(!is.null(firstPhaseTables[[dest]])) stop("Error")
             # Copy the columns:
             firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
-            # Uniquify, as splitting a table may produce dupicates, e.g. for multiple samples of the same species:
+            # Uniquify, as splitting a table may produce dupicates, e.g. for multiple samples of the same species. For multiple serialnumber for the same station see the use of removeRowsOfDuplicatedKeys() in StoxBiotic():
             firstPhaseTables[[dest]] <- unique(firstPhaseTables[[dest]])
         }
     }

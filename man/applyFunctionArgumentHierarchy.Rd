@@ -7,7 +7,8 @@
 applyFunctionArgumentHierarchy(
   functionArgumentHierarchy,
   functionArguments,
-  return.only.names = TRUE
+  return.only.names = TRUE,
+  ignore.condition = NULL
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ applyFunctionArgumentHierarchy(
 \item{functionArguments}{A list of the arguments to the function (both function inputs and function parameters).}
 
 \item{return.only.names}{Logical: If TRUE return only the names of the arguments to show.}
+
+\item{ignore.condition}{Character: A vector of strings naming parameters to ignore in the hierarchy. Current use is "UseProcessData" to identify function inputs hidden by that parameter.}
 }
 \description{
 Function to return the names of the arguments to show for a function:

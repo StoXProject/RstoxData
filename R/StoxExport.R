@@ -726,7 +726,9 @@ BioticData_NMDToICESBioticOne <- function(
 		HydrographicStationID = NA_character_,
 		# Direction is integer degrees: 
 		TowDirection = round(direction),
-		SpeedGround = NA_real_,
+		# Added vessel speed on 2024-09-20 for StoX 4.1.0:
+		#SpeedGround = NA_real_,
+		SpeedGround = vesselspeed,
 		SpeedWater = gearflow,
 		# Wind direction is integer degrees: 
 		WindDirection = winddirection,
@@ -934,11 +936,39 @@ changeClassOfNonNA <- function(name, classes, data) {
 			data[, c(name) := ..NAToInsert]
 		}
 		else {
-			data[, c(name) := get(paste("as", thisClass, sep = "."))(get(name))]
+			# Removed this by a special function that converts to integer after rounding to avoid problems like trunc(0.29 * 100) == 28:
+			# I.e., convertion from float to integer performs in the same way as trunc(), which has problems with floating numbers. For the fish lengths that are relevant we have the problem for the following values:
+			# int <- seq_len(150)
+			# d <- data.table::data.table(int = int, equalToFloat = trunc(int / 100 * 100) == int)
+			# subset(d, !equalToFloat)
+			#data[, c(name) := get(paste("as", thisClass, sep = "."))(get(name))]
+			# int equalToFloat
+			# <int>       <lgcl>
+			# 	1:    29        FALSE
+			# 2:    57        FALSE
+			# 3:    58        FALSE
+			# 4:   113        FALSE
+			# 5:   114        FALSE
+			# 6:   115        FALSE
+			# 7:   116        FALSE
+			# So the problem is particularly for fish of length 29 cm, which were truncated to 28 cm when submitting to ICES:
+			data[, c(name) := get(getConversionFunction(thisClass))(get(name))]
 		}
 	}
 }
 
+
+getConversionFunction <- function(class) {
+	atInteger <- class %in% "integer"
+	out <- paste("as", class, sep = ".")
+	out[atInteger] <- "asIntegerAfterRound"
+	return(out)
+}
+
+
+asIntegerAfterRound <- function(x) {
+	as.integer(round(x))
+}
 
 #' Write ICESBiotic to CSV fille
 #'
