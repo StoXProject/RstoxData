@@ -966,8 +966,16 @@ getConversionFunction <- function(class) {
 }
 
 
-asIntegerAfterRound <- function(x) {
-	as.integer(round(x))
+asIntegerAfterRound <- function(x, prec = .Machine$double.eps) {
+	# Convert to integer:
+	output <- as.integer(x)
+	# Find values which differ to the integer value by less than the input precision, and round these off before converting to integer to avoid occational shifts in integer value due to floating point representation (e.g. as.integer(0.29 * 100) == 28):
+	atSmallDiff <- which(abs(x - output) <= prec)
+	
+	# Convert to integer, but for values that differ to the integer value by more than 
+	output[atSmallDiff] <- as.integer(round(x[atSmallDiff]))
+	
+	return(output)
 }
 
 #' Write ICESBiotic to CSV fille
