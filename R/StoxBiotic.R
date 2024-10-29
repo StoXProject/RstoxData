@@ -72,6 +72,9 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 	
 	# Rbind for each StoxBiotic table:
 	StoxBioticData <- rbindlist_StoxFormat(StoxBioticData)
+	
+	# Temporarily remove the Prey tables:
+	StoxBioticData <- StoxBioticData[!startsWith(names(StoxBioticData), "Prey")]
     
 	return(StoxBioticData)
 }
