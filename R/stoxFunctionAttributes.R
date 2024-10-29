@@ -1,34 +1,52 @@
-getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
+getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData, VariableName) {
+	
+	# Function to get the names of a table if that table contains certain variables:
+	getNamesIfVariableIsPresent <- function(table, requiredVariableNames) {
+		output <- names(table)
+		if(!requiredVariableNames %in% output) {
+			output <- NULL
+		}
+		return(output)
+	}
+	
+	# Get the variables:
 	if(!missing(BioticData)) {
-		sort(unique(unlist(lapply(BioticData, function(x) lapply(x, names)))))
+		output <- lapply(BioticData, function(x) lapply(x, getNamesIfVariableIsPresent, requiredVariableNames = VariableName))
 	}
 	else if(!missing(StoxBioticData)) {
-		sort(unique(unlist(lapply(StoxBioticData, names))))
+		output <- lapply(StoxBioticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESBioticData)) {
-		sort(unique(unlist(lapply(ICESBioticData, names))))
+		output <- lapply(ICESBioticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESDatrasData)) {
-		sort(unique(unlist(lapply(ICESDatrasData, names))))
+		output <- lapply(ICESDatrasData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESDatsuscData)) {
-		sort(unique(unlist(lapply(ICESDatsuscData, names))))
+		output <- lapply(ICESDatsuscData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
 	else if(!missing(AcousticData)) {
-		sort(unique(unlist(lapply(AcousticData, function(x) lapply(x, names)))))
+		output <- lapply(AcousticData, function(x) lapply(x, getNamesIfVariableIsPresent, requiredVariableNames = VariableName))
 	}
 	else if(!missing(StoxAcousticData)) {
-		sort(unique(unlist(lapply(StoxAcousticData, names))))
+		output <- lapply(StoxAcousticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESAcousticData)) {
-		sort(unique(unlist(lapply(ICESAcousticData, names))))
+		output <- lapply(ICESAcousticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
 	else if(!missing(LandingData)) {
-		sort(unique(unlist(lapply(LandingData, function(x) lapply(x, names)))))
+		output <- lapply(LandingData, function(x) lapply(x, getNamesIfVariableIsPresent, requiredVariableNames = VariableName))
 	}
 	else if(!missing(StoxLandingData)) {
-		sort(unique(unlist(lapply(StoxLandingData, names))))
+		output <- lapply(StoxLandingData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
+	
+	
+	output <- sort(unique(unlist(output)))
+	output <- setdiff(output, VariableName)
+	
+	return(output)
+	
 	#else {
 	#	stop("Any of BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, AcousticData, StoxAcousticData, ICESAcousticData, Land#ingData and StoxLandingData must be given.")
 	#}
@@ -1166,12 +1184,12 @@ processPropertyFormats <- list(
 		possibleValues = getVariableNamesStoxData, 
 		variableTypes = "character"
 	), 
-	conditionalVariableNames_Copy = list(
-		class = "vector", 
-		title = "Select one variable to copy", 
-		possibleValues = getVariableNamesStoxData, 
-		variableTypes = "character"
-	),
+	#conditionalVariableNames_Copy = list(
+	#	class = "vector", 
+	#	title = "Select one variable to copy", 
+	#	possibleValues = getVariableNamesStoxData, 
+	#	variableTypes = "character"
+	#),
 	
 	roundingTable = list(
 		class = "table", 
