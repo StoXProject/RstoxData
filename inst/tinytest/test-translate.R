@@ -14,7 +14,7 @@ Translation_SpeciesCategory <- RstoxData::DefineTranslation(
 )
 exampleDataTranslated_SpeciesCategory <- RstoxData::TranslateStoxBiotic(StoxBioticData = exampleData, TranslationDefinition = "FunctionInput", Translation = Translation_SpeciesCategory)
 
-expect_equal(which(exampleDataTranslated_SpeciesCategory$SpeciesCategory$SpeciesCategory == "HER"), c(1, 11))
+expect_equal(sum(exampleDataTranslated_SpeciesCategory$SpeciesCategory$SpeciesCategory == "HER"), 2)
 
 # Translate IndividualSex to Male if IndividualTotalLength > 20. All IndividualSex are NA, so we need to use a function both for IndividualSex and for IndividualTotalLength:
 TranslationTable_IndividualSex = data.table::data.table(

@@ -153,26 +153,6 @@ NULL
 #' IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab "F" \tab "F" if \code{sex = 1}, "M" if \code{sex = 2} \tab \code{IndividualSex} \cr
 #' }
 #' 
-#' 
-#' \bold{PreySpeciesCategory level}:
-#' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
-#' PreySpeciesCategoryKey \tab Key of the PreySpeciesCategory level \tab None \tab Character \tab "85258" \tab \code{preycategory} (missing (NA) for NMDBiotic 1.1 and 1.4) \tab Missing (NA) \cr
-#' PreySpeciesCategory \tab The species category \tab None \tab Character \tab "Calanoida" \tab Same as PreySpeciesCategoryKey. Can be translated. \tab Missing (NA) \cr
-#' }
-#' 
-#' 
-#' \bold{PreySample level}:
-#' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
-#' PreySampleKey \tab Key of the PreySample level \tab None \tab Character \tab "1" \tab \code{preysampleid} (missing (NA) for NMDBiotic 1.1 and 1.4) \tab Missing (NA) \cr          
-#' PreySample \tab Unique PreySample identifier \tab None \tab Character \tab "2021105-1-2-sild'G03/161722.G03/126417/Clupea harengus-1-2-85258-1" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey-PreySpeciesCategoryKey-PreySampleKey} (missing (NA) for NMDBiotic 1.1 and 1.4) \tab Missing (NA) \cr
-#' PreyCatchFractionWeight \tab Total weight of the catch for the PreySpeciesCategory and sub category (e.g., fractions for different digestion) \tab mg \tab Numeric \tab 12.3 \tab \code{totalweight} (taking \code{LengthCode.Biology} into account) (missing (NA) for NMDBiotic 1.1 and 1.4) \tab Missing (NA) \cr
-#' PreyCatchFractionWeightResolution \tab Resolution of PreyCatchFractionWeight \tab mg \tab Numeric \tab 0.001 \tab \code{weightresolution} converted to mg (missing (NA) for NMDBiotic 1.1 and 1.4) \tab Missing (NA) \cr
-#' PreyCatchFractionNumber \tab Total number of individual prey of the PreySpeciesCategory and sub category (e.g., fractions for different digestion) \tab individuals \tab Integer \tab 4 \tab \code{totalcount} (missing (NA) for NMDBiotic 1.1 and 1.4) \tab Missing (NA) \cr     
-#' }
-#' 
-#' 
 #' @name StoxBioticFormat
 #' 
 NULL

@@ -438,7 +438,19 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 		if(variableToTranslate %in% names(table)) {
 			varsToMatch <- setdiff(names(translationListOne), "NewValue")
 			matches <- lapply(varsToMatch, matchVariable, list = translationListOne, table = table)
+			
+			# Any empty matches indicate that the variable of interest is not present, and triggers a warning and no match:
+			emptyMatches <- lengths(matches) == 0
+			if(any(emptyMatches)) {
+				warning("StoX: The following variables are used in the translation but are not present in the table. This results in no translation: ", paste(varsToMatch[emptyMatches], collapse = ", "), ".")
+				matches[emptyMatches] <- rep(list(FALSE), sum(emptyMatches))
+			}
+			
 			matches <- apply(do.call(cbind, matches), 1, all)
+			
+			if(!any(matches)) {
+				warning("StoX: No values were translated. Did you spell the values of the variable to translate correctly?")
+			}
 			
 			### # Change the type after matching and before translating to avoid type conversion warninigs:
 			### if(!PreserveClass) {

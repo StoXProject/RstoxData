@@ -4,7 +4,7 @@
 \alias{setorderv_numeric}
 \title{Order a data.table (by reference) by interpreting characters as numeric if possible}
 \usage{
-setorderv_numeric(dataOne, by = NULL, key = NULL, ...)
+setorderv_numeric(dataOne, by = NULL, key = NULL, split = "/")
 }
 \arguments{
 \item{dataOne}{A data.table.}
@@ -13,7 +13,7 @@ setorderv_numeric(dataOne, by = NULL, key = NULL, ...)
 
 \item{key}{If given and \code{by} is empty, order by the columns with names ending with \code{key}.}
 
-\item{...}{Passed on to \code{\link[data.table]{setorderv}}}
+\item{split}{Character: A vector of single character to split by. The default c("-", "/") splits between StoX keys and within StoX keys.}
 }
 \description{
 Order a data.table (by reference) by interpreting characters as numeric if possible

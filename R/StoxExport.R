@@ -795,6 +795,7 @@ BioticData_NMDToICESBioticOne <- function(
 		SpeciesCode = aphia,
 		SpeciesCategory = catchpartnumber,
 		StockCode = NA_character_,
+		GeneticPopulationCode = NA_character_,
 		FishID = specimenid,
 		#LengthCode = "mm", 
 		LengthCode = getLengthCodeICES(lengthresolution, format = "ICESBiotic"), 

@@ -639,7 +639,8 @@ findVariablesMathcinigVocabularyOne <- function(vocabularyOne, data) {
 #' @export
 #' 
 orderRowsByKeys <- function(data) {
-	lapply(data, setorderv_numeric, key = "Key")
+	# StoX keys are concatenated only by "/", whereas IDs are concatenated keys by "-":
+	lapply(data, setorderv_numeric, key = "Key", split = "/")
 }
 
 #' Order a data.table (by reference) by interpreting characters as numeric if possible
@@ -647,11 +648,12 @@ orderRowsByKeys <- function(data) {
 #' @param dataOne A data.table.
 #' @param by Order by the given columns.
 #' @param key If given and \code{by} is empty, order by the columns with names ending with \code{key}.
-#' @param ... Passed on to \code{\link[data.table]{setorderv}}
+#' @param split Character: A vector of single character to split by. The default c("-", "/") splits between StoX keys and within StoX keys. 
 #'
 #' @export
 #' 
-setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
+setorderv_numeric <- function(dataOne, by = NULL, key = NULL, split = "/") {
+#setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
 	
 	# Locate keys:
 	if(!length(by)) {
@@ -667,10 +669,11 @@ setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
 		orderKeys <- paste0(by, "OrderedAfterSplitting")
 		
 		# Create keys which are converted to ranks, splitting first and then treating individual elements as numbers if possible:
-		dataOne[, (orderKeys) := lapply(.SD, createOrderKey), .SDcols = by]
+		dataOne[, (orderKeys) := lapply(.SD, createOrderKey, split = split), .SDcols = by]
 		
 		# Order the rows:
-		data.table::setorderv(dataOne, orderKeys, ...)
+		# 2024-10-28: Change to sort out sorting:
+		data.table::setorderv(dataOne, orderKeys, na.last = TRUE)
 		
 		# Remove the orderKeys:
 		dataOne[, (orderKeys) := NULL]
@@ -689,7 +692,7 @@ addNAs <- function(x, areNAs) {
 	return(x)
 }
 
-#' Convert a vector to an integer vector where individual string elelents at interpreted as numeric if possible.
+#' Convert a vector to an integer vector where individual string elements at interpreted as numeric if possible.
 #'
 #' @param x A vector.
 #' @param split A character to split strings by.
@@ -727,7 +730,11 @@ createOrderKey <- function(x, split = "/") {
 	}
 	
 	# Split the vector by the 'split' parameter:
-	splitted <- strsplit(x, split, fixed = TRUE)
+	splitted <- x
+	for(thisSplit in split) {
+		splitted <- lapply(splitted, function(x) unlist(strsplit(x, thisSplit, fixed = TRUE)))
+	}
+	#splitted <- strsplit(x, split, fixed = TRUE)
 	
 	# Check that all have the same number of elements, that is the same number of splits:
 	if(!all(lengths(splitted) == length(splitted[[1]]))) {
@@ -755,7 +762,7 @@ createOrderKey <- function(x, split = "/") {
 	# This sorting (en_US_POSIX) is the same that data.table uses in setorder/setorderv(), which uses the ICU C locale (https://icu.unicode.org/design/locale/root):
 	splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "en_US_POSIX")))]
 	
-	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
+	# Count the maximum number of digits for each column, and multiply by the cumulative number of digits:
 	numberOfDigits <- splittedDT[, lapply(.SD, max)]
 	numberOfDigits <- nchar(numberOfDigits)
 	exponent <- rev(c(0, cumsum(rev(numberOfDigits))[ -length(numberOfDigits)]))
@@ -775,107 +782,13 @@ createOrderKey <- function(x, split = "/") {
 }
 
 
-createOrderKeyNewWithoutError <- function(x, split = "/") {
-	
-	# Remove NAs and add at the end:
-	areNAs <- is.na(x)
-	# Use c() here to rid off attributes:
-	x <- c(stats::na.omit(x))
-	
-	# Split the keys:
-	if(!is.character(x)) {
-		return(addNAs(x, areNAs))
-	}
-	
-	# Find the first non-NA:
-	firstNonNA <- x[1]
-	if(is.na(firstNonNA)) {
-		firstNonNA <- x[min(which(!is.na(x)))]
-	}
-	
-	
-	# If the first non-NA element is coercable to numierc, try converting the entire vector to numeric, and check that no NAs were generated:
-	if(!is.na(suppressWarnings(as.numeric(firstNonNA)))) {
-		numberOfNAs <- sum(is.na(x))
-		xnumeric <- suppressWarnings(as.numeric(x))
-		# If there are NAs created, it signals that the vector is not coerable to numeric:
-		if(sum(is.na(xnumeric)) > numberOfNAs) {
-			return(addNAs(x, areNAs))
-		}
-		else {
-			return(addNAs(xnumeric, areNAs))
-		}
-	}
-	
-	# Split by the 'split' argument:
-	containsSplit <- sapply(split, grepl, firstNonNA)
-	split <- split[containsSplit]
-	# If the vector does not contain any of the characters to split by, return unchanegd:
-	if(!any(containsSplit)) {
-		return(addNAs(x, areNAs))
-	}
-	
-	# Split the vector by the 'split' parameter:
-	if(length(split) == 1) {
-		splitted <- strsplit(x, split, fixed = TRUE)
-	}
-	else if(length(split) > 1) {
-		splitted <- strsplit(x, split[1], fixed = TRUE)
-		for(ind in seq(2, length(split))) {
-			splitted <- lapply(splitted, function(x) unlist(strsplit(x, split[ind], fixed = TRUE)))
-		}
-	}
-	else {
-		stop("'split' must be given")
-	}
-	
-	# Check that all have the same number of elements, that is the same number of splits:
-	if(!all(lengths(splitted) == length(splitted[[1]]))) {
-		return(addNAs(x, areNAs))
-	}
-	
-	# Create a data.table of the splitted elements and get the order of these:
-	splittedDT <- data.table::rbindlist(lapply(splitted, as.list))
-	suppressWarnings(splittedDT[, names(splittedDT) := lapply(.SD, as.numeric_IfPossible)])
-	
-	# Only accept if all elements can be converted to numeric:
-	#if(any(is.na(splittedDT))) {
-	
-	# Acccpet if any of the values are not NA:
-	if(all(is.na(splittedDT))) {
-		return(addNAs(x, areNAs))
-	}
-	
-	# Convert to integer ranks:
-	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, sort(unique(y))))]
-	# Replicate data.table's soring which happend in C-locale (see ?data.table::setorderv):
-	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringi::stri_sort(unique(y), locale = "C")))]
-	#splittedDT[, names(splittedDT) := lapply(.SD, function(y) match(y, stringr::str_sort(unique(y), locale = "C")))]
-	splittedDT[, names(splittedDT) := lapply(.SD, function(y) if(is.numeric(y)) rank(y) else match(y, stringi::stri_sort(unique(y), locale = "en_US_POSIX")))]
-	
-	# Count the maximum number of digits for each column, and multiply by the cummulative number of digits:
-	numberOfDigits <- splittedDT[, lapply(.SD, max)]
-	numberOfDigits <- nchar(numberOfDigits)
-	exponent <- rev(c(0, cumsum(rev(numberOfDigits))[ -length(numberOfDigits)]))
-	names(exponent) <- names(splittedDT)
-	for(name in names(splittedDT)) {
-		splittedDT[, (name) := get(name) * 10^(exponent[[name]])]
-	}
-	
-	orderKey <- rowSums(splittedDT)
-	
-	#orderOfSplitted <- do.call(order, splittedDT)
-	## Match with a sequence to create integers used as order key:
-	#orderKey <- match(seq_along(x), orderOfSplitted)
-	#
-	
-	
-	return(addNAs(orderKey, areNAs))
-}
 
 as.numeric_IfPossible <- function(x) {
+	# If any missing values are introduced, keep the original:
 	num <- as.numeric(x)
-	if(all(is.na(num))) {
+	#if(all(is.na(num))) {
+	# 2024-10-28: Change to sort out sorting:
+	if(any(is.na(num) & !is.na(x))) {
 		return(x)
 	}
 	else {
