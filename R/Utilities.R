@@ -725,7 +725,7 @@ createOrderKey <- function(x, split = "/") {
 	}
 	
 	# Split by the 'split' argument:
-	if(!grepl(split, firstNonNA)) {
+	if(!any(sapply(split, grepl, firstNonNA))) {
 		return(x)
 	}
 	

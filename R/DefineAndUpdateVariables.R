@@ -277,10 +277,6 @@ translateVariables <- function(
 		translationList =  translationList
 	))
 	
-	#if(any(someButNotAllPresent)) {
-	#	warning("StoX: The following tables contain some but not all of the variables of the Translation: ", paste0(names(data)[someButNotAllPresent], collapse = ", "))
-	#}
-		
 	# Run the conversion for each table of the data:
 	lapplyToStoxData(
 		data, 
@@ -294,6 +290,24 @@ translateVariables <- function(
 
 # Function to translate one table:
 translateOneTable <- function(table, translationList, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
+	
+	# If the variable to translate is present in the table, check whether the conditional variables are present in the table:
+	variableToTranslate <- sapply(translationList, function(x) names(x)[1])
+	variableToTranslateIsPresent <- variableToTranslate %in% names(table)
+	
+	# Abort if the variableToTranslate are not present in the table:
+	if(!any(variableToTranslateIsPresent)) {
+		# This return value is currently not used:
+		return(FALSE)
+	}
+	
+	# List the conditional variables and check whether those linked to the variables present in the table are also present:
+	conditionalVariables <- sapply(translationList, function(x) names(x)[-c(1, 2)])
+	conditionalVariablesNotPresentInTable <- setdiff(unlist(conditionalVariables[variableToTranslateIsPresent]), names(table))
+	if(length(conditionalVariablesNotPresentInTable)) {
+		warning("StoX: The following conditional variables are not present in the table: ", paste(conditionalVariablesNotPresentInTable, collapse = ", "), ".")
+	}
+	
 	
 	# Apply the translation, one line at the time:
 	matches <- lapply(
@@ -320,6 +334,17 @@ translateOneTable <- function(table, translationList, translate.keys = FALSE, Pr
 		if(length(matches[[ind]])) {
 			variableToTranslate <- names(translationList[[ind]])[1]
 			replacement <- translationList[[ind]]$NewValue
+			
+			# Compare classes, and change class of the replacement of different to capture the warning but avoid data.table warning "Coercing --- RHS to --- to match the type of column..."
+			variableToTranslate_class <- class(table[[variableToTranslate]])
+			replacement_class <- class(replacement)
+			
+			replacement_original <- replacement
+			suppressWarnings(class(replacement) <- variableToTranslate_class)
+			if(is.na(replacement) && !is.na(replacement_original)) {
+				warning("StoX: The class of the NewValue of the translation table (", replacement_class, ": ", replacement_original, ") does not match the class of the ", variableToTranslate, " (", variableToTranslate_class, "). Missing value (NA) introduced.")
+			}
+			
 			table[matches[[ind]], eval(variableToTranslate) := ..replacement]
 		}
 	}
@@ -414,13 +439,7 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 				table = table
 			)
 			
-			### translationListOneConverted <- convertClassToExistingOneElement(
-			### 	list = translationListOne, 
-			### 	x = table, 
-			### 	element = "NewValue"
-			### )
-			
-			# Check whether the NewValue has changed, and if it has changegd to NA, report a warning:
+			# Check whether the NewValue has changed, and if it has changed to NA, report a warning:
 			if(!identical(translationListOneConverted, translationListOne)) {
 				
 				atNAAndDiffering <- is.na(translationListOne) & !is.na(translationListOneConverted)
@@ -433,7 +452,6 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 		}
 		
 		
-		
 		# Replace by the new value:
 		if(variableToTranslate %in% names(table)) {
 			varsToMatch <- setdiff(names(translationListOne), "NewValue")
@@ -442,24 +460,12 @@ translateOneTranslationOneTable <- function(translationListOne, table, translate
 			# Any empty matches indicate that the variable of interest is not present, and triggers a warning and no match:
 			emptyMatches <- lengths(matches) == 0
 			if(any(emptyMatches)) {
-				warning("StoX: The following variables are used in the translation but are not present in the table. This results in no translation: ", paste(varsToMatch[emptyMatches], collapse = ", "), ".")
+				#warning("StoX: The following variables are used in the translation but are not present in the table. This results in no translation: ", paste(varsToMatch[emptyMatches], collapse = ", "), ".")
 				matches[emptyMatches] <- rep(list(FALSE), sum(emptyMatches))
 			}
 			
 			matches <- apply(do.call(cbind, matches), 1, all)
 			
-			if(!any(matches)) {
-				warning("StoX: No values were translated. Did you spell the values of the variable to translate correctly?")
-			}
-			
-			### # Change the type after matching and before translating to avoid type conversion warninigs:
-			### if(!PreserveClass) {
-			### 	setColumnClasses(table, structure(list(class(translationListOne$NewValue)), names = variableToTranslate))
-			### }
-			### 
-			### # Replace:
-			### replacement <- translationListOne$NewValue
-			### table[matches, eval(variableToTranslate) := ..replacement]
 			
 			return(matches)
 		}
