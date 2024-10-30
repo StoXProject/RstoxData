@@ -3,7 +3,7 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	# Function to get the names of a table if that table contains certain variables:
 	getNamesIfVariableIsPresent <- function(table, requiredVariableNames) {
 		output <- names(table)
-		if(!requiredVariableNames %in% output) {
+		if(length(requiredVariableNames) && !requiredVariableNames %in% output) {
 			output <- NULL
 		}
 		return(output)
