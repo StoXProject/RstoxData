@@ -1,9 +1,15 @@
-# RstoxData v2.0.1-9005  (2024-10-22)
+# RstoxData v2.0.1-9006  (2024-10-30)
+* Fixed warnings in translateOneTable() so that a warning is given if the variable to translate is not present in any table, and if any conditional variables are not present in a table to be translated.
+* Applied 'release' and 'oldrel' in the check-full.yaml, securing that binaries are built for the current and previous R minor versjon.
+
+
+# RstoxData v2.0.1-9005  (2024-10-28)
 * Fixed bug in as.numeric_IfPossible() used by setorderv_numeric() and orderRowsByKeys() where individual elements could be set to NA in a vector unless all of the values were NA after conversion to numeric. In the new version all of the values must be convertible to numeric for a numeric vector to be returned. In addition setorderv_numeric() has gained the parameter split, which is used in RstoxBase::formatOutput() as split = c("-", "/") to split both by the within StoX key separator and the between StoX kye separator used in IDs such as Sample and Individual. This bugfix may result in different sorting of StoxBiotic, particularly for NMDBiotic data with herring coded as catchcategory 161722.G03, 161722.G05 or 161722.G07.
 * Changed the drop down list of ConditionalVariableNames in Translate functions to only include the variables in the table of the VariableName (and also excluding the VariableName). Previously all variables of the entire data were listed, which was confusing since only those present in the relevant table could be used.
 * Changed the behavior of Translate functions when a variable that is not present in the table is used as a conditional variable. Before this conditional variable was effectively ignored, but in the new version the behavior is to give a warning and not perform any translation.
 * Added a warning if no values are translated in Translate functions.
-* Added the new GeneticPopulationCode to ICESBiotic(). 
+* Added the new GeneticPopulationCode to ICESBiotic().
+* Temporarily hiding Prey tables in StoxBiotic().
 
 # RstoxData v2.0.1-9004  (2024-10-08)
 * Fixed a bug where certain values of BiologyLengthCode were shifted one integer value down in ICESBiotic(). The bug is related to floating point precision which causes some values to be slightly lower than the corresponding integer after calculations. In R one example is format(29 / 100 * 100, digits = 20) = "28.999999999999996447", which results in 28 when converted to integer. The following values are affected:

@@ -26,18 +26,18 @@ jobs:
         config:
           # Latest macOS will use the big-sur-arm64 folder when deploying to the drat repo:
           - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-latest,   r: '4.3',  pkgext: '.tgz'}
+          - {os: macOS-latest,   r: 'oldrel',  pkgext: '.tgz'}
           
           # macOS-13 will use the big-sur-x86_64 folder when deploying to the drat repo:
           - {os: macOS-13,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-13,   r: '4.3',  pkgext: '.tgz'}
+          - {os: macOS-13,   r: 'oldrel',  pkgext: '.tgz'}
           
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
-          - {os: windows-latest, r: '4.3',  pkgext: '.zip'}
+          - {os: windows-latest, r: 'oldrel',  pkgext: '.zip'}
           
           - {os: ubuntu-latest,  r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-22.04,   r: '4.3',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
-          - {os: ubuntu-22.04,   r: '4.2',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-22.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
+          - {os: ubuntu-22.04,   r: 'oldrel-1',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
     
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -50,7 +50,7 @@ jobs:
       #### 1. Setup: ####
       ###################
       
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Prepare for deployment at push
         if: github.event_name == 'push'
@@ -214,7 +214,7 @@ jobs:
           system(paste0("PKG_FREL=", Sys.getenv("PKG_FILE"), " >> ", Sys.getenv("GITHUB_ENV")))
         shell: Rscript {0}
 
-      - name: Build package binary archive from branches develop, testing and master for Windows and macOS (this builds also on matrix.config.r = release, which can or can not be a duplicate)
+      - name: Build package binary archive from branches develop, testing and master for Windows and macOS
         if: (runner.os == 'Windows' || runner.os == 'macOS') && github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'testing' || github.ref_name == 'develop')
         run: |
           pkgbuild::build(".", dest_path = ".", binary = TRUE)
@@ -231,9 +231,9 @@ jobs:
       #### 5. Deploy to the drat repos: ####
       ######################################
       
-      ## 5a. Upload to the official (DRAT) repo, but only from the master branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
+      ## 5a. Upload to the official (DRAT) repo, but only from the master branch:
       - name: Upload to the official (DRAT) repo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'master'
+        if: ( (runner.os == 'Windows') || (runner.os == 'macOS') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'master'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
@@ -241,9 +241,9 @@ jobs:
         shell: bash
 
 
-      ## 5b. Upload to the (DRAT) testingRepo, but only from the testing branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
+      ## 5b. Upload to the (DRAT) testingRepo, but only from the testing branch:
       - name: Upload to the testing (DRAT) repo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'testing'
+        if: ( (runner.os == 'Windows') || (runner.os == 'macOS') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'testing'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
@@ -251,9 +251,9 @@ jobs:
         shell: bash
 
 
-      ## 5c. Upload to the (DRAT) unstableRepo, but only from the develop branch. Here we skip the matrix.config.r = release, as a new StoX release should be ready shortly after each R minor release and listed specifically in the matrix.config:
+      ## 5c. Upload to the (DRAT) unstableRepo, but only from the develop branch:
       - name: Upload to the unstable (DRAT) repo
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'develop'
+        if: ( (runner.os == 'Windows') || (runner.os == 'macOS') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'develop'
         env:
           BUILD_NUMBER: ${{ github.sha  }}
           DRAT_DEPLOY_TOKEN: ${{ secrets.DRAT_DEPLOY_TOKEN }}
@@ -267,7 +267,7 @@ jobs:
       ###############################
       
       - name: Create release on GitHub and upload files for testing branch
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'testing'
+        if: ( (runner.os == 'Windows') || (runner.os == 'macOS') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'testing'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -278,7 +278,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release on GitHub and upload files for master branch
-        if: ( (runner.os == 'Windows' && matrix.config.r != 'release') || (runner.os == 'macOS' && matrix.config.r != 'release') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'master'
+        if: ( (runner.os == 'Windows') || (runner.os == 'macOS') || (runner.os == 'Linux' && matrix.config.r == 'release') ) && github.event_name == 'push' && github.ref_name == 'master'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
