@@ -1,4 +1,8 @@
 # RstoxData v2.0.1-9006  (2024-10-30)
+* Fixed bug in asIntegerAfterRound() used when setting class of ICES data to avoid floating point to integer errors. The bug appeared when the input was character (but convertible to numeric). 
+
+
+# RstoxData v2.0.1-9006  (2024-10-30)
 * Fixed warnings in translateOneTable() so that a warning is given if the variable to translate is not present in any table, and if any conditional variables are not present in a table to be translated.
 * Applied 'release' and 'oldrel' in the check-full.yaml, securing that binaries are built for the current and previous R minor versjon.
 
