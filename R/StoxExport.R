@@ -968,15 +968,24 @@ getConversionFunction <- function(class) {
 
 
 asIntegerAfterRound <- function(x, prec = .Machine$double.eps) {
+	# This operation requires that the input can be represented as numeric, so we test that first by observing whether the number of missing values increases:
+	x_numeric <- as.numeric(x)
+	numberOfNAs <- sum(is.na(x))
+	numberOfNAs_numeric <- sum(is.na(x_numeric))
+	if(numberOfNAs_numeric > numberOfNAs) {
+		warning("StoX: NAs introduced when trying to convert to integer.")
+		return(as.integer)
+	}
+	
 	# Convert to integer:
-	output <- as.integer(x)
-	# Find values which differ to the integer value by less than the input precision, and round these off before converting to integer to avoid occational shifts in integer value due to floating point representation (e.g. as.integer(0.29 * 100) == 28):
-	atSmallDiff <- which(abs(x - output) <= prec)
+	x_integer <- as.integer(x)
+	# Find values which differ to the integer value by less than the input precision, and round these off before converting to integer to avoid occasional shifts in integer value due to floating point representation (e.g. as.integer(0.29 * 100) == 28):
+	atSmallDiff <- which(abs(x_numeric - x_integer) <= prec)
 	
 	# Convert to integer, but for values that differ to the integer value by more than 
-	output[atSmallDiff] <- as.integer(round(x[atSmallDiff]))
+	x_integer[atSmallDiff] <- as.integer(round(x_numeric[atSmallDiff]))
 	
-	return(output)
+	return(x_integer)
 }
 
 #' Write ICESBiotic to CSV fille
