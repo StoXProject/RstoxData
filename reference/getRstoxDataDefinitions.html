@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -87,76 +87,86 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">getRstoxDataDefinitions</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             dataType          variableName     quantity         unit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt;                &lt;char&gt;       &lt;char&gt;       &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1: StoxAcousticData             CruiseKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2: StoxAcousticData                Cruise           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3: StoxAcousticData              Platform           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4: StoxAcousticData                LogKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5: StoxAcousticData                   Log           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6: StoxAcousticData                  EDSU           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7: StoxAcousticData              DateTime     datetime      ISO8601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8: StoxAcousticData             Longitude        angle  degree east</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9: StoxAcousticData              Latitude        angle degree north</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10: StoxAcousticData             LogOrigin           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11: StoxAcousticData            Longitude2        angle  degree east</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12: StoxAcousticData             Latitude2        angle degree north</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13: StoxAcousticData            LogOrigin2           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14: StoxAcousticData           LogDistance       length          nmi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15: StoxAcousticData           LogDuration         time            s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16: StoxAcousticData  EffectiveLogDistance       length          nmi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17: StoxAcousticData           BottomDepth       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18: StoxAcousticData               BeamKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19: StoxAcousticData                  Beam           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20: StoxAcousticData             Frequency    frequency        hertz</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21: StoxAcousticData   AcousticCategoryKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22: StoxAcousticData      AcousticCategory           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23: StoxAcousticData   ChannelReferenceKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24: StoxAcousticData  ChannelReferenceType           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25: StoxAcousticData ChannelReferenceDepth       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26: StoxAcousticData  ChannelReferenceTilt        angle       degree</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27: StoxAcousticData               NASCKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28: StoxAcousticData               Channel           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29: StoxAcousticData       MaxChannelRange       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30: StoxAcousticData       MinChannelRange       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31: StoxAcousticData                  NASC         NASC    m^2/nmi^2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32:   StoxBioticData             CruiseKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33:   StoxBioticData                Cruise           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34:   StoxBioticData              Platform           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35:   StoxBioticData            StationKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36:   StoxBioticData               Station           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37:   StoxBioticData         CatchPlatform           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38:   StoxBioticData              DateTime     datetime      ISO8601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39:   StoxBioticData             Longitude        angle  degree east</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40:   StoxBioticData              Latitude        angle degree north</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41:   StoxBioticData           BottomDepth       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42:   StoxBioticData               HaulKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43:   StoxBioticData                  Haul           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44:   StoxBioticData                  Gear           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45:   StoxBioticData           TowDistance       length          nmi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46:   StoxBioticData  EffectiveTowDistance       length          nmi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47:   StoxBioticData          MinHaulDepth       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48:   StoxBioticData          MaxHaulDepth       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49:   StoxBioticData    VerticalNetOpening       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50:   StoxBioticData  HorizontalNetOpening lengthlength            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51:   StoxBioticData       TrawlDoorSpread       length            m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52:   StoxBioticData    SpeciesCategoryKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53:   StoxBioticData       SpeciesCategory           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54:   StoxBioticData             SampleKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55:   StoxBioticData                Sample           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56:   StoxBioticData   CatchFractionWeight         mass           kg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57:   StoxBioticData   CatchFractionNumber  cardinality  individuals</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58:   StoxBioticData          SampleWeight         mass           kg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59:   StoxBioticData          SampleNumber  cardinality  individuals</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60:   StoxBioticData         IndividualKey           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61:   StoxBioticData            Individual           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62:   StoxBioticData IndividualRoundWeight         mass            g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63:   StoxBioticData IndividualTotalLength       length           cm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64:   StoxBioticData      LengthResolution       length           cm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65:   StoxBioticData     WeightMeasurement           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66:   StoxBioticData         IndividualAge          age         year</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67:   StoxBioticData         IndividualSex           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             dataType          variableName     quantity         unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             dataType              variableName     quantity         unit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt;                    &lt;char&gt;       &lt;char&gt;       &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1: StoxAcousticData                 CruiseKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2: StoxAcousticData                    Cruise           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3: StoxAcousticData                  Platform           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4: StoxAcousticData                    LogKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5: StoxAcousticData                       Log           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6: StoxAcousticData                      EDSU           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7: StoxAcousticData                  DateTime     datetime      ISO8601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8: StoxAcousticData                 Longitude        angle  degree east</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9: StoxAcousticData                  Latitude        angle degree north</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10: StoxAcousticData                 LogOrigin           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11: StoxAcousticData                Longitude2        angle  degree east</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12: StoxAcousticData                 Latitude2        angle degree north</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13: StoxAcousticData                LogOrigin2           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14: StoxAcousticData               LogDistance       length          nmi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15: StoxAcousticData               LogDuration         time            s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16: StoxAcousticData      EffectiveLogDistance       length          nmi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17: StoxAcousticData               BottomDepth       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18: StoxAcousticData                   BeamKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19: StoxAcousticData                      Beam           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20: StoxAcousticData                 Frequency    frequency        hertz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21: StoxAcousticData       AcousticCategoryKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22: StoxAcousticData          AcousticCategory           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23: StoxAcousticData       ChannelReferenceKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24: StoxAcousticData      ChannelReferenceType           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25: StoxAcousticData     ChannelReferenceDepth       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26: StoxAcousticData      ChannelReferenceTilt        angle       degree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27: StoxAcousticData                   NASCKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28: StoxAcousticData                   Channel           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29: StoxAcousticData           MaxChannelRange       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: StoxAcousticData           MinChannelRange       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31: StoxAcousticData                      NASC         NASC    m^2/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32:   StoxBioticData                 CruiseKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:   StoxBioticData                    Cruise           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34:   StoxBioticData                  Platform           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:   StoxBioticData                StationKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36:   StoxBioticData                   Station           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:   StoxBioticData             CatchPlatform           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38:   StoxBioticData                  DateTime     datetime      ISO8601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:   StoxBioticData                 Longitude        angle  degree east</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40:   StoxBioticData                  Latitude        angle degree north</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:   StoxBioticData               BottomDepth       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42:   StoxBioticData                   HaulKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:   StoxBioticData                      Haul           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44:   StoxBioticData                      Gear           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:   StoxBioticData               TowDistance       length          nmi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46:   StoxBioticData      EffectiveTowDistance       length          nmi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47:   StoxBioticData              MinHaulDepth       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48:   StoxBioticData              MaxHaulDepth       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49:   StoxBioticData        VerticalNetOpening       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50:   StoxBioticData      HorizontalNetOpening lengthlength            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51:   StoxBioticData           TrawlDoorSpread       length            m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52:   StoxBioticData        SpeciesCategoryKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53:   StoxBioticData           SpeciesCategory           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54:   StoxBioticData                 SampleKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55:   StoxBioticData                    Sample           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56:   StoxBioticData       CatchFractionWeight         mass           kg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57:   StoxBioticData       CatchFractionNumber  cardinality  individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58:   StoxBioticData              SampleWeight         mass           kg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59:   StoxBioticData              SampleNumber  cardinality  individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60:   StoxBioticData             IndividualKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61:   StoxBioticData                Individual           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62:   StoxBioticData     IndividualRoundWeight         mass            g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63:   StoxBioticData     IndividualTotalLength       length           cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64:   StoxBioticData          LengthResolution       length           cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65:   StoxBioticData         WeightMeasurement           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66:   StoxBioticData             IndividualAge          age         year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67:   StoxBioticData             IndividualSex           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68:   StoxBioticData    PreySpeciesCategoryKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69:   StoxBioticData       PreySpeciesCategory           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70:   StoxBioticData             PreySampleKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71:   StoxBioticData                PreySample           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72:   StoxBioticData          PreySampleWeight         mass            g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73:   StoxBioticData      PreyWeightResolution         mass            g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74:   StoxBioticData         PreyIndividualKey           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75:   StoxBioticData            PreyIndividual           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76:   StoxBioticData PreyIndividualTotalLength       length           cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77:   StoxBioticData      PreyLengthResolution       length           cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             dataType              variableName     quantity         unit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $FilterStoxBioticWarningMessges</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $FilterStoxBioticWarningMessges$SampleCount</span>
@@ -181,8 +191,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     useXsd &lt;- tools::file_path_sans_ext(names(xsdObjects)[hasSelectedXsd])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     return(useXsd)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x131e6c1f8&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x131e6a8c0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x12a9ea558&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x12a9ecb78&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Cruise</span>
@@ -252,9 +262,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4] "AcousticCategoryKey" "ChannelReferenceKey" "NASCKey"            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $StoxBioticKeys</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CruiseKey"          "StationKey"         "HaulKey"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "SpeciesCategoryKey" "SampleKey"          "IndividualKey"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "SubIndividualKey"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CruiseKey"              "StationKey"             "HaulKey"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "SpeciesCategoryKey"     "SampleKey"              "IndividualKey"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "PreySpeciesCategoryKey" "PreySampleKey"          "PreyIndividualKey"     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $StoxDateTimeFormat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "%Y-%m-%dT%H:%M:%OS"</span>
@@ -778,419 +788,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Acoustic"        "Instrument"      "Calibration"     "DataAcquisition"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "DataProcessing"  "Cruise"          "Survey"          "Log"            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Sample"          "Data"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Biotic"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$StatisticalRectangle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$HaulValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$GearExceptions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$DoorType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$DataType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$SpeciesValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$LengthCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$LengthType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$StockCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$WeightUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Maturity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$MaturityScale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$AgePlusGroup</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$AgeSource</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$SamplingFlag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Survey"               "Country"              "Platform"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "Organisation"         "Gear"                 "StatisticalRectangle"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "HaulValidity"         "GearExceptions"       "DoorType"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "DataType"             "SpeciesCode"          "SpeciesValidity"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Sex"                  "LengthCode"           "LengthType"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "StockCode"            "WeightUnit"           "Maturity"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "MaturityScale"        "AgePlusGroup"         "AgeSource"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "SamplingFlag"         "Stratum"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Biology"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Catch"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Haul"   "Survey"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$treeStruct$Biotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Vocabulary" "Cruise"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:ID"     "xsd:string" "xsd:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$StatisticalRectangle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$HaulValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$GearExceptions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$DoorType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$DataType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$SpeciesValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$LengthCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$LengthType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$StockCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$WeightUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Maturity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$MaturityScale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$AgePlusGroup</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$AgeSource</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$SamplingFlag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xs:string" "xsd:int"   "xs:string" "xsd:int"   "xs:string" "xsd:float"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "xs:string" "xs:string" "xs:string" "xsd:int"   "xsd:int"   "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "xs:string" "xs:string" "xs:string" "xs:string" "xsd:int"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xs:string" "xs:string" "xs:string" "xsd:int"   "xsd:float" "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "xsd:float" "xs:string" "xsd:int"   "xsd:float" "xsd:float" "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "xsd:int"   "xs:string" "xsd:float" "xsd:float"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xs:string"  "xsd:int"    "xsd:string" "xsd:string" "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xs:string"  "xsd:float"  "xsd:float"  "xsd:float"  "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xs:string"  "xsd:float"  "xsd:float"  "xsd:float"  "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "xsd:float"  "xsd:int"    "xsd:int"    "xs:string"  "xs:string" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "xsd:int"    "xsd:int"    "xsd:int"    "xsd:float"  "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26] "xsd:float"  "xsd:float"  "xsd:int"    "xsd:float"  "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "xsd:string" "xsd:int"    "xsd:string" "xsd:int"    "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [36] "xsd:float"  "xsd:int"    "xsd:int"    "xsd:int"    "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "xsd:float"  "xs:string" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string"  "xs:string"  "xsd:string" "xsd:string" "xs:string" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "xsd:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableTypes$Biotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ID"       "CodeType" "Code"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "StockCode"                "FishID"                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "LengthCode"               "LengthClass"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "WeightUnit"               "IndividualWeight"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "IndividualSex"            "IndividualMaturity"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "MaturityScale"            "IndividualAge"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "IndividualGrowthRings"    "AgePlusGroup"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "AgeSource"                "GeneticSamplingFlag"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "StomachSamplingFlag"      "ParasiteSamplingFlag"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "IndividualVertebraeCount"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "DataType"              "SpeciesCode"           "SpeciesValidity"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "SpeciesCategory"       "SpeciesCategoryNumber" "WeightUnit"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "SpeciesCategoryWeight" "SpeciesSex"            "SubsampledNumber"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "SubsamplingFactor"     "SubsampleWeight"       "LengthCode"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "LengthClass"           "LengthType"            "NumberAtLength"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "WeightAtLength"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Gear"                  "Number"                "StationName"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "StartTime"             "Duration"              "Validity"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "StartLatitude"         "StartLongitude"        "StopLatitude"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "StopLongitude"         "StatisticalRectangle"  "MinTrawlDepth"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "MaxTrawlDepth"         "BottomDepth"           "Distance"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "Netopening"            "CodendMesh"            "SweepLength"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "GearExceptions"        "DoorType"              "WarpLength"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "WarpDiameter"          "WarpDensity"           "DoorSurface"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "DoorWeight"            "DoorSpread"            "WingSpread"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "Buoyancy"              "KiteArea"              "GroundRopeWeight"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "Rigging"               "Tickler"               "HydrographicStationID"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [34] "TowDirection"          "SpeedGround"           "SpeedWater"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "WindDirection"         "WindSpeed"             "SwellDirection"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [40] "SwellHeight"           "LogDistance"           "Stratum"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Country"      "Platform"     "StartDate"    "EndDate"      "Organisation"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "LocalID"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$StatisticalRectangle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$HaulValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$GearExceptions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$DoorType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$DataType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$SpeciesValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$LengthCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$LengthType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$StockCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$WeightUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Maturity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$MaturityScale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$AgePlusGroup</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$AgeSource</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$SamplingFlag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$tableHeaders$Biotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$prefixLens</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Code              Country             Platform </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    2                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Organisation                 Gear StatisticalRectangle </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         HaulValidity       GearExceptions             DoorType </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             DataType          SpeciesCode      SpeciesValidity </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  Sex           LengthCode           LengthType </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            StockCode           WeightUnit             Maturity </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        MaturityScale         AgePlusGroup            AgeSource </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         SamplingFlag              Stratum           Vocabulary </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0                    0                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               Biotic </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$levelDims</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           Survey </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   "count(/Biotic/Cruise/Survey)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                             Code </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         "count(/Biotic/Vocabulary/Stratum/Code)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                          Country </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              "count(/Biotic/Vocabulary/Country)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                         Platform </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             "count(/Biotic/Vocabulary/Platform)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                     Organisation </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         "count(/Biotic/Vocabulary/Organisation)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                             Gear </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 "count(/Biotic/Vocabulary/Gear)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             StatisticalRectangle </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "count(/Biotic/Vocabulary/StatisticalRectangle)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                     HaulValidity </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         "count(/Biotic/Vocabulary/HaulValidity)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   GearExceptions </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "count(/Biotic/Vocabulary/GearExceptions)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                         DoorType </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             "count(/Biotic/Vocabulary/DoorType)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                         DataType </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             "count(/Biotic/Vocabulary/DataType)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                      SpeciesCode </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          "count(/Biotic/Vocabulary/SpeciesCode)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  SpeciesValidity </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      "count(/Biotic/Vocabulary/SpeciesValidity)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                              Sex </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  "count(/Biotic/Vocabulary/Sex)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                       LengthCode </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           "count(/Biotic/Vocabulary/LengthCode)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                       LengthType </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           "count(/Biotic/Vocabulary/LengthType)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        StockCode </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            "count(/Biotic/Vocabulary/StockCode)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                       WeightUnit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           "count(/Biotic/Vocabulary/WeightUnit)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                         Maturity </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             "count(/Biotic/Vocabulary/Maturity)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    MaturityScale </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        "count(/Biotic/Vocabulary/MaturityScale)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                     AgePlusGroup </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         "count(/Biotic/Vocabulary/AgePlusGroup)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        AgeSource </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            "count(/Biotic/Vocabulary/AgeSource)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                     SamplingFlag </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         "count(/Biotic/Vocabulary/SamplingFlag)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                          Stratum </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              "count(/Biotic/Vocabulary/Stratum)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                       Vocabulary </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      "count(/Biotic/Vocabulary)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                          Biology </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "count(/Biotic/Cruise/Haul/Catch/Biology)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                            Catch </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               "count(/Biotic/Cruise/Haul/Catch)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                             Haul </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     "count(/Biotic/Cruise/Haul)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           Cruise </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          "count(/Biotic/Cruise)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           Biotic </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 "count(/Biotic)" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic_1.5.xsd$targetNamespace</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd</span>
@@ -4016,7 +3613,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer></div>
