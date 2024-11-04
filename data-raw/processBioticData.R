@@ -52,15 +52,15 @@ stoxBioticObject$borrowVariables <- list()
 
 # Define the keys on each level, to add to the complexMaps:
 #StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual")
-StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample")
+StoxBioticLevels <- c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual", "PreySpeciesCategory", "PreySample")
 StoxBioticLevelsSansCruise <- setdiff(StoxBioticLevels, "Cruise")
 StoxBioticLevelsNumeric <- structure(seq_along(StoxBioticLevels), names = StoxBioticLevels)
 StoxBioticLevelsNumericSansCruise <- StoxBioticLevelsNumeric[names(StoxBioticLevelsNumeric) != "Cruise"]
 #NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample", "individual")
-NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample")
+NMDLevels = c("fishstation", "fishstation", "catchsample", "catchsample", "individual", "prey", "prey")
 
 
-keysForComplexMaps <- data.table::data.table(
+keysForComplexMaps3 <- data.table::data.table(
 	level = rep(NMDLevels, StoxBioticLevelsNumericSansCruise), 
 	variable = paste0(
 		StoxBioticLevels[unlist(lapply(StoxBioticLevelsNumericSansCruise, sequence))], 
@@ -69,6 +69,13 @@ keysForComplexMaps <- data.table::data.table(
 	target = rep(StoxBioticLevelsSansCruise, StoxBioticLevelsNumericSansCruise), 
 	iskey = "Y"
 )
+
+# Remove the individual level, as this is does not require complex mapping, but was still needed to generate the keys of the prey levels:
+keysForComplexMaps3 <- subset(keysForComplexMaps3, level != "individual")
+
+# We do not support prey on NMDBiotic version 1*, since the key structure is complicated for this format (specimenno is key in the individual table but fishno is the corresponding column in the prey table):
+keysForComplexMaps1 <- subset(keysForComplexMaps3, level != "prey")
+
 
 getIndividualComplexMap <- function(NMDBioticTableName, NMDBioticFormat) {
 	NMDBioticFormat.xsd <- paste0(NMDBioticFormat, ".xsd")
@@ -141,9 +148,25 @@ readComplexMap <- function(
 	return(complexMaps)
 }
 
-convertLenRes_NMDBiotic <- function(x) {
-	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2) * 100
-	names(z) <- seq_len(12)
+convertWeightRes_NMDBiotic <- function(x, scale) {
+	# Change this to use the NMD-R-packages in the future!!!!!!!!!!
+	
+	# This is a hard coded copy of the reference data https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/weightresolution:
+	z <- c(1, 1e-3, 1e-6, 1e-9) * scale
+	names(z) <- as.character(1:4)
+	return(z[x])
+}
+
+convertLenRes_NMDBiotic <- function(x, scale) {
+	# Change this to use the NMD-R-packages in the future!!!!!!!!!!
+	
+	# This is a hard coded copy of the reference data https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/lengthresolution:
+	# Multiply by 100 to give these in cm: 
+	z <- c(0.001, 0.005, 0.01, 0.03, 0.05, 0.0005, 0.0001, 0.0001, 0.002, 0.003, 0.02, 0.2, 0.1) * scale
+	# This was a bug, since we were not using the actual values but the internal codes (see https://referenceeditor.hi.no/apps/referenceeditor/v2/tables/lengthresolution):
+	#names(z) <- seq_len(13)
+	# The letters here are deprecated, but used in historical data:
+	names(z) <- c(1:7, "P", "Q", "R", "S", "U", "T")
 	return(z[x])
 }
 
@@ -232,6 +255,13 @@ getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, speci
 }
 
 
+getPreyCatchFractionWeight_NMDBiotic3 <- function(totalweight){
+	# Multiply by 1e6 since the weight of prey is given in mg in StoxBiotic (while kg in NMDBiotic):
+	totalweight * 1e6
+	
+}
+
+
 getBottomDepth_NMDBiotic <- function(bottomdepthstart, bottomdepthstop) {
 	missingStart <- is.na(bottomdepthstart)
 	missingStop <- is.na(bottomdepthstop)
@@ -289,21 +319,35 @@ getDateTime_ICESBiotic <- function(StartTime) {
 }
 
 
-tableMapList_nmdbiotic <- list(
+tableMapList_nmdbiotic3 <- list(
 	list("mission", "Cruise"), 
 	list("fishstation", c("Station", "Haul")), 
 	list("catchsample", c("SpeciesCategory", "Sample")), 
 	list("individual", "Individual"), 
-	list("prey", "SubIndividual")
+	list("prey", c("PreySpeciesCategory", "PreySample"))#, 
+	#list("preylengthfrequencytable", "PreyIndividual")
 )
+
+tableMapList_nmdbiotic1 <- list(
+	list("mission", "Cruise"), 
+	list("fishstation", c("Station", "Haul")), 
+	list("catchsample", c("SpeciesCategory", "Sample")), 
+	list("individual", "Individual")
+)
+
+
 tableKeyList3 <- list(
 	Cruise = list(c("cruise", "missiontype", "startyear", "platform", "missionnumber"), "CruiseKey"),
 	Station = list("station", "StationKey"),
 	Haul = list("serialnumber", "HaulKey"),
 	SpeciesCategory = list(c("commonname", "catchcategory", "aphia", "scientificname"), "SpeciesCategoryKey"),
-	Sample = list("catchsampleid", "SampleKey"),
+	# We do not use catchpartnumber here, even though that would have been sufficient, as it identifies the catch smples uniquely together with the SpeciesCategoryKey:
+	Sample = list("catchsampleid", "SampleKey"), 
 	Individual = list("specimenid", "IndividualKey"),
-	SubIndividual = list("preysampleid", "SubIndividualKey")
+	PreySpeciesCategory = list("preycategory", "PreySpeciesCategoryKey"),
+	# Same here as for Sample, that we do not use preypartnumber, even though that would have been sufficient, as it identifies the prey smples uniquely together with the PreySpeciesCategory:
+	PreySample = list("preysampleid", "PreySampleKey")#,
+	#PreyIndividual = list("preysampleid", "PreyIndividualKey")
 )
 tableKeyList1 <- list(
 	Cruise = list(c("cruise", "missiontype", "year", "platform", "missionnumber"), "CruiseKey"),
@@ -312,8 +356,7 @@ tableKeyList1 <- list(
 	# Using "group" here is a bug, but we keep it for backwards compatibility, and because this is an ancient format. The Norwegian Marine Data Centre only provides data in the format NMDBiotic >= 3: 
 	SpeciesCategory = list(c("noname", "species", "aphia", "group"), "SpeciesCategoryKey"),
 	Sample = list("samplenumber", "SampleKey"),
-	Individual = list("specimenno", "IndividualKey"),
-	SubIndividual = list("fishno", "SubIndividualKey")
+	Individual = list("specimenno", "IndividualKey")
 )
 originalParentTables <- list(
 	Cruise = NULL, 
@@ -321,8 +364,10 @@ originalParentTables <- list(
 	Haul = "Cruise", 
 	SpeciesCategory = c("Cruise", "Station", "Haul"), 
 	Sample = c("Cruise", "Station", "Haul"), 
-	Individual = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample"), 
-	SubIndividual = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample")
+	Individual = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample"),
+	PreySpeciesCategory = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual"), 
+	PreySample = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual")#, 
+	#PreySample = c("Cruise", "Station", "Haul", "SpeciesCategory", "Sample", "Individual", "PreySpeciesCategory", "PreySample")
 )
 
 
@@ -333,25 +378,25 @@ stoxBioticObject$indageHeadersList[["nmdbioticv3.1"]] <- c("missiontype", "start
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- tableKeyList3
 #stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual"))
-stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- tableMapList_nmdbiotic
+stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- tableMapList_nmdbiotic3
 stoxBioticObject$originalParentTables[["nmdbioticv3.1"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv3.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3.1", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps3, 
 	#lowestTable = FALSE
 	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv3.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3.1", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps3, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Lowest"
 )
 stoxBioticObject$complexMaps_highestTable[["nmdbioticv3.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3.1", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps3, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Highest"
 )
@@ -360,6 +405,7 @@ stoxBioticObject$complexMaps_highestTable[["nmdbioticv3.1"]] <- readComplexMap(
 
 
 ## Length conversion
+stoxBioticObject$convertWeightRes[["nmdbioticv3.1"]] <- convertWeightRes_NMDBiotic
 stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- convertLenRes_NMDBiotic
 stoxBioticObject$convertLen[["nmdbioticv3.1"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3.1"]] <- NULL
@@ -367,6 +413,7 @@ stoxBioticObject$getCatchFractionWeight[["nmdbioticv3.1"]] <- getCatchFractionWe
 stoxBioticObject$getSampleWeight[["nmdbioticv3.1"]] <- getSampleWeight_NMDBiotic3
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3.1"]] <- getIndividualRoundWeight_NMDBiotic3
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv3.1"]] <- getIndividualTotalLength_NMDBiotic3
+stoxBioticObject$getPreyCatchFractionWeight[["nmdbioticv3.1"]] <- getPreyCatchFractionWeight_NMDBiotic3
 stoxBioticObject$getBottomDepth[["nmdbioticv3.1"]] <- getBottomDepth_NMDBiotic
 
 # DateTime of NMDBiotic3.1:
@@ -418,30 +465,31 @@ stoxBioticObject$indageHeadersList[["nmdbioticv3"]] <- c("missiontype", "startye
 ## Format: {source variable, target keyname}  
 stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- tableKeyList3
 #stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual")) 
-stoxBioticObject$tableMapList[["nmdbioticv3"]] <- tableMapList_nmdbiotic
+stoxBioticObject$tableMapList[["nmdbioticv3"]] <- tableMapList_nmdbiotic3
 stoxBioticObject$originalParentTables[["nmdbioticv3"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv3"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps3, 
 	#lowestTable = FALSE
 	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv3"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps3, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Lowest"
 )
 stoxBioticObject$complexMaps_highestTable[["nmdbioticv3"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv3", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps3, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Highest"
 )
 
 ## Length conversion
+stoxBioticObject$convertWeightRes[["nmdbioticv3"]] <- convertWeightRes_NMDBiotic
 stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- convertLenRes_NMDBiotic
 stoxBioticObject$convertLen[["nmdbioticv3"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3"]] <- NULL
@@ -449,6 +497,7 @@ stoxBioticObject$getCatchFractionWeight[["nmdbioticv3"]] <- getCatchFractionWeig
 stoxBioticObject$getSampleWeight[["nmdbioticv3"]] <- getSampleWeight_NMDBiotic3
 stoxBioticObject$getIndividualRoundWeight[["nmdbioticv3"]] <- getIndividualRoundWeight_NMDBiotic3
 stoxBioticObject$getIndividualTotalLength[["nmdbioticv3"]] <- getIndividualTotalLength_NMDBiotic3
+stoxBioticObject$getPreyCatchFractionWeight[["nmdbioticv3"]] <- getPreyCatchFractionWeight_NMDBiotic3
 stoxBioticObject$getBottomDepth[["nmdbioticv3"]] <- getBottomDepth_NMDBiotic
 
 # DateTime of NMDBiotic3.0:
@@ -479,30 +528,31 @@ stoxBioticObject$indageHeadersList[["nmdbioticv1.4"]] <- NULL
 
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- tableKeyList1
-stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- tableMapList_nmdbiotic
+stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- tableMapList_nmdbiotic1
 stoxBioticObject$originalParentTables[["nmdbioticv1.4"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv1.4"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.4", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps1, 
 	#lowestTable = FALSE
 	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv1.4"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.4", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps1, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Lowest"
 )
 stoxBioticObject$complexMaps_highestTable[["nmdbioticv1.4"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.4", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps1, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Highest"
 )
 
 ## Length conversion
+stoxBioticObject$convertWeightRes[["nmdbioticv1.4"]] <- convertWeightRes_NMDBiotic
 stoxBioticObject$convertLenRes[["nmdbioticv1.4"]] <- convertLenRes_NMDBiotic
 stoxBioticObject$convertLen[["nmdbioticv1.4"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv1.4"]] <- NULL
@@ -561,30 +611,31 @@ stoxBioticObject$indageHeadersList[["nmdbioticv1.1"]] <- stoxBioticObject$indage
 
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- tableKeyList1
-stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- tableMapList_nmdbiotic
+stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- tableMapList_nmdbiotic1
 stoxBioticObject$originalParentTables[["nmdbioticv1.1"]] <- originalParentTables
 
 # Read complex maps, and add Keys and variables from individual and agedetermination:
 stoxBioticObject$complexMaps[["nmdbioticv1.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.1", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps1, 
 	#lowestTable = FALSE
 	SplitTableAllocation = "Default"
 )
 stoxBioticObject$complexMaps_lowestTable[["nmdbioticv1.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.1", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps1, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Lowest"
 )
 stoxBioticObject$complexMaps_highestTable[["nmdbioticv1.1"]] <- readComplexMap(
 	NMDBioticFormat = "nmdbioticv1.1", 
-	keysForComplexMaps = keysForComplexMaps, 
+	keysForComplexMaps = keysForComplexMaps1, 
 	#lowestTable = TRUE
 	SplitTableAllocation = "Highest"
 )
 
 ## Length conversion
+stoxBioticObject$convertWeightRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertWeightRes[["nmdbioticv1.4"]]
 stoxBioticObject$convertLenRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertLenRes[["nmdbioticv1.4"]]
 stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
 stoxBioticObject$convertWt[["nmdbioticv1.1"]] <- stoxBioticObject$convertWt[["nmdbioticv1.4"]]

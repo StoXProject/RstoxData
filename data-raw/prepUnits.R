@@ -21,6 +21,8 @@ StoxUnits <- data.table::data.table(id=character(),
                                     name=character(),
                                     conversion=numeric())
 
+StoxUnits <- rbind(StoxUnits, list("mass-mcg", "mass", "mcg", "mcg", "microgram", 1e-9))
+StoxUnits <- rbind(StoxUnits, list("mass-mg", "mass", "mg", "mg", "milligram", 1e-6))
 StoxUnits <- rbind(StoxUnits, list("mass-g", "mass", "g", "g", "gram", 1e-3))
 StoxUnits <- rbind(StoxUnits, list("mass-kg", "mass", "kg", "kg", "kilogram", 1))
 StoxUnits <- rbind(StoxUnits, list("mass-ton", "mass", "t", "ton", "metric ton", 1e3))
@@ -37,6 +39,7 @@ StoxUnits <- rbind(StoxUnits, list("cardinality-N", "cardinality", "N", "individ
 StoxUnits <- rbind(StoxUnits, list("cardinality-kN", "cardinality", "kN", "10^3 individuals", "thousand individuals", 1e3))
 StoxUnits <- rbind(StoxUnits, list("cardinality-MN", "cardinality", "MN", "10^6 individuals", "million individuals", 1e6))
 StoxUnits <- rbind(StoxUnits, list("cardinality-GN", "cardinality", "GN", "10^9 individuals", "billion individuals", 1e9))
+StoxUnits <- rbind(StoxUnits, list("cardinality-TN", "cardinality", "TN", "10^12 individuals", "trillion individuals", 1e12))
 
 StoxUnits <- rbind(StoxUnits, list("area_number_density-N/nmi^2", "area_number_density", "N/nmi^2", "individuals/nmi^2", "individuals per square nautical mile", 1))
 StoxUnits <- rbind(StoxUnits, list("area_number_density-kN/nmi^2", "area_number_density", "kN/nmi^2", "10^3 individuals/nmi^2", "thousand individuals per square nautical mile", 1e3))
@@ -67,3 +70,5 @@ StoxUnits <- StoxUnits[,c("id", "conversion", "quantity", "symbol", "shortname",
 
 usethis::use_data(StoxUnits, overwrite = T)
 
+setwd("..")
+setwd("..")

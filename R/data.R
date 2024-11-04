@@ -123,7 +123,7 @@ NULL
 #' \bold{SpeciesCategory level}:
 #' \tabular{lllllll}{
 #' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
-#' SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab "126417" \tab \code{commonname/catchcategory/aphia/scientificname} (\code{noname/species/aphia/group} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCode} \cr
+#' SpeciesCategoryKey \tab Key of the SpeciesCategory level \tab None \tab Character \tab "sild'G03/161722.G03/126417/Clupea harengus" \tab \code{commonname/catchcategory/aphia/scientificname} (\code{noname/species/aphia/group} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCode} \cr
 #' SpeciesCategory \tab The species category \tab None \tab Character \tab "Herring" \tab Same as SpeciesCategoryKey. Can be translated. \tab Same as SpeciesCategoryKey. Can be translated. \cr
 #' }
 #' 
@@ -132,9 +132,9 @@ NULL
 #' \tabular{lllllll}{
 #' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
 #' SampleKey \tab Key of the Sample level \tab None \tab Character \tab "1" \tab \code{catchsampleid} (\code{samplenumber} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategory} \cr          
-#' Sample \tab Unique Sample identifier \tab None \tab Character \tab "2021105-1-2-126417-1" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \cr             
-#' CatchFractionWeight \tab Total weight of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab kg \tab Numeric \tab 49.9 \tab \code{catchweight} (missing (\code{NA}) if \code{catchproducttype != 1}) (\code{weight} (missing (\code{NA}) if \code{producttype != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryWeight} (taking \code{WeightUnit} into account) \cr
-#' CatchFractionNumber \tab Total number of individuals of the catch SpeciesCategory and sub category (fractions such as juveniles and adults) \tab individuals \tab Integer \tab 295 \tab \code{catchcount} (\code{count} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryNumber} \cr 
+#' Sample \tab Unique Sample identifier \tab None \tab Character \tab "2021105-1-2-sild'G03/161722.G03/126417/Clupea harengus-1" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey} \cr             
+#' CatchFractionWeight \tab Total weight of the catch for the SpeciesCategory and sub category (e.g., fractions such as juveniles and adults) \tab kg \tab Numeric \tab 49.9 \tab \code{catchweight} (missing (\code{NA}) if \code{catchproducttype != 1}) (\code{weight} (missing (\code{NA}) if \code{producttype != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryWeight} (taking \code{WeightUnit} into account) \cr
+#' CatchFractionNumber \tab Total number of individuals of the catch for the SpeciesCategory and sub category (e.g., fractions such as juveniles and adults) \tab individuals \tab Integer \tab 295 \tab \code{catchcount} (\code{count} for NMDBiotic 1.1 and 1.4) \tab \code{SpeciesCategoryNumber} \cr 
 #' SampleWeight \tab Total weight of the sample for individual measurements \tab kg \tab Numeric \tab 4.6 \tab \code{lengthsampleweight} (missing (\code{NA}) if \code{sampleproducttype != 1}) \tab \code{SubsampleWeight} (taking \code{WeightUnit} into account) \cr       
 #' SampleNumber \tab Size of the sample for individual measurements \tab individuals \tab Integer \tab 100 \tab \code{lengthsamplecount} \tab \code{SubsampledNumber} \cr
 #' }
@@ -144,7 +144,7 @@ NULL
 #' \tabular{lllllll}{
 #' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
 #' IndividualKey \tab Key of the Individual level \tab None \tab Character \tab "2" \tab \code{specimenid} (\code{specimenno} for NMDBiotic 1.1 and 1.4) \tab \code{FishID} \cr        
-#' Individual \tab Unique Individual identifier \tab None \tab Character \tab "2021105-1-2-126417-1-2" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \cr           
+#' Individual \tab Unique Individual identifier \tab None \tab Character \tab "2021105-1-2-sild'G03/161722.G03/126417/Clupea harengus-1-2" \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \tab \code{CruiseKey-StationKey-HaulKey-SpeciesCategoryKey-SampleKey-IndividualKey} \cr           
 #' IndividualRoundWeight \tab Round weight (the whole fish) fo the individual \tab g \tab Numeric \tab 123 \tab \code{individualweight * 1000} (missing (\code{NA}) if \code{individualproducttype != 1}) (\code{weight.individual} (missing (\code{NA}) if \code{producttype.individual != 1}) for NMDBiotic 1.1 and 1.4) \tab \code{IndividualWeight} (taking \code{WeightUnit.Biology} into account) \cr
 #' IndividualTotalLength \tab Total length (from snout to end of fin), given as the lower end of the interval of width given by LengthResolution \tab cm \tab Numeric \tab 14.5 \tab \code{length * 100}  (missing (\code{NA}) if \code{lengthmeasurement != "E"}) \tab \code{LengthClass.Biology} (taking \code{LengthCode.Biology} into account) \cr
 #' LengthResolution \tab Resolution of IndividualTotalLength \tab cm \tab Numeric \tab 0.5 \tab \code{lengthresolution} (\code{lengthunit} for NMDBiotic 1.1 and 1.4) converted to cm \tab \code{LengthCode.Biology} converted to cm \cr     

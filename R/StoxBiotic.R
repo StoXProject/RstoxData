@@ -16,6 +16,12 @@ StoxBiotic <- function(BioticData) {
 	# Extract the StoxBiotic data and rbind across files:
 	StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = 1L)
 	
+	# Warn if there are keys with missing values:
+	warningMissingKeys(
+		StoxData = StoxBioticData, 
+		stoxDataFormat = "Biotic"
+	)
+	
 	# Remove rows of duplicated keys:
 	#StoxBioticData <- removeRowsOfDuplicatedKeysFromStoxBioticData(StoxBioticData)
 	StoxBioticData <- removeRowsOfDuplicatedKeys(
@@ -66,6 +72,9 @@ GeneralSamplingHierarchy2StoxBiotic <- function(GeneralSamplingHierarchy, Number
 	
 	# Rbind for each StoxBiotic table:
 	StoxBioticData <- rbindlist_StoxFormat(StoxBioticData)
+	
+	# Temporarily remove the Prey tables:
+	StoxBioticData <- StoxBioticData[!startsWith(names(StoxBioticData), "Prey")]
     
 	return(StoxBioticData)
 }
@@ -148,7 +157,7 @@ firstPhase <- function(
 	    data$individual <- merge(data$individual, data$agedetermination, by.x = c(indageHeaders, "preferredagereading"), by.y = c(indageHeaders, "no"), all.x=TRUE)
 	    # Store the names of the individual and prey tables:
 	    individualNames <- names(data$individual)
-	    preyNames <- names(data$prey)
+	    #preyNames <- names(data$prey)
 	    
 	    ## Cascading merge tables
 	    toMerge <- c("mission", "fishstation", "catchsample", "individual")
@@ -267,7 +276,9 @@ firstPhase <- function(
 	    ### data$Biology <- data$Biology[, .SD, .SDcols = columnsToKeep]
 
 	    # Fix Individual ID for those coming from Catch:
-	    FishIDBy <- head(sapply(tableKey, "[[", 1), -1)
+	    FishIDBy <- sapply(tableKey, "[[", 1)
+	    FishIDBy <- FishIDBy[names(FishIDBy) != "Individual"]
+	    
 	    
 	    # Does not work, as FishID is integer
 	    #data$Biology[is.na(FishID), FishID := paste0("FromCatch_", seq_len(.N)), by = FishIDBy]
@@ -290,25 +301,39 @@ firstPhase <- function(
     
     
     # 2. Making keys
+    createKey <- function(x) {
+    	if(length(x) == 1) {
+    		as.character(x[[1]])
+    	}
+    	else {
+    		do.call(paste, c(x, sep="/"))
+    	}
+    }
+    
     for(curr in names(data)) {
         tmpKeys <- c()
         for(key in tableKey) {
             if(all(key[[1]] %in% names(data[[curr]]))) {
-                data[[curr]][, key[[2]] := do.call(paste, c(.SD, sep="/")), .SDcols = key[[1]]]
-                tmpKeys <- c(tmpKeys,  key[[2]])
+            	#data[[curr]][, key[[2]] := do.call(paste, c(.SD, sep="/")), .SDcols = key[[1]]]
+            	data[[curr]][, key[[2]] := createKey(.SD), .SDcols = key[[1]]]
+            	tmpKeys <- c(tmpKeys,  key[[2]])
             }
         }
         setindexv(data[[curr]], tmpKeys)
     }
     
-    # Keep only the original names and the new kyes of the individual and prey tables:
+    # Keep only the original names and the new keys of the individual and prey tables:
     if(datatype %in% c("nmdbioticv1.1", "nmdbioticv1.4", "nmdbioticv3", "nmdbioticv3.1")) {
     	getKeyNames <- function(x) {
     		names(x)[endsWith(names(x), "Key")]
     	}
     	data$individual <- subset(data$individual, select = c(individualNames, getKeyNames(data$individual)))
-    	data$prey <- subset(data$prey, select = c(preyNames, getKeyNames(data$prey)))
+    	
+    	if(datatype %in% c("nmdbioticv3", "nmdbioticv3.1")) {
+    		data$prey <- subset(data$prey, select = c(preyNames, getKeyNames(data$prey)))
+    	}
     }
+    
     
     
     # Special warning if there are duplicate station for NMDBiotic:
@@ -355,7 +380,7 @@ firstPhase <- function(
             if(!is.null(firstPhaseTables[[dest]])) stop("Error")
             # Copy the columns:
             firstPhaseTables[[dest]] <- data[[origin]][, ..colList]
-            # Uniquify, as splitting a table may produce dupicates, e.g. for multiple samples of the same species:
+            # Uniquify, as splitting a table may produce dupicates, e.g. for multiple samples of the same species. For multiple serialnumber for the same station see the use of removeRowsOfDuplicatedKeys() in StoxBiotic():
             firstPhaseTables[[dest]] <- unique(firstPhaseTables[[dest]])
         }
     }
@@ -466,7 +491,7 @@ StoxBiotic_firstPhase <- function(
         data(stoxBioticObject, package="RstoxData", envir = environment())
     }
     
-    # Do first phase
+	# Do first phase
 	first <- firstPhase(
 		BioticData, 
 		datatype, 
@@ -485,14 +510,16 @@ StoxBiotic_firstPhase <- function(
 #' @importFrom data.table indices
 secondPhase <- function(data, datatype, stoxBioticObject) {
 	
-	# Getting conversion function for datatype, used in the loop using convertTable below (applying the conersions in "stox-biotic-final-phase.csv"):
+	# Getting conversion function for datatype, used in the loop using convertTable below (applying the conversions in "stox-biotic-final-phase.csv"):
+	convertWeightRes <- stoxBioticObject$convertWeightRes[[datatype]]
 	convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
-    convertLen <- stoxBioticObject$convertLen[[datatype]]
+	convertLen <- stoxBioticObject$convertLen[[datatype]]
     convertWt <- stoxBioticObject$convertWt[[datatype]]
     getCatchFractionWeight <- stoxBioticObject$getCatchFractionWeight[[datatype]]
     getSampleWeight <- stoxBioticObject$getSampleWeight[[datatype]]
     getIndividualRoundWeight <- stoxBioticObject$getIndividualRoundWeight[[datatype]]
     getIndividualTotalLength <- stoxBioticObject$getIndividualTotalLength[[datatype]]
+    getPreyCatchFractionWeight <- stoxBioticObject$getPreyCatchFractionWeight[[datatype]]
     getBottomDepth <- stoxBioticObject$getBottomDepth[[datatype]]
     getDateTime <- stoxBioticObject$getDateTime[[datatype]]
     

@@ -1,3 +1,42 @@
+# RstoxData v2.1.0  (2024-11-04)
+* Final release for StoX 4.1.0.
+
+
+# RstoxData v2.0.1-9006  (2024-10-30)
+* Fixed bug in asIntegerAfterRound() used when setting class of ICES data to avoid floating point to integer errors. The bug appeared when the input was character (but convertible to numeric). 
+
+
+# RstoxData v2.0.1-9006  (2024-10-30)
+* Fixed warnings in translateOneTable() so that a warning is given if the variable to translate is not present in any table, and if any conditional variables are not present in a table to be translated.
+* Applied 'release' and 'oldrel' in the check-full.yaml, securing that binaries are built for the current and previous R minor versjon.
+
+
+# RstoxData v2.0.1-9005  (2024-10-28)
+* Fixed bug in as.numeric_IfPossible() used by setorderv_numeric() and orderRowsByKeys() where individual elements could be set to NA in a vector unless all of the values were NA after conversion to numeric. In the new version all of the values must be convertible to numeric for a numeric vector to be returned. In addition setorderv_numeric() has gained the parameter split, which is used in RstoxBase::formatOutput() as split = c("-", "/") to split both by the within StoX key separator and the between StoX kye separator used in IDs such as Sample and Individual. This bugfix may result in different sorting of StoxBiotic, particularly for NMDBiotic data with herring coded as catchcategory 161722.G03, 161722.G05 or 161722.G07.
+* Changed the drop down list of ConditionalVariableNames in Translate functions to only include the variables in the table of the VariableName (and also excluding the VariableName). Previously all variables of the entire data were listed, which was confusing since only those present in the relevant table could be used.
+* Changed the behavior of Translate functions when a variable that is not present in the table is used as a conditional variable. Before this conditional variable was effectively ignored, but in the new version the behavior is to give a warning and not perform any translation.
+* Added a warning if no values are translated in Translate functions.
+* Added the new GeneticPopulationCode to ICESBiotic().
+* Temporarily hiding Prey tables in StoxBiotic().
+
+# RstoxData v2.0.1-9004  (2024-10-08)
+* Fixed a bug where certain values of BiologyLengthCode were shifted one integer value down in ICESBiotic(). The bug is related to floating point precision which causes some values to be slightly lower than the corresponding integer after calculations. In R one example is format(29 / 100 * 100, digits = 20) = "28.999999999999996447", which results in 28 when converted to integer. The following values are affected:
+	* 29, 57, 58, 113, 114, 115, 116 when BiologyLengthCode is "cm" (lengthresolution "3")
+	* 1001, 1003, 1005, 1007, 1009, 1011, 1013, 1015, 1017, 1019, 1021 and 1023 when BiologyLengthCode is "mm"  (lengthresolution "1")
+	* 1005 and 1015 (a subset of the values for "mm") when BiologyLengthCode is "halfcm" (lengthresolution "2")
+* Added SpeedGround as vesselspeed from NMDBiotic in ICESBiotic().
+* Fixed bug in RedefineStoxBiotic(), where duplicated keys in the input BioticData were warned but not removed.
+* Added documentation of PreySpeciesCategory and PreySample in StoxBiotic.
+* Fixed bug where PreyCatchfractionWeight = 0 was set to NA if PreyCatchFractionWeightResolution was missing. Now returning 0.
+* Fixed inaccuracies in the documentation of the StoxBiotic format.
+* Added warning when there are missing values in keys in StoxBiotic.
+* Changed mapplyOnCores() to using sockets both for Windows and macOS, which solved the problem that the memory of the parent R session was copied to all cores, potentially causing memory issues
+* Added the argument ignore.condition to applyFunctionArgumentHierarchy() which is now used by RstoxFramework to get functions inputs that are hidden by UseProcessData. See news of RstoxFramework. 
+
+# RstoxData v2.0.1-9001  (2024-09-01)
+* Added tables PreySpeciesCategory and PreySample in StoxBiotic, and prepared for adding PreyIndividual. 
+* Fixed bug where reports could be run even though the Baseline model had been rerun."
+
 # RstoxData v2.0.0  (2024-07-09)
 * Final release for StoX 4.0.0.
 

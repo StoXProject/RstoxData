@@ -11,6 +11,10 @@ propogateFilterDown <- function(retained, deleted, table, treeStruct){
   }
   
   for (child in treeStruct[[table]]){
+  	# Immediately return empry tables:
+  	if(NROW(retained[[child]]) == 0) {
+  		return(retained)
+  	}
     keys <- names(deleted)
     deleteKeys <- unique(deleted[,.SD, .SDcol=keys])
     retainKeys <- data.table::fsetdiff(retained[[child]][,.SD, .SDcol=keys], deleteKeys)
