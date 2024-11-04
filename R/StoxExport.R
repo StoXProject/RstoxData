@@ -318,12 +318,14 @@ checkAndCreateICESAcousticCSV <- function(ICESAcousticDataOne) {
 
 
 is_online <- function(site = "https://raw.githubusercontent.com/StoXProject/repo/master/README.md") {
-	tryCatch({
-		readLines(site, n = 1)
-		TRUE
-	},
-	warning = function(w) invokeRestart("muffleWarning"),
-	error = function(e) FALSE)
+	tryCatch(
+		{
+			readLines(site, n = 1)
+			TRUE
+		},
+		warning = function(w) invokeRestart("muffleWarning"),
+		error = function(e) FALSE
+	)
 }
 
 

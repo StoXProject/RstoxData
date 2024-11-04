@@ -1,3 +1,7 @@
+# RstoxData v2.1.0  (2024-11-04)
+* Final release for StoX 4.1.0.
+
+
 # RstoxData v2.0.1-9006  (2024-10-30)
 * Fixed bug in asIntegerAfterRound() used when setting class of ICES data to avoid floating point to integer errors. The bug appeared when the input was character (but convertible to numeric). 
 
