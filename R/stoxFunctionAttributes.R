@@ -40,7 +40,9 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	else if(!missing(StoxLandingData)) {
 		output <- lapply(StoxLandingData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
 	}
-	
+	else {
+		return(NULL)
+	}
 	
 	output <- sort(unique(unlist(output)))
 	output <- setdiff(output, VariableName)
@@ -471,8 +473,7 @@ stoxFunctionAttributes <- list(
 		functionParameterFormat = list(
 			TranslationTable = "translationTable", 
 			FileName = "filePath", 
-			# No format for ConditionalVariableNames, since we do not have any function input in DefineTranslation:
-			#ConditionalVariableNames = "conditionalVariableNames_translate", 
+			ConditionalVariableNames = "conditionalVariableNames_translate", 
 			ValueColumn = "valueColumn", 
 			NewValueColumn = "newValueColumn", 
 			ConditionalValueColumns = "conditionalValueColumns"
