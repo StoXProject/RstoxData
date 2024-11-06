@@ -465,7 +465,7 @@ expandFilterExpressionList <- function(FilterExpressionList, sep = "/") {
 #' Filters \code{\link{BioticData}}.
 #'
 #' @param BioticData  Input \code{\link{BioticData}} data.
-#' @param FilterExpression Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \code{\%in\%} or the special operator \code{\%notin\%}, which is defined in RstoxData. For a numeric filter, in the current StoX GUI, NA must be added manually in the text field of the "Expression table dialog" (the "Query builder dialog" will only show numeric values and will show an empty fields if the filter contains NA).
+#' @param FilterExpression Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator \code{\%in\%} or the special operator \code{\%notin\%}, which is defined in RstoxData. For a numeric filter, in the current StoX GUI, NA must be added manually in the text field of the "Expression table dialog" (the "Query builder dialog" will only show numeric values and will show an empty fields if the filter contains NA). Possible values are provided in the filter expression builder in the StoX GUI for character values, integer values, and numeric values that are all whole numbers, but not for keys (CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey and IndividualKey in \code{\link{FilterStoxBiotic}}, and CruiseKey, LogKey, BeamKey, AcousticCategoryKey, ChannelReferenceKey and NASCKey in \code{\link{FilterStoxAcoustic}}).
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE. Use this option with caution, particularly for swept-area survey estimates, where setting \code{FilterUpwards} to TRUE could affect the estimated mean density.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -489,8 +489,8 @@ FilterBiotic <- function(BioticData, FilterExpression = list(), FilterUpwards = 
 #'
 #' Filters \code{\link{AcousticData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param AcousticData  Input \code{\link{AcousticData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -516,8 +516,8 @@ FilterAcoustic <- function(AcousticData, FilterExpression = list(), FilterUpward
 #'
 #' Filters \code{\link{LandingData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param LandingData  Input \code{\link{LandingData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -541,8 +541,8 @@ FilterLanding <- function(LandingData, FilterExpression = list(), FilterUpwards 
 #'
 #' Filters \code{\link{StoxBioticData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param StoxBioticData  Input \code{\link{StoxBioticData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -590,8 +590,8 @@ getFilterStoxBiotic_FilterExpressionWarningMessage <- function(FilterExpression,
 #'
 #' Filters \code{\link{StoxAcousticData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param StoxAcousticData  Input \code{\link{StoxAcousticData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -611,8 +611,8 @@ FilterStoxAcoustic <- function(StoxAcousticData, FilterExpression = list(), Filt
 #'
 #' Filters \code{\link{StoxLandingData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param StoxLandingData  Input \code{\link{StoxLandingData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #'
 #' @return An object of filtered data in the same format as the input data.
 #'
@@ -635,8 +635,8 @@ FilterStoxLanding <- function(StoxLandingData, FilterExpression = list()) {
 #'
 #' Filters \code{\link{ICESBioticData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param ICESBioticData  Input \code{\link{ICESBioticData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -659,8 +659,8 @@ FilterICESBiotic <- function(ICESBioticData, FilterExpression = list(), FilterUp
 #'
 #' Filters \code{\link{ICESAcousticData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param ICESAcousticData  Input \code{\link{ICESAcousticData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #' @param FilterUpwards Whether the filter action will propagate in the upwards direction. Default to FALSE.
 #'
 #' @return An object of filtered data in the same format as the input data.
@@ -683,8 +683,8 @@ FilterICESAcoustic <- function(ICESAcousticData, FilterExpression = list(), Filt
 #'
 #' Filters \code{\link{ICESDatrasData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param ICESDatrasData  Input \code{\link{ICESDatrasData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #'
 #' @return An object of filtered data in the same format as the input data.
 #'
@@ -708,8 +708,8 @@ FilterICESDatras <- function(ICESDatrasData, FilterExpression = list()) {
 #'
 #' Filters \code{\link{ICESDatsuscData}}.
 #' 
+#' @inheritParams FilterBiotic
 #' @param ICESDatsuscData  Input \code{\link{ICESDatsuscData}} data.
-#' @param FilterExpression Filter expression in list of strings. The name of the list and structures should be identical to the names of the input data list.
 #'
 #' @return An object of filtered data in the same format as the input data.
 #'
