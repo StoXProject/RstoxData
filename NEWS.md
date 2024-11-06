@@ -1,5 +1,6 @@
 # RstoxData v2.1.0  (2024-11-04)
 * Final release for StoX 4.1.0.
+* Fixed bug in DefineTranslation, where the ConditionalVariableNames was showing as a single string and not a vector.
 
 
 # RstoxData v2.0.1-9006  (2024-10-30)
