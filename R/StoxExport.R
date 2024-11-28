@@ -274,7 +274,7 @@ checkAndCreateICESAcousticCSV <- function(ICESAcousticDataOne) {
 	checkICESAcousticDefinitions (ICESAcousticDataOne)
 	
 	# Set classes of the variables, especially taking care of NAs. The class of the variables is used later to format the output from WriteICESAcoustic, where NA double type is stored as empty sting to support these beingg empty fields in the written file:
-	setClassICESAcoustic(ICESAcousticDataOne)
+	lapply(names(ICESAcousticDataOne), setClass_OneTable, ICESAcousticDataOne, RstoxData::xsdObjects$icesAcoustic.xsd)
 	
 	
 	#### Rename columns to start with the table name:
@@ -595,7 +595,7 @@ BioticDataToICESBioticOne <- function(
 	ICESBioticDataOne <- ICESBioticDataOne[hierarchicalTables]
 	
 	# Set classes of the variables, especially taking care of NAs. The class of the variables is used later to format the output from WriteICESBiotic, where NA double type is stored as empty sting to support these being empty fields in the written file:
-	setClassICESBiotic(ICESBioticDataOne)
+	lapply(names(ICESBioticDataOne), setClass_OneTable, ICESBioticDataOne, RstoxData::xsdObjects$icesBiotic.xsd)
 	
 	
 	# Create a table of the original and new column names, but remove keys:
@@ -748,6 +748,8 @@ BioticData_NMDToICESBioticOne <- function(
 	# We must filter records with aphia == NA
 	catchRaw <- catchRaw[!is.na(aphia)]
 	
+	
+	
 	Catch <- catchRaw[, .(
 		LocalID = cruise,
 		Gear = gear,
@@ -862,9 +864,6 @@ BioticData_NMDToICESBioticOne <- function(
 	}
 	
 	
-	
-	
-	
 	ICESBioticCSV <- list(
 		Cruise = Cruise, 
 		Haul = Haul, 
@@ -878,117 +877,12 @@ BioticData_NMDToICESBioticOne <- function(
 
 
 
-setClassICESBiotic <- function(data, tables = names(data), xsd = RstoxData::xsdObjects$icesBiotic.xsd) {
-	setClassICES(data, xsd, tables = names(data))
-}
-
-setClassICESAcoustic <- function(data, tables = names(data), xsd = RstoxData::xsdObjects$icesAcoustic.xsd) {
-	setClassICES(data, xsd, tables = names(data))
-}
 
 
 
-setClassICES <- function(data, xsd, tables = names(data)) {
-	# Get the classes per table:
-	classes <- mapply(
-		structure, 
-		lapply(
-			xsd$tableTypes[tables], 
-			translateSimple, 
-			old = c(
-				"xsd:float", 
-				"xsd:int", 
-				"xsd:string", 
-				"xs:string", 
-				"xsd:ID"
-			), 
-			new = c(
-				"numeric", 
-				"integer", 
-				"character", 
-				"character", 
-				"character"
-			)
-		), 
-		names = xsd$tableHeaders[tables], 
-		SIMPLIFY = FALSE
-	)
-	classes <- lapply(classes, as.list)
-	
-	for(table in tables) {
-		data[[table]] <- data[[table]][, lapply(names(.SD), changeClassOfNonNA, classes = classes[[table]], data = data[[table]])]
-	}
-}
-
-translateSimple <- function(x, old, new) {
-	if(length(old) != length(new)) {
-		stop("old and new need to be of equal length.")
-	}
-	for(ind in seq_along(old)) {
-		x <- replace(x, x == old[ind], new[ind])
-	}
-	return(x)
-}
 
 
-changeClassOfNonNA <- function(name, classes, data) {
-	if(name %in% names(data) && name %in% names(classes) && firstClass(data[[name]]) != classes[[name]]) {
-		thisClass <- classes[[name]]
-		if(all(is.na(data[[name]]))) {
-			NAToInsert <- getNAByType(thisClass)
-			data[, c(name) := ..NAToInsert]
-		}
-		else {
-			# Removed this by a special function that converts to integer after rounding to avoid problems like trunc(0.29 * 100) == 28:
-			# I.e., convertion from float to integer performs in the same way as trunc(), which has problems with floating numbers. For the fish lengths that are relevant we have the problem for the following values:
-			# int <- seq_len(150)
-			# d <- data.table::data.table(int = int, equalToFloat = trunc(int / 100 * 100) == int)
-			# subset(d, !equalToFloat)
-			#data[, c(name) := get(paste("as", thisClass, sep = "."))(get(name))]
-			# int equalToFloat
-			# <int>       <lgcl>
-			# 	1:    29        FALSE
-			# 2:    57        FALSE
-			# 3:    58        FALSE
-			# 4:   113        FALSE
-			# 5:   114        FALSE
-			# 6:   115        FALSE
-			# 7:   116        FALSE
-			# So the problem is particularly for fish of length 29 cm, which were truncated to 28 cm when submitting to ICES:
-			data[, c(name) := get(getConversionFunction(thisClass))(get(name))]
-		}
-	}
-}
 
-
-getConversionFunction <- function(class) {
-	atInteger <- class %in% "integer"
-	out <- paste("as", class, sep = ".")
-	out[atInteger] <- "asIntegerAfterRound"
-	return(out)
-}
-
-
-asIntegerAfterRound <- function(x, prec = .Machine$double.eps) {
-	# This operation requires that the input can be represented as numeric, so we test that first by observing whether the number of missing values increases:
-	x_numeric <- as.numeric(x)
-	numberOfNAs <- sum(is.na(x))
-	numberOfNAs_numeric <- sum(is.na(x_numeric))
-	if(numberOfNAs_numeric > numberOfNAs) {
-		warning("StoX: NAs introduced when trying to convert to integer.")
-		return(as.integer)
-	}
-	
-	# Convert to integer:
-	x_integer <- as.integer(x)
-	# Find values which differ to the integer value by less than the input precision, and round these off before converting to integer to avoid occasional shifts in integer value due to floating point representation (e.g. as.integer(0.29 * 100) == 28):
-	atSmallDiff <- which(abs(x_numeric - x_integer) <= prec)
-	
-	# Convert to integer, but for values that differ to the integer value by more than 
-	x_integer[atSmallDiff] <- as.integer(round(x_numeric[atSmallDiff]))
-	
-	return(x_integer)
-}
 
 #' Write ICESBiotic to CSV fille
 #'
