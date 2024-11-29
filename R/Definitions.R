@@ -257,6 +257,24 @@ initiateRstoxData <- function(){
 	lengthCode_unit_table[, rank := seq_len(.N)]
 	
 	
+	# Define conversion functions from xml types:
+	conversionFunctionName <- list(
+		"xsd:ID" = "as.character", 
+		"xsd:float" = "as.double", 
+		"xs:string" = "as.character",
+		"xsd:string" = "as.character", 
+		#"xsd:int" = "integer", 
+		"xsd:int" = "asIntegerAfterRound", 
+		"xs:long" = "asIntegerAfterRound", 
+		#"xs:integer" = "integer",
+		"xs:integer" = "asIntegerAfterRound",
+		"xs:decimal" = "as.double", 
+		"xs:date" = "as.character", 
+		"xs:time" = "as.character", 
+		"xs:double" = "as.double"
+	)
+	
+	
 	#### Assign to RstoxDataEnv and return the definitions: ####
 	definitionsNames <- ls()
 	definitions <- lapply(definitionsNames, get, pos = environment())
