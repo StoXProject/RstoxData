@@ -319,7 +319,10 @@ mapplyOnCores <- function(FUN, NumberOfCores = 1L, ..., MoreArgs = NULL, SIMPLIF
 		
 		# On Windows run special args to speed up:
 		#if(get_os() == "win") {
-			cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			
+			# Removed the rscript_args, because it changes the envoronment compared to the partent environment:
+			#cl <- parallel::makeCluster(NumberOfCores, rscript_args = c("--no-init-file", "--no-site-file", "--no-environ"))
+			cl <- parallel::makeCluster(NumberOfCores)
 			out <- parallel::clusterMap(cl, FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY)
 			parallel::stopCluster(cl)
 		#} 
@@ -1050,5 +1053,124 @@ do.call_robust <- function(what, args, quote = FALSE, envir = parent.frame(), ke
 	# Run the function:
 	do.call(what, args, quote = quote, envir = envir)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Process column names and types
+setNames_OneTable <- function(tableName, data, xsd) {
+	
+	# For convenience extract the tableHeader of the current table:
+	tableHeader <- xsd$tableHeaders[[tableName]]
+	
+	# There are duplicated column names in NMDBiotic 1, 1.1 and 1.4. we suffix the table name to those fields:
+	if(anyDuplicated(tableHeader)) {
+		dup <- duplicated(tableHeader)
+		tableHeader[dup] <- paste(tableHeader[dup], tableName, sep = ".")
+	}
+	
+	# Handle empty data. This is only relevant for NMDBiotic and NMDAcoustic, which both have levels with no data (i.e. "missions" and "distance_list", respectively):
+	if(!length(data[[tableName]])) {
+		data[[tableName]] <- matrix(data = "", nrow = 0, ncol = length(tableHeader))
+	}
+	
+	# Convert to data.table
+	output <- data.table(data[[tableName]])
+	
+	# Set column names
+	setnames(output, tableHeader)
+	
+	return(output)
+}
+
+
+
+
+
+# Set types of the columns of the table named 'tableName' of 'data'. Note that this only considers the columns with names present in the xsd$tableHeader. For ICES formats the keys are not included in the tableHeader, but all keys are character
+setClass_OneTable <- function(tableName, data, xsd) {
+	
+	# Known atomic data types
+	conversionFunctionName <- getRstoxDataDefinitions("conversionFunctionName")
+	
+	# Set column types (only double and integer for now)
+	tableHeader <- xsd$tableHeader[[tableName]]
+	tableType <- xsd$tableTypes[[tableName]]
+	if(length(tableType) > 0) {
+		for(i in seq_along(tableHeader)) {
+			# Map the types
+			doConv <- eval(
+				parse(
+					text = conversionFunctionName[[tableType[i]]]
+				)
+			)
+			
+			# Throw a proper warning when conversion fails:
+			tryCatch(
+				data[[tableName]][, tableHeader[i] := doConv(data [[tableName]] [[tableHeader[i]]] ) ], 
+				error = function(e) {
+					e
+				}, 
+				warning = function(w) {
+					modifiedWarning <- paste0("The following variable could not converted to numeric as per the format definition and were set to NA: ", names(data[[tableName]])[i])
+					warning(modifiedWarning)
+				}
+			)
+		}
+	}
+	
+	invisible(tableName)
+}
+
+
+asIntegerAfterRound <- function(x, prec = sqrt(.Machine$double.eps)) {
+	# This operation requires that the input can be represented as numeric, so we test that first by observing whether the number of missing values increases:
+	x_numeric <- as.numeric(x)
+	x_integer <- as.integer(x)
+	
+	# Detect whether the input is not fully convertible to integer, which we assume is the case if there are mote missing values in the x_numeric, in which case we simply return the x_integer: 
+	numberOfNAs <- sum(is.na(x))
+	numberOfNAs_numeric <- sum(is.na(x_numeric))
+	if(numberOfNAs_numeric > numberOfNAs) {
+		warning("StoX: NAs introduced when trying to convert to integer.")
+		return(x_integer)
+	}
+	
+	# Convert to integer:
+	x_integer <- as.integer(x)
+	x_rounded <- round(x_numeric)
+	# Find values which differ to the integer value by less than the input precision, and round these off before converting to integer to avoid occasional shifts in integer value due to floating point representation (e.g. as.integer(0.29 * 100) == 28):
+	diff <- x_numeric - x_rounded
+	atSmallDiff <- which(diff < 0 & -diff <= prec)
+	
+	# Convert to integer after rounding for values that differ to the integer value by less than the prec:
+	x_integer[atSmallDiff] <- as.integer(x_rounded[atSmallDiff])
+	
+	return(x_integer)
+}
+
 
 

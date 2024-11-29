@@ -114,20 +114,20 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	
 
 	result <- res[["result"]]
-	xsd <- res[["xsd"]]
+	xsdName <- res[["xsd"]]
 
 	# Fix encoding on the result list names
 	xx <- names(result)
 	Encoding(xx) <- "UTF-8"
 	names(result) <- xx
 
-	tableHeaders <- xsdObjects[[xsd]][["tableHeaders"]]
-	
-	tableTypes <- xsdObjects[[xsd]][["tableTypes"]]
-	
-	# Finishing touch
-	final <- lapply(names(result), applyNameType, result, tableHeaders, tableTypes, xsd)
+	# Convert to data.table and set the names of the columns:
+	final <- lapply(names(result), setNames_OneTable, result, xsdObjects[[xsdName]])
 	names(final) <- names(result)
+	
+	# Set the class of the columns by the format definition (xsd):
+	lapply(names(final), setClass_OneTable, final, xsdObjects[[xsdName]])
+	
 
 	# Add metadata
 	final[["metadata"]] <- data.table(useXsd = useXsd, file = xmlFilePath)
@@ -225,67 +225,15 @@ icesBioticPreprocess <- function(xsdObject) {
 	return(newAC)
 }
 
-# Process column names and types
-applyNameType <- function(x, result, tableHeaders, tableTypes, xsd) {
-	
-	# Known atomic data types
-	knownTypes <- list( "xsd:ID"="character", "xsd:float"="double", "xs:string"="character",
-						"xsd:string"="character", "xsd:int"="integer", "xs:long"="integer", "xs:integer"="integer",
-						"xs:decimal"="double", "xs:date"="character", "xs:time"="character", "xs:double"="double")
-	
-	# Get result matrix
-	y <- result[[x]]
-	
-	# Handle empty data
-	if(ncol(y) == 0)
-		y <- matrix(data = "", nrow = 0, ncol = length(tableHeaders[[x]]))
-	
-	# Convert to data.table
-	z <- data.table(y)
-	
-	# Set column names
-	tableHeader <- tableHeaders[[x]]
-	
-	# NOTE: Landings' Fartoy header has duplicate header name try to rename the second
-	
-	# Instead of adding integers, add the level:
-	#tableHeader <- make.unique(tableHeader)
-	if(anyDuplicated(tableHeader)) {
-		dup <- duplicated(tableHeader)
-		tableHeader[dup] <- paste(tableHeader[dup], x, sep = ".")
-	}
-	
-	Encoding(tableHeader) <- "UTF-8"
-	setnames(z, tableHeader)
-	
-	# Set encoding (Rcpp uses UTF-8)
-	cn <- colnames(z)
-	if(nrow(z) > 0)
-		z[, (cn):=lapply(.SD, toUTF8), .SDcols=cn]
-	
-	# Set column types (only double and integer for now)
-	tableType <- tableTypes[[x]]
-	if(length(tableType) > 0) {
-		for(i in seq_len(ncol(z))) {
-			# Map the types
-			doConv <- eval(parse(text = paste0("as.", knownTypes[[tableType[i]]])))
-			#z[, tableHeader[i] := doConv(z[[tableHeader[i]]])]
-			
-			# Throw a proper warning when conversion fails:
-			tryCatch(
-				z[, tableHeader[i] := doConv(z[[tableHeader[i]]])], 
-				error = function(e) {
-					e
-				}, 
-				warning = function(w) {
-					modifiedWarning <- paste0("The following variable could not converted to numeric as required by the XSD ", xsd, ", and were set to NA: ", paste(cn[i]))
-					warning(modifiedWarning)
-				}
-			)
-		}
-	}
-	return(z)
-}
+
+
+
+
+
+
+
+
+
 
 # To UTf-8
 toUTF8 <- function(srcvec) {
