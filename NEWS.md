@@ -1,3 +1,13 @@
+# RstoxData v2.1.1  (2024-12-19)
+* Final release for StoX 4.1.1.
+
+
+# RstoxData v2.1.1_9001  (2024-11-25)
+* Removed rscript_args from mapplyOnCores(), since this caused the Renviron to be ignored in the sub processes, resulting in errors with finding RstoxFramework in the case of multiple libraries on Linux and macOS.
+* Fixed the 29 cm bug again, as it was not properly fixed in RstoxData v2.1.0. Refactored how precision is set both when reading data and in the ICESBiotic() and ICESAcoustic().
+* Introduced the EchoType as a column in the Data table of ICESBiotic() (and WriteICESBiotic()).
+
+
 # RstoxData v2.1.0  (2024-11-04)
 * Final release for StoX 4.1.0.
 * Fixed bug in DefineTranslation, where the ConditionalVariableNames was showing as a single string and not a vector.
