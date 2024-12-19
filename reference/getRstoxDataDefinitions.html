@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.1</span>
       </span>
     </div>
 
@@ -86,6 +86,41 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">getRstoxDataDefinitions</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xsd:ID`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xsd:float`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.double"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:string`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xsd:string`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xsd:int`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "asIntegerAfterRound"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:long`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "asIntegerAfterRound"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:integer`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "asIntegerAfterRound"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:decimal`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.double"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:date`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:time`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $conversionFunctionName$`xs:double`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "as.double"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dataTypeUnits</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             dataType              variableName     quantity         unit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt;                    &lt;char&gt;       &lt;char&gt;       &lt;char&gt;</span>
@@ -191,8 +226,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     useXsd &lt;- tools::file_path_sans_ext(names(xsdObjects)[hasSelectedXsd])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     return(useXsd)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x124f3b140&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x124f3ec38&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x13932ebe0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1393310b0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Cruise</span>

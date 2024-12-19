@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.1</span>
       </span>
     </div>
 
@@ -57,6 +57,16 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.1.1" id="rstoxdata-v211-2024-12-19">RstoxData v2.1.1 (2024-12-19)<a class="anchor" aria-label="anchor" href="#rstoxdata-v211-2024-12-19"></a></h2>
+<ul><li>Final release for StoX 4.1.1.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.1.1" id="rstoxdata-v211_9001-2024-11-25">RstoxData v2.1.1_9001 (2024-11-25)<a class="anchor" aria-label="anchor" href="#rstoxdata-v211_9001-2024-11-25"></a></h2>
+<ul><li>Removed rscript_args from mapplyOnCores(), since this caused the Renviron to be ignored in the sub processes, resulting in errors with finding RstoxFramework in the case of multiple libraries on Linux and macOS.</li>
+<li>Fixed the 29 cm bug again, as it was not properly fixed in RstoxData v2.1.0. Refactored how precision is set both when reading data and in the ICESBiotic() and ICESAcoustic().</li>
+<li>Introduced the EchoType as a column in the Data table of ICESBiotic() (and WriteICESBiotic()).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.1.0" id="rstoxdata-v210-2024-11-04">RstoxData v2.1.0 (2024-11-04)<a class="anchor" aria-label="anchor" href="#rstoxdata-v210-2024-11-04"></a></h2>
 <ul><li>Final release for StoX 4.1.0.</li>
