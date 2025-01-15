@@ -9,9 +9,21 @@
 #'
 #' @export
 #' 
-StoxBiotic <- function(BioticData) {
+StoxBiotic <- function(
+	BioticData
+) {
+	
+	# This can be used if we decide to introduce the UseHaulKeyAsStationKey:
+	# @param UseHaulKeyAsStationKey Logical: If TRUE the variable used as key in the Haul table (HaulKey) will also be used as key in the parent Station table (StationKey). This option can be used for biotic input data in cases where the station variable has been used for something different than a geographical grouping variable (to group hauls on the sam egeographical station) but e.g. to group one month of data from the Norwegian reference fleet.
+	# UseHaulKeyAsStationKey = FALSE
+	
+	
 	# Convert from BioticData to the general sampling hierarchy:
-	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(BioticData, NumberOfCores = 1L)
+	GeneralSamplingHierarchy <- BioticData2GeneralSamplingHierarchy(
+		BioticData, 
+		NumberOfCores = 1L
+		#UseHaulKeyAsStationKey = UseHaulKeyAsStationKey
+	)
 	
 	# Extract the StoxBiotic data and rbind across files:
 	StoxBioticData <- GeneralSamplingHierarchy2StoxBiotic(GeneralSamplingHierarchy, NumberOfCores = 1L)
@@ -45,6 +57,7 @@ BioticData2GeneralSamplingHierarchy <- function(
 	NumberOfCores = 1L, 
 	#AddToLowestTable = FALSE, 
 	SplitTableAllocation = c("Default", "Lowest", "Highest")
+	#UseHaulKeyAsStationKey = FALSE
 ) {
 	
 	# Make a copy, since we are modifying things by reference:
@@ -57,6 +70,7 @@ BioticData2GeneralSamplingHierarchy <- function(
 		NumberOfCores = NumberOfCores,
 		#AddToLowestTable = AddToLowestTable
 		SplitTableAllocation = SplitTableAllocation
+		#UseHaulKeyAsStationKey = UseHaulKeyAsStationKey
 	)
 }
 
@@ -107,11 +121,18 @@ firstPhase <- function(
 	stoxBioticObject, 
 	#AddToLowestTable = FALSE
 	SplitTableAllocation = c("Default", "Lowest", "Highest")
+	#UseHaulKeyAsStationKey = FALSE
 ) {
     
 	# Getting data for the datatype
-    tableKey <- stoxBioticObject$tableKeyList[[datatype]]
-    tableMap <- stoxBioticObject$tableMapList[[datatype]]
+	#if(UseHaulKeyAsStationKey) {
+	#	tableKey <- stoxBioticObject$tableKeyList_HaulAtStation[[datatype]]
+	#}
+	#else {
+		tableKey <- stoxBioticObject$tableKeyList[[datatype]]
+	#}
+    
+	tableMap <- stoxBioticObject$tableMapList[[datatype]]
     simpleTableMap <- tableMap[sapply(tableMap, function(x) length(x[[2]])) == 1]
     originalParentTables <- stoxBioticObject$originalParentTables[[datatype]]
     
@@ -347,7 +368,7 @@ firstPhase <- function(
     	
     	numDup <- length(stationsWithMoreThanOneSerialnumber)
     	
-    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station'(StationKey in StoxBioticData) in the NMDBiotic data. In DefineBioticAssignment() it is currently only possible to asssign all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic(). More than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
+    	warning("StoX: There are more than one 'serialnumber' (HaulKey in StoxBioticData) for ", numDup, " out of ", numStations," 'station' (StationKey in StoxBioticData) in the NMDBiotic data. This implies that the first value of CatchPlatform, DateTime, Longitude, Latitude and BottomDepth is used for all the hauls of each of these stations.\nNote about biotic assignment: In DefineBioticAssignment() it is currently only possible to asssign all hauls of a station in the map (manual assignment). If certain Hauls should be exclcuded, use FilterStoxBiotic().\nMore than one serialnumber for the following cruise/station (of the fishstation table of the BioticData):", printErrorIDs(stationsWithMoreThanOneSerialnumber))
     }
     
     # 3. One to one mapping and keys
@@ -483,6 +504,7 @@ StoxBiotic_firstPhase <- function(
 	BioticData, 
 	#AddToLowestTable = FALSE
 	SplitTableAllocation = c("Default", "Lowest", "Highest")
+	#UseHaulKeyAsStationKey = FALSE
 ) {
     # Get data type: 
 	datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
@@ -498,6 +520,7 @@ StoxBiotic_firstPhase <- function(
 		stoxBioticObject, 
 		#AddToLowestTable = AddToLowestTable
 		SplitTableAllocation = SplitTableAllocation
+		#UseHaulKeyAsStationKey = UseHaulKeyAsStationKey
 	)
     
 	# Add the metadata:
