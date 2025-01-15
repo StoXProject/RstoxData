@@ -358,6 +358,15 @@ tableKeyList1 <- list(
 	Sample = list("samplenumber", "SampleKey"),
 	Individual = list("specimenno", "IndividualKey")
 )
+
+# Special support for using the serial number as key both for the Haul and the Station level, which is an option to support use of Norwegian data where station is used as a non-geographical grouping variable (e.g. for the reference fleet where one month is often used as one station):
+tableKeyList3_HaulAtStation <- tableKeyList3
+tableKeyList3_HaulAtStation$Station <- list("serialnumber", "StationKey")
+tableKeyList1_HaulAtStation <- tableKeyList1
+tableKeyList1_HaulAtStation$Station <- list("serialno", "StationKey")
+
+
+
 originalParentTables <- list(
 	Cruise = NULL, 
 	Station = "Cruise", 
@@ -377,6 +386,8 @@ stoxBioticObject$indageHeadersList[["nmdbioticv3.1"]] <- c("missiontype", "start
 
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv3.1"]] <- tableKeyList3
+stoxBioticObject$tableKeyList_HaulAtStation[["nmdbioticv3.1"]] <- tableKeyList3_HaulAtStation
+
 #stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual"))
 stoxBioticObject$tableMapList[["nmdbioticv3.1"]] <- tableMapList_nmdbiotic3
 stoxBioticObject$originalParentTables[["nmdbioticv3.1"]] <- originalParentTables
@@ -464,6 +475,8 @@ stoxBioticObject$indageHeadersList[["nmdbioticv3"]] <- c("missiontype", "startye
 
 ## Format: {source variable, target keyname}  
 stoxBioticObject$tableKeyList[["nmdbioticv3"]] <- tableKeyList3
+stoxBioticObject$tableKeyList_HaulAtStation[["nmdbioticv3"]] <- tableKeyList3_HaulAtStation
+
 #stoxBioticObject$tableMapList[["nmdbioticv3"]] <- list(list("mission", "Cruise"), list("individual", "Individual"), list("prey", "SubIndividual")) 
 stoxBioticObject$tableMapList[["nmdbioticv3"]] <- tableMapList_nmdbiotic3
 stoxBioticObject$originalParentTables[["nmdbioticv3"]] <- originalParentTables
@@ -528,6 +541,8 @@ stoxBioticObject$indageHeadersList[["nmdbioticv1.4"]] <- NULL
 
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv1.4"]] <- tableKeyList1
+stoxBioticObject$tableKeyList_HaulAtStation[["nmdbioticv1.4"]] <- tableKeyList1_HaulAtStation
+
 stoxBioticObject$tableMapList[["nmdbioticv1.4"]] <- tableMapList_nmdbiotic1
 stoxBioticObject$originalParentTables[["nmdbioticv1.4"]] <- originalParentTables
 
@@ -611,6 +626,8 @@ stoxBioticObject$indageHeadersList[["nmdbioticv1.1"]] <- stoxBioticObject$indage
 
 ## Format: {source variable, target keyname}
 stoxBioticObject$tableKeyList[["nmdbioticv1.1"]] <- tableKeyList1
+stoxBioticObject$tableKeyList_HaulAtStation[["nmdbioticv1.1"]] <- tableKeyList1_HaulAtStation
+
 stoxBioticObject$tableMapList[["nmdbioticv1.1"]] <- tableMapList_nmdbiotic1
 stoxBioticObject$originalParentTables[["nmdbioticv1.1"]] <- originalParentTables
 
@@ -669,6 +686,8 @@ stoxBioticObject$tableKeyList[["icesBiotic"]] <- list(
                  Sample = list("SpeciesCategory", "SampleKey"),
                  Individual = list("FishID", "IndividualKey")
                 )
+stoxBioticObject$tableKeyList_HaulAtStation[["icesBiotic"]] <- stoxBioticObject$tableKeyList[["icesBiotic"]]
+
 stoxBioticObject$tableMapList[["icesBiotic"]] <- list(
 	list("Cruise", "Cruise"), 
 	list("Haul", c("Station", "Haul")), 

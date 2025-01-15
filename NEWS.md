@@ -1,3 +1,7 @@
+# RstoxData v2.1.2-9001  (2025-01-14)
+* Improved warning when multiple serial numbers have the same station in NMDBiotic input files.
+
+
 # RstoxData v2.1.1  (2024-12-19)
 * Final release for StoX 4.1.1.
 

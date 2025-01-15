@@ -35,6 +35,7 @@ jobs:
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: 'oldrel',  pkgext: '.zip'}
           
+          # ubuntu-latest is 24 as of 2024-10-31. Should we use it?
           - {os: ubuntu-22.04,  r: 'release', pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-22.04,   r: 'oldrel',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
           - {os: ubuntu-22.04,   r: 'oldrel-1',  pkgext: '.tar.gz', rspm: "https://cloud.r-project.org"}
@@ -123,8 +124,8 @@ jobs:
           rm '/usr/local/bin/pydoc3.11'
           rm '/usr/local/bin/python3.11'
           rm '/usr/local/bin/python3.11-config'
-          export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=0 # This prevents Homebrew from re-installing R, which will lead to .Platform$pkgType = "source".
-          brew install gdal udunits
+          export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=false # This prevents Homebrew from re-installing R, which will lead to .Platform$pkgType = "source".
+         brew install gdal udunits
         shell: bash
       
       - name: Prepare for CRANdependencies on Linux
@@ -156,20 +157,6 @@ jobs:
           pkgs <- installed.packages()[, "Package"]
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
-
-
-      ## 2f. Additional installs to secure specific versions to patch incompatibilities with older R versions:
-      - name: Additional installs to secure specific versions
-        run: |
-          pkgs <- installed.packages()[, "Package"]
-          s <-  sessioninfo::session_info(pkgs, include_base = TRUE)
-          onlyStringi <- subset(s$packages, package == "stringi")
-          if("stringi"  %in% as.data.frame(s$packages)$package && is.na(subset(s$packages, package == "stringi")$ondiskversion)) {
-          	remotes::install_github("gagolews/stringi")
-          }
-        shell: Rscript {0}
-
-
 
 
       #####################################
