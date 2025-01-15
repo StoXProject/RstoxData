@@ -125,7 +125,7 @@ jobs:
           rm '/usr/local/bin/python3.11'
           rm '/usr/local/bin/python3.11-config'
           export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=false # This prevents Homebrew from re-installing R, which will lead to .Platform$pkgType = "source".
-         brew install gdal udunits
+          brew install gdal udunits
         shell: bash
       
       - name: Prepare for CRANdependencies on Linux
