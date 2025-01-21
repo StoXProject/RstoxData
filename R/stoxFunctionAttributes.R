@@ -1,3 +1,4 @@
+# Function to get variable names, given a different variable name in the input VariableName. This funciton is used e.g. to list possible ConditionalVariableNames:
 getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData, VariableName) {
 	
 	# Function to get the names of a table if that table contains certain variables:
@@ -53,6 +54,17 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 	#	stop("Any of BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, AcousticData, StoxAcousticData, ICESAcousticData, Land#ingData and StoxLandingData must be given.")
 	#}
 }
+
+
+# Function to get variable names from all tables:
+getVariableNameStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
+	
+	output <- getVariableNamesStoxData(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData, VariableName = NULL) 
+	
+	return(output)
+}
+
+
 
 
 getValueColumns <- function(FileName, ValueColumn = NULL, NewValueColumn = NULL, ConditionalValueColumns = NULL) {
@@ -1140,7 +1152,7 @@ processPropertyFormats <- list(
 	variableName_translate = list(
 		class = "single", 
 		title = "Select one variable to translate.", 
-		possibleValues = getVariableNamesStoxData, 
+		possibleValues = getVariableNameStoxData, 
 		variableTypes = "character"
 	), 
 	valueColumn = list(
@@ -1182,15 +1194,10 @@ processPropertyFormats <- list(
 	fromVariable_StoxData = list(
 		class = "single", 
 		title = "Select one variable to copy", 
-		possibleValues = getVariableNamesStoxData, 
+		possibleValues = getVariableNameStoxData, 
 		variableTypes = "character"
 	), 
-	#conditionalVariableNames_Copy = list(
-	#	class = "vector", 
-	#	title = "Select one variable to copy", 
-	#	possibleValues = getVariableNamesStoxData, 
-	#	variableTypes = "character"
-	#),
+
 	
 	roundingTable = list(
 		class = "table", 
