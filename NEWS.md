@@ -39,7 +39,7 @@
 * Temporarily hiding Prey tables in StoxBiotic().
 
 # RstoxData v2.0.1-9004  (2024-10-08)
-* Fixed a bug where certain values of BiologyLengthCode were shifted one integer value down in ICESBiotic(). The bug is related to floating point precision which causes some values to be slightly lower than the corresponding integer after calculations. In R one example is format(29 / 100 * 100, digits = 20) = "28.999999999999996447", which results in 28 when converted to integer. The following values are affected:
+* Fixed a bug where certain values of BiologyLengthClass were shifted one integer value down in ICESBiotic(). The bug is related to floating point precision which causes some values to be slightly lower than the corresponding integer after calculations. In R one example is format(29 / 100 * 100, digits = 20) = "28.999999999999996447", which results in 28 when converted to integer. The following values are affected:
 	* 29, 57, 58, 113, 114, 115, 116 when BiologyLengthCode is "cm" (lengthresolution "3")
 	* 1001, 1003, 1005, 1007, 1009, 1011, 1013, 1015, 1017, 1019, 1021 and 1023 when BiologyLengthCode is "mm"  (lengthresolution "1")
 	* 1005 and 1015 (a subset of the values for "mm") when BiologyLengthCode is "halfcm" (lengthresolution "2")
