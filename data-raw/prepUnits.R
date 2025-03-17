@@ -44,6 +44,7 @@ StoxUnits <- rbind(StoxUnits, list("cardinality-TN", "cardinality", "TN", "10^12
 StoxUnits <- rbind(StoxUnits, list("area_number_density-N/nmi^2", "area_number_density", "N/nmi^2", "individuals/nmi^2", "individuals per square nautical mile", 1))
 StoxUnits <- rbind(StoxUnits, list("area_number_density-kN/nmi^2", "area_number_density", "kN/nmi^2", "10^3 individuals/nmi^2", "thousand individuals per square nautical mile", 1e3))
 StoxUnits <- rbind(StoxUnits, list("area_number_density-MN/nmi^2", "area_number_density", "MN/nmi^2", "10^6 individuals/nmi^2", "million individuals per square nautical mile", 1e6))
+StoxUnits <- rbind(StoxUnits, list("area_number_density-GN/nmi^2", "area_number_density", "GN/nmi^2", "10^9 individuals/nmi^2", "billion individuals per square nautical mile", 1e9))
 
 StoxUnits <- rbind(StoxUnits, list("NASC-m^2/nmi^2", "NASC", "m^2/nmi^2", "m^2/nmi^2", "square meter backscattering cross-section per square nautical mile surveyed area", 1))
 
