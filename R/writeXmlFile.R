@@ -1142,7 +1142,67 @@ MergeNMDEchosounderOne <- function(NMDEchosounderOne) {
 }
 
 MergeICESAcousticOne <- function(ICESAcousticOne) {
-	stop("Not yet implemented.")
+	
+	stop("Not finished!")
+	
+	# The following code is an attempt to merge ICESAcoustic data. The problem that remains unsolved is that when reading the ICESAcoustic XML there is a table named "Survey" and a column named Survey in the Cruise table. The reader misinterprets this so that the Survey column of the Cruise table is appended as an additional row in the Survey table:
+	
+	# Make a copy, as we are translating by reference:
+	ICESAcousticOne <- data.table::copy(ICESAcousticOne)
+	
+	
+	tablesToMerge <- c("Cruise", "Log", "Sample", "Data")
+	
+	# Apply translations defined in the table 'vocabulary':
+	if(length(ICESAcousticOne$vocabulary)) {
+		vocabulary <- findVariablesMathcinigVocabulary(
+			vocabulary = ICESAcousticOne$vocabulary, 
+			data = ICESAcousticOne[tablesToMerge]
+		)
+		# Uniqueify since some columns (keys) are present in several tables:
+		vocabulary <- unique(vocabulary)
+		
+		translateVariables(
+			data = ICESAcousticOne[tablesToMerge], 
+			TranslationDefinition = "FunctionInput",
+			Translation = vocabulary, 
+			translate.keys = TRUE
+		)
+	}
+	
+	
+	
+	merged <- RstoxData::mergeDataTables(ICESAcousticOne[tablesToMerge], output.only.last = TRUE, all = TRUE)
+	
+	# Add the echosounder_dataset:
+	merged <- cbind(
+		ICESAcousticOne$Survey,
+		merged, 
+		ICESAcousticOne$Instrument, 
+		ICESAcousticOne$Calibration, 
+		ICESAcousticOne$DataAcquisition, 
+		ICESAcousticOne$DataProcessing
+	)
+	
+	
+	# # Apply translations defined in the table 'vocabulary':
+	# if(length(ICESAcousticOne$vocabulary)) {
+	# 	vocabulary <- findVariablesMathcinigVocabulary(
+	# 		vocabulary = ICESAcousticOne$vocabulary, 
+	# 		data = merged
+	# 	)
+	# 	# Uniqueify since some columns (keys) are present in several tables:
+	# 	vocabulary <- unique(vocabulary)
+	# 	
+	# 	translateVariables(
+	# 		data = merged, 
+	# 		TranslationDefinition = "FunctionInput",
+	# 		Translation = vocabulary, 
+	# 		translate.keys = TRUE
+	# 	)
+	# }
+	
+	return(merged)
 }
 
 
