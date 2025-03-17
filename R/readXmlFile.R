@@ -93,7 +93,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	#	close(fileConn)
 	#	xmlFilePath <- tempXml
 	#}
-
+	
 	# Apply preprocess for ICES XSDs. This must happen on the xsdObjects, and not e.g. on a copy, as the zip reading fails in that case:
 	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
 		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)

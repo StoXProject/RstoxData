@@ -363,17 +363,26 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 }
 
 readCharZip <- function(x, ...) {
+	
 	if(tolower(tools::file_ext(x)) == "zip") {
 		file <- utils::unzip(zipfile = x, list = TRUE)[, "Name"]
 		file <- file[!grepl("__MACOSX", file)]
 		if(length(file) > 1) {
 			stop("Input data can be zipped, but then each file must be zipped individually, so that each zipfile contains only one file (and this file must have the same name as the zip, excluding file extension).")
 		}
-		readChar(unz(x, file), ...)
+		output <- readChar(unz(x, file), ...)
 	}
 	else {
-		readChar(x, ...)
+		output <- readChar(x, ...)
 	}
+	
+	# Make sure the output is a complete xml (ending with ">"):
+	#last <- utils::tail(gregexpr(">", output)[[1]], 1)
+	#if(is.finite(last)) {
+	#	output <- substr(output, 1, last)
+	#}
+	
+	return(output)
 }
 
 checkFileNameInZip <- function(x) {
