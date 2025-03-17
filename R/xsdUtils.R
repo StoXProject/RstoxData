@@ -377,10 +377,10 @@ readCharZip <- function(x, ...) {
 	}
 	
 	# Make sure the output is a complete xml (ending with ">"):
-	#last <- utils::tail(gregexpr(">", output)[[1]], 1)
-	#if(is.finite(last)) {
-	#	output <- substr(output, 1, last)
-	#}
+	last <- utils::tail(gregexpr(">", output)[[1]], 1)
+	if(is.finite(last)) {
+		output <- substr(output, 1, last)
+	}
 	
 	return(output)
 }
