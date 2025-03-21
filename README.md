@@ -32,7 +32,7 @@ Loaded data can also be filtered by using any supported R conditional syntax suc
 
 1. Install the latest release from our local repository:
     ```r
-    install.packages("RstoxData", repos = c("https://stoxproject.github.io/repo/", "https://cloud.r-project.org/"))
+    install.packages("RstoxData", repos = c("https://stoxproject.github.io/repo/", getOption("repos")))
     ```
 
 2. Install the latest version from GitHub:
