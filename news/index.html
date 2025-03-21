@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.3-9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.3</span>
       </span>
     </div>
 
@@ -57,6 +57,12 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.1.3" id="rstoxdata-v213-2025-03-21">RstoxData v2.1.3 (2025-03-21)<a class="anchor" aria-label="anchor" href="#rstoxdata-v213-2025-03-21"></a></h2>
+<ul><li>Fixed error in ReadBiotic() and ReadAcoustic() where autodetectXml() returned "Memory allocation failed" on Windows due to imcomplete XML returned by readCharZip() not beeing accepted by xml2 v1.3.7 and v1.3.8.</li>
+<li>Adding area_number_density-GN/nmi^2 unit.</li>
+<li>Changed to point to getOption(“repos”) instead of “<a href="https://cloud.r-project.org/" class="external-link uri">https://cloud.r-project.org/</a>” in install.packages() in README.md, so that we do not override the users repo settings.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.1.2" id="rstoxdata-v212-2025-01-20">RstoxData v2.1.2 (2025-01-20)<a class="anchor" aria-label="anchor" href="#rstoxdata-v212-2025-01-20"></a></h2>
 <ul><li>Final release for StoX 4.1.2.</li>
