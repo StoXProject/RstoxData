@@ -7,7 +7,7 @@
 Biotic data stored in the ICESDatras (CSV) format.
 }
 \details{
-This StoX data type is produced by \code{\link{ICESDatras}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESDatras}}, each holding the tables HH, HL and CA, in that hierarchical order.
+This StoX data type is produced by \code{\link{ICESDatras}}, and contains one list per input biotic file read to produec the input to \code{\link{ICESDatras}}, each holding the tables HH, HL and CA, in that hierarchical order. See the \href{https://www.ices.dk/data/Documents/DATRAS/DATRAS_Field_descriptions_and_example_file_March2024.xlsx}{relevant DATRAS format description updated March 2024}.
 }
 \seealso{
 \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
