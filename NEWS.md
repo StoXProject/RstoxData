@@ -1,4 +1,8 @@
-# RstoxData v2.1.3  (2025-03-21)
+# RstoxData v2.1.4-9001  (2025-03-21)
+* Changed ICESDatras() to output missing Sex in the HL table, and where TotalNo and NoMeas are now sums over all sexes (a consequence of setting Sex to NA). The reason for this change is that in Norwegian biotic data catch categories (sub-samples) are not separated by sex, which results in SubWgt and CatCatchWgt being sums over sexes. In other words, the resolution in the Norwegian biotic data is not by sex, hence the change to Sex set to NA in the HL table. The CA table is left unchanged.
+
+
+RstoxData v2.1.3  (2025-03-21)
 * Fixed error in ReadBiotic() and ReadAcoustic() where autodetectXml() returned \"Memory allocation failed\" on Windows due to imcomplete XML returned by readCharZip() not beeing accepted by xml2 v1.3.7 and v1.3.8.
 * Adding area_number_density-GN/nmi^2 unit.
 * Changed to point to getOption("repos") instead of "https://cloud.r-project.org/" in install.packages() in README.md, so that we do not override the users repo settings.
