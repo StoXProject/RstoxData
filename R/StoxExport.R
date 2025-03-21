@@ -1169,6 +1169,8 @@ ICESDatrasOne <- function(
 	
 	
 	# catCatchWgt & subWeight
+	# This simply uses the catchweight and lengthsampleweight from NMDBiotic, which in practice is grouped by station, species and subsample, where the subsample is not separated for sex. The format description for DATRAS is that sex should be an aggregation variable in these fields, and consequently we need to ignore sex in the calculation of TotalNo and NoMeas. we do this by setting sex as NA:
+	
 	mergedHL[!is.na(catchweight), catCatchWgt := ceiling(catchweight * 1000)]
 	mergedHL[!is.na(lengthsampleweight), subWeight := ceiling(lengthsampleweight * 1000)]
 	
@@ -1198,7 +1200,6 @@ ICESDatrasOne <- function(
 	# lenInterval, and reportInMM
 	### mergedHL[,`:=`(lenInterval = ifelse(lngtCode=="0", 5, 1), reportInMM = ifelse(lngtCode %ni% c("1", NA_real_), TRUE, FALSE))]
 	### mergedHL[is.na(lenInterval), lenInterval := 1]
-	
 	
 	# Get count
 	mergedHL[, N := sum(!is.na(specimenid)), by = groupHL]
