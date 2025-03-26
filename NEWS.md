@@ -1,3 +1,7 @@
+# RstoxData v2.1.4-9002  (2025-03-26)
+* Corrected error in ICESDatras() where HLNoAtLngt was not properly set (Sex set to NA after HLNoAtLngt was calculated).
+
+
 # RstoxData v2.1.4-9001  (2025-03-21)
 * Changed ICESDatras() to output missing Sex in the HL table, and where TotalNo and NoMeas are now sums over all sexes (a consequence of setting Sex to NA). The reason for this change is that in Norwegian biotic data catch categories (sub-samples) are not separated by sex, which results in SubWgt and CatCatchWgt being sums over sexes. In other words, the resolution in the Norwegian biotic data is not by sex, hence the change to Sex set to NA in the HL table. The CA table is left unchanged.
 
