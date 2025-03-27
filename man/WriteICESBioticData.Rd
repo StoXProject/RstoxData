@@ -7,7 +7,7 @@
 The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
 }
 \details{
-The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are included as header rows.
+The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are included as header rows. RstoxData appends columns with missing values in order to produce this matrix, and this is reflected in the output file written by RstoxFramework.
 }
 \seealso{
 \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
