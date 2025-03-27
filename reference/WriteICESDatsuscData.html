@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.4-9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.4-9004</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@
 
     <div id="details">
     <h2>Details</h2>
-    <p>The ICESDatras CSV format is one string matrix containing all tables of <code><a href="ICESDatsuscData.html">ICESDatsuscData</a></code>, where column names are included as header rows.</p>
+    <p>The ICESDatsusc CSV format is a stack of comma separated tables containing all tables of <code><a href="ICESDatsuscData.html">ICESDatsuscData</a></code>, where column names are included as header rows. The file format does not contain the same number of elements in all rows, as the different tables are not padded with columns to produce a regular table. For this reason the output of <code><a href="WriteICESDatsusc.html">WriteICESDatsusc</a></code> is a character vector of comma separated strings representing the rows of the <code><a href="ICESDatsuscData.html">ICESDatsuscData</a></code>. The resulting output file written by RstoxFramework can for this reason not be read easily by e.g. <code><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">fread</a></code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
