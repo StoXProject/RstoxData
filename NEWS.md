@@ -1,3 +1,7 @@
+# RstoxData v2.1.4-9003  (2025-03-27)
+* Corrected error in ICESDatras() where finalHL was not data.table copied from mergedHL, causing Sex to be NA in the CA table.
+
+
 # RstoxData v2.1.4-9002  (2025-03-26)
 * Corrected error in ICESDatras() where HLNoAtLngt was not properly set (Sex set to NA after HLNoAtLngt was calculated).
 
