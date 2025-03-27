@@ -503,7 +503,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
 #' 
 #' @details
-#' The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are included as header rows.
+#' The ICESAcoustic CSV format is one string matrix containing all tables of \code{\link{ICESAcousticData}}, where column names are included as header rows. RstoxData appends columns with missing values in order to produce this matrix, and this is reflected in the output file written by RstoxFramework.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -518,7 +518,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://acoustic.ices.dk/}.
 #' 
 #' @details
-#' The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are included as header rows.
+#' The ICESBiotic CSV format is one string matrix containing all tables of \code{\link{ICESBioticData}}, where column names are included as header rows. RstoxData appends columns with missing values in order to produce this matrix, and this is reflected in the output file written by RstoxFramework.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -533,7 +533,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://www.ices.dk/data/data-portals/Pages/DATRAS.aspx}.
 #' 
 #' @details
-#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatrasData}}, where column names are included as header rows.
+#' The ICESDatras CSV format is a stack of comma separated tables containing all tables of \code{\link{ICESDatrasData}}, where column names are included as header rows. The file format does not contain the same number of elements in all rows, as the different tables are not padded with columns to produce a regular table. For this reason the output of \code{\link{WriteICESDatras}} is a character vector of comma separated strings representing the rows of the \code{\link{ICESDatrasData}}. The resulting output file written by RstoxFramework can for this reason not be read easily by e.g. \code{\link[data.table]{fread}}.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
@@ -549,7 +549,7 @@ NULL
 #' The output of this function is suited for submission to \url{https://www.ices.dk/data/data-portals/Pages/Stomach-content.aspx}.
 #' 
 #' @details
-#' The ICESDatras CSV format is one string matrix containing all tables of \code{\link{ICESDatsuscData}}, where column names are included as header rows.
+#' The ICESDatsusc CSV format is a stack of comma separated tables containing all tables of \code{\link{ICESDatsuscData}}, where column names are included as header rows. The file format does not contain the same number of elements in all rows, as the different tables are not padded with columns to produce a regular table. For this reason the output of \code{\link{WriteICESDatsusc}} is a character vector of comma separated strings representing the rows of the \code{\link{ICESDatsuscData}}. The resulting output file written by RstoxFramework can for this reason not be read easily by e.g. \code{\link[data.table]{fread}}.
 #' 
 #' @seealso \code{\link{DataTypes}} for a list of all StoX data types produced by \code{\link{RstoxData}}
 #' 
