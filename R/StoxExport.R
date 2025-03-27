@@ -1953,10 +1953,7 @@ WriteICESDatrasOne <- function(ICESDatrasDataOne, na = "-9"){
 		ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, function(x) {x[is.na(x)] <- na; x})
 	}
 	
-	#ICESDatrasCSVDataOne <- expandWidth(ICESDatrasCSVDataOne, na = na)
-	
-	# Stack all matrices:
-	#ICESDatrasCSVDataOne <- do.call(rbind, ICESDatrasCSVDataOne)
+	# IMPORTANT NOTE: The ICES DATRAS format assumes that the three tables HH, HL and CA are stacked in a comma separated file but without padding the tables to equal number of columns as is done for ICESAcoustic and ICESBiotic. For this reason we need to paste the data to a chatacter vector and write as lines. RstoxFramework detects that the output as a vector of characters and uses writeLines() to produce the file.
 	
 	# Convert each line of each table to comma separated:
 	ICESDatrasCSVDataOne <- lapply(ICESDatrasCSVDataOne, apply, 1, paste, collapse = ",")
@@ -2222,6 +2219,10 @@ WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
 	if(length(na)) {
 		ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
 	}
+	
+	# IMPORTANT NOTE: The ICES DATRAS format assumes that the three tables HH, HL and CA are stacked in a comma separated file but without padding the tables to equal number of columns as is done for ICESAcoustic and ICESBiotic. For this reason we need to paste the data to a chatacter vector and write as lines. RstoxFramework detects that the output as a vector of characters and uses writeLines() to produce the file.
+	
+	
 	# Convert each line of each table to comma separated:
 	ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, apply, 1, paste, collapse = ",")
 	# Join to one vector, to be written to one file:
