@@ -1233,7 +1233,7 @@ ICESDatrasOne <- function(
 	
 	
 	# To fix the problem that the procedure at the IMR is to not split sex into different subsamples, we set the sex to NA here, so that aggregation to produce noMeas and totalNo sum over sexes. The reason for this is that catCatchWgt and subWeight are in practice summed over sexes, and we do not want to do estimation to split these by sex.
-	finalHL <- mergedHL
+	finalHL <- data.table::copy(mergedHL)
 	finalHL[, sex := NA]
 	
 	# Aggregate hlNoAtLngth and lsCountTot
