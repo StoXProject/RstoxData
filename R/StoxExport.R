@@ -1226,21 +1226,32 @@ ICESDatrasOne <- function(
 	### 	mergedHL[lenInterval == interval, lngtClass := intVec[findInterval(length, intVec)]]
 	### }
 	
+	
+	
 	# Count measured individual
 	mergedHL[!is.na(length), lsCountTot := 1]
 	
-	# Aggregate hlNoAtLngth and lsCountTot
-	finalHL <- mergedHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(
-		groupHL,  
-		"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
-		)
-	]
 	
 	# To fix the problem that the procedure at the IMR is to not split sex into different subsamples, we set the sex to NA here, so that aggregation to produce noMeas and totalNo sum over sexes. The reason for this is that catCatchWgt and subWeight are in practice summed over sexes, and we do not want to do estimation to split these by sex.
+	finalHL <- mergedHL
 	finalHL[, sex := NA]
 	
+	# Aggregate hlNoAtLngth and lsCountTot
+	# We ignore the defined aggregation variable devstage, as this is always NA in norwegian data (hard coded below):
+	finalHL <- finalHL[, lsCountTot := sum(lsCountTot), by = c(groupHL, "lngtClass")]
+	finalHL <- unique(finalHL, by = c(groupHL, "lngtClass"))
 	
-	finalHL <- finalHL[!duplicated(finalHL)]
+	#finalHL <- finalHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(
+	#	groupHL,  
+	#	"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
+	#	)
+	#]
+	
+	# To fix the problem that the procedure at the IMR is to not split sex into different subsamples, we set the sex to NA here, so that aggregation to produce noMeas and totalNo sum over sexes. The reason for this is that catCatchWgt and subWeight are in practice summed over sexes, and we do not want to do estimation to split these by sex.
+	#finalHL[, sex := NA]
+	
+	
+	#finalHL <- finalHL[!duplicated(finalHL)]
 	finalHL[,`:=`(noMeas = sum(lsCountTot)), by = groupHL]
 	finalHL[,`:=`(totalNo = noMeas * sampleFac, subFactor = sampleFac)]
 	
