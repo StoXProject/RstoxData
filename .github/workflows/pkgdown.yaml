@@ -33,7 +33,7 @@ jobs:
             "httr", 
             "knitr", 
             "rmarkdown", 
-            "tinytest", 
+            "tinytest"
           )
           install.packages(
             topLevelDeps, 
