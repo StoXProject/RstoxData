@@ -1,5 +1,9 @@
+# RstoxData v2.1.4  (2025-03-31)
+* Final release for StoX 4.1.3.
+
+
 # RstoxData v2.1.4-9004  (2025-03-27)
-* Updated documentation on WriteICESDatrasData and WriteICESDatsucsData.
+* Updated documentation on WriteICESDatrasData and WriteICESDatsuscData.
 
 
 # RstoxData v2.1.4-9003  (2025-03-27)
