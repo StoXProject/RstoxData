@@ -28,7 +28,7 @@ jobs:
             "Rcpp",
             "stringi",
             "units",
-            "xml2"
+            "xml2",
             # Suggests: 
             "httr", 
             "knitr", 
