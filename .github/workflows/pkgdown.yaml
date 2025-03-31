@@ -21,9 +21,25 @@ jobs:
 
       - name: Install R package dependencies
         run: |
-          # Install the dependencies:
-          # dependencies = TRUE installs "Depends", "Imports", "LinkingTo" and "Suggests", and the  "Depends", "Imports" and "LinkingTo" recursively from those dependencies
-          remotes::install_deps(dependencies = TRUE, type = "both")
+          # We hard code the list of top level dependencies, since the behavior of remotes::install_deps() that we used before is very unclear (e.g. how is the Additional_repositories included in the list of repos?):
+          topLevelDeps <- c(
+            # Imports: 
+            "data.table",
+            "Rcpp",
+            "stringi",
+            "units",
+            "xml2",
+            # Suggests: 
+            "httr", 
+            "knitr", 
+            "rmarkdown", 
+            "tinytest"
+          )
+          install.packages(
+            topLevelDeps, 
+            dependencies = TRUE, 
+            repos = c("https://stoxproject.github.io/unstableRepo/", "https://cloud.r-project.org/")
+          )
           
           # Used in "Deploy package" below:
           install.packages("pkgdown", type = "binary")
