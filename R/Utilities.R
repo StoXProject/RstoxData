@@ -1119,6 +1119,14 @@ setClass_OneTable <- function(tableName, data, xsd) {
 	# Set column types (only double and integer for now)
 	tableHeader <- xsd$tableHeader[[tableName]]
 	tableType <- xsd$tableTypes[[tableName]]
+	
+	# Subset by the present names in order to avoid mutually conditional fields, i.e. fields that cannot exist if the other field exists, specifically SaCategory and EchoType:
+	present <- tableHeader %in% names(data[[tableName]])
+	if(!all(present)) {
+		tableHeader <- tableHeader[present]
+		tableType <- tableType[present]
+	}
+	
 	if(length(tableType) > 0) {
 		for(i in seq_along(tableHeader)) {
 			# Map the types

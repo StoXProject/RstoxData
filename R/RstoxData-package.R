@@ -10,9 +10,9 @@
 
 # Global variables
 utils::globalVariables(c(
-	 ".", "..Country", "..NAToInsert", "..Organisation", "..SurveyName", "..atResolution",
-	 "..attribsNames", "..colList", "..columns", "..groupingVariables", "..keep", "..keys",
-	 "..parameterNames", "..relevantColumns", "..replacement", "..simpletags", "..sourceColumns",
+	 ".", "..Country", "..Organisation", "..SurveyName", "..atResolution", "..attribsNames",
+	 "..colList", "..columns", "..groupingVariables", "..keep", "..keys", "..parameterNames",
+	 "..relevantColumns", "..replacement", "..simpletags", "..sourceColumns",
 	 "..targetAndSourceVariables", "..toKeep", "..valueVariablesInTranslation", "..varToExtract",
 	 "..variableKeys", "..variablesInTable", "..x", "AcousticCategory", "Addition",
 	 "AphiaIDPredator", "AphiaIDPrey", "BeamKey", "CANoAtLngt", "Channel", "ChannelDepthLower",

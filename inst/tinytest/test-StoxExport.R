@@ -29,9 +29,7 @@ data$ICES_Acoustic_1.xml$Data$SaCategory <- "MAC"
 # TEMPORARILY DISABLED DUE TO ICES BEING HACKED. UN-COMMENT THIS WHEN THE ICES PROBLEM IS FIXED:
 ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
 ICESAcousticCSV2 <- RstoxData::WriteICESAcoustic(ICESAcoustic2)
-# Changed this to 29 columns after including EchoType:
-#expect_equal(dim(ICESAcousticCSV2), c(19, 28))
-expect_equal(dim(ICESAcousticCSV2), c(19, 29))
+expect_equal(dim(ICESAcousticCSV2), c(19, 28))
 
 #context("test-StoxExport: ICES acoustic export #2")
 example <- system.file("testresources", "ICES_Acoustic_2.xml", package="RstoxData")
@@ -42,6 +40,4 @@ data$ICES_Acoustic_2.xml$Survey$Code <- data$ICES_Acoustic_2.xml$Survey$Code[1]
 # TEMPORARILY DISABLED DUE TO ICES BEING HACKED. UN-COMMENT THIS WHEN THE ICES PROBLEM IS FIXED:
 ICESAcoustic2 <- RstoxData::ICESAcoustic(data)
 ICESAcousticCSV2 <- RstoxData::WriteICESAcoustic(ICESAcoustic2)
-# Changed this to 29 columns after including EchoType:
-#expect_equal(dim(ICESAcousticCSV2), c(23, 28))
-expect_equal(dim(ICESAcousticCSV2), c(23, 29))
+expect_equal(dim(ICESAcousticCSV2), c(23, 28))
