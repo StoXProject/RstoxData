@@ -1,6 +1,7 @@
 # RstoxData v2.1.5-9001  (2025-04-28)
 * Removed EchoType from ICESAcousticData, which should only appear if the present in the input file.
 * Added support for R 4.5 binary.
+* Fixed \"Memory allocation failed\" on Windows for input files with nordic chatacters.
 
 
 # RstoxData v2.1.4  (2025-03-31)
