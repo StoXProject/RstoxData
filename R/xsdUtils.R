@@ -375,6 +375,8 @@ readCharZip <- function(x, ...) {
 	else {
 		output <- readChar(x, ...)
 	}
+	# Assume that the input file is UTF-8. We need to set the encoding here to make sure that substr repects characters not bytes (supporting norwegian characters):
+	Encoding(output) <- "UTF-8"	
 	
 	# Make sure the output is a complete xml (ending with ">"):
 	last <- utils::tail(gregexpr(">", output)[[1]], 1)
