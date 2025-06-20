@@ -2,7 +2,7 @@
 % Please edit documentation in R/StoxExport.R
 \name{RegroupLengthICESDatras}
 \alias{RegroupLengthICESDatras}
-\title{Regroup LngtCode and LngtClass ICESDatrasData}
+\title{Regroup LengthCode and LengthClass ICESDatrasData}
 \usage{
 RegroupLengthICESDatras(
   ICESDatrasData,
@@ -21,23 +21,23 @@ RegroupLengthICESDatras(
 
 \item{RegroupMethod}{Character: A string naming the method to use, one of "ResolutionTable", for specifying a table with the desired resolutions for combinations of the \code{ResolutionTableVariables}, or "HighestResolution" to set the highest possible resolution for each combination of the \code{GroupingVariables}. In the former case, the \code{ResolutionTableVariables} must be given when the function is used in the StoX GUI, but this is not required when applied directly in R.}
 
-\item{ResolutionTableVariables}{A vector of names of the variables to use in the \code{ResolutionTable} in the GUI. Typically this could be "SpecCode".}
+\item{ResolutionTableVariables}{A vector of names of the variables to use in the \code{ResolutionTable} in the GUI. Typically this could be "SpeciesCode".}
 
-\item{ResolutionTable}{A table of a number of columns named by variables present in both the HL and the CA, and one column named "ResolutionCode" holding desired resolution for the combinations of values in the previous columns. The values in the column "ResolutionCode" must be "1 mm", "5 mm" or "1 cm" (see getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic). An example is data.table::data.table(SpecCode = c("126417", "126441"), ResolutionCode = c("5 mm", "1 cm")).}
+\item{ResolutionTable}{A table of a number of columns named by variables present in both the HL and the CA, and one column named "ResolutionCode" holding desired resolution for the combinations of values in the previous columns. The values in the column "ResolutionCode" must be "1 mm", "5 mm" or "1 cm" (see getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic). An example is data.table::data.table(SpeciesCode = c("126417", "126441"), ResolutionCode = c("5 mm", "1 cm")).}
 
-\item{GroupingVariables}{A vector of variable names giving the variables by which to reduce the resolution of LngtCode and LngtClass. Defaulted to "HaulNo" and "SpecCode".}
+\item{GroupingVariables}{A vector of variable names giving the variables by which to reduce the resolution of LengthCode and LengthClass Defaulted to "HaulNumber" and "SpeciesCode".}
 
-\item{AggregateHLNoAtLngt}{Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.}
+\item{AggregateHLNoAtLngt}{Logical: If TRUE aggregate the variable NumberAtLength after regrouping lengths.}
 
-\item{AggregationVariablesHL}{A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "CatIdentifier", "Sex", "LngtClass"), which is the default when creating a StoX process.}
+\item{AggregationVariablesHL}{A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNumber", "SpeciesCode", "SpeciesCategory", "SpeciesSex", "LengthClass"), which is the default when creating a StoX process.}
 
-\item{AggregateCANoAtLngt}{Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.}
+\item{AggregateCANoAtLngt}{Logical: If TRUE aggregate the variable NumberAtLength after regrouping lengths.}
 
-\item{AggregationVariablesCA}{A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "LngtClass", "Sex", "Maturity", "AgeRings"), which is the default when creating a StoX process.}
+\item{AggregationVariablesCA}{A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNumber", "SpeciesCode", "LengthClass", "SpeciesSex", "IndividualMaturity", "IndividualAge"), which is the default when creating a StoX process.}
 }
 \value{
 An \code{\link{ICESDatrasData}} object.
 }
 \description{
-ICES Datras requires equal LngtCode and LngtClass per haul and species.
+ICES Datras requires equal LengthCode and LengthClass per haul and species.
 }

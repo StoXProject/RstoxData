@@ -4,10 +4,14 @@
 \alias{ICESDatras}
 \title{Convert BioticData to ICESDatras format}
 \usage{
-ICESDatras(BioticData)
+ICESDatras(BioticData, Survey = character(), EDMO = character())
 }
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
+
+\item{Survey}{Character: The code of the survey. See the table "Survey" on https://vocab.ices.dk/.}
+
+\item{EDMO}{Character: The code of the organization, e.g. 1351 for IMR.}
 }
 \value{
 An \code{\link{ICESDatrasData}} object.
@@ -15,4 +19,7 @@ An \code{\link{ICESDatrasData}} object.
 \description{
 Given an \code{\link{BioticData}} object, this function converts to ICESDatras format. Note that this function only supports
 \code{\link{BioticData}} NMDBiotic version > 3 XML files.
+}
+\details{
+As of StoX 4.1.3 (RstoxData 2.1.4) the SpeciesSex is set to NA in the HL table of ICESDatrasData, and where TotalNumber and SubsampledNumber are sums over all sexes (a consequence of setting Sex to NA). The reason for this is that in Norwegian biotic data catch categories (sub-samples) are not separated by sex, which results in SubWgt and CatCatchWgt being sums over sexes. In other words, the resolution in the Norwegian biotic data is not by sex, hence the change to Sex set to NA in the HL table.
 }

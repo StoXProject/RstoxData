@@ -59,7 +59,6 @@ BioticData2GeneralSamplingHierarchy <- function(
 	SplitTableAllocation = c("Default", "Lowest", "Highest")
 	#UseHaulKeyAsStationKey = FALSE
 ) {
-	
 	# Make a copy, since we are modifying things by reference:
 	BioticDataCopy <- data.table::copy(BioticData)
     
@@ -124,6 +123,7 @@ firstPhase <- function(
 	#UseHaulKeyAsStationKey = FALSE
 ) {
     
+	
 	# Getting data for the datatype
 	#if(UseHaulKeyAsStationKey) {
 	#	tableKey <- stoxBioticObject$tableKeyList_HaulAtStation[[datatype]]
@@ -358,6 +358,7 @@ firstPhase <- function(
     
     
     # Special warning if there are duplicate station for NMDBiotic:
+    # Note that the data are not changed in this funciton but later in StoxBiotic() using removeRowsOfDuplicatedKeys(.)
     CruiseStationKeys <- c("cruise", "station")
     if("fishstation" %in% names(data) && any(duplicated(data$fishstation, by = CruiseStationKeys))) {
     	numStations <- NROW(unique(data$fishstation, by = CruiseStationKeys))
@@ -506,7 +507,8 @@ StoxBiotic_firstPhase <- function(
 	SplitTableAllocation = c("Default", "Lowest", "Highest")
 	#UseHaulKeyAsStationKey = FALSE
 ) {
-    # Get data type: 
+	
+	# Get data type: 
 	datatype <- unlist(BioticData[["metadata"]][1, "useXsd"])
 	
 	if(!exists("stoxBioticObject")) {
@@ -676,7 +678,7 @@ MergeStoxBiotic <- function(
 #'
 #' @inheritParams ModelData
 #' @param VariableNames A character vector with names of the variables to add from the \code{BioticData}.
-#' @param SplitTableAllocation A string indicating how to split tables of the BioticData into tables of the StoxBiotic format. See Details.
+#' @param SplitTableAllocation A string indicating how to split tables of the BioticData into tables of the StoxBiotic format, one of "Default" for the default mapping, "Lowest" for mapping variables to the lowest table (e.g. mapping variables from the fishstation level of \code{BioticData} from NMDBiotic files to the Haul level of \code{StoxBioticData}) and "Highest" for mapping variables to the highest table (e.g. mapping variables from the fishstation level of \code{BioticData} from NMDBiotic files to the Station level of \code{StoxBioticData}). See \code{\link{StoxBioticMapping}} for a description of the mapping for the different biotic input file formats.
 #' 
 #' @details The default \code{SplitTableAllocation} allocates variables to the StoxBiotic tables according to the mapping defined in \cr\cr
 #' \code{RstoxData::stoxBioticObject$complexMaps}. \cr\cr
@@ -694,7 +696,6 @@ AddToStoxBiotic <- function(
 	StoxBioticData, 
 	BioticData, 
 	VariableNames = character(), 
-	#AddToLowestTable = FALSE, 
 	SplitTableAllocation = c("Default", "Lowest", "Highest")
 ) {
 	StoxBioticData <- AddToStoxData(
