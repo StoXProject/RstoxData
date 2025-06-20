@@ -990,19 +990,29 @@ renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType 
 #' \code{\link{BioticData}} NMDBiotic version > 3 XML files.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
+#' @param Survey Character: The code of the survey. See the table "Survey" on https://vocab.ices.dk/.
+#' @param EDMO Character: The code of the organization, e.g. 1351 for IMR. 
+#'
+#' @details
+#' As of StoX 4.1.3 (RstoxData 2.1.4) the SpeciesSex is set to NA in the HL table of ICESDatrasData, and where TotalNumber and SubsampledNumber are sums over all sexes (a consequence of setting Sex to NA). The reason for this is that in Norwegian biotic data catch categories (sub-samples) are not separated by sex, which results in SubWgt and CatCatchWgt being sums over sexes. In other words, the resolution in the Norwegian biotic data is not by sex, hence the change to Sex set to NA in the HL table.
+#' 
 #'
 #' @return An \code{\link{ICESDatrasData}} object.
 #'
 #' @export
 #' 
 ICESDatras <- function(
-	BioticData
+	BioticData, 
+	Survey = character(), 
+	EDMO = character()
 ) {
 
 	# Run for each file:
 	ICESDatrasData <- lapply(
   		BioticData, 
-  		ICESDatrasOne
+  		ICESDatrasOne, 
+  		Survey = Survey, 
+  		EDMO = EDMO
   	)
 
 	# Remove empty data (from invavlid files, non NMDBiotic >= 3)
@@ -1016,7 +1026,9 @@ ICESDatras <- function(
 
 
 ICESDatrasOne <- function(
-	BioticDataOne
+	BioticDataOne, 
+	Survey = character(), 
+	EDMO = character()
 ) {
 	
 	# Check input is a NMD Biotic v3 data
@@ -1036,46 +1048,46 @@ ICESDatrasOne <- function(
 		"Country" = nation,
 		# Changed to platformname on 2022-05-12. The user should translate to the codes on https://vocab.ices.dk/services/pox/GetCodeList/SHIPC:
 		#"Ship" = getICESShipCode(platformname),
-		"Ship" = platformname,
+		"Platform" = platformname,
 		"Gear" = gear, # Changed from "GOV" on 2022-01-27
 		# Changed to NA, as the user should define the sweep length. It could generally be dependent on species, gear, depth, etc:
 		#"SweepLngt" = getGOVSweepByEquipment(gear),
-		"SweepLngt" = NA_real_,
+		"SweepLength" = NA_real_,
 		# Removed this hard coding on 2022-05-12: 
 		#"GearEx" = getGearEx(getGOVSweepByEquipment(gear), startyear, serialnumber, bottomdepthstart),
-		"GearEx" = NA_character_,
+		"GearExceptions" = NA_character_,
 		"DoorType" = trawldoortype, # Changed from "P" on 2022-01-27
-		"StNo" = serialnumber,
+		"StationName" = serialnumber,
 		# This seems like a bug. The HaulNo should be a "Sequential numbering of hauls during cruise.", so for Norwegian data we use serialnumber also for this one:
 		# "HaulNo" = station,
 		# Changing back to "HaulNo" = station for consistency with historical data:
 		#"HaulNo" = serialnumber,
-		"HaulNo" = station,
+		"HaulNumber" = station,
 		"Year" = getYear(stationstartdate),
 		"Month" = getMonth(stationstartdate),
 		"Day" = getDay(stationstartdate),
-		"TimeShot" = getTimeShot(stationstarttime),
+		"StartTime" = getTimeShot(stationstarttime),
 		"DepthStratum" = NA_character_,
-		"HaulDur" = as.numeric(getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime)),
+		"HaulDuration" = as.numeric(getTimeDiff(stationstartdate, stationstarttime, stationstopdate, stationstoptime)),
 		# Changed this to NA, since trawling should happen at day, and any check for this should be done prior to StoX:
 		#"DayNight" = getDayNight(stationstartdate, stationstarttime, latitudestart, longitudestart),
 		"DayNight" = NA_character_,
-		"ShootLat" = round(latitudestart, digits = 4), 
-		"ShootLong" = round(longitudestart, digits = 4), 
-		"HaulLat" = round(latitudeend, digits = 4),
-		"HaulLong" = round(longitudeend, digits = 4),
+		"ShootLatitude" = round(latitudestart, digits = 4), 
+		"ShootLongitude" = round(longitudestart, digits = 4), 
+		"HaulLatitude" = round(latitudeend, digits = 4),
+		"HaulLongitude" = round(longitudeend, digits = 4),
 		# Changed 2022-05-12 to pasting area and location:
 		#"StatRec" = getICESrect(latitudestart, longitudestart),
 		#"StatRec" = getICESrect(area, location),
 		# Changed 2023-01-14 to the new function getStatisticalRectangle() since getICESrect() has errors (includes "I" and A4, ..., A9) :
-		"StatRec" = getStatisticalRectangle(latitudestart, longitudestart),
-		"Depth" = round(bottomdepthstart),
+		"StatisticalRectangle" = getStatisticalRectangle(latitudestart, longitudestart),
+		"BottomDepth" = round(bottomdepthstart),
 		# Changed to NA on 2022-05-12, as StoX cannot decide which of gearcondition and samplequality should be used:
 		#"HaulVal" = getHaulVal(gearcondition, samplequality),
-		"HaulVal" = NA_character_,
-		"HydroStNo" = NA_character_,
-		"StdSpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=88.
-		"BySpecRecCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=89.
+		"HaulValidity" = NA_character_,
+		"HydrographicStationID" = NA_character_,
+		"StandardSpeciesCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=88.
+		"BycatchSpeciesCode" = "1", # We assume all possible species recorded. See http://vocab.ices.dk/?ref=89.
 		"DataType" = "R", # "Data by haul", see http://vocab.ices.dk/?ref=9.
 		"Netopening"= round(verticaltrawlopening, digits = 1),
 		"Rigging" = NA_character_,
@@ -1084,55 +1096,58 @@ ICESDatrasOne <- function(
 		#"Distance" = round(getDistanceMeter(latitudestart, longitudestart, latitudeend, longitudeend)),
 		# Distance is in nautical miles in NMDBiotic and in meters in ICESDatras:
 		"Distance" = round(distance * 1852),
-		"Warplngt" = round(wirelength),
-		"Warpdia" = NA_real_,
-		"WarpDen" = NA_real_,
+		"WarpLength" = round(wirelength),
+		"WarpDiameter" = NA_real_,
+		"WarpDensity" = NA_real_,
 		"DoorSurface" = trawldoorarea, # Changed from 4.5 on 2022-01-27. See https://kvalitet.hi.no/docs/pub/DOK04173.pdf.
-		"DoorWgt" = trawldoorweight, # Changed from 1075 on 2022-01-27. See https://kvalitet.hi.no/docs/pub/DOK04173.pdf. 
+		"DoorWeight" = trawldoorweight, # Changed from 1075 on 2022-01-27. See https://kvalitet.hi.no/docs/pub/DOK04173.pdf. 
 		"DoorSpread" = ifelse(!is.na(trawldoorspread), round(trawldoorspread, digits = 1), NA_real_),
 		"WingSpread" = NA_real_,
 		"Buoyancy" = NA_real_,
-		"KiteDim" = NA_real_, # Changed from 0.8 on 2022-01-27.
-		"WgtGroundRope" = NA_real_,
-		"TowDir" = ifelse(!is.na(direction), round(direction), NA_real_),
+		"KiteArea" = NA_real_, # Changed from 0.8 on 2022-01-27.
+		"GroundRopeWeight" = NA_real_,
+		"TowDirection" = ifelse(!is.na(direction), round(direction), NA_real_),
 		# Changed to vesselspeed on 2022-05-12, which is in knots as required:
 		#"GroundSpeed" = round(gearflow, digits = 1),
-		"GroundSpeed" = vesselspeed,
+		"SpeedGround" = vesselspeed,
 		"SpeedWater" = NA_real_,
-		"SurCurDir" = NA_real_,
-		"SurCurSpeed" = NA_real_,
-		"BotCurDir" = NA_real_,
-		"BotCurSpeed" = NA_real_,
-		"WindDir" = NA_real_,
+		"SurfaceCurrentDirection" = NA_real_,
+		"SurfaceCurrentSpeed" = NA_real_,
+		"BottomCurrentDirection" = NA_real_,
+		"BottomCurrentSpeed" = NA_real_,
+		"WindDirection" = NA_real_,
 		"WindSpeed" = NA_real_,
-		"SwellDir" = NA_real_,
+		"SwellDirection" = NA_real_,
 		"SwellHeight" = NA_real_,
-		"SurTemp" = NA_real_,
-		"BotTemp" = NA_real_,
-		"SurSal" = NA_real_,
-		"BotSal" = NA_real_,
+		"SurfaceTemperature" = NA_real_,
+		"BottomTemperature" = NA_real_,
+		"SurfaceSalinity" = NA_real_,
+		"BottomSalinity" = NA_real_,
 		"ThermoCline" = NA_character_,
-		"ThClineDepth" = NA_real_,
+		"ThermoClineDepth" = NA_real_,
 		"CodendMesh" = NA_real_ ,
 		"SecchiDepth" = NA_real_,
 		"Turbidity" = NA_real_,
 		"TidePhase" = NA_real_,
 		"TideSpeed" = NA_real_,
-		"PelSampType" = NA_character_,
+		"PelagicSamplingType" = NA_character_,
 		"MinTrawlDepth" = NA_real_,
-		"MaxTrawlDepth" = NA_real_
+		"MaxTrawlDepth" = NA_real_, 
+		"SurveyIndexArea" = NA_character_,
+		"Survey" = Survey,
+		"EDMO" = EDMO
 	)]
 	
 	HHraw <- data.table::copy(finalHH[, c(
-		"Quarter", "Country", "Ship", "Gear",
-		"SweepLngt", "GearEx", "DoorType", "StNo", "HaulNo", "Year", "Month", "Day",
-		"TimeShot", "DepthStratum", "HaulDur", "DayNight", "ShootLat", "ShootLong", "HaulLat", "HaulLong",
-		"StatRec", "Depth", "HaulVal", "HydroStNo", "StdSpecRecCode", "BySpecRecCode", "DataType", "Netopening",
-		"Rigging", "Tickler", "Distance", "Warplngt", "Warpdia", "WarpDen", "DoorSurface", "DoorWgt",
-		"DoorSpread", "WingSpread", "Buoyancy", "KiteDim", "WgtGroundRope", "TowDir", "GroundSpeed",
-		"SpeedWater", "SurCurDir", "SurCurSpeed", "BotCurDir", "BotCurSpeed", "WindDir", "WindSpeed",
-		"SwellDir", "SwellHeight", "SurTemp", "BotTemp", "SurSal", "BotSal", "ThermoCline", "ThClineDepth",
-		"CodendMesh", "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelSampType", "MinTrawlDepth", "MaxTrawlDepth")]
+		"Quarter", "Country", "Platform", "Gear",
+		"SweepLength", "GearExceptions", "DoorType", "StationName", "HaulNumber", "Year", "Month", "Day",
+		"StartTime", "DepthStratum", "HaulDuration", "DayNight", "ShootLatitude", "ShootLongitude", "HaulLatitude", "HaulLongitude",
+		"StatisticalRectangle", "BottomDepth", "HaulValidity", "HydrographicStationID", "StandardSpeciesCode", "BycatchSpeciesCode", "DataType", "Netopening",
+		"Rigging", "Tickler", "Distance", "WarpLength", "WarpDiameter", "WarpDensity", "DoorSurface", "DoorWeight",
+		"DoorSpread", "WingSpread", "Buoyancy", "KiteArea", "GroundRopeWeight", "TowDirection", "SpeedGround",
+		"SpeedWater", "SurfaceCurrentDirection", "SurfaceCurrentSpeed", "BottomCurrentDirection", "BottomCurrentSpeed", "WindDirection", "WindSpeed",
+		"SwellDirection", "SwellHeight", "SurfaceTemperature", "BottomTemperature", "SurfaceSalinity", "BottomSalinity", "ThermoCline", "ThermoClineDepth",
+		"CodendMesh", "SecchiDepth", "Turbidity", "TidePhase", "TideSpeed", "PelagicSamplingType", "MinTrawlDepth", "MaxTrawlDepth", "SurveyIndexArea", "Survey", "EDMO")]
 	)
 	
 	## 2. HL ##
@@ -1164,12 +1179,12 @@ ICESDatrasOne <- function(
 	#}
 	
 	# Changed on 2022-05-12 to NA:
-	#mergedHL[, SpecVal := getSpecVal(HaulVal, catchcount, lengthsamplecount, catchweight)]
-	mergedHL[, SpecVal := NA_character_]
+	#mergedHL[, SpeciesValidity := getSpecVal(HaulVal, catchcount, lengthsamplecount, catchweight)]
+	mergedHL[, SpeciesValidity := NA_character_]
 	
 	
 	# catCatchWgt & subWeight
-	# This simply uses the catchweight and lengthsampleweight from NMDBiotic, which in practice is grouped by station, species and subsample, where the subsample is not separated for sex. The format description for DATRAS is that sex should be an aggregation variable in these fields, and consequently we need to ignore sex in the calculation of TotalNo and NoMeas. we do this by setting sex as NA:
+	# This simply uses the catchweight and lengthsampleweight from NMDBiotic, which in practice is grouped by station, species and subsample, where the subsample is not separated for sex. The format description for DATRAS is that sex should be an aggregation variable in these fields, and consequently we need to ignore sex in the calculation of TotalNumber and SubsampledNumber we do this by setting sex as NA:
 	
 	mergedHL[!is.na(catchweight), catCatchWgt := ceiling(catchweight * 1000)]
 	mergedHL[!is.na(lengthsampleweight), subWeight := ceiling(lengthsampleweight * 1000)]
@@ -1243,7 +1258,7 @@ ICESDatrasOne <- function(
 	
 	#finalHL <- finalHL[, .(N, lsCountTot = sum(lsCountTot)), by = c(
 	#	groupHL,  
-	#	"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpecVal", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
+	#	"lngtClass", "Quarter", "Country", "Ship", "Gear", "SweepLngt", "GearEx", "DoorType", "HaulNo", "SpeciesValidity", "catCatchWgt", "sampleFac", "subWeight", "lngtCode", "stationtype", "lengthmeasurement"
 	#	)
 	#]
 	
@@ -1258,31 +1273,32 @@ ICESDatrasOne <- function(
 	HLraw <- data.table::copy(finalHL[, .(
 		"Quarter" = Quarter,
 		"Country" = Country,
-		"Ship" = Ship,
+		"Platform" = Platform,
 		"Gear" = Gear,
-		"SweepLngt" = SweepLngt,
-		"GearEx" = GearEx,
+		"SweepLength" = SweepLength,
+		"GearExceptions" = GearExceptions,
 		"DoorType" = DoorType,
-		"StNo" = serialnumber,
-		"HaulNo" = HaulNo,
-		"Year" = startyear,
-		"SpecCodeType" = "W", # "W" means that aphia is used for SpecCode.
-		"SpecCode" = aphia,
-		"SpecVal" = SpecVal,
-		"Sex" = sex,
-		"TotalNo" = round(totalNo, digits = 2),
-		"CatIdentifier" = catchpartnumber,
-		"NoMeas" = noMeas,
-		"SubFactor" = round(subFactor, 4),
-		"SubWgt" = round(subWeight),
-		"CatCatchWgt" = round(catCatchWgt),
-		"LngtCode" = lngtCode,
-		"LngtClass" = lngtClass,
-		"HLNoAtLngt" = round(lsCountTot, 2),
-		"DevStage" = NA_character_,
+		"StationName" = serialnumber,
+		"HaulNumber" = HaulNumber,
+		"Year" = as.character(startyear),
+		"SpeciesCodeType" = "W", # "W" means that aphia is used for SpeciesCode
+		"SpeciesCode" = aphia,
+		"SpeciesValidity" = SpeciesValidity,
+		"SpeciesSex" = sex,
+		"TotalNumber" = round(totalNo, digits = 2),
+		"SpeciesCategory" = catchpartnumber,
+		"SubsampledNumber" = noMeas,
+		"SubsamplingFactor" = round(subFactor, 4),
+		"SubsampleWeight" = round(subWeight),
+		"SpeciesCategoryWeight" = round(catCatchWgt),
+		"LengthCode" = lngtCode,
+		"LengthClass" = lngtClass,
+		"NumberAtLength" = round(lsCountTot, 2),
+		"DevelopmentStage" = NA_character_,
 		# 2022-05-12: changed to lengthmeasurement, and the user should translate:
 		#"LenMeasType" = convLenMeasType(lengthmeasurement)
-		"LenMeasType" = lengthmeasurement
+		"LengthType" = lengthmeasurement,
+		"Survey" = Survey
 	)]
 	)
 	
@@ -1318,43 +1334,44 @@ ICESDatrasOne <- function(
 		.(
 			"Quarter" = Quarter,
 			"Country" = Country,
-			"Ship" = Ship,
+			"Platform" = Platform,
 			"Gear" = Gear,
-			"SweepLngt" = SweepLngt,
-			"GearEx" = GearEx,
+			"SweepLength" = SweepLength,
+			"GearExceptions" = GearExceptions,
 			"DoorType" = DoorType,
-			"StNo" = serialnumber,
-			"HaulNo" = HaulNo,
-			"Year" = startyear,
-			"SpecCodeType" = "W", # "W" means that aphia is used for SpecCode (http://vocab.ices.dk/?ref=96).
-			"SpecCode" = aphia,
-			"AreaType" = "0", # "0" means that StatRec is used for AreaCode (http://vocab.ices.dk/?ref=10).
-			"AreaCode" = StatRec,
-			"LngtCode" = lngtCode,
-			"LngtClass" = lngtClass,
-			"Sex" = sex,
-			"Maturity" = maturity,
-			"PlusGr" = NA_character_,
+			"StationName" = serialnumber,
+			"HaulNumber" = HaulNumber,
+			"Year" = as.character(startyear),
+			"SpeciesCodeType" = "W", # "W" means that aphia is used for SpeciesCode (http://vocab.ices.dk/?ref=96).
+			"SpeciesCode" = aphia,
+			"AreaType" = "0", # "0" means that StatisticalRectangle is used for AreaCode (http://vocab.ices.dk/?ref=10).
+			"AreaCode" = StatisticalRectangle,
+			"LengthCode" = lngtCode,
+			"LengthClass" = lngtClass,
+			"IndividualSex" = sex,
+			"IndividualMaturity" = maturity,
+			"AgePlusGroup" = NA_character_,
 			# Changed to age on 2022-05-12:
 			#"AgeRings" = ifelse(!is.na(age), age, NA_real_),
-			"AgeRings" = age,
-			"CANoAtLngt" = nInd,
-			"IndWgt" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA_real_),
+			"IndividualAge" = age,
+			"NumberAtLength" = nInd,
+			"IndividualWeight" = ifelse(!is.na(meanW), round(meanW * 1000, 1), NA_real_),
 			# 2022-05-12: The user should select maturity scale:
 			#"MaturityScale" = "M6", # See getDATRASMaturity() which is made for MaturityScale M6. See also http://vocab.ices.dk/?ref=1481.
 			"MaturityScale" = NA_character_,
 			"FishID" = specimenid,
-			"GenSamp" = ifelse(!is.na(tissuesample), "Y", "N"),
-			"StomSamp" = ifelse(!is.na(stomach), "Y", "N"),
+			"GeneticSamplingFlag" = ifelse(!is.na(tissuesample), "Y", "N"),
+			"StomachSamplingFlag" = ifelse(!is.na(stomach), "Y", "N"),
 			# 2022-05-12: Replaced by agingstructure, and the user should translate:
 			#"AgeSource" = convAgeSource(agingstructure),
 			"AgeSource" = agingstructure,
-			"AgePrepMet" = NA_character_,
+			"AgePreparationMethod" = NA_character_,
 			# 2022-05-12: The user needs to do the translation here, as readability
 			#"OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA_character_),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
-			"OtGrading" = ifelse(agingstructure %in% as.character(2), readability, NA_character_), 
-			"ParSamp" = ifelse(!is.na(parasite), "Y", "N"), 
-			"LiverWeight" = liverweight
+			"OtolithGrading" = ifelse(agingstructure %in% as.character(2), readability, NA_character_), 
+			"ParasiteSamplingFlag" = ifelse(!is.na(parasite), "Y", "N"), 
+			"LiverWeight" = liverweight,
+			"Survey" = Survey
 		)]
 	)
 	
@@ -1366,7 +1383,7 @@ ICESDatrasOne <- function(
 	
 	## WARN #0:
 	# It's possible to have two same aphia (but different species, e.g. SILD05) catch sampes in a haul.
-	# We need to combine them if we have two different TotalNo and catcatchwgt.
+	# We need to combine them if we have two different TotalNumber and catcatchwgt.
 	
 	# Find duplicate species in a haul
 	dupl <- stats::aggregate(catchcategory ~ aphia + serialnumber, BioticDataOne$catchsample, FUN = function(x) length(unique(x)))
@@ -1374,165 +1391,67 @@ ICESDatrasOne <- function(
 	
 	# Find the above in our DATRAS HL
 	if(nrow(dupl)) {
-		hlAphiaSerialnumber <- hl[(hl$SpecCode %in% dupl$aphia & hl$StNo %in% dupl$serialnumber),]
+		hlAphiaSerialnumber <- hl[(hl$SpeciesCode %in% dupl$aphia & hl$StationName %in% dupl$serialnumber),]
 		
 		# Build the formula to use in stats::aggregate(), containing only those columns that are not all NA:
-		groupingVariables <- c("StNo", "SpecCode", "Sex", "CatIdentifier")
+		groupingVariables <- c("StationName", "SpeciesCode", "SpeciesSex", "SpeciesCategory")
 		allNA <- sapply(groupingVariables, function(x) all(is.na(hlAphiaSerialnumber[[x]])))
 		groupingVariables <- groupingVariables[!allNA]
-		aggregateFormula <- stats::as.formula(paste0("CatCatchWgt ~ ", paste(groupingVariables, collapse = " + ")))
+		aggregateFormula <- stats::as.formula(paste0("SpeciesCategoryWeight ~ ", paste(groupingVariables, collapse = " + ")))
 		
 		found <- stats::aggregate(
 			aggregateFormula, 
 			hlAphiaSerialnumber, 
 			FUN = function(x) length(unique(x))
 		)
-		found <- found[found$CatCatchWgt > 1, ]
+		found <- found[found$SpeciesCategoryWeight > 1, ]
 		
 		for(iz in seq_len(nrow(found))) {
 			
 			atMatch <- apply(mapply("==", hl[, ..groupingVariables], found[iz, groupingVariables]), 1, all)
-			#atMatch <- hl$StNo==found[iz, "StNo"] & hl$SpecCode==found[iz, "SpecCode"] & hl$Sex==found[iz, "Sex"] & hl$CatIdentifier==found[iz, "CatIdentifier"]
 			tmpHL <- hl[atMatch, ]
-			# Fix CatCatchWgt
-			hl[atMatch, "CatCatchWgt"] <- round(mean(tmpHL$CatCatchWgt))
-			# Fix CatCatchWgt
-			hl[atMatch, "SubWgt"] <- round(mean(tmpHL$SubWgt))
+			# Fix SpeciesCategoryWeight
+			hl[atMatch, "SpeciesCategoryWeight"] <- round(mean(tmpHL$SpeciesCategoryWeight))
+			# Fix SpeciesCategoryWeight
+			hl[atMatch, "SubsampleWeight"] <- round(mean(tmpHL$SubsampleWeight))
 			# Fix totalNo
-			hl[atMatch, "TotalNo"] <- sum(unique(tmpHL$TotalNo))
+			hl[atMatch, "TotalNumber"] <- sum(unique(tmpHL$TotalNumber))
 			# Fix noMeas
-			hl[atMatch, "NoMeas"] <- sum(tmpHL$HLNoAtLngt)
-			# Finally, fix SubFactor
-			hl[atMatch, "SubFactor"] <- sum(unique(tmpHL$TotalNo))/sum(tmpHL$HLNoAtLngt)
+			hl[atMatch, "SubsampledNumber"] <- sum(tmpHL$NumberAtLength)
+			# Finally, fix SubsamplingFactor
+			hl[atMatch, "SubsamplingFactor"] <- sum(unique(tmpHL$TotalNumber))/sum(tmpHL$NumberAtLength)
 		}
 	}
-	
-	## WARN #1:
-	# Find species with different SpecVal, if any of them have SpecVal == 1, delete any other records with different SpecVal
-	# otherwise, use the lowest SpecVal value for all
-	
-	#tmp <- stats::aggregate(SpecVal ~ SpecCode + StNo, hl, FUN = function(x) length(unique(x)))
-	#tmp <- tmp[tmp$SpecVal>1, ]
-	#
-	#for( rownum in seq_len(nrow(tmp)) ) {
-	#	tmpSpecs <- hl[(hl$StNo==tmp$StNo[rownum] & hl$SpecCode==tmp$SpecCode[rownum]),]$SpecVal
-	#	if(any(tmpSpecs == 1))
-	#		hl <- hl[!(hl$StNo==tmp$StNo[rownum] & hl$SpecCode==tmp$SpecCode[rownum] & hl$SpecVal!=1),]
-	#	else
-	#		hl[(hl$StNo==tmp$StNo[rownum] & hl$SpecCode==tmp$SpecCode[rownum]), c("SpecVal")] <- min(tmpSpecs)
-	#}
-	
-	# 2022-05-12: Removed all specied validity contitionals, as we have set SpecVal to NA:
-	### SpecVal Conditionals
-	#hl[hl$SpecVal==0, c("Sex", "TotalNo", "CatIdentifier", "NoMeas", "SubFactor", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLN#oAtLngt")] <- NA
-	#
-	#hl[hl$SpecVal==4, c("NoMeas", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
-	#hl[hl$SpecVal==4, c("SubFactor")] <- 1
-	#
-	#hl[hl$SpecVal==5, c("TotalNo", "NoMeas", "SubWgt", "CatCatchWgt", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
-	#hl[hl$SpecVal==5, c("SubFactor")] <- 1
-	#
-	#hl[hl$SpecVal==6, c("TotalNo", "NoMeas", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
-	#
-	#hl[hl$SpecVal==7, c("NoMeas", "LngtCode", "LngtClass", "HLNoAtLngt")] <- NA
-	#
-	#hl[hl$SpecVal==10, c("CatCatchWgt")] <- NA
 	
 	## WARN #2:
 	## will now get errors in DATRAS upload for duplicate records
 	hl <- hl[!duplicated(hl),]
 	
 	## hl and ca contain 0-tow info - must throw these out
-	hl <- hl[hl$StNo %in% hh$StNo,]
-	ca <- ca[ca$StNo %in% hh$StNo,]
+	hl <- hl[hl$StationName %in% hh$StationName,]
+	ca <- ca[ca$StationName %in% hh$StationName,]
 	# throw out ca records for Invalid hauls
-	ca <- ca[!ca$StNo %in% hh$StNo[hh$HaulVal=='I'],]
-	
-	### ##########################################
-	### ## Removing some benthos - this won't be needed in the future
-	### ## keep 11725 138139 138482 138483 140600 140621 140624 140625 141443 141444 141449 153083 153131-- these are cephaolopods
-	### ## required benthos: 107205
-	### hl <- hl[!hl$SpecCode %in% c(230,558,830,883,1302,1839,100635,100706,100930,103929,106048,106087,106204,106733,106791,
-	### 							 106854,106928,107044,107218,107230,107240,107273,107292,107318,107330,107346,107397,107398,107551,
-	### 							 107616,107643,111374,111597,111604,116986,117302,117809,117815,117890,123117,123867,123920,123970,
-	### 							 123987,124319,124418,124913,124929,124934,125128,125131,125134,129196,129229,130464,130867,132072,
-	### 							 132480,135144,135302,137704,137732,138223,138239,138760,138899,139004,139488,140299,140627,141753,
-	### 							 144129,150642,178639,181228,23986719494,21263,100817,100982,106738,107160,107232,107277,107322,
-	### 							 107323,107327,107387,107531,107552,107564,107649,107651,111367,123080,123083,123084,123776,123813,
-	### 							 124043,124154,124160,124287,124535,125166,125333,128517,129840,138802,138878,138920,140467,140717,
-	### 							 143755,145541,145546,145548,532031,589677,1762,123082,149),]
-	### 
-	### ca <- ca[!ca$SpecCode %in% c(230,558,830,883,1302,1839,100635,100706,100930,103929,106048,106087,106204,106733,106791,
-	### 							 106854,106928,107044,107218,107230,107240,107273,107292,107318,107330,107346,107397,107398,107551,
-	### 							 107616,107643,111374,111597,111604,116986,117302,117809,117815,117890,123117,123867,123920,123970,
-	### 							 123987,124319,124418,124913,124929,124934,125128,125131,125134,129196,129229,130464,130867,132072,
-	### 							 132480,135144,135302,137704,137732,138223,138239,138760,138899,139004,139488,140299,140627,141753,
-	### 							 144129,150642,178639,181228,23986719494,21263,100817,100982,106738,107160,107232,107277,107322,
-	### 							 107323,107327,107387,107531,107552,107564,107649,107651,111367,123080,123083,123084,123776,123813,
-	### 							 124043,124154,124160,124287,124535,125166,125333,128517,129840,138802,138878,138920,140467,140717,
-	### 							 143755,145541,145546,145548,532031,589677,1762,123082,149),]
-	### 
-	### #more benthods 10216 = skate egg case
-	### hl <- hl[!hl$SpecCode %in% c(443,938,1131,1292,1337,1360,19494,22988,100751,100757,100790,101054,103484,104062,
-	### 							 106122,106669,107011,107052,107148,107239,107388,107563,110690,110911,110956,111411,117136,
-	### 							 117258,123260,123276,123321,123335,123574,123593 ,123851,123922,123985,124085,125158,125269,
-	### 							 128506,130467,130987,131779,134591,137683,141872,146142 ,149864,445590,510534,105,175,927,1107,
-	### 							 1135,1267,100793),]
-	### hl <- hl[!hl$SpecCode %in% c(105,175,927,1107,1135,1267,100793,103443,103692,106057,106835,106903,107558,110908,111361,
-	### 							 117940,122348,123160,123426,124257,125027,125284,131495,135294,135301,135306,138992,140528,140687,
-	### 							 167882,178527,239867,291396,106763,137656,117225,100653,125125,100698,131774,134366,123386,117228,
-	### 							 117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
-	### 							 146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
-	### 
-	### ca <- ca[!ca$SpecCode %in% c(443,938,1131,1292,1337,1360,19494,22988,100751,100757,100790,101054,103484,104062,
-	### 							 106122,106669,107011,107052,107148,107239,107388,107563,110690,110911,110956,111411,117136,
-	### 							 117258,123260,123276,123321,123335,123574,123593 ,123851,123922,123985,124085,125158,125269,
-	### 							 128506,130467,130987,131779,134591,137683,141872,146142 ,149864,445590,510534,105,175,927,1107,
-	### 							 1135,1267,100793),]
-	### ca <- ca[!ca$SpecCode %in% c(105,175,927,1107,1135,1267,100793,103443,103692,106057,106835,106903,107558,110908,111361,
-	### 							 117940,122348,123160,123426,124257,125027,125284,131495,135294,135301,135306,138992,140528,140687,
-	### 							 167882,178527,239867,291396,106763,137656,117225,100653,125125,100698,131774,134366,123386,117228,
-	### 							 117994,138923,123127,137701,123320,131629 ,152391,1363,214,103543,106994,103450,129400,140143,
-	### 							 146420,141905,22496,988,103717,107163,982,985,123622,102145,1082,10216,103483),]
-	### 
-	### hl <- hl[!hl$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
-	### ca <- ca[!ca$SpecCode %in% c(NA, 101,106769,106782,107010,107726,122478,123506,12437,124951,128539,129402,196221,205077,124373, 123187, 124710),]
-	### 
-	### ## IU: Filter out additional benthos:
-	### benthosSpecCodes <- c(104,956,966,1128,1296,1367,1608,11707,100782,100839,100854,103439,103732,104040,105865,106041,106673,106702,106789,106834,107152,
-	### 					  107205,107264,110749,110916,110993,111152,111355,111365,117093,117195,118445,122626,123204,123255,123613,124147,124151,124324,124670,
-	### 					  128490,128503,129563,130057,134691,136025,137710,138018,138068,138477,138631,138749,138938,140166,140173,140480,140625,141904,141929,
-	### 					  149854,152997,532035,816800)
-	### 
-	### hl <- hl[!hl$SpecCode %in% benthosSpecCodes,]
-	### ca <- ca[!ca$SpecCode %in% benthosSpecCodes,]
-	
-	
-	## WARN #3:
-	## ca records with no HL records
-	## these records are because there is no catch weight
-	## DATRAS does not accept length info without catch weight
-	## so create a line in the HL for each, but give SpecValue=4 and delete ca record
+	ca <- ca[!ca$StationName %in% hh$StationName[hh$HaulValidity == 'I'],]
 	
 	#IU: Improved cleaning#
 	# Use join to find missing value in HL
 	if (nrow(ca) > 0) {
 		#testca <- unique(data.frame(StNo=ca$StNo, SpecCode=ca$SpecCode, ca=TRUE))
 		#testhl <- unique(data.frame(StNo=hl$StNo, SpecCode=hl$SpecCode, hl=TRUE))
-		testca <- unique(data.table::data.table(StNo=ca$StNo, SpecCode=ca$SpecCode, ca=TRUE))
-		testhl <- unique(data.table::data.table(StNo=hl$StNo, SpecCode=hl$SpecCode, hl=TRUE))
-		tt <- merge(testca, testhl, by = c("StNo","SpecCode"), all=TRUE)
+		testca <- unique(data.table::data.table(StationName = ca$StationName, SpeciesCode = ca$SpeciesCode, ca = TRUE))
+		testhl <- unique(data.table::data.table(StationName = hl$StationName, SpeciesCode = hl$SpeciesCode, hl = TRUE))
+		tt <- merge(testca, testhl, by = c("StationName","SpeciesCode"), all = TRUE)
 		missingHL <- tt[is.na(tt$hl),]
 		
 		# Populate missing value in HL
 		for(idxHL in seq_len(nrow(missingHL))) {
 			r <- missingHL[idxHL,]
-			tmp <- hl[hl$StNo==r$StNo,][1,]
-			tmp$SpecCode <- r$SpecCode
-			tmp$SpecVal <- 4
-			tmp$TotalNo <- c(hh$HaulDur[hh$StNo==r$StNo])
-			tmp$CatCatchWgt <- NA
-			hl <- rbind(hl,tmp)
+			tmp <- hl[hl$StationName == r$StationName,][1,]
+			tmp$SpeciesCode <- r$SpeciesCode
+			tmp$SpeciesValidity <- 4
+			tmp$TotalNumber <- c(hh$HaulDuration[hh$StationName == r$StationName])
+			tmp$SpeciesCategoryWeight <- NA
+			hl <- rbind(hl, tmp)
 		}
 	}
 	## WARN #4:
@@ -1542,7 +1461,7 @@ ICESDatrasOne <- function(
 	#ca[ which((ca$SpecCode==127023 | ca$SpecCode==126417) & ca$AgeRings >= 15), c("PlusGr", "AgeRings")] <- list("+", 15)
 	
 	# Order HL
-	hl <- hl[order(hl$StNo),]
+	hl <- hl[order(hl$StationName),]
 	
 	#
 	ICESDatrasData <- list(HH = hh, HL = hl, CA = ca)
@@ -1765,19 +1684,19 @@ roundDownTo <- function(x, to, buffer = 1e-10) {
 
 
 
-#' Regroup LngtCode and LngtClass ICESDatrasData
+#' Regroup LengthCode and LengthClass ICESDatrasData
 #'
-#' ICES Datras requires equal LngtCode and LngtClass per haul and species. 
+#' ICES Datras requires equal LengthCode and LengthClass per haul and species. 
 #'
 #' @param ICESDatrasData A \code{\link{ICESDatrasData}} object as returned from \code{\link{ICESDatras}}.
 #' @param RegroupMethod Character: A string naming the method to use, one of "ResolutionTable", for specifying a table with the desired resolutions for combinations of the \code{ResolutionTableVariables}, or "HighestResolution" to set the highest possible resolution for each combination of the \code{GroupingVariables}. In the former case, the \code{ResolutionTableVariables} must be given when the function is used in the StoX GUI, but this is not required when applied directly in R.
-#' @param ResolutionTableVariables A vector of names of the variables to use in the \code{ResolutionTable} in the GUI. Typically this could be "SpecCode".
-#' @param ResolutionTable A table of a number of columns named by variables present in both the HL and the CA, and one column named "ResolutionCode" holding desired resolution for the combinations of values in the previous columns. The values in the column "ResolutionCode" must be "1 mm", "5 mm" or "1 cm" (see getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic). An example is data.table::data.table(SpecCode = c("126417", "126441"), ResolutionCode = c("5 mm", "1 cm")).
-#' @param GroupingVariables A vector of variable names giving the variables by which to reduce the resolution of LngtCode and LngtClass. Defaulted to "HaulNo" and "SpecCode". 
-#' @param AggregateHLNoAtLngt Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.
-#' @param AggregationVariablesHL A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "CatIdentifier", "Sex", "LngtClass"), which is the default when creating a StoX process.
-#' @param AggregateCANoAtLngt Logical: If TRUE aggregate the variable HLNoAtLngt after regrouping lengths.
-#' @param AggregationVariablesCA A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNo", "SpecCode", "LngtClass", "Sex", "Maturity", "AgeRings"), which is the default when creating a StoX process.
+#' @param ResolutionTableVariables A vector of names of the variables to use in the \code{ResolutionTable} in the GUI. Typically this could be "SpeciesCode".
+#' @param ResolutionTable A table of a number of columns named by variables present in both the HL and the CA, and one column named "ResolutionCode" holding desired resolution for the combinations of values in the previous columns. The values in the column "ResolutionCode" must be "1 mm", "5 mm" or "1 cm" (see getRstoxDataDefinitions("lengthCode_unit_table")$shortnameNMDBiotic). An example is data.table::data.table(SpeciesCode = c("126417", "126441"), ResolutionCode = c("5 mm", "1 cm")).
+#' @param GroupingVariables A vector of variable names giving the variables by which to reduce the resolution of LengthCode and LengthClass Defaulted to "HaulNumber" and "SpeciesCode". 
+#' @param AggregateHLNoAtLngt Logical: If TRUE aggregate the variable NumberAtLength after regrouping lengths.
+#' @param AggregationVariablesHL A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNumber", "SpeciesCode", "SpeciesCategory", "SpeciesSex", "LengthClass"), which is the default when creating a StoX process.
+#' @param AggregateCANoAtLngt Logical: If TRUE aggregate the variable NumberAtLength after regrouping lengths.
+#' @param AggregationVariablesCA A vector of variables of the HL table for which to aggregate individuals. It is recommended to use c("HaulNumber", "SpeciesCode", "LengthClass", "SpeciesSex", "IndividualMaturity", "IndividualAge"), which is the default when creating a StoX process.
 #'
 #' @return An \code{\link{ICESDatrasData}} object.
 #'
@@ -1817,7 +1736,7 @@ RegroupLengthICESDatras <- function(
 	
 	# Sum up individuals:
 	if(AggregateHLNoAtLngt) {
-		#sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
+		#sumBy <- c("StNo", "SpecCode", "SpeciesSex", "SpeciesCategory", "LengthClass")
 		sumBy <- AggregationVariablesHL
 		if(any(! sumBy %in% names(ICESDatrasData$HL))) {
 			toRemove <- setdiff(sumBy, names(ICESDatrasData$HL))
@@ -1825,13 +1744,13 @@ RegroupLengthICESDatras <- function(
 			sumBy <- intersect(sumBy, names(ICESDatrasData$HL))
 		}
 		
-		ICESDatrasData$HL[, HLNoAtLngt := sum(HLNoAtLngt), by = sumBy]
+		ICESDatrasData$HL[, NumberAtLength := sum(NumberAtLength), by = sumBy]
 		ICESDatrasData$HL <- unique(ICESDatrasData$HL, by = sumBy)
 	}
 	
 	# Sum up individuals:
 	if(AggregateCANoAtLngt) {
-		#sumBy <- c("StNo", "SpecCode", "Sex", "CatIdentifier", "LngtClass")
+		#sumBy <- c("StNo", "SpecCode", "SpeciesSex", "SpeciesCategory", "LengthClass")
 		sumBy <- AggregationVariablesCA
 		if(any(! sumBy %in% names(ICESDatrasData$CA))) {
 			toRemove <- setdiff(sumBy, names(ICESDatrasData$CA))
@@ -1839,7 +1758,7 @@ RegroupLengthICESDatras <- function(
 			sumBy <- intersect(sumBy, names(ICESDatrasData$CA))
 		}
 		
-		ICESDatrasData$CA[, CANoAtLngt := sum(CANoAtLngt), by = sumBy]
+		ICESDatrasData$CA[, NumberAtLength := sum(NumberAtLength), by = sumBy]
 		ICESDatrasData$CA <- unique(ICESDatrasData$CA, by = sumBy)
 	}
 	
@@ -1877,16 +1796,16 @@ RegroupLengthICESDatrasOneTable <- function(table, RegroupMethod, ResolutionTabl
 	toRegroup <- table[, !is.na(newLngtCode)]
 	
 	# Get the unit temporarily:
-	table[, currentReportingUnit := lengthCode_unit_table$reportingUnit[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)]]
+	table[, currentReportingUnit := lengthCode_unit_table$reportingUnit[match(LengthCode, lengthCode_unit_table$lengthCodeICESDatras)]]
 	
 	# Change the units:
-	table[toRegroup, LngtClass := scaleUsingUnit(LngtClass, inputUnit = currentReportingUnit, outputUnit = newReportingUnit)]
+	table[toRegroup, LengthClass := scaleUsingUnit(LengthClass, inputUnit = currentReportingUnit, outputUnit = newReportingUnit)]
 	
 	# Round down:
-	table[toRegroup, LngtClass := roundDownTo(LngtClass, to = newLngtCodeNumeric)]
+	table[toRegroup, LengthClass := roundDownTo(LengthClass, to = newLngtCodeNumeric)]
 	
-	# Set the new LngtCode:
-	table[toRegroup, LngtCode := newLngtCode]
+	# Set the new LengthCode:
+	table[toRegroup, LengthCode := newLngtCode]
 	
 	table[, currentReportingUnit := NULL]
 	table[, newLngtCode := NULL]
@@ -1902,10 +1821,10 @@ getHighestResolution <- function(table) {
 	lengthCode_unit_table <- getRstoxDataDefinitions("lengthCode_unit_table")
 	
 	# Get the lowest resolution:
-	maxRank <- table[, max(lengthCode_unit_table$rank[match(LngtCode, lengthCode_unit_table$lengthCodeICESDatras)])]
+	maxRank <- table[, max(lengthCode_unit_table$rank[match(LengthCode, lengthCode_unit_table$lengthCodeICESDatras)])]
 	atMaxRank <- which(lengthCode_unit_table$rank == maxRank)
 	
-	# Insert the LngtCode, LngtCodeNumeric and ReportingUnit:
+	# Insert the LengthCode, LngtCodeNumeric and ReportingUnit:
 	newLngtCode <- lengthCode_unit_table$lengthCodeICESDatras[atMaxRank]
 	newLngtCodeNumeric <- lengthCode_unit_table$numericResolution[atMaxRank]
 	newReportingUnit <- lengthCode_unit_table$reportingUnit[atMaxRank]
@@ -2057,7 +1976,7 @@ ICESDatsuscOne <- function(
   finalPI <- merge(BioticDataOne$agedetermination,finalPI, all = TRUE, sort = FALSE)
   
   
-  # Make HH records
+  # Make PI records
   finalPI[, `:=`(
     "Ship" = platformname,
     "Gear" = gear,

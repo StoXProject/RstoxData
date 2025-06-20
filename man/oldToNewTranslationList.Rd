@@ -2,7 +2,7 @@
 % Please edit documentation in R/backwardCompatibility.R
 \name{oldToNewTranslationList}
 \alias{oldToNewTranslationList}
-\title{Function to convert from the VarialbeName-Value-NewValue translation form to the foor where variable names are column names.}
+\title{Function to convert from the VarialbeName-Value-NewValue translation form to the form where variable names are column names.}
 \usage{
 oldToNewTranslationList(translationList)
 }
@@ -10,5 +10,5 @@ oldToNewTranslationList(translationList)
 \item{translationList}{A list of lists of each row of the Translation table, as read in using RstoxFramework:::readProjectDescription().}
 }
 \description{
-Function to convert from the VarialbeName-Value-NewValue translation form to the foor where variable names are column names.
+Function to convert from the VarialbeName-Value-NewValue translation form to the form where variable names are column names.
 }

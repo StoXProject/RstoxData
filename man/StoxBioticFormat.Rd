@@ -81,3 +81,6 @@ IndividualAge \tab Age of an individual \tab year \tab Numeric \tab 3 \tab \code
 IndividualSex \tab sex of an individual \tab F is female, M is male \tab Character \tab "F" \tab "F" if \code{sex = 1}, "M" if \code{sex = 2} \tab \code{IndividualSex} \cr
 }
 }
+\seealso{
+\code{\link{StoxBioticMapping}} shows the mapping between \code{BioticData} and \code{StoxBioticData} for the variables that are not directly defined in the StoxBioticFormat (which can be added using \code{\link{AddToStoxBiotic}} and redefined using \code{\link{RedefineStoxBiotic}}).
+}

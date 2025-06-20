@@ -1,8 +1,9 @@
-#' Function to convert from the VarialbeName-Value-NewValue translation form to the foor where variable names are column names.
+#' Function to convert from the VarialbeName-Value-NewValue translation form to the form where variable names are column names.
 #' 
 #' @param translationList A list of lists of each row of the Translation table, as read in using RstoxFramework:::readProjectDescription(). 
 #' 
 #' @export
+#' 
 oldToNewTranslationList <- function(translationList) {
 	
 	# Reshape only old Translation:
@@ -53,6 +54,108 @@ oldToNewTranslationList <- function(translationList) {
 	
 	return(translationList)	
 }
+
+#' Function to translate from old to new Datras field name:
+#' 
+#' @param x Character: A vector of strings.
+#' 
+#' @export
+#' 
+translateDatrasField <- function(x) {
+	# These translations are derived from information from ICES in 2025:
+	translationDatras <- data.table::as.data.table(
+		matrix(
+			c("AgePlusGroup", "PlusGr",
+			  "AgePreparationMethod", "AgePrepMet",
+			  "BottomCurrentDirection", "BotCurDir",
+			  "BottomCurrentSpeed", "BotCurSpeed",
+			  "BottomDepth", "Depth",
+			  "BottomSalinity", "BotSal",
+			  "BottomTemperature", "BotTemp",
+			  "BycatchSpeciesCode", "BySpecRecCode",
+			  "DevelopmentStage", "DevStage",
+			  "DoorWeight", "DoorWgt",
+			  "GearExceptions", "GearEx",
+			  "GeneticSamplingFlag", "GenSamp",
+			  "GroundRopeWeight", "WgtGroundRope",
+			  "HaulDuration", "HaulDur",
+			  "HaulLatitude", "HaulLat",
+			  "HaulLongitude", "HaulLong",
+			  "HaulNumber", "HaulNo",
+			  "HaulValidity", "HaulVal",
+			  "HydrographicStationID", "HydroStNo",
+			  "IndividualAge", "AgeRings",
+			  "IndividualMaturity", "Maturity",
+			  "IndividualSex", "Sex",
+			  "IndividualWeight", "IndWgt",
+			  "KiteArea", "KiteDim",
+			  "LengthClass", "LngtClass",
+			  "LengthCode", "LngtCode",
+			  "LengthType", "LenMeasType",
+			  "NumberAtLength", "HLNoAtLngt",
+			  "OtolithGrading", "OtGrading",
+			  "ParasiteSamplingFlag", "ParSamp",
+			  "PelagicSamplingType", "PelSampType",
+			  "Platform", "Ship",
+			  "ShootLatitude", "ShootLat",
+			  "ShootLongitude", "ShootLong",
+			  "SpeciesCategory", "CatIdentifier",
+			  "SpeciesCategoryWeight", "CatCatchWgt",
+			  "SpeciesCode", "SpecCode",
+			  "SpeciesCodeType", "SpecCodeType",
+			  "SpeciesSex", "Sex",
+			  "SpeciesValidity", "SpecVal",
+			  "SpeedGround", "GroundSpeed",
+			  "StandardSpeciesCode", "StdSpecRecCode",
+			  "StartTime", "TimeShot",
+			  "StationName", "StNo",
+			  "StatisticalRectangle", "StatRec",
+			  "StomachSamplingFlag", "StomSamp",
+			  "SubsampledNumber", "NoMeas",
+			  "SubsampleWeight", "SubWgt",
+			  "SubsamplingFactor", "SubFactor",
+			  "SurfaceCurrentDirection", "SurCurDir",
+			  "SurfaceCurrentSpeed", "SurCurSpeed",
+			  "SurfaceSalinity", "SurSal",
+			  "SurfaceTemperature", "SurTemp",
+			  "SweepLength", "SweepLngt",
+			  "SwellDirection", "SwellDir",
+			  "ThermoClineDepth", "ThClineDepth",
+			  "TotalNumber", "TotalNo",
+			  "TowDirection", "TowDir",
+			  "WarpDensity", "WarpDen",
+			  "WarpDiameter", "Warpdia",
+			  "WarpLength", "Warplngt",
+			  "WindDirection", "WindDir"), 
+			ncol = 2, 
+			byrow = TRUE
+		)
+	)
+	names(translationDatras) <- c("FieldName", "FieldNameOld")
+	
+	out <- x
+	
+	# In addition translate whole words, such as in filter expressions. We use double brackets here to support lists, which is the case for filters, where the different tables are represented as named list elements:
+	# Loop through the strings to translate:
+	for(ind1 in seq_along(x)) {
+		# Loop through the rows of the translation table:
+		for(ind2 in seq_along(translationDatras$FieldNameOld)) {
+			# Find whole words:
+			wholeWord <- paste0("\\b", translationDatras$FieldNameOld[[ind2]], "\\b")
+			keyWord <- translationDatras$FieldNameOld[[ind2]]
+			
+			
+			# If we find the whole word in the output, translate in the output:
+			if(grepl(wholeWord, out[[ind1]])) {
+				out[[ind1]] <- gsub(wholeWord, translationDatras$FieldName[[ind2]], out[[ind1]])
+			}
+		}
+	}
+	
+	
+	return(out)
+}
+
 
 #' Backward compabitibility actions:
 #' @export
@@ -184,6 +287,13 @@ backwardCompatibility_RstoxData <- list(
 			modelName = "baseline", 
 			parameterName = "RegroupMethod", 
 			parameterValue = "HighestResolution"
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "RedefineStoxBiotic", 
+			modelName = "baseline", 
+			parameterName = "SplitTableAllocation", 
+			parameterValue = "Default"
 		)
 	), 
 	
@@ -389,6 +499,136 @@ backwardCompatibility_RstoxData <- list(
 			newValue = function(projectDescription, modelName, processIndex) {
 				# Return the reshaped parameter:
 				RstoxData::oldToNewTranslationList(projectDescription[[modelName]][[processIndex]]$functionParameters$TranslationTable)
+			}
+		), 
+		########## Changes in the Datras format in 2025: ##########
+		# The following functions are affected by the ICESDatras format:
+		# CopyICESDatras
+		# FilterICESDatras
+		# ICESDatras (has no arguments that can contain names of ICESDatras variables, but has been fundamentaly changed to support the new format)
+		# RegroupLengthICESDatras
+		# TranslateICESDatras
+		# WriteICESDatras (has no arguments that can contain names of ICESDatras variables)
+		# 
+		# CopyICESDatras
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "CopyICESDatras", 
+			modelName = "baseline", 
+			parameterName = "FromVariable",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$FromVariable)
+			}
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "CopyICESDatras", 
+			modelName = "baseline", 
+			parameterName = "ToVariable",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$ToVariable)
+			}
+		),
+		# FilterICESDatras
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "FilterICESDatras", 
+			modelName = "baseline", 
+			parameterName = "FilterExpression",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$FilterExpression)
+			}
+		), 
+		# RegroupLengthICESDatras
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "RegroupLengthICESDatras", 
+			modelName = "baseline", 
+			parameterName = "ResolutionTableVariables",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$ResolutionTableVariables)
+			}
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "RegroupLengthICESDatras", 
+			modelName = "baseline", 
+			parameterName = "ResolutionTable",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# The ResolutionTable is a list of lists at the time that the backwards compatibility acitons are applied, so we convert to data.table, which will be ok when formatting the parameter afterwards:
+				table <- data.table::rbindlist(projectDescription[[modelName]][[processIndex]]$functionParameters$ResolutionTable)
+				
+				# Translate the column names:
+				newColNames <- translateDatrasField(names(table))
+				data.table::setnames(table, names(table), newColNames)
+				
+				return(table)
+			}
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "RegroupLengthICESDatras", 
+			modelName = "baseline", 
+			parameterName = "AggregationVariablesHL",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$AggregationVariablesHL)
+			}
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "RegroupLengthICESDatras", 
+			modelName = "baseline", 
+			parameterName = "AggregationVariablesCA",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$AggregationVariablesCA)
+			}
+		), 
+		# TranslateICESDatras
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "TranslateICESDatras", 
+			modelName = "baseline", 
+			parameterName = "VariableName",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$VariableName)
+			}
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "TranslateICESDatras", 
+			modelName = "baseline", 
+			parameterName = "ConditionalVariableNames",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# Translate the fields:
+				translateDatrasField(projectDescription[[modelName]][[processIndex]]$functionParameters$ConditionalVariableNames)
+			}
+		), 
+		list(
+			changeVersion = "2.2.0-9001", 
+			functionName = "TranslateICESDatras", 
+			modelName = "baseline", 
+			parameterName = "TranslationTable",
+			newValue = function(projectDescription, modelName, processIndex) {
+				# The TranslationTable is a list of lists at the time that the backwards compatibility acitons are applied, so we convert to data.table, which will be ok when formatting the parameter afterwards:
+				table <- data.table::rbindlist(projectDescription[[modelName]][[processIndex]]$functionParameters$TranslationTable)
+				
+				# Translate the column names:
+				newColNames <- translateDatrasField(names(table))
+				data.table::setnames(table, names(table), newColNames)
+				
+				# Translate also the values:
+				for(ind in seq_along(table)) {
+					table[[ind]] <-  translateDatrasField(table[[ind]])
+				}
+				
+				return(table)
 			}
 		)
 	), 

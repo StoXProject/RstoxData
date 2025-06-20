@@ -467,13 +467,13 @@ stoxFunctionAttributes <- list(
 			)
 		), 
 		functionParameterDefaults = list(
-			GroupingVariables = c("HaulNo", "SpecCode"), 
+			GroupingVariables = c("HaulNumber", "SpeciesCode"), 
 			# This need verification
-			AggregationVariablesHL = c("HaulNo", "SpecCode", "CatIdentifier", "Sex", "LngtClass"), 
+			AggregationVariablesHL = c("HaulNumber", "SpeciesCode", "SpeciesCategory", "SpeciesSex", "LengthClass"), 
 			# From https://datras.ices.dk/Data_products/ReportingFormat.aspx, clicking on CANoAtLngt:
 			# "Amount of fish at the given category (per haul, species, length class, sex, maturity, age)."
-			# Here a haul is represented not by the HaulNo, which is a sequential numbering of the hauls
-			AggregationVariablesCA = c("HaulNo", "SpecCode", "LngtClass", "Sex", "Maturity", "AgeRings")
+			# Here a haul is represented not by the HaulNumber, which is a sequential numbering of the hauls
+			AggregationVariablesCA = c("HaulNumber", "SpeciesCode", "LengthClass", "SpeciesSex", "IndividualMaturity", "IndividualAge")
 		)
 	),
 	
@@ -1201,9 +1201,9 @@ processPropertyFormats <- list(
 	
 	roundingTable = list(
 		class = "table", 
-		title = "Table linking LngtCode and the length resolution", 
+		title = "Table linking LengthCode and the length resolution", 
 		columnNames = c(
-			"LngtCode", 
+			"LengthCode", 
 			"LengthResolution"
 		), 
 		variableTypes = c(

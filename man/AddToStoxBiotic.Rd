@@ -18,7 +18,7 @@ AddToStoxBiotic(
 
 \item{VariableNames}{A character vector with names of the variables to add from the \code{BioticData}.}
 
-\item{SplitTableAllocation}{A string indicating how to split tables of the BioticData into tables of the StoxBiotic format. See Details.}
+\item{SplitTableAllocation}{A string indicating how to split tables of the BioticData into tables of the StoxBiotic format, one of "Default" for the default mapping, "Lowest" for mapping variables to the lowest table (e.g. mapping variables from the fishstation level of \code{BioticData} from NMDBiotic files to the Haul level of \code{StoxBioticData}) and "Highest" for mapping variables to the highest table (e.g. mapping variables from the fishstation level of \code{BioticData} from NMDBiotic files to the Station level of \code{StoxBioticData}). See \code{\link{StoxBioticMapping}} for a description of the mapping for the different biotic input file formats.}
 }
 \value{
 An object of StoX data type \code{\link{StoxBioticData}}.
