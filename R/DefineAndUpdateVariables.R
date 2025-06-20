@@ -4,7 +4,8 @@ RedefineData <- function(
 	StoxData, RawData, 
 	Redefinition = data.table::data.table(), 
 	StoxDataFormat = c("Biotic", "Acoustic"), 
-	NumberOfCores = 1L
+	NumberOfCores = 1L, 
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
 ) {
 	
 	StoxDataFormat <- match_arg_informative(StoxDataFormat)
@@ -15,27 +16,53 @@ RedefineData <- function(
 		RawData = RawData, 
 		VariableNames = Redefinition$ReplaceBy, 
 		NumberOfCores = NumberOfCores, 
-		StoxDataFormat = StoxDataFormat
+		StoxDataFormat = StoxDataFormat, 
+		SplitTableAllocation = SplitTableAllocation
 	)
 	
 	# Remove the old:
-	lapply(StoxData, replaceAndDelete, VariableReplacement = Redefinition)
+	lapply(
+		names(StoxData), 
+		replaceAndDelete, 
+		StoxData = StoxData, 
+		VariableReplacement = Redefinition
+	)
+	
+	# Remove rows of duplicated keys:
+	StoxData <- removeRowsOfDuplicatedKeys(
+		StoxData = StoxData, 
+		stoxDataFormat = StoxDataFormat
+	)
 	
 	return(StoxData)
 }
 
 # Function to replace the existing column by the new, as stored in the VariableReplacement:
-replaceAndDelete <- function(table, VariableReplacement) {
-	
-	presentVariableName <- which(VariableReplacement$VariableName  %in%  names(table))
-	hasReplaceBy <- VariableReplacement$ReplaceBy  %in%  names(table)
-	if(length(presentVariableName) && hasReplaceBy) {
-		# Delete the present column:
-		table[, (VariableReplacement[presentVariableName, VariableName]) := NULL]
-		# ... and then rename the new to the old name:
-		setnames(table, VariableReplacement[presentVariableName, ReplaceBy], VariableReplacement[presentVariableName, VariableName])
+replaceAndDelete <- function(tableName, StoxData, VariableReplacement) {
+	for(ind in seq_len(nrow(VariableReplacement))) {
+		replaceAndDeleteOne(tableName, StoxData, VariableReplacement[ind, ])
 	}
 }
+
+
+replaceAndDeleteOne <- function(tableName, StoxData, VariableReplacementOne) {
+	hasVariableToReplace <- VariableReplacementOne$VariableName  %in%  names(StoxData[[tableName]])
+	hasReplaceBy <- VariableReplacementOne$ReplaceBy  %in%  names(StoxData[[tableName]])
+	# If the variable to replace is in the table, and the variable to replace by is also in the table, delete the old variable and rename the new to the name of the variable to replace:
+	if(hasVariableToReplace && hasReplaceBy) {
+		# Delete the present column:
+		StoxData[[tableName]][, (VariableReplacementOne$VariableName) := NULL]
+		# ... and then rename the new to the old name:
+		setnames(StoxData[[tableName]], VariableReplacementOne$ReplaceBy, VariableReplacementOne$VariableName)
+	}
+	# If the variable to replace is not in the table, but the variable to replace by is, this implies that the replacement is from a different table. In this case we delete the replacement with a warning:
+	else if(hasReplaceBy) {
+		warning("StoX: The variable ", VariableReplacementOne$ReplaceBy, " cannot replace the variable ", VariableReplacementOne$VariableName, " as it does not map to the table ", tableName, ".")
+		StoxData[[tableName]][, (VariableReplacementOne$ReplaceBy) := NULL]
+	}
+}
+
+
 
 ##################################################
 #' Redefine StoxBioticData variables by data from BioticData
@@ -45,6 +72,7 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' @param StoxBioticData An input of \link{ModelData} object
 #' @param BioticData An input of \link{ModelData} object
 #' @param Redefinition A table of the columns "VariableName", representing the variable to redefine; and "ReplaceBy", representing the variable from BioticData to replace by. 
+#' @inheritParams AddToStoxBiotic
 #' 
 #' @return
 #' A \code{\link{StoxBioticData}} object.
@@ -53,13 +81,15 @@ replaceAndDelete <- function(table, VariableReplacement) {
 #' 
 RedefineStoxBiotic <- function(
 	StoxBioticData, BioticData, 
-	Redefinition = data.table::data.table()
+	Redefinition = data.table::data.table(), 
+	SplitTableAllocation = c("Default", "Lowest", "Highest")
 ) {
 	# Redefine StoxBioticData:
 	RedefineData(
 		StoxData = StoxBioticData, RawData = BioticData, 
 		Redefinition = Redefinition, 
-		StoxDataFormat = "Biotic"
+		StoxDataFormat = "Biotic", 
+		SplitTableAllocation = SplitTableAllocation
 	)
 }
 
