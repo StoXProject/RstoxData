@@ -1,3 +1,16 @@
+# RstoxData v2.2.0-9001  (2025-06-20)
+* Fixed bug in RedefineStoxBiotic() where redefining a variable in the Station level where there are multiple hauls per station in the BioticData (multiple 'serialnumber' per 'station' in NMDBiotic) resulted in duplicated rows in the Station table of the output StoxBioticData.
+* Added the argument SplitTableAllocation to RedefineStoxBiotic().
+* Fixed bug in RedefineStoxBiotic(), where multiple rows in the Redefinition table resulted in an error (*e.g., "'length = 2' in coercion to 'logical(1)'" for two rows).
+* Fixed bug in RedefineStoxBiotic(), where redefining a variable by a variable in a different table silently resulted in the replacement to be simply added to the relevant table and the original variable kept, i.e. no replacement. This is now replaced with a warning.
+* Improved the description of the argument SplitTableAllocation.
+* Changed the ICESDatras() to support the new definition of the Datras format published 2025 Q1.
+* Added the arguments Survey and EDMO to the ICESDatras() according to the new definition of the Datras format published 2025 Q1.
+* Changed also the RegroupLengthICESDatras() to support the new definition of the Datras format published 2025 Q1.
+* Added the documentation for StoxBioticMapping, which shows the mapping between the different biotic input files and the different tables of the StoxBioticData.
+
+
+
 # RstoxData v2.1.5-9001  (2025-04-28)
 * Removed EchoType from ICESAcousticData, which should only appear if the present in the input file.
 * Added support for R 4.5 binary.
