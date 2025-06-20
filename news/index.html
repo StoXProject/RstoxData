@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9001</span>
       </span>
     </div>
 
@@ -57,6 +57,18 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.2.0-9001" id="rstoxdata-v220-9001-2025-06-20">RstoxData v2.2.0-9001 (2025-06-20)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9001-2025-06-20"></a></h2>
+<ul><li>Fixed bug in RedefineStoxBiotic() where redefining a variable in the Station level where there are multiple hauls per station in the BioticData (multiple ‘serialnumber’ per ‘station’ in NMDBiotic) resulted in duplicated rows in the Station table of the output StoxBioticData.</li>
+<li>Added the argument SplitTableAllocation to RedefineStoxBiotic().</li>
+<li>Fixed bug in RedefineStoxBiotic(), where multiple rows in the Redefinition table resulted in an error (*e.g., “‘length = 2’ in coercion to ‘logical(1)’” for two rows).</li>
+<li>Fixed bug in RedefineStoxBiotic(), where redefining a variable by a variable in a different table silently resulted in the replacement to be simply added to the relevant table and the original variable kept, i.e. no replacement. This is now replaced with a warning.</li>
+<li>Improved the description of the argument SplitTableAllocation.</li>
+<li>Changed the ICESDatras() to support the new definition of the Datras format published 2025 Q1.</li>
+<li>Added the arguments Survey and EDMO to the ICESDatras() according to the new definition of the Datras format published 2025 Q1.</li>
+<li>Changed also the RegroupLengthICESDatras() to support the new definition of the Datras format published 2025 Q1.</li>
+<li>Added the documentation for StoxBioticMapping, which shows the mapping between the different biotic input files and the different tables of the StoxBioticData.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.1.5-9001" id="rstoxdata-v215-9001-2025-04-28">RstoxData v2.1.5-9001 (2025-04-28)<a class="anchor" aria-label="anchor" href="#rstoxdata-v215-9001-2025-04-28"></a></h2>
 <ul><li>Removed EchoType from ICESAcousticData, which should only appear if the present in the input file.</li>
@@ -886,7 +898,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer></div>

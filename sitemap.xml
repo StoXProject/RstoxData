@@ -65,6 +65,7 @@
 <url><loc>/reference/StoxBiotic.html</loc></url>
 <url><loc>/reference/StoxBioticData.html</loc></url>
 <url><loc>/reference/StoxBioticFormat.html</loc></url>
+<url><loc>/reference/StoxBioticMapping.html</loc></url>
 <url><loc>/reference/StoxLanding.html</loc></url>
 <url><loc>/reference/StoxLandingData.html</loc></url>
 <url><loc>/reference/StoxUnits.html</loc></url>
@@ -133,6 +134,7 @@
 <url><loc>/reference/setorderv_numeric.html</loc></url>
 <url><loc>/reference/stoxBioticObject.html</loc></url>
 <url><loc>/reference/stoxFunctionAttributes.html</loc></url>
+<url><loc>/reference/translateDatrasField.html</loc></url>
 <url><loc>/reference/unMergeAcoustic.html</loc></url>
 <url><loc>/reference/unMergeBiotic.html</loc></url>
 <url><loc>/reference/xsdObjects.html</loc></url>
