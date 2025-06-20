@@ -24,7 +24,7 @@ Authors@R: c(
     role = "aut"), 
   person(given = "Norwegian Institute of Marine Research", 
     role = c("cph", "fnd")))
-Depends: R (>= 4.5)
+Depends: R (>= 4.4)
 Description: Set of tools to read and manipulate various data formats for fisheries. Mainly
   catered towards scientific trawl survey sampling ('biotic') data, acoustic
   trawl data, and commercial fishing catch ('landings') data. Among the
