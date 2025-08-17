@@ -990,8 +990,6 @@ renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType 
 #' \code{\link{BioticData}} NMDBiotic version > 3 XML files.
 #'
 #' @param BioticData a \code{BioticData} object from an XML file with NMD biotic version 3 format.
-#' @param Survey Character: The code of the survey. See the table "Survey" on https://vocab.ices.dk/.
-#' @param EDMO Character: The code of the organization, e.g. 1351 for IMR. 
 #'
 #' @details
 #' As of StoX 4.1.3 (RstoxData 2.1.4) the SpeciesSex is set to NA in the HL table of ICESDatrasData, and where TotalNumber and SubsampledNumber are sums over all sexes (a consequence of setting Sex to NA). The reason for this is that in Norwegian biotic data catch categories (sub-samples) are not separated by sex, which results in SubWgt and CatCatchWgt being sums over sexes. In other words, the resolution in the Norwegian biotic data is not by sex, hence the change to Sex set to NA in the HL table.
@@ -1002,17 +1000,22 @@ renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType 
 #' @export
 #' 
 ICESDatras <- function(
-	BioticData, 
-	Survey = character(), 
-	EDMO = character()
+	BioticData#, 
+	#Survey = character(), 
+	#EDMO = character()
 ) {
 
+	
+	# @param Survey Character: The code of the survey. See the table "Survey" on https://vocab.ices.dk/.
+	# @param EDMO Character: The code of the organization, e.g. 1351 for IMR. 
+	
+	
 	# Run for each file:
 	ICESDatrasData <- lapply(
   		BioticData, 
-  		ICESDatrasOne, 
-  		Survey = Survey, 
-  		EDMO = EDMO
+  		ICESDatrasOne#, 
+  		#Survey = Survey, 
+  		#EDMO = EDMO
   	)
 
 	# Remove empty data (from invavlid files, non NMDBiotic >= 3)
@@ -1026,9 +1029,9 @@ ICESDatras <- function(
 
 
 ICESDatrasOne <- function(
-	BioticDataOne, 
-	Survey = character(), 
-	EDMO = character()
+	BioticDataOne#, 
+	#Survey = character(), 
+	#EDMO = character()
 ) {
 	
 	# Check input is a NMD Biotic v3 data
@@ -1134,8 +1137,8 @@ ICESDatrasOne <- function(
 		"MinTrawlDepth" = NA_real_,
 		"MaxTrawlDepth" = NA_real_, 
 		"SurveyIndexArea" = NA_character_,
-		"Survey" = Survey,
-		"EDMO" = EDMO
+		"Survey" = NA_character_,
+		"EDMO" = NA_character_
 	)]
 	
 	HHraw <- data.table::copy(finalHH[, c(
@@ -1298,7 +1301,7 @@ ICESDatrasOne <- function(
 		# 2022-05-12: changed to lengthmeasurement, and the user should translate:
 		#"LenMeasType" = convLenMeasType(lengthmeasurement)
 		"LengthType" = lengthmeasurement,
-		"Survey" = Survey
+		"Survey" = NA_character_
 	)]
 	)
 	
@@ -1371,7 +1374,7 @@ ICESDatrasOne <- function(
 			"OtolithGrading" = ifelse(agingstructure %in% as.character(2), readability, NA_character_), 
 			"ParasiteSamplingFlag" = ifelse(!is.na(parasite), "Y", "N"), 
 			"LiverWeight" = liverweight,
-			"Survey" = Survey
+			"Survey" = NA_character_
 		)]
 	)
 	

@@ -4,14 +4,10 @@
 \alias{ICESDatras}
 \title{Convert BioticData to ICESDatras format}
 \usage{
-ICESDatras(BioticData, Survey = character(), EDMO = character())
+ICESDatras(BioticData)
 }
 \arguments{
 \item{BioticData}{a \code{BioticData} object from an XML file with NMD biotic version 3 format.}
-
-\item{Survey}{Character: The code of the survey. See the table "Survey" on https://vocab.ices.dk/.}
-
-\item{EDMO}{Character: The code of the organization, e.g. 1351 for IMR.}
 }
 \value{
 An \code{\link{ICESDatrasData}} object.
