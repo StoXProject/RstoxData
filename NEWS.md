@@ -1,3 +1,8 @@
+# RstoxData v2.2.0-9002  (2025-06-20)
+* Removed Survey and EDMO from ICESDatras(). The are now set to NA, and need to be translated by the user.
+* Changed functionArguments.rds to include object documentation as html.
+
+
 # RstoxData v2.2.0-9001  (2025-06-20)
 * Fixed bug in RedefineStoxBiotic() where redefining a variable in the Station level where there are multiple hauls per station in the BioticData (multiple 'serialnumber' per 'station' in NMDBiotic) resulted in duplicated rows in the Station table of the output StoxBioticData.
 * Added the argument SplitTableAllocation to RedefineStoxBiotic().
