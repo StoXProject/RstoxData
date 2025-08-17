@@ -942,7 +942,6 @@ applyFunctionArgumentHierarchy <- function(
 	ignore.condition = NULL
 ) {
 	
-	
 	# Support an expression at the top level:
 	if(inherits(functionArgumentHierarchy, "expression")) {
 		functionArgumentHierarchy <- eval(functionArgumentHierarchy)
