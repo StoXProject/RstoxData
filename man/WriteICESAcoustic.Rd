@@ -2,16 +2,16 @@
 % Please edit documentation in R/StoxExport.R
 \name{WriteICESAcoustic}
 \alias{WriteICESAcoustic}
-\title{Write ICESAcoustic to CSV fille}
+\title{Write ICESAcoustic to CSV file}
 \usage{
-WriteICESAcoustic(ICESAcousticData)
+WriteICESAcoustic(ICESAcousticData, AggregateSa = FALSE)
 }
 \arguments{
 \item{ICESAcousticData}{A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.}
+
+\item{AggregateSa}{Logical: If TRUE aggregate the acoustic value for each LogDistance, SampleChannelDepthUpper and DataSaCategory, which should be done if multiple DataSaCategory have been translated to the same DataSaCategory.}
 }
 \value{
-List of string matrices in the ICES acoustic CSV format.
-
 An object of StoX data type \code{\link{WriteICESAcousticData}}.
 }
 \description{

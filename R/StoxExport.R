@@ -201,12 +201,23 @@ prepareICESAcousticCSV_nmdechosounderv1 <-  function(AcousticDataOne){
 		LocalID = Cruise$LocalID, 
 		Distance = log_start,
 		Time = start_time,
-		Latitude = lat_start,
-		Longitude = lon_start,
-		Origin = 'start',
-		Latitude2 = lat_stop, 
-		Longitude2 = lon_stop, 
-		Origin2 = 'end',
+			#Latitude = lat_start,
+			#Longitude = lon_start,
+		# Insert NA if any of lat_start and lon_start are missing:
+		Latitude = ifelse(is.na(lat_start) | is.na(lon_start), NA, lat_start),
+		Longitude = ifelse(is.na(lat_start) | is.na(lon_start), NA, lon_start),
+			#Origin = 'start',
+		# Insert NA if any of lat_start and lon_start are missing:
+		Origin = ifelse(is.na(lat_start) | is.na(lon_start), NA, "start"),
+			#Latitude2 = lat_stop, 
+			#Longitude2 = lon_stop, 
+			#Origin2 = 'end',
+		# Insert NA if any of lat_start and lon_start are missing:
+		Latitude2 = ifelse(is.na(lat_stop) | is.na(lon_stop), NA, lat_stop),
+		Longitude2 = ifelse(is.na(lat_stop) | is.na(lon_stop), NA, lon_stop),
+		# Insert NA if any of lat_start and lon_start are missing:
+		Origin2 = ifelse(is.na(lat_stop) | is.na(lon_stop), NA, "end"),
+		
 		Validity = 'V',
 		BottomDepth = max_bot_depth                       #Have used max instead of min bottom depth
 	)])
@@ -388,35 +399,66 @@ checkICESAcousticDefinitions <- function(
 
 
 
-
-
-
-#' Write ICESAcoustic to CSV fille
-#'
-#' Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#' Aggregate sa in ICESAcoustic
 #'
 #' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
 #'
 #' @return List of string matrices in the ICES acoustic CSV format.
-#' 
+#'
+aggregateSaInICESAcoustic <- function(ICESAcousticData){
+	
+	# Make a copy, as we are aggregating by reference below:
+	aggregatedICESAcousticData <- data.table::copy(ICESAcousticData)
+	
+	# Sum the sa per log, channel and category:
+	aggregatedICESAcousticData$Data[, DataValue := sum(DataValue), by = c("LogDistance", "SampleChannelDepthUpper", "DataSaCategory")]
+	
+	# Remove the duplicates created by the aggregation by reference:
+	aggregatedICESAcousticData$Data <- unique(aggregatedICESAcousticData$Data, by = c("LogDistance", "SampleChannelDepthUpper", "DataSaCategory"))
+	
+	
+	return(aggregatedICESAcousticData)
+}
+
+
+#' Write ICESAcoustic to CSV file
+#'
+#' Writes \code{\link{ICESAcousticData}} to a csv file for each input acoustic file used to create the \code{\link{ICESAcousticData}}
+#'
+#' @param ICESAcousticData A \code{\link{ICESAcousticData}} object obtained from an ICES acoustic XML format file.
+#' @param AggregateSa Logical: If TRUE aggregate the acoustic value for each LogDistance, SampleChannelDepthUpper and DataSaCategory, which should be done if multiple DataSaCategory have been translated to the same DataSaCategory.
+#'
 #' @return An object of StoX data type \code{\link{WriteICESAcousticData}}.
 #'
 #' @export
 #' 
-WriteICESAcoustic <- function(ICESAcousticData){
+WriteICESAcoustic <- function(
+	ICESAcousticData, 
+	AggregateSa = FALSE
+){
 	
 	#WriteICESAcousticData <- lapply(
 	#	ICESAcousticData, 
 	#	WriteICESAcousticOne
 	#)
 	
-	WriteICESAcousticData <- WriteICESAcousticOne(ICESAcousticData)
+	WriteICESAcousticData <- WriteICESAcousticOne(
+		ICESAcousticData, 
+		AggregateSa = AggregateSa
+	)
 	
 	return(WriteICESAcousticData)
 }
 
 
-WriteICESAcousticOne <- function(ICESAcousticDataOne){
+WriteICESAcousticOne <- function(
+	ICESAcousticDataOne, 
+	AggregateSa = FALSE
+){
+	
+	if(AggregateSa) {
+		ICESAcousticDataOne <- aggregateSaInICESAcoustic(ICESAcousticDataOne)
+	}
 	
 	# Convert all tables to string with header and reccord, and rbind:
 	#ICESAcousticCSVDataOne <- convertToHeaderRecordMatrix(ICESAcousticDataOne, keepNA = "DataProcessingTriwaveCorrection")
@@ -840,8 +882,8 @@ BioticData_NMDToICESBioticOne <- function(
 	else {
 		if(AllowRemoveSpecies) {
 			# Check for valid aphias, mark other as invalid
-			xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
-			validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
+			xmlRaw <- xml2::read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+			validCodes <- xml2::xml_text(xml2::xml_find_all(xmlRaw, "//Code//Key"))
 			
 			notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
 			notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))

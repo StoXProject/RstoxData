@@ -220,7 +220,7 @@ stoxFunctionAttributes <- list(
 			#ConditionalTable = "conditionalTable_Copy"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)#, 
 			#ConditionalVariableNames = list(
@@ -239,7 +239,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -252,7 +252,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -265,7 +265,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -278,7 +278,7 @@ stoxFunctionAttributes <- list(
 	    FromVariable = "fromVariable_StoxData"
 	  ), 
 	  functionArgumentHierarchy = list(
-	    preserveClass = list(
+	    PreserveClass = list(
 	      overwrite = TRUE
 	    )
 	  )
@@ -292,7 +292,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -305,7 +305,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -318,7 +318,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -331,7 +331,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)
@@ -344,7 +344,7 @@ stoxFunctionAttributes <- list(
 			FromVariable = "fromVariable_StoxData"
 		), 
 		functionArgumentHierarchy = list(
-			preserveClass = list(
+			PreserveClass = list(
 				overwrite = TRUE
 			)
 		)

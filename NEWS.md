@@ -1,4 +1,11 @@
-# RstoxData v2.2.0-9002  (2025-06-20)
+# RstoxData v2.2.0-9003  (2025-09-23)
+* Added the option AggregateSa to WriteICESAcoustic() which when set to TRUE aggregates the DataValue (acoustic variable 'sa') for each combination of LogDistance, SampleChannelDepthUpper and DataSaCategory. This can be useful when DataSaCategory have been merged using translate-functions, so that one DataSaCategory occurs with multiple entries for the same LogDistance and SampleChannelDepthUpper.
+* Fixed bug in ICESAcoustic(), where LogOrigin and LogOrigin2 were set to "start" and "end" even then positions were missing, resulting in error when trying to submit data to ICES.
+* Fixed bug in all Copy-functions (CopyBiotic, CopyStoxBiotic, CopyICESBiotic, CopyICESDatras, CopyICESDatsusc, CopyAcoustic, CopyStoxAcoustic, CopyICESAcoustic, CopyLanding, CopyStoxLanding) where the argument PreserveClass was visible even when Overwrite was FALSE.
+* Changed setorderv_numeric() to accept column names in 'by' not being in dataOne.
+
+
+# RstoxData v2.2.0-9002  (2025-08-17)
 * Removed Survey and EDMO from ICESDatras(). The are now set to NA, and need to be translated by the user.
 * Changed functionArguments.rds to include object documentation as html.
 
