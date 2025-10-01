@@ -5,7 +5,7 @@
 #' @param FromVariable The name of the variable to copy.
 #' @param ToVariable The name of the (possibly existing) variable insert the values in \code{FromVariable} to.
 #' @param Overwrite Logical: If TRUE overwrite the existing variable, if \code{ToVariable} is the name of an existing variable in the same table as \code{FromVariable}.
-#' @param PreserveClass Logical: If TRUE (the default) do not convert the class of the variable given by \code{ToVariable} to the class of the variable given by \code{FromVariable}.
+#' @param PreserveClass Logical: Only used if \code{Overwrite} is TRUE. If \code{PreserveClass} is TRUE (the default) do not convert the class of the variable given by \code{ToVariable} to the class of the variable given by \code{FromVariable}.
 #' 
 #' @name copy_arguments
 #' 

@@ -88,24 +88,7 @@ jobs:
       #### 2. R package installation (with system and R package dependencies): ####
       #############################################################################
       
-      ## 2a. Cache R packages:
-      #- name: Query R package dependencies
-      #  run: |
-      #    install.packages('remotes')
-      #    saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
-      #    writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-      #  shell: Rscript {0}
-
-      #- name: Cache R packages
-      #  if: runner.os != 'Windows'
-      #  uses: actions/cache@v3
-      #  with:
-      #    path: ${{ env.R_LIBS_USER }}
-      #    key: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
-      #    restore-keys: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-
-
-      
-      ## 2b. System dependencies:
+      ## 2a. System dependencies:
       - name: Install system dependencies on macOS
         if: runner.os == 'macOS'
         run: |
@@ -114,16 +97,16 @@ jobs:
           if [ -f "$gfortranFile" ] ; then
             rm "$gfortranFile"
           fi
-          rm '/usr/local/bin/2to3'
-          rm '/usr/local/bin/2to3-3.11'
-          rm '/usr/local/bin/idle3.11'
-          rm '/usr/local/bin/idle3'
-          rm '/usr/local/bin/pydoc3'
-          rm '/usr/local/bin/python3'
-          rm '/usr/local/bin/python3-config'
-          rm '/usr/local/bin/pydoc3.11'
-          rm '/usr/local/bin/python3.11'
-          rm '/usr/local/bin/python3.11-config'
+          rm -f '/usr/local/bin/2to3'
+          rm -f '/usr/local/bin/2to3-3.11'
+          rm -f '/usr/local/bin/idle3'
+          rm -f '/usr/local/bin/idle3.11'
+          rm -f '/usr/local/bin/pydoc3'
+          rm -f '/usr/local/bin/pydoc3.11'
+          rm -f '/usr/local/bin/python3'
+          rm -f '/usr/local/bin/python3.11'
+          rm -f '/usr/local/bin/python3-config'
+          rm -f '/usr/local/bin/python3.11-config'
           export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK= # This (the value should actually be empty...) prevents Homebrew from re-installing R, which will lead to .Platform$pkgType = "source".
           brew install gdal udunits
         shell: bash
@@ -136,14 +119,14 @@ jobs:
         shell: bash
       
       
-      ## 2c. R packages needed for this yaml script (not related to the Rstox package itself):
+      ## 2b. R packages needed for this yaml script (not related to the Rstox package itself):
       - name: Install CRANdependencies
         run: |
           install.packages(c("rcmdcheck", "git2r", "sessioninfo", "knitr", "drat"))
         shell: Rscript {0}
         
       
-      ## 2d. Rstox packages and dependencies (the complicated if condition is needed since the reference to branch name is not consistent across event names). There is the issue that R sorts packge versions alphabetically, while StoX uses semantic versioning. Consequently a pre-release such as 1.2.3-9001 will be considered as newer than the official release 1.2.3 by R. We have solved this by separating the pre-releases and official releases into different repos "unstableRepo" and "testingRepo" for pre-releases and "repo" of official releases). This potentially breaks with remotes::install_deps() as it silently appends the Additional_repositories from the DESCRIPTION file to the repos, but since this would only be a problem if a pre-release is ranked as newer than the official release it will not be a problem when installing dependencies from the "repo" since the Additional_repositories points to that same repo:
+      ## 2c. Rstox packages and dependencies (the complicated if condition is needed since the reference to branch name is not consistent across event names). There is the issue that R sorts packge versions alphabetically, while StoX uses semantic versioning. Consequently a pre-release such as 1.2.3-9001 will be considered as newer than the official release 1.2.3 by R. We have solved this by separating the pre-releases and official releases into different repos "unstableRepo" and "testingRepo" for pre-releases and "repo" of official releases). This potentially breaks with remotes::install_deps() as it silently appends the Additional_repositories from the DESCRIPTION file to the repos, but since this would only be a problem if a pre-release is ranked as newer than the official release it will not be a problem when installing dependencies from the "repo" since the Additional_repositories points to that same repo:
       - name: Install R package dependencies
         run: |
           # We hard code the list of top level dependencies, since the behavior of remotes::install_deps() that we used before is very unclear (e.g. how is the Additional_repositories included in the list of repos?):
@@ -167,7 +150,7 @@ jobs:
         shell: Rscript {0}
 
 
-      ## 2e. Session info:
+      ## 2d. Session info:
       - name: Session info
         run: |
           options(width = 100)

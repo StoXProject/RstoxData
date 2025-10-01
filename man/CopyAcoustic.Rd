@@ -21,7 +21,7 @@ CopyAcoustic(
 
 \item{Overwrite}{Logical: If TRUE overwrite the existing variable, if \code{ToVariable} is the name of an existing variable in the same table as \code{FromVariable}.}
 
-\item{PreserveClass}{Logical: If TRUE (the default) do not convert the class of the variable given by \code{ToVariable} to the class of the variable given by \code{FromVariable}.}
+\item{PreserveClass}{Logical: Only used if \code{Overwrite} is TRUE. If \code{PreserveClass} is TRUE (the default) do not convert the class of the variable given by \code{ToVariable} to the class of the variable given by \code{FromVariable}.}
 }
 \value{
 A \code{\link{AcousticData}} object.
