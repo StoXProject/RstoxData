@@ -86,7 +86,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	#if(!is.null(usePrefix)) {
 	#	warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
 	#	stripXslt <- system.file("extdata/stripns.xsl", package = "RstoxData")
-	#	stripped <- xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
+	#	stripped <- xml2::xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
 	#	tempXml <- tempfile(fileext=".xml")
 	#	fileConn <- file(tempXml)
 	#	writeLines(as.character(stripped), fileConn)
