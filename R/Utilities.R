@@ -667,6 +667,9 @@ setorderv_numeric <- function(dataOne, by = NULL, key = NULL, split = "/") {
 			by <- names(dataOne)
 		}
 	}
+	else {
+		by <- intersect(by, names(dataOne))
+	}
 	
 	if(length(by)) {
 		orderKeys <- paste0(by, "OrderedAfterSplitting")

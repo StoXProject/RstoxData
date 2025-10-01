@@ -1,12 +1,12 @@
 processXSD <- function(doc, path = NULL) {
 
 	getNameType <- function(x) {
-		y <- xml_attrs(x)
+		y <- xml2::xml_attrs(x)
 		return(c(y[["name"]], y[["type"]]))
 	}
 
 	getNameTypeExt <- function(x, base) {
-		y <- xml_attrs(x)
+		y <- xml2::xml_attrs(x)
 		return(c(base, y[["base"]]))
 	}
 
@@ -22,10 +22,10 @@ processXSD <- function(doc, path = NULL) {
 		sName <- gsub(paste0(rootName, ":"), "", sName)
 
 		# Extract elements
-		y <- xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "element"))
+		y <- xml2::xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "element"))
 
 		# This is needed for echosounder v1 SA records
-		extension <- xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "extension"))
+		extension <- xml2::xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "extension"))
 
 		# If no children and "KeyType" (This might be specific to NMDBioticv3) or "*IDREFType*" (specific to ICES XSDs)
 		if(length(y) > 0 && (!grepl("KeyType", sName) || !grepl("IDREFType", sName))) {
@@ -42,7 +42,7 @@ processXSD <- function(doc, path = NULL) {
 
 			# Prepare flat
 			recEnv$flat[[x[1]]] <- z
-			recEnv$flatAttr[[x[1]]] <- sapply(xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "attribute/@name")), function(xx) xml_text(xx))
+			recEnv$flatAttr[[x[1]]] <- sapply(xml2::xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "attribute/@name")), function(xx) xml2::xml_text(xx))
 
 			# Remove nested elements
 			recEnv$flat[[x[1]]] <- lapply(recEnv$flat[[x[1]]], function(xx){ if(is.list(xx)) return(xx[[1]][1]) else return(xx) })
@@ -53,7 +53,7 @@ processXSD <- function(doc, path = NULL) {
 
 			# Prepare flat
 			recEnv$flat[[x[1]]] <- z
-			recEnv$flatAttr[[x[1]]] <- sapply(xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "attribute/@name")), function(xx) xml_text(xx))
+			recEnv$flatAttr[[x[1]]] <- sapply(xml2::xml_find_all(doc, paste0("//", defNS, "complexType[@name=\"", sName, "\"]//", defNS, "attribute/@name")), function(xx) xml2::xml_text(xx))
 
 			# Remove nested elements
 			recEnv$flat[[x[1]]] <- lapply(recEnv$flat[[x[1]]], function(xx){ if(is.list(xx)) return(xx[[1]][1]) else return(xx) })
@@ -64,7 +64,7 @@ processXSD <- function(doc, path = NULL) {
 	}
 
 	# Get the default namespace
-	defNS <- names(xml_ns(doc))[[grep("XMLSchema", as.list(xml_ns(doc)))]]
+	defNS <- names(xml2::xml_ns(doc))[[grep("XMLSchema", as.list(xml2::xml_ns(doc)))]]
   
 	if(length(defNS) > 0)
 		defNS <- paste0(defNS[[1]], ":")
@@ -72,15 +72,15 @@ processXSD <- function(doc, path = NULL) {
 		defNS <- ""
 
 	# See if we need to include more file(s) (include schemaLocation)
-	extraXSD <- xml_find_all(doc, paste0("//", defNS, "include"))
+	extraXSD <- xml2::xml_find_all(doc, paste0("//", defNS, "include"))
 	if(length(extraXSD) > 0) {
 		message("We have extra XSDs to be included!\n")
-		exFiles <- xml_attr(extraXSD, "schemaLocation")
-		exObj <- lapply(paste0(path, "/include/", exFiles), read_xml)
-		lapply(exObj, function(x) lapply(xml_children(x), function(y) xml_add_child(doc, y)))
+		exFiles <- xml2::xml_attr(extraXSD, "schemaLocation")
+		exObj <- lapply(paste0(path, "/include/", exFiles), xml2::read_xml)
+		lapply(exObj, function(x) lapply(xml2::xml_children(x), function(y) xml2::xml_add_child(doc, y)))
 	}
 
-	rootInfo <- getNameType(xml_find_all(doc, paste0("/", defNS, "schema/", defNS, "element"))[[1]])
+	rootInfo <- getNameType(xml2::xml_find_all(doc, paste0("/", defNS, "schema/", defNS, "element"))[[1]])
   
 	r_e <- new.env()
 	r_e$flat <- list()
@@ -102,15 +102,15 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 		else {
 			# Try to search the root "type"
 			findstring <- paste0('//*[@name="', xx, '"]')
-			el <- xml_find_all(xsdDoc, findstring)
-			elu <- unique(xml_attr(el, "type"))
+			el <- xml2::xml_find_all(xsdDoc, findstring)
+			elu <- unique(xml2::xml_attr(el, "type"))
 			res <- unlist(lapply(elu, traceType))
 
 			# Now try to search the root "base"
 			if(is.null(res)) {
 				findstring <- paste0('//*[@name="', xx, '"]//*[@base]')
-				el <- xml_find_all(xsdDoc, findstring)
-				elu <- unique(xml_attr(el, "base"))
+				el <- xml2::xml_find_all(xsdDoc, findstring)
+				elu <- unique(xml2::xml_attr(el, "base"))
 				res <- unlist(lapply(elu, traceType))
 			}
 			return(res)
@@ -239,8 +239,8 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 	xsdObject[["tableHeaders"]] <- r_e$tableHeaders;
 	xsdObject[["prefixLens"]] <- prefixLens;
 	xsdObject[["levelDims"]] <- levelDims;
-	if ("targetNamespace" %in% names(xml_attrs(xsdDoc))){
-	  xsdObject[["targetNamespace"]] <- xml_attrs(xsdDoc)[["targetNamespace"]]	  
+	if ("targetNamespace" %in% names(xml2::xml_attrs(xsdDoc))){
+	  xsdObject[["targetNamespace"]] <- xml2::xml_attrs(xsdDoc)[["targetNamespace"]]	  
 	}
 	else{
 	  xsdObject[["targetNamespace"]] <- NA
@@ -272,7 +272,7 @@ createXsdObject <- function(xsdFile) {
 	}
 
 	# Parse XSD
-	xsdObj <- read_xml(xsdFilePath)
+	xsdObj <- xml2::read_xml(xsdFilePath)
 
 	# Get metadata based on XSD
 	metaData <- processXSD(xsdObj, dirname(xsdFile))
@@ -344,17 +344,17 @@ autodetectXml <- function(xmlFile, xsdObjects, verbose) {
 
 	# Do manual detection
 	# Later We need to distinguish Biotic v3&v3.1, Biotic v1.4&earlier
-	if( length(xml_find_all(bits, paste0("//", prefix2, "mission[@startyear]"))) )
+	if( length(xml2::xml_find_all(bits, paste0("//", prefix2, "mission[@startyear]"))) )
 		xmlXsd <- "nmdbioticv3"
-	else if( length(xml_find_all(bits, paste0("//", prefix2, "mission[@year]"))) )
+	else if( length(xml2::xml_find_all(bits, paste0("//", prefix2, "mission[@year]"))) )
 		xmlXsd <- "nmdbioticv1.4"
-	else if( length(xml_find_all(bits, paste0("//", prefix2, "biotic"))) )
+	else if( length(xml2::xml_find_all(bits, paste0("//", prefix2, "biotic"))) )
 		xmlXsd <- "icesBiotic"
-	else if( length(xml_find_all(bits, paste0("//", prefix2, "echosounder_dataset"))) )
+	else if( length(xml2::xml_find_all(bits, paste0("//", prefix2, "echosounder_dataset"))) )
 		xmlXsd <- "nmdechosounderv1"
-	else if( length(xml_find_all(bits, paste0("//", prefix2, "acoustic"))) )
+	else if( length(xml2::xml_find_all(bits, paste0("//", prefix2, "acoustic"))) )
 		xmlXsd <- "icesAcoustic"
-	else if( length(xml_find_all(bits, paste0("//", prefix2, "Seddellinje"))) )
+	else if( length(xml2::xml_find_all(bits, paste0("//", prefix2, "Seddellinje"))) )
 		xmlXsd <- "landingerv2"
 	else
 		xmlXsd <- NULL
@@ -407,7 +407,7 @@ getIcesVocabulary <- function(xmlFile) {
 	xmlObj <- read_html(tmpText)
 
 	# Apply transformation to get the vocabulary translation table
-	ret <- rbindlist(lapply(as_list(xml_find_all(xmlObj, "//vocabulary/*/code")), function(x) if(length(x)>0) return(list(attr(x, "id"), ifelse(length(x) > 0, unlist(x), NA), attr(x, "codetype")))))
+	ret <- rbindlist(lapply(as_list(xml2::xml_find_all(xmlObj, "//vocabulary/*/code")), function(x) if(length(x)>0) return(list(attr(x, "id"), ifelse(length(x) > 0, unlist(x), NA), attr(x, "codetype")))))
 	setnames(ret, c("id", "value", "codetype"))
 	return(ret)
 }

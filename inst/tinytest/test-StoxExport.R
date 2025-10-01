@@ -1,5 +1,9 @@
 # Satisfy R CMD check
 
+xmlRaw <- xml2::read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+validCodes <- xml2::xml_text(xml2::xml_find_all(xmlRaw, "//Code//Key"))
+expect_true("125951" %in% validCodes)
+
 
 #context("test-StoxExport: DATRAS export")
 example <- system.file("testresources", "biotic_v3_example.xml", package="RstoxData")	
