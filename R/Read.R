@@ -204,7 +204,7 @@ ReadLanding <- function(FileNames = character(), ForceUnique=FALSE) {
 compareICES <- function(tableName, fieldName, data, url) {
 	pg <- tryCatch(
 		{
-			read_xml(url)
+			xml2::read_xml(url)
 		},
 		error = function(e){
 			warning(paste("StoX: Url", url, "is not exist or no internet connection available."))
@@ -212,8 +212,8 @@ compareICES <- function(tableName, fieldName, data, url) {
 			return(emptyXML)
 		}
 	)
-	recs <- xml_find_all(pg, "//Key")
-	vals <- trimws(xml_text(recs))
+	recs <- xml2::xml_find_all(pg, "//Key")
+	vals <- trimws(xml2::xml_text(recs))
 	for(x in unique(data[[tableName]][[fieldName]])){
 		if(!x %in% vals){
 			warning(paste0("StoX: ", tableName, fieldName, " = ", x, " is not defined in ", url))

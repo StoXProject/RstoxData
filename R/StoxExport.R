@@ -882,8 +882,8 @@ BioticData_NMDToICESBioticOne <- function(
 	else {
 		if(AllowRemoveSpecies) {
 			# Check for valid aphias, mark other as invalid
-			xmlRaw <- read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
-			validCodes <- xml_text(xml_find_all(xmlRaw, "//Code//Key"))
+			xmlRaw <- xml2::read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+			validCodes <- xml2::xml_text(xml2::xml_find_all(xmlRaw, "//Code//Key"))
 			
 			notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
 			notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
