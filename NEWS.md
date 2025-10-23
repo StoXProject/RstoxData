@@ -1,3 +1,19 @@
+# RstoxData v2.2.0-9004  (2025-10-23)
+* Fixed the following bugs in ICESDatsusc():
+	* Added values in the field ICESrectangle in the HH table.
+	* Changed the FishID in the PI and PP table to unique value by concatenating catchsampleid and specimenid, separated by dash.
+	* Changed the PreySequence to unique value by concatenating preysampleid and preylengthid (set to 0 if not present), separated by dash.
+	* Added values in the field ICESrectangle in the HH table.
+	* Added values in the field ICESrectangle in the HH table.
+	* Changed to compute Weight in the PP table only when TotalCount is present.
+	* Changed from -9 to NA in EmptyStomWgt in the PI table.
+* Changed -9 to NA to represent missing values in WriteICESDatsusc().
+* Fixed bug where WriteICESDatsusc actually called WriteICESDatrasOne().
+* Changed warning to error when ICES vocabulary cannot be checked (e.g. when internet connection is lost), affecting ICESBiotic() and ICESAcoustic(). StoX project that are run with these functions should not fail if the internet connection is lost.
+
+	
+
+
 # RstoxData v2.2.0-9003  (2025-09-23)
 * Added the option AggregateSa to WriteICESAcoustic() which when set to TRUE aggregates the DataValue (acoustic variable 'sa') for each combination of LogDistance, SampleChannelDepthUpper and DataSaCategory. This can be useful when DataSaCategory have been merged using translate-functions, so that one DataSaCategory occurs with multiple entries for the same LogDistance and SampleChannelDepthUpper.
 * Fixed bug in ICESAcoustic(), where LogOrigin and LogOrigin2 were set to "start" and "end" even then positions were missing, resulting in error when trying to submit data to ICES.
@@ -6,7 +22,7 @@
 
 
 # RstoxData v2.2.0-9002  (2025-08-17)
-* Removed Survey and EDMO from ICESDatras(). The are now set to NA, and need to be translated by the user.
+* Removed Survey and EDMO from ICESDatras(). These are now set to NA, and need to be translated by the user.
 * Changed functionArguments.rds to include object documentation as html.
 
 
