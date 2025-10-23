@@ -1299,6 +1299,13 @@ getUniqueVariablesOfLevel <- function(level, data, xsd, lll) {
 	
 	# Extract these variables present in the data: and in lll
 	varsToExtractFromData <- intersect(names(data), varsToExtract)
+	
+	# If there are no non-key fields, return an empty but named data table:
+	if(identical(keys, varsToExtractFromData)) {
+		output <- data[0, varsToExtractFromData, with = FALSE]
+		return(output)
+	}
+	
 	thisData <- data[, varsToExtractFromData, with = FALSE]
 	# Uniqueify:
 	
