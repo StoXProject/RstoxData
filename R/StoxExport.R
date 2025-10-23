@@ -341,6 +341,7 @@ is_online <- function(site = "https://raw.githubusercontent.com/StoXProject/repo
 
 
 testICESURL <- function(baseURL = "https://acoustic.ices.dk/Services/Schema/XML", testSchema = "AC_TransducerLocation") {
+	
 	testURL <- getICESURL(testSchema, baseURL = baseURL)
 	if(!is_online()) {
 		warning("Internet connecion does not work, or is too slow to read a small file within the timeout of ", options("timeout")$timeout, ".")
@@ -870,17 +871,20 @@ BioticData_NMDToICESBioticOne <- function(
 		IndividualVertebraeCount = NA_integer_
 	)]
 	
-	if(!testICESURL()) {
-		if(AllowRemoveSpecies) {
-			warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set to TRUE.")
-		}
-		else {
-			warning("Reference data for ICESAcoustic cannot be checked!!!")
-		}
+	baseURL <- "https://acoustic.ices.dk/Services/Schema/XML"
+	if(!testICESURL(baseURL = baseURL)) {
+		#if(AllowRemoveSpecies) {
+		#	warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set to TRUE.")
+		#}
+		#else {
+		#warning("Reference data for ICESAcoustic cannot be checked!!!")
+		stop("Reference data for ICESAcoustic cannot be checked. Internet connection not working, or ", baseURL, " cannot be reached.")
+		#}
 		
 	}
 	else {
 		if(AllowRemoveSpecies) {
+			
 			# Check for valid aphias, mark other as invalid
 			xmlRaw <- xml2::read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
 			validCodes <- xml2::xml_text(xml2::xml_find_all(xmlRaw, "//Code//Key"))
@@ -889,11 +893,11 @@ BioticData_NMDToICESBioticOne <- function(
 			notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
 			
 			if(length(notPresentInCatch)) {
-				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
+				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml, and were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
 				
 			}
 			if(length(notPresentInBiology)) {
-				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
+				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml, and were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
 				
 			}
 			
@@ -2000,7 +2004,7 @@ ICESDatsuscOne <- function(
     "ShootLong" = round(longitudestart, digits = 4),   #%Mandatory
     "HaulLat" = round(latitudeend, digits = 4),  #%Optional
     "HaulLong" = round(longitudeend, digits = 4),  #%Optional
-    "ICESrectangle" = NA_character_,  #TODO: do we need to fix this? 
+    "ICESrectangle" = getStatisticalRectangle(latitudestart, longitudestart),  #%Optional
     "Depth" = round(bottomdepthstart),  #%Optional
     "Survey" = NA_character_,          #%Optional
     "ICESDatabase" = NA_character_     #%Optional
@@ -2031,7 +2035,8 @@ ICESDatsuscOne <- function(
     "Month" = getMonth(stationstartdate),
     "Day" = getDay(stationstartdate),
     "Time" = getTimeShot(stationstarttime),
-    "FishID" = specimenid,        
+    #"FishID" = specimenid,        
+    "FishID" = paste(catchsampleid, specimenid, sep = "-"),        
     "AphiaIDPredator" = aphia, 
     "IndWgt" = individualweight, 
     "Number" = NA_character_, #Number of species taken for stomach analyses (pooled samples)
@@ -2046,7 +2051,7 @@ ICESDatsuscOne <- function(
     "Regurgitated" = NA_character_,           
     "StomachFullness" = stomachfillfield,           
     "FullStomWgt" = stomachweight,            
-    "EmptyStomWgt" = -9,            
+    "EmptyStomWgt" = NA_real_,           
     "StomachEmpty" = NA_character_,            
     "GenSamp" = NA_character_,          
     "Notes" = NA_character_           
@@ -2069,24 +2074,26 @@ ICESDatsuscOne <- function(
     "Month" = getMonth(stationstartdate),
     "Day" = getDay(stationstartdate),
     "Time" = getTimeShot(stationstarttime),
-    "FishID" = specimenid,    
-    "AphiaIDPredator" = aphia, 
-    "AphiaIDPrey" = preycategory,           
-    "IdentMet" = NA_character_,            
-    "DigestionStage" = preydigestion,            
-    "GravMethod" = stomach,            
-    "SubFactor" = NA_character_,           
-    "PreySequence" = preysampleid,            
-    "Count" = lengthintervalcount,            
-    "UnitWgt" = weightresolution,            
-    "Weight"= totalweight,     
-    "UnitLngt"= interval,   
-    "Length" = lengthintervalstart,            
-    "OtherItems" = NA_character_,           
-    "OtherCount" = NA_character_,            
-    "OtherWgt" = NA_character_,           
-    "AnalysingOrg" = NA_character_,           
-    "Notes" = NA_character_,           
+    #"FishID" = specimenid,
+    "FishID" = paste(catchsampleid, specimenid, sep = "-"),
+    "AphiaIDPredator" = aphia,
+    "AphiaIDPrey" = preycategory,
+    "IdentMet" = NA_character_,
+    "DigestionStage" = preydigestion,
+    "GravMethod" = stomach,
+    "SubFactor" = NA_character_,
+    #"PreySequence" = preysampleid,
+    "PreySequence" = paste(preysampleid, ifelse(is.na(preylengthid), 0, preylengthid), sep = "-"),
+    "Count" = lengthintervalcount,
+    "UnitWgt" = weightresolution,
+    "Weight"= totalweight,
+    "UnitLngt"= interval,
+    "Length" = lengthintervalstart,
+    "OtherItems" = NA_character_,
+    "OtherCount" = NA_character_,
+    "OtherWgt" = NA_character_,
+    "AnalysingOrg" = NA_character_,
+    "Notes" = NA_character_,
     "preyforeignobject" = preyforeignobject
   )]
   
@@ -2108,10 +2115,13 @@ ICESDatsuscOne <- function(
        by = .(Ship, Gear,HaulNo,StationNumber,Year,Month,Day,Time,FishID,
               AphiaIDPredator,AphiaIDPrey,IdentMet,DigestionStage,GravMethod,
               SubFactor,PreySequence)]
-  finalPP[!is.na(finalPP$TotalCount)]$Notes<-'Computed using: total weight * count in length group / count for all length group'
-  finalPP$Weight=finalPP$Weight*finalPP$Count/finalPP$TotalCount
   
-  #Handling number of unique species in pray sampled in each individual fish
+  # Set the weight to computed weight if possible:
+  hasCountAndTotalCount <- !is.na(finalPP$TotalCount)
+  finalPP[hasCountAndTotalCount, Notes := 'Computed using: total weight * count in length group / count for all length group']
+  finalPP[hasCountAndTotalCount, Weight := Weight * Count / TotalCount]
+  
+  #Handling number of unique species in prey sampled in each individual fish
   #TODO: Needs to be checked
   replace<-finalPP[!is.na(finalPP$AphiaIDPrey), .(replace_number = data.table::uniqueN(AphiaIDPredator)), 
               by = .(Ship,Gear,HaulNo,StationNumber,Year,Month,Day,Time)]#,FishID,
@@ -2164,25 +2174,26 @@ ICESDatsuscOne <- function(
 #' @export
 WriteICESDatsusc <- function(ICESDatsuscData){
   
-  #WriteICESDatrasData <- lapply(
+	#WriteICESDatrasData <- lapply(
   #	ICESDatrasData, 
   #	WriteICESDatrasOne, 
   #	na = "-9"
   #)
   
-  WriteICESDatsuscData <- WriteICESDatrasOne(ICESDatsuscData, na = "-9")
+  WriteICESDatsuscData <- WriteICESDatsuscOne(ICESDatsuscData)
   
   return(WriteICESDatsuscData)
 }
 
 
-WriteICESDatsuscOne <- function(ICESDatsuscData, na = "-9"){
+WriteICESDatsuscOne <- function(ICESDatsuscData){
+	
 	# Convert all tables to string matrix with header and record, and rbind:
 	ICESDatsuscCSVDataOne<- convertToRecordTypeMatrix(ICESDatsuscData)
-	# Replace NAs:
-	if(length(na)) {
-		ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
-	}
+	### # Replace NAs:
+	### if(length(na)) {
+	### 	ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+	### }
 	
 	# IMPORTANT NOTE: The ICES DATRAS format assumes that the three tables HH, HL and CA are stacked in a comma separated file but without padding the tables to equal number of columns as is done for ICESAcoustic and ICESBiotic. For this reason we need to paste the data to a chatacter vector and write as lines. RstoxFramework detects that the output as a vector of characters and uses writeLines() to produce the file.
 	

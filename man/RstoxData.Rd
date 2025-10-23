@@ -20,14 +20,15 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Edvin Fuglebakk \email{edvin.fuglebakk@hi.no}
+\strong{Maintainer}: Arne Johannes Holmin \email{arnejh@hi.no}
 
 Authors:
 \itemize{
-  \item Arne Johannes Holmin
-  \item Ibrahim Umar
-  \item Sindre Vatnehol
   \item Anthony Hennessey
+  \item Charles Abraham Solberg
+  \item Sindre Vatnehol
+  \item Edvin Fuglebakk
+  \item Ibrahim Umar
   \item Espen Johnsen
 }
 
