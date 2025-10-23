@@ -10,8 +10,7 @@
 * Changed -9 to NA to represent missing values in WriteICESDatsusc().
 * Fixed bug where WriteICESDatsusc actually called WriteICESDatrasOne().
 * Changed warning to error when ICES vocabulary cannot be checked (e.g. when internet connection is lost), affecting ICESBiotic() and ICESAcoustic(). StoX project that are run with these functions should not fail if the internet connection is lost.
-
-	
+* Temporarily disabled the checks for ICESAcoustic() and ICESBiotic() in test-StoxExport.R due to failure on macOS "x86_64" architecture to access https://acoustic.ices.dk/Services/Schema/XML at ICES.
 
 
 # RstoxData v2.2.0-9003  (2025-09-23)

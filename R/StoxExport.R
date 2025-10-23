@@ -878,7 +878,7 @@ BioticData_NMDToICESBioticOne <- function(
 		#}
 		#else {
 		#warning("Reference data for ICESAcoustic cannot be checked!!!")
-		stop("Reference data for ICESAcoustic cannot be checked. Not connected to internet, or not able to reach ", baseURL, ".")
+		stop("Reference data for ICESAcoustic cannot be checked. Internet connection not working, or ", baseURL, " cannot be reached.")
 		#}
 		
 	}
