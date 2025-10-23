@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9004</span>
       </span>
     </div>
 
@@ -58,8 +58,31 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="2.2.0-9002" id="rstoxdata-v220-9002-2025-06-20">RstoxData v2.2.0-9002 (2025-06-20)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9002-2025-06-20"></a></h2>
-<ul><li>Removed Survey and EDMO from ICESDatras(). The are now set to NA, and need to be translated by the user.</li>
+<h2 class="page-header" data-toc-text="2.2.0-9004" id="rstoxdata-v220-9004-2025-10-23">RstoxData v2.2.0-9004 (2025-10-23)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9004-2025-10-23"></a></h2>
+<ul><li>Fixed the following bugs in ICESDatsusc():
+<ul><li>Added values in the field ICESrectangle in the HH table.</li>
+<li>Changed the FishID in the PI and PP table to unique value by concatenating catchsampleid and specimenid, separated by dash.</li>
+<li>Changed the PreySequence to unique value by concatenating preysampleid and preylengthid (set to 0 if not present), separated by dash.</li>
+<li>Added values in the field ICESrectangle in the HH table.</li>
+<li>Added values in the field ICESrectangle in the HH table.</li>
+<li>Changed to compute Weight in the PP table only when TotalCount is present.</li>
+<li>Changed from -9 to NA in EmptyStomWgt in the PI table.</li>
+</ul></li>
+<li>Changed -9 to NA to represent missing values in WriteICESDatsusc().</li>
+<li>Fixed bug where WriteICESDatsusc actually called WriteICESDatrasOne().</li>
+<li>Changed warning to error when ICES vocabulary cannot be checked (e.g. when internet connection is lost), affecting ICESBiotic() and ICESAcoustic(). StoX project that are run with these functions should not fail if the internet connection is lost.</li>
+<li>Temporarily disabled the checks for ICESAcoustic() and ICESBiotic() in test-StoxExport.R due to failure on macOS “x86_64” architecture to access <a href="https://acoustic.ices.dk/Services/Schema/XML" class="external-link uri">https://acoustic.ices.dk/Services/Schema/XML</a> at ICES.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.2.0-9003" id="rstoxdata-v220-9003-2025-09-23">RstoxData v2.2.0-9003 (2025-09-23)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9003-2025-09-23"></a></h2>
+<ul><li>Added the option AggregateSa to WriteICESAcoustic() which when set to TRUE aggregates the DataValue (acoustic variable ‘sa’) for each combination of LogDistance, SampleChannelDepthUpper and DataSaCategory. This can be useful when DataSaCategory have been merged using translate-functions, so that one DataSaCategory occurs with multiple entries for the same LogDistance and SampleChannelDepthUpper.</li>
+<li>Fixed bug in ICESAcoustic(), where LogOrigin and LogOrigin2 were set to “start” and “end” even then positions were missing, resulting in error when trying to submit data to ICES.</li>
+<li>Fixed bug in all Copy-functions (CopyBiotic, CopyStoxBiotic, CopyICESBiotic, CopyICESDatras, CopyICESDatsusc, CopyAcoustic, CopyStoxAcoustic, CopyICESAcoustic, CopyLanding, CopyStoxLanding) where the argument PreserveClass was visible even when Overwrite was FALSE.</li>
+<li>Changed setorderv_numeric() to accept column names in ‘by’ not being in dataOne.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.2.0-9002" id="rstoxdata-v220-9002-2025-08-17">RstoxData v2.2.0-9002 (2025-08-17)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9002-2025-08-17"></a></h2>
+<ul><li>Removed Survey and EDMO from ICESDatras(). These are now set to NA, and need to be translated by the user.</li>
 <li>Changed functionArguments.rds to include object documentation as html.</li>
 </ul></div>
     <div class="section level2">
@@ -899,7 +922,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Edvin Fuglebakk, Arne Johannes Holmin, Ibrahim Umar, Sindre Vatnehol, Anthony Hennessey, Espen Johnsen, Norwegian Institute of Marine Research.</p>
+  <p></p><p>Developed by Arne Johannes Holmin, Anthony Hennessey, Charles Abraham Solberg, Sindre Vatnehol, Edvin Fuglebakk, Ibrahim Umar, Espen Johnsen, Norwegian Institute of Marine Research.</p>
 </div>
 
 <div class="pkgdown">
