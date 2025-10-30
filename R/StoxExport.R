@@ -281,9 +281,6 @@ prepareICESAcousticCSV_nmdechosounderv1 <-  function(AcousticDataOne){
 
 checkAndCreateICESAcousticCSV <- function(ICESAcousticDataOne) {
 	
-	# Check metadata against ices definitions
-	checkICESAcousticDefinitions (ICESAcousticDataOne)
-	
 	# Set classes of the variables, especially taking care of NAs. The class of the variables is used later to format the output from WriteICESAcoustic, where NA double type is stored as empty sting to support these beingg empty fields in the written file:
 	lapply(names(ICESAcousticDataOne), setClass_OneTable, ICESAcousticDataOne, RstoxData::xsdObjects$icesAcoustic.xsd)
 	
@@ -340,21 +337,7 @@ is_online <- function(site = "https://raw.githubusercontent.com/StoXProject/repo
 }
 
 
-testICESURL <- function(baseURL = "https://acoustic.ices.dk/Services/Schema/XML", testSchema = "AC_TransducerLocation") {
-	
-	testURL <- getICESURL(testSchema, baseURL = baseURL)
-	if(!is_online()) {
-		warning("Internet connecion does not work, or is too slow to read a small file within the timeout of ", options("timeout")$timeout, ".")
-		return(FALSE)
-	}
-	else if(!is_online(testURL)) {
-		warning("The URL ", testURL, " failed to download within the timeout of ", options("timeout")$timeout, ".")
-		return(FALSE)
-	}
-	else {
-		return(TRUE)
-	}
-}
+
 
 # Get the URL to ICES schema:
 
@@ -362,41 +345,6 @@ getICESURL <- function(schema, baseURL) {
 	paste(baseURL, paste(schema, "xml", sep = "."), sep = "/")
 }
 
-
-
-checkICESAcousticDefinitions <- function(
-	ICESAcousticDataOne, 
-	baseURL = "https://acoustic.ices.dk/Services/Schema/XML", 
-	testSchema = "AC_TransducerLocation"
-) {
-	# Test the internet connection:
-	if(testICESURL(baseURL = baseURL, testSchema = testSchema)) {
-		compareICES("Instrument", "TransducerLocation", ICESAcousticDataOne, getICESURL("AC_TransducerLocation", baseURL = baseURL))
-		compareICES("Instrument", "TransducerBeamType", ICESAcousticDataOne, getICESURL("AC_TransducerBeamType", baseURL = baseURL))
-		compareICES("Calibration", "AcquisitionMethod", ICESAcousticDataOne, getICESURL("AC_AcquisitionMethod", baseURL = baseURL))
-		compareICES("Calibration", "ProcessingMethod", ICESAcousticDataOne, getICESURL("AC_ProcessingMethod", baseURL = baseURL))
-		compareICES("DataAcquisition", "SoftwareName", ICESAcousticDataOne, getICESURL("AC_DataAcquisitionSoftwareName", baseURL = baseURL))
-		compareICES("DataAcquisition", "StoredDataFormat", ICESAcousticDataOne, getICESURL("AC_StoredDataFormat", baseURL = baseURL))
-		compareICES("DataProcessing", "SoftwareName", ICESAcousticDataOne, getICESURL("AC_DataProcessingSoftwareName", baseURL = baseURL))
-		compareICES("DataProcessing", "TriwaveCorrection", ICESAcousticDataOne, getICESURL("AC_TriwaveCorrection", baseURL = baseURL))
-		compareICES("DataProcessing", "OnAxisGainUnit", ICESAcousticDataOne, getICESURL("AC_OnAxisGainUnit", baseURL = baseURL))
-		compareICES("Cruise", "Country", ICESAcousticDataOne, getICESURL("ISO_3166", baseURL = baseURL))
-		compareICES("Cruise", "Platform", ICESAcousticDataOne, getICESURL("SHIPC", baseURL = baseURL))
-		compareICES("Cruise", "Organisation", ICESAcousticDataOne, getICESURL("EDMO", baseURL = baseURL))
-		compareICES("Cruise", "Survey", ICESAcousticDataOne, getICESURL("AC_Survey", baseURL = baseURL))
-		compareICES("Log", "Origin", ICESAcousticDataOne, getICESURL("AC_LogOrigin", baseURL = baseURL))
-		compareICES("Log", "Validity", ICESAcousticDataOne, getICESURL("AC_LogValidity", baseURL = baseURL))
-		compareICES("Sample", "PingAxisIntervalType", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalType", baseURL = baseURL))
-		compareICES("Sample", "PingAxisIntervalUnit", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalUnit", baseURL = baseURL))
-		compareICES("Sample", "PingAxisIntervalOrigin", ICESAcousticDataOne, getICESURL("AC_PingAxisIntervalOrigin", baseURL = baseURL))
-		compareICES("Data", "SaCategory", ICESAcousticDataOne, getICESURL("AC_SaCategory", baseURL = baseURL))
-		compareICES("Data", "Type", ICESAcousticDataOne, getICESURL("AC_AcousticDataType", baseURL = baseURL))
-		compareICES("Data", "Unit", ICESAcousticDataOne, getICESURL("AC_DataUnit", baseURL = baseURL))
-	}
-	else {
-		warning("Reference data for ICESAcoustic was not checked!!!")
-	}
-}
 
 
 
@@ -572,8 +520,6 @@ expandWidth <- function(x, na = NA) {
 #' @param SurveyName A string naming the survey. Must be one of the names listed on \url{https://vocab.ices.dk/?ref=1453} or NONE.
 #' @param Country The ISO_3166 code of the country running the cruise. See \url{http://vocab.ices.dk/?ref=337}.
 #' @param Organisation An integer code representing the organization running the cruise. See \url{https://vocab.ices.dk/?ref=1398} for a list of possible codes (e.g., Institute of Marine Research: 612).
-#' @param AllowRemoveSpecies ICES submission will not allow the resulting CSV file to be uploaded if the file contains species not listed in
-#' https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml. Setting this parameter to TRUE will remove the unlisted species records.
 #'        
 #' @return An \code{\link{ICESBioticData}} object.
 #'
@@ -582,8 +528,7 @@ ICESBiotic <- function(
 	BioticData, 
 	SurveyName = character(), 
 	Country = character(), 
-	Organisation = integer(), 
-	AllowRemoveSpecies = TRUE
+	Organisation = integer()
 ) {
 
 	# Convert to ICESBiotic:
@@ -592,8 +537,7 @@ ICESBiotic <- function(
 		BioticDataToICESBioticOne, 
 		SurveyName = SurveyName,
 		Country = Country,
-		Organisation = Organisation,
-		AllowRemoveSpecies = AllowRemoveSpecies
+		Organisation = Organisation
 	)
 	
 	# Rbind accross files:
@@ -611,8 +555,7 @@ BioticDataToICESBioticOne <- function(
 	BioticDataOne, 
 	SurveyName = character(), 
 	Country = character(), 
-	Organisation = integer(),  
-	AllowRemoveSpecies = TRUE
+	Organisation = integer()
 ) {
 	
 	if(BioticDataOne$metadata$useXsd %in% "icesBiotic") {
@@ -623,8 +566,7 @@ BioticDataToICESBioticOne <- function(
 			BioticDataOne, 
 			SurveyName = SurveyName,
 			Country = Country,
-			Organisation = Organisation,
-			AllowRemoveSpecies = AllowRemoveSpecies
+			Organisation = Organisation
 		)
 	}
 	else {
@@ -694,8 +636,7 @@ BioticData_NMDToICESBioticOne <- function(
 	BioticData_NMDOne, 
 	SurveyName = character(), 
 	Country = character(), 
-	Organisation = integer(), 
-	AllowRemoveSpecies = TRUE
+	Organisation = integer()
 ) {
 	
 	cruiseRaw <- BioticData_NMDOne$mission
@@ -871,43 +812,7 @@ BioticData_NMDToICESBioticOne <- function(
 		IndividualVertebraeCount = NA_integer_
 	)]
 	
-	baseURL <- "https://acoustic.ices.dk/Services/Schema/XML"
-	if(!testICESURL(baseURL = baseURL)) {
-		#if(AllowRemoveSpecies) {
-		#	warning("Reference data for ICESAcoustic cannot be checked!!! This can lead to invalid species being inclcuded since AllowRemoveSpecies is set to TRUE.")
-		#}
-		#else {
-		#warning("Reference data for ICESAcoustic cannot be checked!!!")
-		stop("Reference data for ICESAcoustic cannot be checked. Internet connection not working, or ", baseURL, " cannot be reached.")
-		#}
-		
-	}
-	else {
-		if(AllowRemoveSpecies) {
-			
-			# Check for valid aphias, mark other as invalid
-			xmlRaw <- xml2::read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
-			validCodes <- xml2::xml_text(xml2::xml_find_all(xmlRaw, "//Code//Key"))
-			
-			notPresentInCatch <- unique(setdiff(Catch$SpeciesCode, validCodes))
-			notPresentInBiology <- unique(setdiff(Biology$SpeciesCode, validCodes))
-			
-			if(length(notPresentInCatch)) {
-				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml, and were automatically removed from table Catch (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInCatch, collapse = ", "))
-				
-			}
-			if(length(notPresentInBiology)) {
-				warning("StoX: The following species are not listed in https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml, and were automatically removed from table Biology (set AllowRemoveSpecies = FALSE to prevent this):\n", paste(notPresentInBiology, collapse = ", "))
-				
-			}
-			
-			Catch <- Catch[SpeciesCode %in% validCodes, ]
-			Biology <- Biology[SpeciesCode %in% validCodes, ]
-		} else {
-			message("AllowRemoveSpecies is set to FALSE. Will only give warning for records with species that is not accepted by the ICES system.")
-			compareICES("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml", unique(Catch$SpeciesCode))
-		}
-	}
+	
 	
 	
 	ICESBioticCSV <- list(
@@ -1416,7 +1321,6 @@ ICESDatrasOne <- function(
 			"AgeSource" = agingstructure,
 			"AgePreparationMethod" = NA_character_,
 			# 2022-05-12: The user needs to do the translation here, as readability
-			#"OtGrading" = ifelse(readability %in% as.character(c(1:4)), readability, NA_character_),  # From http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/otolithreadability?version=2.0 and http://vocab.ices.dk/?ref=1395
 			"OtolithGrading" = ifelse(agingstructure %in% as.character(2), readability, NA_character_), 
 			"ParasiteSamplingFlag" = ifelse(!is.na(parasite), "Y", "N"), 
 			"LiverWeight" = liverweight,
@@ -1579,145 +1483,6 @@ getQuarter <- function(stationstartdate) {
 	return(floor((as.numeric(x) - 1) / 3 + 1))
 }
 
-# # Adopted from: https://www.mathworks.com/matlabcentral/fileexchange/62180-sunriseset-lat-lng-utcoff-date-plot
-# getDayNight <- function(stationstartdate, stationstarttime, latitudestart, longitudestart, UTCoff = 0) {
-# 	
-# 	deg2rad <- function(val) {
-# 		return(val * (pi / 180))
-# 	}
-# 	
-# 	rad2deg <- function(val) {
-# 		return(val * (180 / pi))
-# 	}
-# 	
-# 	datetime0 <- as.POSIXct("1990-12-30", tz = "UTC")
-# 	
-# 	uniqueDates <- unique(stationstartdate)
-# 	
-# 	nDaysA = as.numeric(difftime(uniqueDates, datetime0, units = "days")) # Number of days since 01/01
-# 	
-# 	nTimes = 24*3600                       # Number of seconds in the day
-# 	tArray = seq(0, 1, length = nTimes)
-# 	
-# 	ssTab <- list()
-# 	
-# 	for(idx in seq_len(length(nDaysA))) {
-# 		
-# 		nDays <- nDaysA[idx]
-# 		lat <- latitudestart[idx]
-# 		lng <- longitudestart[idx]
-# 		localdate <- as.POSIXct(uniqueDates[idx], tz = "UTC")
-# 		
-# 		# Compute
-# 		# Letters correspond to colums in the NOAA Excel
-# 		E = tArray
-# 		F = nDays + 2415018.5 + E - UTCoff / 24
-# 		G = (F - 2451545) / 36525
-# 		I = (280.46646 + G * (36000.76983 + G * 0.0003032)) %% 360
-# 		J = 357.52911 + G * (35999.05029 - 0.0001537 * G)
-# 		K = 0.016708634 - G * (0.000042037 + 0.0000001267 * G)
-# 		L = sin(deg2rad(J)) * (1.914602 - G * (0.004817 + 0.000014 * G))+sin(deg2rad(2 * J)) * (0.019993 - 0.000101*G) + sin(deg2rad(3 * J)) * 0.000289
-# 		M = I + L
-# 		P = M - 0.00569 - 0.00478 * sin(deg2rad(125.04 - 1934.136 * G))
-# 		Q = 23 + (26 + ((21.448 - G * (46.815 + G * (0.00059 - G * 0.001813)))) / 60) / 60
-# 		R = Q + 0.00256 * cos(deg2rad(125.04 - 1934.136 * G))
-# 		T = rad2deg(asin(sin(deg2rad(R)) * sin(deg2rad(P))))
-# 		U = tan(deg2rad(R/2)) * tan(deg2rad(R/2))
-# 		V = 4 * rad2deg(U * sin(2 * deg2rad(I))-2 * K * sin(deg2rad(J)) + 4 * K * U * sin(deg2rad(J)) *  cos(2*deg2rad(I)) - 0.5 * U * U * sin(4 * deg2rad(I)) - 1.25 * K * K * sin(2 * # deg2rad(J)))
-# 		AB = (E * 1440 + V + 4 *lng - 60 * UTCoff) %% 1440
-# 		
-# 		
-# 		AC = ifelse (AB/4 < 0, AB/4 + 180, AB/4 - 180)
-# 		
-# 		AD = rad2deg(acos(sin(deg2rad(lat)) * sin(deg2rad(T)) + cos(deg2rad(lat)) * cos(deg2rad(T)) * cos(deg2rad(AC))))
-# 		
-# 		# Test whether we are in midnightsun: 
-# 		WArg <- cos(deg2rad(90.833)) / (cos(deg2rad(lat)) * cos(deg2rad(T))) - tan(deg2rad(lat)) * tan(deg2rad(T))
-# 		# Truncate WArg to [-1, 1], where below is midnightsun and above 1 is myrketid:
-# 		if(any(WArg < -1)) {
-# 			WArg[WArg < -1] <- -1
-# 		}
-# 		if(any(WArg > 1)) {
-# 			WArg[WArg > 1] <- 1
-# 		}
-# 		
-# 		W = rad2deg(acos(WArg))
-# 		X = (720 - 4 * lng - V + UTCoff * 60) * 60
-# 		
-# 		sunrise = which.min(abs(X - round(W * 4 * 60) - nTimes * tArray))
-# 		sunset = which.min(abs(X+round(W*4*60) - nTimes*tArray))
-# 		
-# 		sunrisetime = localdate + sunrise
-# 		sunsettime = localdate + sunset
-# 		
-# 		ssTab[[uniqueDates[idx]]] <- list(sunrise = sunrisetime, sunset = sunsettime)
-# 	}
-# 	
-# 	getDN <- function(x, ssTab) {
-# 		
-# 		y <- ssTab[[format(x, "%Y-%m-%dZ")]]
-# 		
-# 		if(x < y$sunrise || x >= y$sunset) {
-# 			return("N")
-# 		} else {
-# 			return("D")
-# 		}
-# 	}
-# 	
-# 	datetime <- as.POSIXct(gsub("Z", " ", paste0(stationstartdate, stationstarttime)), tz = "UTC")
-# 	
-# 	return(unlist(lapply(datetime, getDN, ssTab)))
-# }
-
-# # Convert Length Measurement Type
-# # http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/lengthmeasurement?version=2.0
-# # http://vocab.ices.dk/?ref=1392
-# convLenMeasType <- function(LenMeasType) {
-# 	# Convert table
-# 	ct <- c(
-# 		"B" = 5,
-# 		"C" = 6,
-# 		"E" = 1,
-# 		"F" = 8,
-# 		"G" = 4,
-# 		"H" = 3,
-# 		"J" = 2,
-# 		"L" = 7,
-# 		"S" = 9
-# 	)
-# 	return(ct[LenMeasType])
-# }
-
-## Convert aging structure source
-## http://tomcat7.imr.no:8080/apis/nmdapi/reference/v2/dataset/agingstructure?version=2.0
-## http://vocab.ices.dk/?ref=1507
-## This function seems to incorrect, as the AgeSource documentation on here only lists three values:
-## http://vocab.ices.dk/?ref=1482
-#convAgeSource <- function(AgeSource) {
-#	# Convert table
-#	if(!all(AgeSource %in% c(NA, "1", "2", "7"))) {
-#		warning("StoX: The conversion from agingstructure to AgeSource may be wrong for other values than 1, 2 and 7. Please noify #the developers of StoX.")
-#	}
-#	
-#	ct <- c("1" = "scale",
-#			"2" = "otolith",
-#			"4" = "df-spine",
-#			"6" = "spine",
-#			"7" = "vertebra",
-#			"8" = "caudal-thorn")
-#	return(ct[AgeSource])
-#}
-
-
-#translateAgeSource <- function(agingstructure) {
-#	# Convert table:
-#	ct <- c(
-#		"1" = "Scale",
-#		"2" = "Otolith",
-#		"7" = "Vertebra"
-#	)
-#	return(ct[agingstructure])
-#}
 
 roundDrop0 <- function(x, digits = 0) {
 	notNA <- !is.na(x)
