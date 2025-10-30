@@ -397,6 +397,12 @@ backwardCompatibility_RstoxData <- list(
 			functionName = "AddToStoxBiotic", 
 			modelName = "baseline", 
 			parameterName = "AddToLowestTable"
+		), 
+		list(
+			changeVersion = "2.2.0-9005", 
+			functionName = "ICESBiotic", 
+			modelName = "baseline", 
+			parameterName = "AllowRemoveSpecies"
 		)
 	),  
 	
@@ -651,6 +657,66 @@ backwardCompatibility_RstoxData <- list(
 			processDataName = "Translation",
 			newProcessData = function(projectDescription, modelName, processIndex) {
 				RstoxData::oldToNewTranslationList(projectDescription[[modelName]][[processIndex]]$processData$Translation)
+			}
+		)
+	), 
+	
+	splitProcess = list(
+		# Split ICESBiotic process into one ICESBiotic and one FilterICESBiotic process:
+		list(
+			changeVersion = "2.2.0-9005", 
+			functionName = "ICESBiotic", 
+			modelName = "baseline", 
+			newProcesses = function(projectDescription, modelName, processIndex) {
+				
+				# Get the process name of the filter process, hopefully not used elsewhere in the project:	
+				processNameOfSecondProcess <- "FilterICESBiotic_KeepOnlyICESSpecWoRMS"
+				
+				allProcessNames <- unlist(lapply(projectDescription, function(model) lapply(model, "[[", "processName")))
+				if(any(processNameOfSecondProcess %in% allProcessNames)) {
+					stop("Cannot split process...")
+				}
+				
+				# Create the filter expression:
+				# Read the valid species codes from ICES:
+				xmlRaw <- xml2::read_xml("https://acoustic.ices.dk/Services/Schema/XML/SpecWoRMS.xml")
+				validCodes <- xml2::xml_text(xml2::xml_find_all(xmlRaw, "//Code//Key"))
+				
+				# Create a filter expression where only the species listed by ICES are kept (at the Catch level and subsequently at the Biology level). This expression should be pasted into the FilterExpression parameter of a FilterICESBiotic process:
+				CatchFilterexpression <- paste(
+					"CatchSpeciesCode", 
+					"%in%", 
+					paste(deparse(validCodes, 200), collapse = "")
+				)
+				
+				# Create a list of the two processes:
+				output <- list(
+					# The first process unchanged:
+					projectDescription[[modelName]][[processIndex]], 
+					# The new filter process:
+					list(
+						processName = processNameOfSecondProcess, 
+						functionName = "FilterICESBiotic", 
+						functionInputs = list(
+							ICESBioticData = projectDescription[[modelName]][[processIndex]]$processName
+						), 
+						functionParameters = list(
+							FilterExpression = list(
+								Catch = CatchFilterexpression
+							)
+						), 
+						processParameters = list(
+							enabled = TRUE, 
+							showInMap = TRUE,
+							fileOutput = TRUE
+						),
+						processData = list()
+					)
+				)
+				
+				names(output) <- c("ICESBiotic", processNameOfSecondProcess)
+				
+				return(output)
 			}
 		)
 	)

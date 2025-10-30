@@ -1,3 +1,9 @@
+# RstoxData v2.2.0-9005  (2025-10-23)
+* Removed all check against ICES vocabularies in ICESAcoustic() and ICESBiotic(). Comprehensive checks are run when a file is submitted to the acoustic database at ICES.
+* Added drop-down list of possible values in TranslationTable in Translation* funcitons (except for the NewValue).
+* Removed the argument AllowRemoveSpecies in ICESBiotic(), and added the backwards compatibility action that any ICESBiotic process is split into an ICESBiotic process and a FilterICESBiotic process that keeps only those species present in the ICES vocabulary at the time of opening the old project.
+
+
 # RstoxData v2.2.0-9004  (2025-10-23)
 * Fixed the following bugs in ICESDatsusc():
 	* Added values in the field ICESrectangle in the HH table.

@@ -1110,6 +1110,47 @@ processPropertyFormats <- list(
 		}, 
 		variableTypes = function(VariableName, Conditional, ConditionalVariableNames = NULL) {
 			rep("character", 2 + as.numeric(Conditional) * length(ConditionalVariableNames))
+		}, 
+		possibleValues = function(VariableName, Conditional, ConditionalVariableNames = NULL, ...) {
+			# Find the data:
+			lll <- list(...)
+			atData <- which(sapply(names(lll), endsWith, "Data"))
+			if(length(atData)) {
+				data <- lll[[atData]]
+			}
+			else {
+				stop("The function does not contain an argument with name ending with \"Data\".")
+			}
+			
+			getUniqueValuesFromStoxData <- function(data, VariableName) {
+				if(is.data.table(data[[1]])) {
+					sort(unique(unlist(lapply(data, "[[", VariableName))))
+				}
+				else if(is.data.table(data[[1]][[1]])) {
+					sort(unique(unlist(lapply(data, function(x) lapply(x, "[[", VariableName)))))
+				}
+			}
+			
+			# Get the sorted unique values of the VariableName, and no possible values for the NewValue:
+			output <- list(
+				getUniqueValuesFromStoxData(data, VariableName), 
+				list()
+			)
+			
+			# Add the conditional variable:
+			if(Conditional) {
+				output <- c(
+					output, 
+					lapply(
+						ConditionalVariableNames, 
+						function(name) {
+							getUniqueValuesFromStoxData(data, name)
+						}
+					)
+				)
+			}
+			
+			return(output)
 		}
 		#columnNames = c(
 		#	"VariableName", 
