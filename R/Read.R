@@ -200,26 +200,26 @@ ReadLanding <- function(FileNames = character(), ForceUnique=FALSE) {
 
 
 
-# Function to compare with ices vocabulary of allowed values
-compareICES <- function(tableName, fieldName, data, url) {
-	pg <- tryCatch(
-		{
-			xml2::read_xml(url)
-		},
-		error = function(e){
-			warning(paste("StoX: Url", url, "is not exist or no internet connection available."))
-			emptyXML <- xml2::as_xml_document(list(list()))
-			return(emptyXML)
-		}
-	)
-	recs <- xml2::xml_find_all(pg, "//Key")
-	vals <- trimws(xml2::xml_text(recs))
-	for(x in unique(data[[tableName]][[fieldName]])){
-		if(!x %in% vals){
-			warning(paste0("StoX: ", tableName, fieldName, " = ", x, " is not defined in ", url))
-		}
-	}
-}     
+### # Function to compare with ices vocabulary of allowed values
+### compareICES <- function(tableName, fieldName, data, url) {
+### 	pg <- tryCatch(
+### 		{
+### 			xml2::read_xml(url)
+### 		},
+### 		error = function(e){
+### 			warning(paste("StoX: Url", url, "is not exist or no internet connection available."))
+### 			emptyXML <- xml2::as_xml_document(list(list()))
+### 			return(emptyXML)
+### 		}
+### 	)
+### 	recs <- xml2::xml_find_all(pg, "//Key")
+### 	vals <- trimws(xml2::xml_text(recs))
+### 	for(x in unique(data[[tableName]][[fieldName]])){
+### 		if(!x %in% vals){
+### 			warning(paste0("StoX: ", tableName, fieldName, " = ", x, " is not defined in ", url))
+### 		}
+### 	}
+### }     
 
 # Get quarter representation from a date
 getQuarter <- function(stationstartdate) {
