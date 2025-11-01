@@ -1850,9 +1850,13 @@ ICESDatsuscOne <- function(
     #"PreySequence" = preysampleid,
     "PreySequence" = paste(preysampleid, ifelse(is.na(preylengthid), 0, preylengthid), sep = "-"),
     "Count" = lengthintervalcount,
-    "UnitWgt" = weightresolution,
+    # This should be hard coded to kg, as that is the unit of the NMDBiotic format:
+    #"UnitWgt" = weightresolution,
+    "UnitWgt" = "kg",
     "Weight"= totalweight,
-    "UnitLngt"= interval,
+    # This should be hard coded to m, as that is the unit of the NMDBiotic format:
+    #"UnitLngt"= interval,
+    "UnitLngt"= "m",
     "Length" = lengthintervalstart,
     "OtherItems" = NA_character_,
     "OtherCount" = NA_character_,

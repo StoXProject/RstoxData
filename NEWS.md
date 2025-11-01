@@ -1,3 +1,7 @@
+# RstoxData v2.2.0-9006  (2025-11-01)
+* Changed to hard coding UnitWgt to "kg" and UnitLngt to "m" in ICESDatsusc().
+
+
 # RstoxData v2.2.0-9005  (2025-10-23)
 * Removed all check against ICES vocabularies in ICESAcoustic() and ICESBiotic(). Comprehensive checks are run when a file is submitted to the acoustic database at ICES.
 * Added drop-down list of possible values in TranslationTable in Translation* funcitons (except for the NewValue).
