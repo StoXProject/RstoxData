@@ -59,7 +59,6 @@ StoxAcousticOne <- function(data_list) {
 		# Description: protocol to convert NMDacoustic to StoxAcoustic  #
 		#################################################################
 		
-		
 		#################################################################
 		#                       RENAME general level                    #
 		#################################################################
@@ -326,7 +325,6 @@ StoxAcousticOne <- function(data_list) {
 		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
 		
-		
 		#################################################################
 		#                   MAKE other general level                    #
 		#################################################################
@@ -447,7 +445,6 @@ StoxAcousticOne <- function(data_list) {
 		data_list$Log <- unique(data_list$Log)
 		data_list$Beam <- unique(data_list$Beam)
 		
-	
 		# Interpret the LogOrigin and LogOrigin2 as "start", "middle" or "end":
 		interpretLogOrigin <- function(x) {
 			if(!is.na(x[1])) {
@@ -473,7 +470,6 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		data_list$Cruise[, Cruise := CruiseKey]
-		
 		
 	}
 	
@@ -521,8 +517,9 @@ StoxAcousticOne <- function(data_list) {
 		)
 	}
 	
+	output <- data_list[tablesToReturn]
 	
-	return(data_list[tablesToReturn])
+	return(output)
 }
 
 
