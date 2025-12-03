@@ -169,7 +169,7 @@ NULL
 #' 
 #' \bold{Cruise level}:
 #' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDAcoustic} \tab \bold{ICESAcoustic} \cr
 #' CruiseKey \tab Key of the Cruise table \tab None \tab Character \tab "2021105" \tab \code{cruise} \tab \code{LocalID} \cr
 #' Cruise \tab Unique Cruise identifier \tab None \tab Character \tab "2021105" \tab Same as CruiseKey. Can be translated. \tab Same as CruiseKey. Can be translated. \cr
 #' Platform  \tab Data collection platform identifier \tab None \tab Character \tab "1019" \tab \code{platform} \tab \code{Platform} \cr
@@ -178,7 +178,7 @@ NULL
 #' 
 #' \bold{Log level}:
 #' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDAcoustic} \tab \bold{ICESAcoustic} \cr
 #' LogKey \tab Key of the Log level, given as ISO 8601 date time string \tab ISO8601 \tab Character \tab "2020-04-24T03:51:26.000Z" \tab ISO 8601 formatted \code{start_time} \tab ISO 8601 formatted \code{Time} \cr
 #' Log \tab Sailed distance \tab nmi \tab Numeric \tab 123.1 \tab \code{log_start} \tab \code{Distance} \cr   
 #' EDSU \tab Unique elementary distance sampling unit (EDSU/Log) identifier \tab None \tab Character \tab "2020821/2020-04-24T03:51:26.000Z" \tab \code{CruiseKey-LogKey} \tab \code{CruiseKey-LogKey} \cr   
@@ -198,7 +198,7 @@ NULL
 #' 
 #' \bold{Beam level}:
 #' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDAcoustic} \tab \bold{ICESAcoustic} \cr
 #' BeamKey \tab Key of the Beam level \tab None \tab Character \tab "38000/2" \tab \code{freq/transceiver} \tab \code{ID.Instrument} \cr
 #' Beam \tab Unique Beam identifier \tab None \tab Character \tab "38000/2" \tab Same as BeamKey. Can be translated. \tab Same as BeamKey. Can be translated. \cr
 #' Frequency \tab The acoustic frequency of the Beam \tab hertz \tab Numeric \tab 38000 \tab \code{freq} \tab \code{Frequency} \cr
@@ -207,7 +207,7 @@ NULL
 #' 
 #' \bold{AcousticCategory level}:
 #' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDAcoustic} \tab \bold{ICESAcoustic} \cr
 #' AcousticCategoryKey \tab Key of the AcousticCategory level \tab None \tab Character \tab "HER" \tab \code{acocat} \tab \code{SaCategory} \cr
 #' AcousticCategory \tab The acousic category \tab None \tab Character \tab "Herring" \tab Same as AcousticCategoryKey Can be translated. \tab Same as AcousticCategoryKey Can be translated. \cr
 #' }
@@ -215,7 +215,7 @@ NULL
 #' 
 #' \bold{ChannelReference level}:
 #' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDAcoustic} \tab \bold{ICESAcoustic} \cr
 #' ChannelReferenceKey \tab Key of the ChannelReference level \tab None \tab Character \tab "P" \tab \code{type} \tab "P" \cr
 #' ChannelReferenceType \tab Unique ChannelReference identifier \tab None \tab Character \tab "P" \tab Same as ChannelReferenceKey \tab Same as ChannelReferenceKey \cr             
 #' ChannelReferenceDepth \tab The depth of the ChannelReference origin. 0 for pelagic channels. Not yet given for bottom channels, as BottomDepth is not yet defined for NMDEchosounder data \tab m \tab Numeric \tab 0 \tab 0 if \code{ChannelReferenceType == "P"}, \code{NA} if \code{ChannelReferenceType == "B"} (see BottomDepth) \tab 0 \cr
@@ -225,7 +225,7 @@ NULL
 #' 
 #' \bold{NASC level}:
 #' \tabular{lllllll}{
-#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDBiotic} \tab \bold{ICESBiotic} \cr
+#' \bold{Variable} \tab \bold{Description} \tab \bold{Unit} \tab \bold{Data type} \tab \bold{Example} \tab \bold{NMDAcoustic} \tab \bold{ICESAcoustic} \cr
 #' NASCKey \tab Key of the NASC level \tab None \tab Character \tab "2" \tab \code{ch} \tab \code{ChannelDepthUpper/ChannelDepthLower} \cr
 #' Channel \tab Unique NASC depth channel identifier \tab None \tab Character \tab "2" \tab Same as NASCKey Can be translated. \tab Same as NASCKey Can be translated. \cr           
 #' MaxChannelRange \tab The maximum range of the channel. Translates to the lower channel depth for vertically downwards oriented echosounder. \tab m \tab Numeric \tab 40 \tab \code{pel_ch_thickness * ch} \tab \code{MaxChannelRange} \cr
