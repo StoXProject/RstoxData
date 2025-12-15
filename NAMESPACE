@@ -2,10 +2,6 @@
 
 export(AddToStoxBiotic)
 export(CompensateEffectiveTowDistanceForFishingDepthCount)
-export(ConvertAcoustic)
-export(ConvertBiotic)
-export(ConvertStoxAcoustic)
-export(ConvertStoxBiotic)
 export(CopyAcoustic)
 export(CopyBiotic)
 export(CopyICESAcoustic)

@@ -28,9 +28,9 @@ jobs:
           - {os: macOS-latest,   r: 'release', pkgext: '.tgz'}
           - {os: macOS-latest,   r: 'oldrel',  pkgext: '.tgz'}
           
-          # macOS-13 will use the big-sur-x86_64 folder when deploying to the drat repo:
-          - {os: macOS-13,   r: 'release', pkgext: '.tgz'}
-          - {os: macOS-13,   r: 'oldrel',  pkgext: '.tgz'}
+          # macos-15-intel will use the big-sur-x86_64 folder when deploying to the drat repo. This is the last intel-macOS supported by GitHub Actions:
+          - {os: macos-15-intel,   r: 'release', pkgext: '.tgz'}
+          - {os: macos-15-intel,   r: 'oldrel',  pkgext: '.tgz'}
           
           - {os: windows-latest, r: 'release', pkgext: '.zip'}
           - {os: windows-latest, r: 'oldrel',  pkgext: '.zip'}

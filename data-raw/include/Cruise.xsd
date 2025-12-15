@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0">
   <xsd:include schemaLocation="Types.xsd"/>
 
   <!--Cruise-->
@@ -46,7 +46,6 @@
       <xsd:element name="Code" type="OrganisationVocabulary" minOccurs="0" maxOccurs="unbounded" />
     </xsd:sequence>
   </xsd:complexType>
-
  
   <!--Cruise Vocabularies-->
   <xsd:complexType name="SurveyVocabulary">

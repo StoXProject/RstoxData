@@ -46,8 +46,8 @@ SpeciesCategoryKey,Individual,SpeciesCategoryKey,SpeciesCategoryKey,SpeciesCateg
 SampleKey,Individual,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
 IndividualKey,Individual,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y,character
 Individual,Individual,"paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')","paste(CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey, IndividualKey, sep = '-')",,character
-IndividualRoundWeight,Individual,"getIndividualRoundWeight(individualweight, individualproducttype, catchcategory, CruiseKey)","getIndividualRoundWeight(individualweight, individualproducttype, catchcategory, CruiseKey)","getIndividualRoundWeight(weight.individual, producttype.individual, species, CruiseKey)","getIndividualRoundWeight(weight.individual, producttype.individual, species, CruiseKey)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",,numeric
-IndividualTotalLength,Individual,"getIndividualTotalLength(length, lengthmeasurement, catchcategory, CruiseKey)","getIndividualTotalLength(length, lengthmeasurement, catchcategory, CruiseKey)","getIndividualTotalLength(length, lengthmeasurement, species, CruiseKey)","getIndividualTotalLength(length, lengthmeasurement, species, CruiseKey)","LengthClass.Biology * convertLen(LengthCode.Biology, 'cm')",,numeric
+IndividualRoundWeight,Individual,"getIndividualRoundWeight(individualweight, individualproducttype)","getIndividualRoundWeight(individualweight, individualproducttype)","getIndividualRoundWeight(weight.individual, producttype.individual)","getIndividualRoundWeight(weight.individual, producttype.individual)","IndividualWeight * convertWt(WeightUnit.Biology, 'gr')",,numeric
+IndividualTotalLength,Individual,"getIndividualTotalLength(length, lengthmeasurement)","getIndividualTotalLength(length, lengthmeasurement)","getIndividualTotalLength(length, lengthmeasurement)","getIndividualTotalLength(length, lengthmeasurement)","getIndividualTotalLength(LengthClass.Biology, LengthCode.Biology, LengthType)",,numeric
 LengthResolution,Individual,"convertLenRes(lengthresolution, scale = 100)","convertLenRes(lengthresolution, scale = 100)","convertLenRes(lengthunit, scale = 100)","convertLenRes(lengthunit, scale = 100)","convertLenRes(LengthCode.Biology)",,numeric
 WeightMeasurement,Individual,'IndividualWeight','IndividualWeight','IndividualWeight','IndividualWeight',"ifelse(WeightMeasurement,  'IndividualWeight', 'AverageWeight')",,character
 IndividualAge,Individual,age,age,age,age,IndividualAge,,numeric
@@ -59,7 +59,7 @@ SpeciesCategoryKey,PreySpeciesCategory,SpeciesCategoryKey,SpeciesCategoryKey,Spe
 SampleKey,PreySpeciesCategory,SampleKey,SampleKey,SampleKey,SampleKey,SampleKey,Y,character
 IndividualKey,PreySpeciesCategory,IndividualKey,IndividualKey,IndividualKey,IndividualKey,IndividualKey,Y,character
 PreySpeciesCategoryKey,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,NA,NA,NA,Y,character
-PreySpeciesCategory,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,NA,NA,NA,Y,character
+PreySpeciesCategory,PreySpeciesCategory,PreySpeciesCategoryKey,PreySpeciesCategoryKey,NA,NA,NA,,character
 CruiseKey,PreySample,CruiseKey,CruiseKey,CruiseKey,CruiseKey,CruiseKey,Y,character
 StationKey,PreySample,StationKey,StationKey,StationKey,StationKey,StationKey,Y,character
 HaulKey,PreySample,HaulKey,HaulKey,HaulKey,HaulKey,HaulKey,Y,character

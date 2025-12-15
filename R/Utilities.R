@@ -11,46 +11,46 @@
 #' 
 mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, ...) {
 	
-	# Better use xsdObjects for getting header vars from XML data for merging
-	## Get data type:
-	plen <- NULL
-	if(!is.null(data[["metadata"]])) {
-		datatype <- unlist(data[["metadata"]][1, "useXsd"])
-		plen <- RstoxData::xsdObjects[[paste0(datatype, ".xsd")]]$prefixLens
-	}
-
+	# Get the keys:
+	keys <- getKeys(data)
+	
+	# Get the tree structure (list of children):
+	treeStruct <- getTreestruct(data)
+	
 	# Merge all tables by default:
 	if(length(tableNames) == 0) {
 		tableNames <- names(data)
 	}
 	# No merging if only one table given in 'tableNames':
 	else if(length(tableNames) == 1)  {
-		return(data)
+		return(data[[tableNames]])
 	}
 	
-	# Make sure tableNames are ordered as in the data:
-	dataNames <- names(data)
-	tableNames <- dataNames[match(tableNames, dataNames)]
-	tableNames <- tableNames[!is.na(tableNames)]
+	
+	
+	## Make sure tableNames are ordered as in the data:
+	#dataNames <- names(data)
+	#tableNames <- dataNames[match(tableNames, dataNames)]
+	#tableNames <- tableNames[!is.na(tableNames)]
 	
 	# Merge
-	for(ii in 2:length(tableNames)) {
-		curr <- tableNames[ii]
-		prev <- tableNames[(ii-1)]
-
-		if(!is.null(plen) && !is.na(plen[prev]))
-			vars <- names(data[[curr]])[1:plen[prev]]
-		else
-			vars <- intersect(names(data[[curr]]), names(data[[prev]]))
-
+	for(parent in head(tableNames, -1)) {
+		child <- intersect(treeStruct[[parent]], tableNames)
+		
+		# Get the keys to merge by:
+		intersectKeys <- intersect(keys[[child]], keys[[parent]])
+		
 		# There can be duplicate names between two tables, see that we fix them by adding appropriate suffix before merging
-		duplicates <- intersect(setdiff(names(data[[prev]]), vars), setdiff(names(data[[curr]]), vars))
+		duplicates <- intersect(setdiff(names(data[[parent]]), intersectKeys), setdiff(names(data[[child]]), intersectKeys))
 		for(ddpl in duplicates) {
-			#message(paste("Duplicate columns in merging", prev, "and", curr,  ": ", ddpl, "->", paste0(ddpl, ".", curr)))
-			setnames(data[[curr]], ddpl, paste0(ddpl, ".", curr))
+			#message(paste("Duplicate columns in merging", parent, "and", child,  ": ", ddpl, "->", paste0(ddpl, ".", child)))
+			setnames(data[[child]], ddpl, paste0(ddpl, ".", child))
 		}
 		
-		data[[curr]] <- merge(data[[prev]], data[[curr]], by=vars, suffixes = suffixes, ...)
+		# Special case if the parentious table is empty. We then do nothing for the children table:
+		if(length(data[[parent]])) {
+			data[[child]] <- merge(data[[parent]], data[[child]], by = intersectKeys, ...)
+		}
 	}
 
 	# If tableNamestableNames == "last", return the last table:
@@ -60,6 +60,47 @@ mergeDataTables <- function(data, tableNames = NULL, output.only.last = FALSE, .
 	
 	return(data)
 }
+
+
+#' Get keys from the data
+#' 
+#' Look for the metadata list element specifying the XSD, or estimate the keys based on intersection between tables, in which case the keys of the last table is set to the keys of the parent plus the next field. For more control of keys, please use getRstoxDataDefinitions("keys") and feed this directly into translateVariables().
+#' 
+#' @param data An StoX data object
+#' 
+getKeys <- function(data) {
+	
+	if(!is.null(data[["metadata"]])) {
+		datatype <- unlist(data[["metadata"]][1, "useXsd"])
+		xsdObject <- RstoxData::xsdObjects[[paste0(datatype, ".xsd")]]
+		keys <- xsdObject$keys
+	}
+	else {
+		
+		allVariableNames <- lapply(data, names)
+		
+		if(any(endsWith(unlist(allVariableNames), "Key"))) {
+			keys <- allVariableNames
+		}
+		else {
+			keys <- vector("list", length(data))
+			# Look for intersecting variables:
+			for(ind in seq_len(length(data) - 1)) {
+				keys[[ind]] <- intersect(names(data[[ind]]), names(data[[ind + 1]]))
+			}
+			
+			# Assume that the last table has the same keys as the parent:
+			keys[[length(data)]] <- keys[[length(data) - 1]]
+		}
+		
+		names(keys) <- names(data)
+		
+	}
+	
+	return(keys)
+}
+
+
 
 #' Merge two data tables by the intersect of the names
 #'
@@ -161,10 +202,6 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 	return(x)
 }
 
-#getKeys <- function(x, keystring = "Key", ignore.case = FALSE) {
-#	namesx <- names(x)
-#	namesx[endsWith(if(ignore.case) tolower(namesx) else namesx, if(ignore.case) tolower(keystring) else keystring#)]
-#}
 
 #' Get the keys of a StoX format
 #' 
@@ -176,6 +213,9 @@ mergeByStoxKeys <- function(x, y, StoxDataType, toMergeFromY = NULL, replace = F
 #' @export
 #' 
 getStoxKeys <- function(StoxDataType = c("StoxBiotic", "StoxAcoustic"), level = NULL, keys.out = c("all", "only.present", "all.but.present")) {
+	
+	# This all seems unnecessary, since the StoxBioticData and StoxAcousticData have keys that end with "Key". The risk of a non-key variable with name ending with "Key" entering those formats is small. This function is currently only used in mergeByStoxKeys() which is only used in StoxBiotic(). Instead we should consider a general funciton to get keys from any StoX datatype, reading from the XSD indicated in the metadata for those data that have this.
+	
 	StoxDataType <- match_arg_informative(StoxDataType)
 	if(StoxDataType == "StoxBiotic") {
 		if(!exists("stoxBioticObject")) {
@@ -381,26 +421,6 @@ checkUniqueFormat <- function(x) {
 }
 
 
-## Function to remove rows with duplicated keys in StoxBioticData:
-#removeRowsOfDuplicatedKeysFromStoxBioticData <- function(StoxBioticData) {
-#	StoxBioticKeys <- getRstoxDataDefinitions("StoxBioticKeys")
-#	
-#	# Run through the tables of the StoxBioticData and remove duplicate rows:
-#	for(tableName in names(StoxBioticData)) {
-#		# Get the names of the columns which are keys:
-#		presentKeys <- intersect(names(StoxBioticData[[tableName]]), StoxBioticKeys)
-#		# Find rows of duplicated keys:
-#		duplicatedKeys <- duplicated(StoxBioticData[[tableName]][, ..presentKeys])
-#		# Remove the rows with duplicated keys:
-#		rowsToKeep <- !duplicatedKeys
-#		if(any(duplicatedKeys)) {
-#			warning("StoX: Removing ", sum(duplicatedKeys), " rows of duplicated keys.")
-#			StoxBioticData[[tableName]] <- StoxBioticData[[tableName]][rowsToKeep, ]
-#		}
-#	}
-#	
-#	return(StoxBioticData)
-#}
 
 
 # Function to remove rows with duplicated keys in StoxBioticData:
@@ -408,7 +428,7 @@ checkUniqueFormat <- function(x) {
 removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
 	stoxDataFormat <- match_arg_informative(stoxDataFormat)
-	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
+	StoxKeys <- unlist(getRstoxDataDefinitions("keys")[[paste0("Stox", stoxDataFormat)]])
 	
 	# Run through the tables of the StoxData and remove duplicate rows:
 	for(tableName in names(StoxData)) {
@@ -444,7 +464,7 @@ removeRowsOfDuplicatedKeys <- function(StoxData, stoxDataFormat = c("Biotic", "A
 warningMissingKeys <- function(StoxData, stoxDataFormat = c("Biotic", "Acoustic")) {
 	
 	stoxDataFormat <- match_arg_informative(stoxDataFormat)
-	StoxKeys <- getRstoxDataDefinitions(paste0("Stox", stoxDataFormat, "Keys"))
+	StoxKeys <- unlist(getRstoxDataDefinitions("keys")[[paste0("Stox", stoxDataFormat)]])
 	
 	presentKeys <- lapply(StoxData, function(x) intersect(names(x), StoxKeys))
 	
@@ -511,7 +531,7 @@ AddToStoxData <- function(
 		
 		# Define a vector of the variables to extract:
 		toExtract <- c(
-			getRstoxDataDefinitions("StoxBioticKeys"), 
+			unlist(getRstoxDataDefinitions("keys")$StoxBiotic), 
 			VariableNames
 		)
 	}
@@ -1182,5 +1202,23 @@ asIntegerAfterRound <- function(x, prec = sqrt(.Machine$double.eps)) {
 	return(x_integer)
 }
 
+
+
+
+expandICESKeysWithPrefix <- function(ICESKeys) {
+	
+	# Declare the output:
+	ICESKeysOut <- ICESKeys
+	
+	# Loop through the tables in reversed order, and paste the table name to the keys, overwriting as we move to the higher tables:
+	reversedTableOrder <- rev(names(ICESKeys))
+	for(tableName1 in reversedTableOrder) {
+		for(tableName2 in reversedTableOrder) {
+			ICESKeysOut[[tableName1]][ICESKeys[[tableName1]] %in% ICESKeys[[tableName2]]] <- paste0(tableName2, ICESKeys[[tableName1]][ICESKeys[[tableName1]] %in% ICESKeys[[tableName2]]])
+		}
+	}
+	
+	return(ICESKeysOut)
+}
 
 

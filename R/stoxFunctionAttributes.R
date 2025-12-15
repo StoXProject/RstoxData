@@ -2,44 +2,45 @@
 getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData, VariableName) {
 	
 	# Function to get the names of a table if that table contains certain variables:
-	getNamesIfVariableIsPresent <- function(table, requiredVariableNames) {
+	getNamesIfVariableIsPresent <- function(tableName, data, requiredVariableNames) {
 		output <- names(table)
-		if(length(requiredVariableNames) && !requiredVariableNames %in% output) {
-			output <- NULL
+		if(length(requiredVariableNames) && !requiredVariableNames %in% names(table)) {
+			variableNames <- lapply(includeParents(tableName, data), function(x) names(data[[x]]))
+			output <- unique(unlist(variableNames))
 		}
 		return(output)
 	}
 	
 	# Get the variables:
 	if(!missing(BioticData)) {
-		output <- lapply(BioticData, function(x) lapply(x, getNamesIfVariableIsPresent, requiredVariableNames = VariableName))
+		output <- lapply(BioticData, function(x) lapply(names(x), getNamesIfVariableIsPresent, data = x, requiredVariableNames = VariableName))
 	}
 	else if(!missing(StoxBioticData)) {
-		output <- lapply(StoxBioticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(StoxBioticData), getNamesIfVariableIsPresent, data = StoxBioticData, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESBioticData)) {
-		output <- lapply(ICESBioticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(ICESBioticData), getNamesIfVariableIsPresent, data = ICESBioticData, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESDatrasData)) {
-		output <- lapply(ICESDatrasData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(ICESDatrasData), getNamesIfVariableIsPresent, data = ICESDatrasData, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESDatsuscData)) {
-		output <- lapply(ICESDatsuscData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(ICESDatsuscData), getNamesIfVariableIsPresent, data = ICESDatsuscData, requiredVariableNames = VariableName)
 	}
 	else if(!missing(AcousticData)) {
-		output <- lapply(AcousticData, function(x) lapply(x, getNamesIfVariableIsPresent, requiredVariableNames = VariableName))
+		output <- lapply(AcousticData, function(x) lapply(names(x), getNamesIfVariableIsPresent, data = x, requiredVariableNames = VariableName))
 	}
 	else if(!missing(StoxAcousticData)) {
-		output <- lapply(StoxAcousticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(StoxAcousticData), getNamesIfVariableIsPresent, data = StoxAcousticData, requiredVariableNames = VariableName)
 	}
 	else if(!missing(ICESAcousticData)) {
-		output <- lapply(ICESAcousticData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(ICESAcousticData), getNamesIfVariableIsPresent, data = ICESAcousticData, requiredVariableNames = VariableName)
 	}
 	else if(!missing(LandingData)) {
-		output <- lapply(LandingData, function(x) lapply(x, getNamesIfVariableIsPresent, requiredVariableNames = VariableName))
+		output <- lapply(LandingData, function(x) lapply(names(x), getNamesIfVariableIsPresent, data = x, requiredVariableNames = VariableName))
 	}
 	else if(!missing(StoxLandingData)) {
-		output <- lapply(StoxLandingData, getNamesIfVariableIsPresent, requiredVariableNames = VariableName)
+		output <- lapply(names(StoxLandingData), getNamesIfVariableIsPresent, data = StoxLandingData, requiredVariableNames = VariableName)
 	}
 	else {
 		return(NULL)
@@ -872,142 +873,6 @@ stoxFunctionAttributes <- list(
 )
 
 
-#getConversionTableFormat <- function(type = c("StoxBiotic", "StoxAcoustic", "Biotic", "Acoustic")) {
-#	
-#	type <- match.arg(type)
-#	
-#	conversionTable = list(
-#		class = "table", 
-#		title = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling")) {
-#			ConversionFunction <- match.arg(ConversionFunction)
-#			
-#			if(identical(ConversionFunction, "Constant")) {
-#				title <- "Replace variables of StoX data by a constant \"Constant\""
-#			}
-#			else if(identical(ConversionFunction, "Addition")) {
-#				title <- "Add the value \"Addition\" to variables of StoX data"
-#			}
-#			else if(identical(ConversionFunction, "Scaling")) {
-#				title <- "Multiply variables of StoX data by the value \"Scaling\""
-#			}
-#			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-#				title <- "Multiply variables of StoX data by the value \"Scaling\" and add the value \"Addition\""
-#			}
-#			else {
-#				stop("Wrong ConversionFunction.")
-#			}
-#			
-#			return(title)
-#		}, 
-#		columnNames = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) {
-#			ConversionFunction <- match.arg(ConversionFunction)
-#			
-#			if(identical(ConversionFunction, "Constant")) {
-#				parameters <- "Constant"
-#			}
-#			else if(identical(ConversionFunction, "Addition")) {
-#				parameters <- "Addition"
-#			}
-#			else if(identical(ConversionFunction, "Scaling")) {
-#				parameters <- "Scaling"
-#			}
-#			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-#				parameters <- c("Addition", "Scaling")
-#			}
-#			else {
-#				stop("Wrong ConversionFunction.")
-#			}
-#			
-#			columnNames <- c(
-#				GruopingVariables, 
-#				#c("TargetVariable", "SourceVariable"), 
-#				"SourceVariable", 
-#				parameters, 
-#				"RoundOffTo"
-#			)
-#			
-#			return(columnNames)
-#		}, 
-#		variableTypes = function(ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), GruopingVariables = NULL) #{
-#			ConversionFunction <- match.arg(ConversionFunction)
-#			
-#			if(identical(ConversionFunction, "Constant")) {
-#				types <- "double"
-#			}
-#			else if(identical(ConversionFunction, "Addition")) {
-#				types <- "double"
-#			}
-#			else if(identical(ConversionFunction, "Scaling")) {
-#				types <- "double"
-#			}
-#			else if(identical(ConversionFunction, "AdditionAndScaling")) {
-#				types <- c("double", "double")
-#			}
-#			else {
-#				stop("Wrong ConversionFunction.")
-#			}
-#			
-#			variableTypes <- c(
-#				rep("character", length(GruopingVariables)), 
-#				#c("character", "character"), 
-#				"character", 
-#				types, 
-#				"double"
-#			)
-#			
-#			return(variableTypes)
-#		}, 
-#		possibleValues = switch(
-#			type, 
-#			StoxBiotic = function(
-#				StoxBioticData, 
-#				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-#				GruopingVariables = NULL
-#			) {
-#				conversionTableFormatPossibleValuesFunction(
-#					data = StoxBioticData, 
-#					ConversionFunction = ConversionFunction, 
-#					GruopingVariables = GruopingVariables
-#				)
-#			}, 
-#			StoxAcoustic = function(
-#				StoxAcousticData, 
-#				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-#				GruopingVariables = NULL
-#			) {
-#				conversionTableFormatPossibleValuesFunction(
-#					data = StoxAcousticData, 
-#					ConversionFunction = ConversionFunction, 
-#					GruopingVariables = GruopingVariables
-#				)
-#			}, 
-#			Biotic = function(
-#				BioticData, 
-#				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-#				GruopingVariables = NULL
-#			) {
-#				conversionTableFormatPossibleValuesFunction(
-#					data = BioticData, 
-#					ConversionFunction = ConversionFunction, 
-#					GruopingVariables = GruopingVariables
-#				)
-#			}, 
-#			Acoustic = function(
-#				AcousticData, 
-#				ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-#				GruopingVariables = NULL
-#			) {
-#				conversionTableFormatPossibleValuesFunction(
-#					data = AcousticData, 
-#					ConversionFunction = ConversionFunction, 
-#					GruopingVariables = GruopingVariables
-#				)
-#			}
-#		)
-#	)
-#	
-#	return(conversionTable)
-#}
 
 
 
@@ -1111,15 +976,20 @@ processPropertyFormats <- list(
 		variableTypes = function(VariableName, Conditional, ConditionalVariableNames = NULL) {
 			rep("character", 2 + as.numeric(Conditional) * length(ConditionalVariableNames))
 		}, 
+		# The data is given in the ...:
 		possibleValues = function(VariableName, Conditional, ConditionalVariableNames = NULL, ...) {
 			# Find the data:
 			lll <- list(...)
-			atData <- which(sapply(names(lll), endsWith, "Data"))
-			if(length(atData)) {
-				data <- lll[[atData]]
+			#atData <- which(sapply(names(lll), endsWith, "Data"))
+			atData <- endsWith(setdiff(names(lll), c("processData", "UseProcessData")), "Data")
+			if(any(atData)) {
+				if(sum(atData) > 1) {
+					stop("Translation functions can only have one functionInput.")
+				}
+				data <- lll[[which(atData)]]
 			}
 			else {
-				stop("The function does not contain an argument with name ending with \"Data\".")
+				return(list())
 			}
 			
 			getUniqueValuesFromStoxData <- function(data, VariableName) {

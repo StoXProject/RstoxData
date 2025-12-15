@@ -5,7 +5,7 @@
 \alias{stoxBioticObject}
 \title{stoxBioticObject}
 \format{
-An object of class \code{list} of length 21.
+An object of class \code{list} of length 20.
 }
 \usage{
 stoxBioticObject
