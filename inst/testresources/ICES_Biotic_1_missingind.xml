@@ -153,7 +153,7 @@
         <DataType IDREF="AC_CatchDataType_R" />
         <SpeciesCode IDREF="SpecWoRMS_126417" />
         <SpeciesValidity IDREF="AC_SpeciesValidity_1" />
-        <SpeciesCategory>1</SpeciesCategory>
+        <SpeciesCategory>2</SpeciesCategory>
         <SpeciesCategoryNumber>7000</SpeciesCategoryNumber>
         <WeightUnit IDREF="AC_WeightUnit_kg" />
         <SpeciesCategoryWeight>595</SpeciesCategoryWeight>
@@ -187,7 +187,7 @@
         <DataType IDREF="AC_CatchDataType_R" />
         <SpeciesCode IDREF="SpecWoRMS_126417" />
         <SpeciesValidity IDREF="AC_SpeciesValidity_1" />
-        <SpeciesCategory>1</SpeciesCategory>
+        <SpeciesCategory>3</SpeciesCategory>
         <SpeciesCategoryNumber>7000</SpeciesCategoryNumber>
         <WeightUnit IDREF="AC_WeightUnit_kg" />
         <SpeciesCategoryWeight>595</SpeciesCategoryWeight>

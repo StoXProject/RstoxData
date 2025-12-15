@@ -14,7 +14,8 @@ xsdObjects <- lapply(xsdFiles, createXsdObject)
 
 names(xsdObjects) <- basename(xsdFiles)
 
-# Result ordering
+####################################
+####################################
 xsdObjects[["nmdbioticv1.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
 xsdObjects[["nmdbioticv1.1.xsd"]]$tableOrder <- c("missions", "mission",  "missionlog", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
 xsdObjects[["nmdbioticv1.2.xsd"]]$tableOrder <- c("missions", "mission", "fishstation", "catchsample", "individual", "prey", "agedetermination", "preylength", "copepodedevstage", "tag")
@@ -29,6 +30,34 @@ xsdObjects[["landingerv2.xsd"]]$tableOrder <- c("Landingsdata", "Seddellinje", "
 
 xsdObjects[["icesAcoustic.xsd"]]$tableOrder <- c("Acoustic", "Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
 xsdObjects[["icesBiotic.xsd"]]$tableOrder <- c("Biotic", "Cruise", "Survey", "Haul", "Catch", "Biology")
+####################################
+
+
+##########################
+######## Get Keys: #######
+##########################
+xsdObjects[["nmdbioticv1.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv1.xsd"]]) 
+xsdObjects[["nmdbioticv1.1.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv1.1.xsd"]]) 
+xsdObjects[["nmdbioticv1.2.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv1.2.xsd"]]) 
+xsdObjects[["nmdbioticv1.3.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv1.3.xsd"]]) 
+xsdObjects[["nmdbioticv1.4.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv1.4.xsd"]]) 
+xsdObjects[["nmdbioticv3.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv3.xsd"]]) 
+xsdObjects[["nmdbioticv3.1.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdbioticv3.1.xsd"]]) 
+
+
+xsdObjects[["nmdechosounderv1.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["nmdechosounderv1.xsd"]]) 
+xsdObjects[["landingerv2.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["landingerv2.xsd"]]) 
+
+xsdObjects[["icesAcoustic.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["icesAcoustic.xsd"]])
+xsdObjects[["icesBiotic.xsd"]]$keys <- getKeysFromXSD(xsdObject = xsdObjects[["icesBiotic.xsd"]])
+##########################
+
+
+# Do additional processing of the ICES XSDs
+xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
+xsdObjects$icesBiotic.xsd <- icesBioticPreprocess(xsdObjects$icesBiotic.xsd)
+	
+	
 
 use_data(xsdObjects, overwrite = TRUE)
 
@@ -43,7 +72,7 @@ stoxBioticObject <- list()
 stoxBioticObject$tableMapList <- list()
 stoxBioticObject$complexMaps <- list()
 stoxBioticObject$convertLenRes <- list()
-stoxBioticObject$convertLen <- list()
+#stoxBioticObject$convertLen <- list()
 stoxBioticObject$convertWt <- list()
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount <- list()
@@ -212,48 +241,69 @@ getSampleWeight_NMDBiotic1 <- function(lengthsampleweight, sampleproducttype, sp
 	ifelse(sampleproducttype %in% 1, lengthsampleweight, NA_real_)
 }
 
-getIndividualRoundWeight_NMDBiotic3 <- function(individualweight, individualproducttype, catchcategory, CruiseKey) {
+getIndividualRoundWeight_NMDBiotic3 <- function(individualweight, individualproducttype) {
 	hasInvalid <- !individualproducttype %in% 1 & !is.na(individualweight)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(catchcategory[hasInvalid]), na.last = TRUE)
 		invalid <- sort(setdiff(unique(individualproducttype), 1), na.last = TRUE)
-		cruise <- sub("\\/.*", "", CruiseKey[1])
-		warning("StoX: There are individualproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing individualweight. This results in missing IndividualRoundWeight in StoxBiotic() for the following catchcategory of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
+		warning("StoX: There are individualproducttype that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing individualweight. This results in missing IndividualRoundWeight in StoxBiotic(). One option is to translate individualproducttype in the BioticData to \"1\" using TranslateBiotic() AND translate the IndividualRoundWeight using a function for NewValue in TranslateStoxBiotic(). See the documentation of DefineTranslation() for details")
 	}
 	ifelse(individualproducttype %in% 1, individualweight * 1000, NA_real_)
 }
-getIndividualRoundWeight_NMDBiotic1 <- function(weight.individual, producttype.individual, species, CruiseKey) {
+getIndividualRoundWeight_NMDBiotic1 <- function(weight.individual, producttype.individual) {
 	hasInvalid <- !producttype.individual %in% 1 & !is.na(weight.individual)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(species[hasInvalid]), na.last = TRUE)
 		invalid <- sort(setdiff(unique(producttype.individual), 1), na.last = TRUE)
-		cruise <- sub("\\/.*", "", CruiseKey[1])
-		warning("StoX: There are producttype.individual that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing weight (in the individual table). This results in missing IndividualRoundWeight in StoxBiotic() for the following species of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
+		warning("StoX: There are producttype.individual that are not 1 (", paste(invalid, collapse = ", "), "), but with non-missing weight (in the individual table). This results in missing IndividualRoundWeight in StoxBiotic(). One option is to translate producttype.individual in the BioticData to \"1\" using TranslateBiotic() AND translate the IndividualRoundWeight using a function for NewValue in TranslateStoxBiotic(). See the documentation of DefineTranslation() for details.")
 	}
 	ifelse(producttype.individual %in% 1, weight.individual * 1000, NA_real_)
 }
 
-getIndividualTotalLength_NMDBiotic3 <- function(length, lengthmeasurement, catchcategory, CruiseKey) {
+getIndividualTotalLength_NMDBiotic3 <- function(length, lengthmeasurement) {
 	hasInvalid <- !lengthmeasurement %in% 'E' & !is.na(length)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(catchcategory[hasInvalid]), na.last = TRUE)
 		invalid <- sort(setdiff(unique(lengthmeasurement), 'E'), na.last = TRUE)
-		cruise <- sub("\\/.*", "", CruiseKey[1])
-		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic() for the following catchcategory of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
+		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic(). One option is to translate lengthmeasurement in the BioticData to \"E\" using TranslateBiotic() AND translate the IndividualTotalLength using a function for NewValue in TranslateStoxBiotic(). See the documentation of DefineTranslation() for details.")
 	}
 	ifelse(lengthmeasurement %in% 'E', length * 100, NA_real_)
 }
-getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement, species, CruiseKey) {
+getIndividualTotalLength_NMDBiotic1 <- function(length, lengthmeasurement) {
 	hasInvalid <- !lengthmeasurement %in% 'E' & !is.na(length)
 	if(any(hasInvalid)) {
-		affectedSpecies <- sort(unique(species[hasInvalid]), na.last = TRUE)
 		invalid <- sort(setdiff(unique(lengthmeasurement), 'E'), na.last = TRUE)
-		cruise <- sub("\\/.*", "", CruiseKey[1])
-		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic() for the following species of cruise ", cruise, ":\n\t", paste(affectedSpecies, collapse = "\n\t"))
+		warning("StoX: There are lengthmeasurement that are not 'E' (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic(). One option is to translate lengthmeasurement in the BioticData to \"E\" using TranslateBiotic() AND translate the IndividualTotalLength using a function for NewValue in TranslateStoxBiotic(). See the documentation of DefineTranslation() for details.")
 	}
 	ifelse(lengthmeasurement %in% 'E', length * 100, NA_real_)
 }
-
+getIndividualTotalLength_ICESBiotic <- function(LengthClass, LengthCode, LengthType) {
+	
+	convertLen<- function(inputUnit, outputUnit) {
+		
+		# Define units
+		# mm and halfcm are reported in mm as per http://vocab.ices.dk/?ref=1486:
+		weightFactor <- c(mm = 10, halfcm = 10, cm = 1)
+		outputFactor <- c(mm = 10, cm = 1)
+		conversionTable <- outer(
+			1 / weightFactor, 
+			1 / outputFactor
+		)
+		
+		# Keep NAs:
+		conversionFactor <- rep(NA_real_, length(inputUnit))
+		inputUnit_isNA <- is.na(inputUnit)
+		# Get the conversion factor:
+		conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
+		
+		return(conversionFactor)
+	}
+	
+	validLengthType <- c('1', NA)
+	hasInvalid <- !LengthType %in% validLengthType & !is.na(LengthClass)
+	if(any(hasInvalid)) {
+		invalid <- sort(setdiff(unique(LengthType), validLengthType), na.last = TRUE)
+		warning("StoX: There are LengthType that are not '1' or NA (", paste(invalid, collapse = ", "), "), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic(). One option is to translate LengthType in the BioticData to \"1\" using TranslateBiotic() AND translate the IndividualTotalLength using a function for NewValue in TranslateStoxBiotic(). See the documentation of DefineTranslation() for details.")
+	}
+	ifelse(LengthType %in% validLengthType, LengthClass * convertLen(LengthCode, 'cm'), NA_real_)
+}
 
 getPreyCatchFractionWeight_NMDBiotic3 <- function(totalweight){
 	# Multiply by 1e6 since the weight of prey is given in mg in StoxBiotic (while kg in NMDBiotic):
@@ -418,7 +468,7 @@ stoxBioticObject$complexMaps_highestTable[["nmdbioticv3.1"]] <- readComplexMap(
 ## Length conversion
 stoxBioticObject$convertWeightRes[["nmdbioticv3.1"]] <- convertWeightRes_NMDBiotic
 stoxBioticObject$convertLenRes[["nmdbioticv3.1"]] <- convertLenRes_NMDBiotic
-stoxBioticObject$convertLen[["nmdbioticv3.1"]] <- NULL
+#stoxBioticObject$convertLen[["nmdbioticv3.1"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3.1"]] <- NULL
 stoxBioticObject$getCatchFractionWeight[["nmdbioticv3.1"]] <- getCatchFractionWeight_NMDBiotic3
 stoxBioticObject$getSampleWeight[["nmdbioticv3.1"]] <- getSampleWeight_NMDBiotic3
@@ -504,7 +554,7 @@ stoxBioticObject$complexMaps_highestTable[["nmdbioticv3"]] <- readComplexMap(
 ## Length conversion
 stoxBioticObject$convertWeightRes[["nmdbioticv3"]] <- convertWeightRes_NMDBiotic
 stoxBioticObject$convertLenRes[["nmdbioticv3"]] <- convertLenRes_NMDBiotic
-stoxBioticObject$convertLen[["nmdbioticv3"]] <- NULL
+#stoxBioticObject$convertLen[["nmdbioticv3"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv3"]] <- NULL
 stoxBioticObject$getCatchFractionWeight[["nmdbioticv3"]] <- getCatchFractionWeight_NMDBiotic3
 stoxBioticObject$getSampleWeight[["nmdbioticv3"]] <- getSampleWeight_NMDBiotic3
@@ -569,7 +619,7 @@ stoxBioticObject$complexMaps_highestTable[["nmdbioticv1.4"]] <- readComplexMap(
 ## Length conversion
 stoxBioticObject$convertWeightRes[["nmdbioticv1.4"]] <- convertWeightRes_NMDBiotic
 stoxBioticObject$convertLenRes[["nmdbioticv1.4"]] <- convertLenRes_NMDBiotic
-stoxBioticObject$convertLen[["nmdbioticv1.4"]] <- NULL
+#stoxBioticObject$convertLen[["nmdbioticv1.4"]] <- NULL
 stoxBioticObject$convertWt[["nmdbioticv1.4"]] <- NULL
 # It was discussed to always compensate for fishingdepthcount, but this needs to be a separate function:
 #stoxBioticObject$getEffectiveTowDistance_fishingdepthcount[["nmdbioticv1.4"]] <- function(distance, fishingdepthmax) {
@@ -654,7 +704,7 @@ stoxBioticObject$complexMaps_highestTable[["nmdbioticv1.1"]] <- readComplexMap(
 ## Length conversion
 stoxBioticObject$convertWeightRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertWeightRes[["nmdbioticv1.4"]]
 stoxBioticObject$convertLenRes[["nmdbioticv1.1"]] <- stoxBioticObject$convertLenRes[["nmdbioticv1.4"]]
-stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
+#stoxBioticObject$convertLen[["nmdbioticv1.1"]] <- stoxBioticObject$convertLen[["nmdbioticv1.4"]]
 stoxBioticObject$convertWt[["nmdbioticv1.1"]] <- stoxBioticObject$convertWt[["nmdbioticv1.4"]]
 stoxBioticObject$getCatchFractionWeight[["nmdbioticv1.1"]] <- getCatchFractionWeight_NMDBiotic1
 stoxBioticObject$getSampleWeight[["nmdbioticv1.1"]] <- getSampleWeight_NMDBiotic1
@@ -711,25 +761,25 @@ stoxBioticObject$convertLenRes[["icesBiotic"]] <- function(resName) {
 }
 
 ## Length conversion
-stoxBioticObject$convertLen[["icesBiotic"]] <- function(inputUnit, outputUnit) {
-
-	# Define units
-	# mm and halfcm are reported in mm as per http://vocab.ices.dk/?ref=1486:
-	weightFactor <- c(mm = 10, halfcm = 10, cm = 1)
-	outputFactor <- c(mm = 10, cm = 1)
-	conversionTable <- outer(
-    	1 / weightFactor, 
-    	1 / outputFactor
-    )
-	
-	# Keep NAs:
-	conversionFactor <- rep(NA_real_, length(inputUnit))
-	inputUnit_isNA <- is.na(inputUnit)
-	# Get the conversion factor:
-	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
-    
-    return(conversionFactor)
-}
+#stoxBioticObject$convertLen[["icesBiotic"]] <- function(inputUnit, outputUnit) {
+#	
+#	# Define units
+#	# mm and halfcm are reported in mm as per http://vocab.ices.dk/?ref=1486:
+#	weightFactor <- c(mm = 10, halfcm = 10, cm = 1)
+#	outputFactor <- c(mm = 10, cm = 1)
+#	conversionTable <- outer(
+#    	1 / weightFactor, 
+#    	1 / outputFactor
+#    )
+#	
+#	# Keep NAs:
+#	conversionFactor <- rep(NA_real_, length(inputUnit))
+#	inputUnit_isNA <- is.na(inputUnit)
+#	# Get the conversion factor:
+#	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
+#    
+#    return(conversionFactor)
+#}
 
 ## Weight conversion
 stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
@@ -744,6 +794,7 @@ stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 	# Keep NAs:
 	conversionFactor <- rep(NA_real_, length(inputUnit))
 	inputUnit_isNA <- is.na(inputUnit)
+	
 	# Get the conversion factor:
 	conversionFactor[!inputUnit_isNA] <- conversionTable[cbind(inputUnit[!inputUnit_isNA], outputUnit)]
 	
@@ -752,6 +803,17 @@ stoxBioticObject$convertWt[["icesBiotic"]] <- function(inputUnit, outputUnit) {
 
 # Universal second phase conversion
 stoxBioticObject$convertTable <- data.table::as.data.table(utils::read.csv("stox-biotic-final-phase.csv", comment.char = "#"))
+
+stoxBioticObject$getIndividualTotalLength[["icesBiotic"]] <- getIndividualTotalLength_ICESBiotic
+
+stoxBioticObject$borrowVariables[["icesBiotic"]] <- list(
+	list(
+		variable = "LengthType", 
+		source = "Sample", 
+		target = "Individual"
+	)
+)
+
 
 
 use_data(stoxBioticObject, overwrite = TRUE)
