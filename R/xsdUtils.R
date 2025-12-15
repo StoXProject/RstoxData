@@ -253,7 +253,7 @@ processMetadata <- function(flat, flatAttr, rootInfo, xsdFile, xsdDoc) {
 #' @importFrom xml2 xml_attrs read_xml xml_find_all xml_find_num xml_ns xml_text xml_add_child xml_attr xml_children
 #' @importFrom utils tail
 createXsdObject <- function(xsdFile) {
-
+	
 	# Check if XSD exists
 	message(paste("Using:", xsdFile))
 
@@ -411,3 +411,155 @@ getIcesVocabulary <- function(xmlFile) {
 	setnames(ret, c("id", "value", "codetype"))
 	return(ret)
 }
+
+
+# Ices Acoustic XSD needs several additional treatments
+icesAcousticPreprocess <- function(xsdObject) {
+	
+	# In elements which are lists holding one element per table, extract only the tables defined hard coded in processBioticData.R, which are found in the tableOrder element:
+	tableOrder <- xsdObject$tableOrder
+	xsdObject <- lapply(xsdObject, function(x) if(is.list(x) && all(tableOrder %in% names(x))) x[tableOrder] else x)
+	
+	# Set again the root
+	xsdObject$root <- "Acoustic"
+	
+	# Re-build prefix data
+	xsdObject$prefixLens[tableOrder] <- 0
+	
+	allDatawithPrefix <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
+	
+	xsdObject$prefixLens[allDatawithPrefix] <- 1
+	xsdObject$prefixLens["Log"] <- 2
+	xsdObject$prefixLens["Sample"] <- 4
+	xsdObject$prefixLens["Data"] <- 5
+	
+	xsdObject$tableHeaders$Survey <- c("LocalID", xsdObject$tableHeaders$Survey)
+	xsdObject$tableTypes$Survey <- c("xsd:string", xsdObject$tableTypes$Survey)
+	
+	xsdObject$tableHeaders$Log <- c("LocalID", xsdObject$tableHeaders$Log)
+	xsdObject$tableTypes$Log <- c("xsd:string", xsdObject$tableTypes$Log)
+	
+	# We need here to add Instrument as the first header, since it must serve as a key:
+	xsdObject$tableHeaders$Sample <- c("LocalID", "Distance", "Instrument", xsdObject$tableHeaders$Sample)
+	xsdObject$tableTypes$Sample <- c("xsd:string", "xsd:float", "xsd:string", xsdObject$tableTypes$Sample)
+	# Remove the duplicated Instrument:
+	atDup <- duplicated(xsdObject$tableHeaders$Sample)
+	xsdObject$tableHeaders$Sample <- xsdObject$tableHeaders$Sample[!atDup]
+	xsdObject$tableTypes$Sample <- xsdObject$tableTypes$Sample[!atDup]
+	
+	xsdObject$tableHeaders$Data <- c("LocalID", "Distance", "Instrument", "ChannelDepthUpper", xsdObject$tableHeaders$Data)
+	xsdObject$tableTypes$Data <- c("xsd:string", "xsd:float", "xsd:string", "xsd:float", xsdObject$tableTypes$Data)
+	
+	
+	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
+	xsdObject$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+	
+	# Put back table order
+	xsdObject$tableOrder <- tableOrder
+	
+	
+	# Define Keys manually, since the keys do not necessarily stand first in the tables. These keys are excluding the InstrumentID, CalibrationID, DataAcquisitionID and DataProcessingID:
+	xsdObject$keys <- list(
+		Cruise = c("LocalID"), 
+		Survey = c("LocalID", "Code"), 
+		Log = c("LocalID", "Distance"), 
+		Sample = c("LocalID", "Distance", "ChannelDepthUpper"), 
+		Data = c("LocalID", "Distance", "ChannelDepthUpper", "SaCategory")
+	)
+	
+	
+	return(xsdObject)
+}
+
+# Ices Biotic XSD needs several additional treatments
+icesBioticPreprocess <- function(xsdObject) {
+	
+	# In elements which are lists holding one element per table, extract only the tables defined hard coded in processBioticData.R, which are found in the tableOrder element:
+	tableOrder <- xsdObject$tableOrder
+	xsdObject <- lapply(xsdObject, function(x) if(is.list(x) && all(tableOrder %in% names(x))) x[tableOrder] else x)
+	
+	# Set again the root
+	xsdObject$root <- "Biotic"
+	
+	# Re-build prefix data
+	xsdObject$prefixLens[tableOrder] <- 0
+	
+	allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
+	
+	# These are hard coded number of keys:
+	xsdObject$prefixLens["Cruise"] <- 1
+	xsdObject$prefixLens["Survey"] <- 2
+	xsdObject$prefixLens["Haul"] <- 3
+	xsdObject$prefixLens["Catch"] <- 5
+	xsdObject$prefixLens["Biology"] <- 6
+	
+	xsdObject$tableHeaders$Survey <- c("LocalID", xsdObject$tableHeaders$Survey)
+	xsdObject$tableTypes$Survey <- c("xsd:string", xsdObject$tableTypes$Survey)
+	
+	xsdObject$tableHeaders$Haul <- c("LocalID", xsdObject$tableHeaders$Haul)
+	xsdObject$tableTypes$Haul <- c("xsd:string", xsdObject$tableTypes$Haul)
+	
+	xsdObject$tableHeaders$Catch <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "DataType", "SpeciesValidity", tail(xsdObject$tableHeaders$Catch, length(xsdObject$tableHeaders$Catch) - 4))
+	xsdObject$tableTypes$Catch <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", "xsd:string", "xsd:string", tail(xsdObject$tableTypes$Catch, length(xsdObject$tableTypes$Catch) - 4))
+	
+	xsdObject$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", xsdObject$tableHeaders$Biology)
+	xsdObject$tableTypes$Biology <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", xsdObject$tableTypes$Biology)
+	
+	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
+	xsdObject$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
+	
+	# Put back table order
+	xsdObject$tableOrder <- tableOrder
+	
+	
+	# Define Keys manually, since the keys do not necessarily stand first in the tables:
+	xsdObject$keys <- list(
+		Cruise = c("LocalID"), 
+		Survey = c("LocalID", "Code"), 
+		Haul = c("LocalID", "Gear", "Number"), 
+		Catch = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory"), 
+		Biology = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "FishID")
+	)
+	
+	
+	return(xsdObject)
+}
+
+
+
+getKeysFromXSD <- function(xsdObject) {
+	
+	if(missing(xsdObject) && !is.null(data[["metadata"]])) {
+		datatype <- unlist(data[["metadata"]][1, "useXsd"])
+		xsdObject <- RstoxData::xsdObjects[[paste0(datatype, ".xsd")]]
+	}
+
+	if(length(xsdObject)) {
+		# Get the number of headers:
+		plen <- xsdObject$prefixLens
+		thead <- xsdObject$tableHeaders
+		
+		#keys <- mapply(function(x, p) names(x)[seq_len(p)], data, plen)
+		keys <- lapply(names(plen), function(name) thead[[name]][seq_len(plen[[name]])])
+		names(keys) <- names(plen)
+	}
+	else {
+		
+		keys <- vector("list", length(data))
+		# Look for intersecting variables:
+		for(ind in seq_len(length(data) - 1)) {
+			keys[[ind]] <- intersect(names(data[[ind]]), names(data[[ind + 1]]))
+		}
+		
+		names(keys) <- names(data)
+	}
+	
+	return(keys)
+}
+
+
+
+
+
+
+

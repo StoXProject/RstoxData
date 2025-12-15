@@ -509,12 +509,27 @@ StoxAcousticOne <- function(data_list) {
 		# Uniqueify since some columns (keys) are present in several tables:
 		vocabulary <- unique(vocabulary)
 		
-		translateVariables(
-			data = data_list[tablesToReturn], 
-			TranslationDefinition = "FunctionInput",
-			Translation = vocabulary, 
-			translate.keys = TRUE
+		# Convert to a list of single translations and run these in a loop:
+		vocabularyList <- split(vocabulary, seq_len(nrow(vocabulary)))
+		
+		mapply(
+			translateVariables, 
+			Translation = vocabularyList, 
+			MoreArgs = list(
+				# Do not subset to only the tables to translate in, since we need the metadata in the translation (treeStruct):
+				#data = data_list[tablesToReturn], 
+				data = data_list, 
+				TranslationDefinition = "FunctionInput",
+				translate.keys = TRUE
+			)
 		)
+		
+		#translateVariables(
+		#	data = data_list[tablesToReturn], 
+		#	TranslationDefinition = "FunctionInput",
+		#	Translation = vocabulary, 
+		#	translate.keys = TRUE
+		#)
 	}
 	
 	output <- data_list[tablesToReturn]

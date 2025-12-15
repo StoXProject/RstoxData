@@ -251,17 +251,14 @@ prepareICESAcousticCSV_nmdechosounderv1 <-  function(AcousticDataOne){
 	
 	
 	
-	#Summarise sa value of same acocat in same channel
-	#AJ can make this function more pretty 
-	# Indeed:
-	# Get the keys of the Data table:
+	# Define the keys for summing:
 	keysData <- c(
-		getRstoxDataDefinitions("ICESAcousticKeys")$Data, 
+		xsdObjects$icesAcoustic.xsd$keys$Data, 
 		"Instrument" # This is introduced in the Sample table, and acts as a key in the Data table (before merging):
 	)
+	#Summarise sa value of same acocat in same channel
 	Data[, Value := sum(Value), by = keysData]
 	Data <- unique(Data, by = keysData)
-	
 	
 	#Prepare the output 
 	ICESAcousticDataOne <- list(
@@ -877,6 +874,7 @@ WriteICESBioticOne <- function(ICESBioticDataOne){
 # Function to add the table name to the column names, but not to the keys.
 renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType = c("Biotic", "Acoustic")) {
 	
+	# Get the formatType:
 	formatType <- match_arg_informative(formatType)
 	
 	# Create a table of the original and new column names, but remove keys:
@@ -898,7 +896,7 @@ renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType 
 	)
 	
 	# Remove the keys:
-	ICESKeys <- getRstoxDataDefinitions(paste0("ICES", formatType, "Keys"))
+	ICESKeys <- xsdObjects[[paste0("ices", formatType, ".xsd")]]$keys
 	# Do not remove the key of the last table:
 	ICESKeys <- unique(unlist(ICESKeys[!names(ICESKeys) %in% tail(tableNames, 1)]))
 	
@@ -923,8 +921,63 @@ renameToTableNameFirst <- function(data, tableNames, setToID = NULL, formatType 
 		new = lapply(conversionTableList, "[[", "newColumnName"), 
 		skip_absent = TRUE
 	)
+	
+	
 }
 
+
+
+### browser()
+### 	formatType <- match_arg_informative(formatType)
+### 	
+### 	# Remove the keys:
+### 	ICESKeys <- xsdObjects[[paste0("ices", formatType, ".xsd")]]$keys
+### 	
+### 	# Extract only the root keys (the kyes introduced in each table):
+### 	for(ind in rev(seq_along(ICESKeys)[-1])) {
+### 		ICESKeys[[ind]] <- setdiff(ICESKeys[[ind]], ICESKeys[[ind - 1]])
+### 	}
+### 	allICESKeys <- unique(unlist(ICESKeys))
+### 	
+### 	# Treat only the tables that are defined both in the data and the keys. This excludes the "Instrument", "Calibration", "DataAcquisition" and "DataProcessing", which are already prefixed:
+### 	tablesPresentInDataAndICESKeys <- intersect(names(data), names(ICESKeys))
+### 	
+### 	
+### 	##### NOTE: #####
+### 	##### In StoX 4.1.4 we used a conversion table here to define the renaming of fields. #####
+### 	##### However, this failed since the keys were also renamed for each table, so that we cot 
+### 	
+### 	
+### 	# Rename first the "Instrument", "Calibration", "DataAcquisition" and "DataProcessing" IDs:
+### 	tableHeaders <- xsdObjects[[paste0("ices", formatType, ".xsd")]]$tableHeaders
+### 	metadataTables <- names(tableHeaders)[sapply(tableHeaders, function(x) "ID" %in% x)]
+### 	for(name in tablesPresentInDataAndICESKeys) {
+### 		areTableNames <- names(data[[name]]) %in% metadataTables
+### 		oldNames <- names(data[[name]])[areTableNames]
+### 		newNames <- paste0(oldNames, "ID")
+### 		if(any(areTableNames)) {
+### 			data.table::setnames(data[[name]], old = oldNames, new = newNames)
+### 		}
+### 	}
+### 	
+### 	
+### 	# Rename fields by adding table name as prefix, but in two steps, (1) for non-key fields, and (2) for key fields:
+### 	# For non-key fields:
+### 	for(name in tablesPresentInDataAndICESKeys) {
+### 		nonKeyNames <- setdiff(names(data[[name]]), allICESKeys)
+### 		if(length(nonKeyNames)) {
+### 			newNonKeyNames <- paste0(name, nonKeyNames)
+### 			data.table::setnames(data[[name]], old = nonKeyNames, new = newNonKeyNames)
+### 		}
+### 	}
+### 	# For key fields:
+### 	oldNames <- unlist(ICESKeys[tablesPresentInDataAndICESKeys])
+### 	newNames <- unlist(mapply(paste0, tablesPresentInDataAndICESKeys, ICESKeys[tablesPresentInDataAndICESKeys]))
+### 	for(name in rev(tablesPresentInDataAndICESKeys)) {
+### 		#if(NROW(data)) {
+### 			data.table::setnames(data[[name]], old = oldNames, new = newNames, skip_absent = TRUE)
+### 		#}
+### 	}
 
 
 

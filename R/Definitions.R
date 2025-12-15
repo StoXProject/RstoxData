@@ -33,27 +33,63 @@ initiateRstoxData <- function(){
 		"nmdbioticv1.4"
 	)
 	
-	# StoxBioticKeys: 
-	StoxBioticKeys <- c(
-		"CruiseKey", 
-		"StationKey", 
-		"HaulKey", 
-		"SpeciesCategoryKey", 
-		"SampleKey", 
-		"IndividualKey", 
-		"PreySpeciesCategoryKey", 
-		"PreySampleKey", 
-		"PreyIndividualKey"
+	# The keys of the input data StoxAcoustic (NMDEchosounder and ICESAcoustic) and StoxBiotic (NMDBiotic and ICESBiotic) (NMDLanding does not have a heirarchical data model) are defined in the RstoxData::xsdObjects. Here, we the keys of the StoxAcousticData and StoxBioticData as well as ICESDatrasData and ICESDatsuscData. The ICESAcousticData and ICESBioticData use expandICESKeysWithPrefix() to add table name as prefix to the keys defined in the RstoxData::xsdObjects (see TranslateICESAcoustic and TranslateICESBiotic):
+	keys <- list(
+		# StoxBiotic keys: 
+		StoxBiotic = list(
+			Cruise = "CruiseKey", 
+			Station = "StationKey", 
+			Haul = "HaulKey", 
+			SpeciesCategory = "SpeciesCategoryKey", 
+			Sample = "SampleKey", 
+			Individual = "IndividualKey", 
+			PreySpeciesCategory = "PreySpeciesCategoryKey", 
+			PreySample = "PreySampleKey", 
+			PreyIndividual = "PreyIndividualKey"
+		),
+		# StoxAcoustic keys: 
+		StoxAcoustic = list(
+			Cruise = "CruiseKey", 
+			Log = "LogKey", 
+			Beam = "BeamKey", 
+			AcousticCategory = "AcousticCategoryKey", 
+			ChannelReference = "ChannelReferenceKey", 
+			NASC = "NASCKey"
+		),
+		# ICESDatras keys: 
+		ICESDatras = list(
+			HH = c(
+				"Quarter", 
+				"Country", 
+				"Platform", 
+				"Gear", 
+				"HaulNumber"
+			),
+			HL = c(
+				"Quarter", 
+				"Country", 
+				"Platform", 
+				"Gear", 
+				"HaulNumber", 
+				"SpeciesCode",
+				"LengthClass"
+			),
+			CA = c(
+				"Quarter", 
+				"Country", 
+				"Platform", 
+				"Gear", 
+				"HaulNumber", 
+				"SpeciesCode",
+				"LengthClass",
+				"FishID"
+			)
+		)
 	)
-	# StoxBioticKeys: 
-	StoxAcousticKeys <- c(
-		"CruiseKey", 
-		"LogKey", 
-		"BeamKey", 
-		"AcousticCategoryKey", 
-		"ChannelReferenceKey", 
-		"NASCKey"
-	)
+	# Add the ICESDatsusc keys as the same as the ICESDatras:
+	keys$ICESDatsusc <- keys$ICESDatras
+	
+	
 	
 	#dataTypeDefinition <- list(
 	#	# StoxAcousticDat: 
@@ -185,28 +221,8 @@ initiateRstoxData <- function(){
 	)
 	dataTypeUnits <- data.table::rbindlist(dataTypeUnits)
 	
-	
-	targetAndSourceVariables <- list(
-		target = "TargetVariable", 
-		source = "SourceVariable"
-	)
-	
 	# Define the columns required for VariableConversionTable:
 	TranslationOldRequiredColumns <- c("VariableName", "Value", "NewValue")
-	
-	# Define the ICESBiotic keys (check with the package author whether this is already defined when reading the data):
-	ICESAcousticKeys <- list(
-		Cruise =   "LocalID", 
-		Log =    c("LocalID", "Distance"), 
-		Sample = c("LocalID", "Distance", "ChannelDepthUpper"), 
-		Data =   c("LocalID", "Distance", "ChannelDepthUpper", "SaCategory")
-	)
-	ICESBioticKeys <- list(
-		Cruise =    "LocalID", 
-		Haul =    c("LocalID", "Gear", "Number"), 
-		Catch =   c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory"), 
-		Biology = c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "StockCode", "FishID")
-	)
 	
 	# A function to extract the implemented xml formats for each of the types "biotic", "acoustic" and "landing":
 	getImplementedXsd <- function(type = c("Biotic", "Acoustic", "Landing")) {
