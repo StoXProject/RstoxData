@@ -282,7 +282,7 @@ translateVariables <- function(
 	# This is only used by the GUI. This function assumes that the name of the columns past the "NewValue" in the TranslationTable are the names of the conditional variables:
 	ConditionalVariableNames = character(),
 	translate.keys = FALSE, 
-	PreserveClass = TRUE, 
+	preserveClass = TRUE, 
 	warnMissingTranslation = FALSE, 
 	
 	keys = NULL
@@ -326,7 +326,7 @@ translateVariables <- function(
 				data = data[[ind]], 
 				keys = keys, 
 				translate.keys = translate.keys, 
-				PreserveClass = PreserveClass, 
+				preserveClass = preserveClass, 
 				warnMissingTranslation = warnMissingTranslation
 			)
 			
@@ -344,7 +344,7 @@ translateVariables <- function(
 			data = data, 
 			keys = keys, 
 			translate.keys = translate.keys, 
-			PreserveClass = PreserveClass, 
+			preserveClass = preserveClass, 
 			warnMissingTranslation = warnMissingTranslation
 		)
 		
@@ -362,7 +362,7 @@ translateOne <- function(
 		data, 
 		keys, 
 		translate.keys = FALSE, 
-		PreserveClass = TRUE, 
+		preserveClass = TRUE, 
 		warnMissingTranslation = FALSE
 ) {
 	
@@ -413,11 +413,25 @@ translateOne <- function(
 					
 					# Translate
 					if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
-						data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+						#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+						
+						# Get the replacement by applying the function defined by translationListOne$NewValue:
+						replacement <- data[[tableName]] [thisMatches, eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
 					}
 					else {
-						data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+						#data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+						
+						# Get the replacement by applying the function defined by translationListOne$NewValue:
+						replacement <- data[[tableName]] [thisMatches, translationListOne$NewValue, on = names(thisMatches)]
 					}
+					
+					# Do the replacement, preserving class if requested:
+					if(!preserveClass) {
+						setColumnClasses(data[[tableName]], structure(list(class(replacement)), names = variableToTranslate))
+					}
+					
+					data[[tableName]] [thisMatches, eval(variableToTranslate) := replacement, on = names(thisMatches)]
+					
 				}
 			}
 		}
@@ -432,11 +446,25 @@ translateOne <- function(
 			if(length(thisMatches)) {
 				# Translate
 				if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
-					data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+					#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+					
+					# Get the replacement by applying the function defined by translationListOne$NewValue:
+					replacement <- data[[tableName]] [thisMatches, eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
 				}
 				else {
-					data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+					#data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+					
+					# Get the replacement by applying the function defined by translationListOne$NewValue:
+					replacement <- data[[tableName]] [thisMatches, translationListOne$NewValue, on = names(thisMatches)]
 				}
+				
+				# Do the replacement, preserving class if requested:
+				if(!preserveClass) {
+					setColumnClasses(data[[tableName]], structure(list(class(replacement)), names = variableToTranslate))
+				}
+				
+				data[[tableName]] [thisMatches, eval(variableToTranslate) := replacement, on = names(thisMatches)]
+				
 			}
 		}
 	}
@@ -622,7 +650,7 @@ matchVariable <- function(variableName, list, table) {
 
 # Test if a value is a function string:
 isFunctionString <- function(x, variableName) {
-	if(is.character(x)) {
+	if(!is.na(x) && is.character(x)) {
 		functionPrefix <- paste0("function(", variableName, ")")
 		xWithoutWhitespace <- gsub("[[:space:]]", "", x)
 		startsWith(xWithoutWhitespace, functionPrefix)
@@ -732,7 +760,7 @@ TranslateStoxBiotic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(StoxBioticDataCopy)
@@ -775,7 +803,7 @@ TranslateStoxAcoustic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(StoxAcousticDataCopy)
@@ -819,7 +847,7 @@ TranslateBiotic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(BioticDataCopy)
@@ -862,7 +890,7 @@ TranslateAcoustic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(AcousticDataCopy)
@@ -905,7 +933,7 @@ TranslateStoxLanding <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(StoxLandingDataCopy)
@@ -948,7 +976,7 @@ TranslateLanding <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(LandingDataCopy)
@@ -999,7 +1027,7 @@ TranslateICESBiotic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass, 
+		preserveClass = PreserveClass, 
 		keys = keys
 	)
 	
@@ -1046,7 +1074,7 @@ TranslateICESAcoustic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass, 
+		preserveClass = PreserveClass, 
 		keys = keys
 	)
 	
@@ -1094,7 +1122,7 @@ TranslateICESDatras <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass, 
+		preserveClass = PreserveClass, 
 		keys = keys
 	)
 	
@@ -1140,7 +1168,7 @@ TranslateICESDatsusc <- function(
     Conditional = Conditional,
     ConditionalVariableNames = ConditionalVariableNames,
     Translation = Translation,  
-    PreserveClass = PreserveClass, 
+    preserveClass = PreserveClass, 
     keys = keys
   )
   

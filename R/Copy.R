@@ -404,7 +404,7 @@ copyDataOneTable <- function(
 			}
 			else {
 				if(!preserveClass) {
-					setColumnClasses(table, structure(list(class(translationListOne$NewValue)), names = variableToTranslate))
+					setColumnClasses(table, structure(list(class(table[[fromVariable]])), names = toVariable))
 				}
 			}
 		}

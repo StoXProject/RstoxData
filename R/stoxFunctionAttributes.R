@@ -1,12 +1,15 @@
 # Function to get variable names, given a different variable name in the input VariableName. This funciton is used e.g. to list possible ConditionalVariableNames:
 getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData, VariableName) {
-	
 	# Function to get the names of a table if that table contains certain variables:
-	getNamesIfVariableIsPresent <- function(tableName, data, requiredVariableNames) {
-		output <- names(table)
+	getNamesIfVariableIsPresent <- function(tableName, data, requiredVariableNames = NULL) {
+		# Get the column names of the current table and the parent tables if the requiredVariableNames is given:
 		if(length(requiredVariableNames) && !requiredVariableNames %in% names(table)) {
 			variableNames <- lapply(includeParents(tableName, data), function(x) names(data[[x]]))
 			output <- unique(unlist(variableNames))
+		}
+		# Get the column names of the table:
+		else {
+			output <- names(data[[tableName]])
 		}
 		return(output)
 	}
@@ -58,7 +61,7 @@ getVariableNamesStoxData <- function(BioticData, StoxBioticData, ICESBioticData,
 
 
 # Function to get variable names from all tables:
-getVariableNameStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
+getPossibleVariableNameStoxData <- function(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData) {
 	
 	output <- getVariableNamesStoxData(BioticData, StoxBioticData, ICESBioticData, ICESDatrasData, ICESDatsuscData, AcousticData, StoxAcousticData, ICESAcousticData, LandingData, StoxLandingData, VariableName = NULL) 
 	
@@ -222,7 +225,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)#, 
 			#ConditionalVariableNames = list(
 			#	Conditional = TRUE
@@ -241,7 +244,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -254,7 +257,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -267,7 +270,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -280,7 +283,7 @@ stoxFunctionAttributes <- list(
 	  ), 
 	  functionArgumentHierarchy = list(
 	    PreserveClass = list(
-	      overwrite = TRUE
+	      Overwrite = TRUE
 	    )
 	  )
 	),
@@ -294,7 +297,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -307,7 +310,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -320,7 +323,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -333,7 +336,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -346,7 +349,7 @@ stoxFunctionAttributes <- list(
 		), 
 		functionArgumentHierarchy = list(
 			PreserveClass = list(
-				overwrite = TRUE
+				Overwrite = TRUE
 			)
 		)
 	),
@@ -973,8 +976,8 @@ processPropertyFormats <- list(
 			
 			return(columnNames)
 		}, 
-		variableTypes = function(VariableName, Conditional, ConditionalVariableNames = NULL) {
-			rep("character", 2 + as.numeric(Conditional) * length(ConditionalVariableNames))
+		variableTypes = function(VariableName, ConditionalVariableNames = NULL) {
+			rep("character", 2 + length(ConditionalVariableNames))
 		}, 
 		# The data is given in the ...:
 		possibleValues = function(VariableName, Conditional, ConditionalVariableNames = NULL, ...) {
@@ -1063,7 +1066,7 @@ processPropertyFormats <- list(
 	variableName_translate = list(
 		class = "single", 
 		title = "Select one variable to translate.", 
-		possibleValues = getVariableNameStoxData, 
+		possibleValues = getPossibleVariableNameStoxData, 
 		variableTypes = "character"
 	), 
 	valueColumn = list(
@@ -1105,7 +1108,7 @@ processPropertyFormats <- list(
 	fromVariable_StoxData = list(
 		class = "single", 
 		title = "Select one variable to copy", 
-		possibleValues = getVariableNameStoxData, 
+		possibleValues = getPossibleVariableNameStoxData, 
 		variableTypes = "character"
 	), 
 
