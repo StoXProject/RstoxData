@@ -840,7 +840,7 @@ createEmptyDataTable <- function(names, classes = NULL) {
 #' Convert classes of a data.table:
 #'
 #' @param DT A data.table
-#' @param classes A named list of classes. Columns in \code{DT} with name found in \code{classes} are modified if the existing class differs from the desired class.
+#' @param classes A list of classes named by the columns for which the class should be set. Columns in \code{DT} with name found in the names of \code{classes} are modified if the existing class differs from the desired class.
 #'
 #' @export
 #' 
