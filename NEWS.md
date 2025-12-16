@@ -2,7 +2,8 @@
 * Added support for specifying a function in NewValue in TranslationTable in Translate functions. This allows for mathematical transformation of values, e.g. IndividualTotalLength * 0.9 to get total length from fork length
 * Added the possibility to condition on variables present in parent tables in Translate functions. This can be useful e.g. when translating variables in the Individual table of StoxBiotic conditioned on SpeciesCategory (which is found two tables up in the SpeciesCategory table).
 * Restricted LengthType accepted to only "1" from ICESBiotic XML files in the StoxBiotic() function, equivalent to the only accepted lengthmeasurement "E" from NMDBiotic XML files.
-* Fixed bug where the only the first Survey from the Survey table of BioticData read from ICESBiotic XML files was added to the Cruise table. In the ICESBiotic CSV file multiple surveys concatenated with "~" as separator, which is not adopted in RstoxData. 
+* Fixed bug where the only the first Survey from the Survey table of BioticData read from ICESBiotic XML files was added to the Cruise table. In the ICESBiotic CSV file multiple surveys concatenated with "~" as separator, which is not adopted in RstoxData.
+* Fixed bug where PreserveClass was not showing in the GUI even if Overwrite was set to TRUE.
 * Changed the warning i StoxBiotic() for non-total length (lengthmeasurement != "E" or LengthType != "1") to not list the species, but rather inform about the possibility to transform the length values using Translate functions.
 * Removed the argument useXsd from filterData(), which was used to ignore the table hierarchy provided in the RstoxData::xsdObjects.
 * Added the LocalID as key field in the Survey table of BioticData and AcousticData when read from ICES XML files.

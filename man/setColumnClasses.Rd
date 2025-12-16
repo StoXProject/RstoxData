@@ -9,7 +9,7 @@ setColumnClasses(DT, classes = NULL)
 \arguments{
 \item{DT}{A data.table}
 
-\item{classes}{A named list of classes. Columns in \code{DT} with name found in \code{classes} are modified if the existing class differs from the desired class.}
+\item{classes}{A list of classes named by the columns for which the class should be set. Columns in \code{DT} with name found in the names of \code{classes} are modified if the existing class differs from the desired class.}
 }
 \description{
 Convert classes of a data.table:
