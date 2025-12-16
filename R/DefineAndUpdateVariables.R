@@ -107,11 +107,19 @@ RedefineStoxBiotic <- function(
 #' @param FileName The csv file holding a table with the \code{TranslationTable}. Required columns are given by \code{ValueColumn} and \code{NewValueColumn}, and, in the case that Conditional == TRUE, \code{ConditionalValueColumns}.
 #' @param ValueColumn,NewValueColumn The name of the columns of \code{FileName} representing the current values and the values to translate to, respectively.
 #' @param ConditionalValueColumns The names of the columns of \code{FileName} representing the conditional values.
-#' @param TranslationTable A table holding the following columns: The first column holds the values to translate FROM, the second column holds the values to translate TO, and the remaining zero or more columns holds the values for the conditional variables specified in \code{ConditionalVariableNames}. I.e., if \code{VariableName} = "IndividualAge" and \code{ConditionalVariableNames} = "IndividualSex", and the \code{TranslationTable} has values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4. Use NA to translate missing values (shown as "-" in Preview in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions of functions of the variable specified by the column name. See details of \code{\link{DefineTranslation}}. 
+#' @param TranslationTable A table holding the values to translate FROM in the first column, the values to translate TO (column NewValue), and zero or more columns named by the conditional variables specified in \code{ConditionalVariableNames} giving the values of these variables at which to perform the translation. Use NA to translate missing values (shown as "-" in Preview in the StoX GUI, and usually as empty cell in excel). Values in the \code{TranslationTable} can be given either as single values or as expressions of functions of the variable specified by the column name. See details of \code{\link{DefineTranslation}}. 
 #' 
-#' @details The columns of the \code{TranslationTable} (except the NewValue column) can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "\%in\%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength > 10". When the \code{TranslationnTable} is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength > 10). 
+#' @details The columns of the \code{TranslationTable} can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "\%in\%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength > 10". 
+#'
+#' Specifying NewValue as a function can be used to transform numeric values, e.g. "function(IndividualTotalLength) IndividualTotalLength * 1.1" to compensate for different length measurement. This can be useful for length that are not total length, in which case TranslateBiotic can be used to translate the lengthmeasurement (NMDBiotic) or LengthType (ICESBiotic) to the accepted "E" or "1", respectively. For BioticData read from ICESBiotic XML files the the LengthType specifies the type of length measurement. These values are not translated using the vocabulary from the XML file, so that total length is represented as "AC_LengthMeasurementType_1" instead of the code "1". For these data the translation can be either to "AC_LengthMeasurementType_1" or to "1". 
+#'
+#' Similar to transforming IndividualTotalLength, IndividualRoundWeight can also be transformed if the individualproducttype is not 1 for NMDBiotic XML files.
+#'
+#' When the \code{TranslationnTable} is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength > 10).
 #' 
-#' E.g., to set all individuals with missing IndividualMaturity as "Adult" if longer than 10 cm, use \code{function(IndividualMaturity) is.na(IndividualMaturity)} in the first column named "IndividualMaturity", \code{Adult} in the "NewValue" column, and \code{function(IndividualTotalLength) IndividualTotalLength > 10} in the third (conditional) column named "IndividualTotalLength". To translate all IndividualMaturity to a e.g. NA, use \code{function(IndividualMaturity) TRUE} in the "IndividualMaturity" column and \code{NA} in the "NewValue" column.
+#' As an example, if there are three columns in the \code{TranslationTable} named "IndividualAge", "NewValue" and "IndividualSex" (as specified by ConditionalVariableNames), with values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4.
+#'
+#' As another example, to set all individuals with missing IndividualMaturity as "Adult" if longer than 10 cm, use \code{function(IndividualMaturity) is.na(IndividualMaturity)} in the first column named "IndividualMaturity", \code{Adult} in the "NewValue" column, and \code{function(IndividualTotalLength) IndividualTotalLength > 10} in the third (conditional) column named "IndividualTotalLength". To translate all IndividualMaturity to a e.g. NA, use \code{function(IndividualMaturity) TRUE} in the "IndividualMaturity" column and \code{NA} in the "NewValue" column.
 #' 
 #' @return
 #' A \code{\link{Translation}} object.
@@ -268,12 +276,16 @@ translateVariables <- function(
 	TranslationDefinition = c("FunctionParameter", "FunctionInput"), 
 	Translation, 
 	TranslationTable = data.table::data.table(), 
+	# This is only used by the GUI. This function assumes that the name of the first column of the TranslationTable is the name of the variable to translate:
 	VariableName = character(),
 	Conditional = FALSE, # If TRUE, adds a column to the parameter format translationTable.
+	# This is only used by the GUI. This function assumes that the name of the columns past the "NewValue" in the TranslationTable are the names of the conditional variables:
 	ConditionalVariableNames = character(),
 	translate.keys = FALSE, 
-	PreserveClass = TRUE, 
-	warnMissingTranslation = FALSE
+	preserveClass = TRUE, 
+	warnMissingTranslation = FALSE, 
+	
+	keys = NULL
 ) {
 	
 	# Get the Translation:
@@ -290,97 +302,292 @@ translateVariables <- function(
 	# Split the translation table into a list, thus treating only one row at the time. This is probably sloppy coding, but it works:
 	translationList <- split(Translation, seq_len(nrow(Translation)))
 	
-	# Check whether the old required columns are present in the translation table, and transform to the new form:
+	# Check whether the old required columns are present in the translation table, and transform to the new form. This can only be done after transforming to the translationList, as each row in the Translation can have different VariableName in the old definition (which is still used by StoxAcoustic()):
 	oldRequiredColumns <- getRstoxDataDefinitions("TranslationOldRequiredColumns")
 	if(all(oldRequiredColumns %in% names(translationList[[1]]))) {
 		translationList <- lapply(translationList, oldToNewTranslationOne)
 	}
 	
-	# Warn if there are columns in the translation that are not present in the data. Check only the first translation, as all translations have the same columns in the new form, and in the old form (that is used by StoxBiotic()) this check is not as important:
-	someButNotAllPresentOneTable <- function(table, translationList) {
-		translationNames <- setdiff(names(translationList[[1]]), "NewValue")
-		any(translationNames %in% names(table)) && !all(translationNames %in% names(table))
-	}
-	someButNotAllPresent <- unlist(lapply(
-		data, 
-		someButNotAllPresentOneTable, 
-		translationList =  translationList
-	))
 	
-	# Run the conversion for each table of the data:
-	lapplyToStoxData(
-		data, 
-		translateOneTable, 
-		translationList = translationList, 
-		translate.keys = translate.keys, 
-		PreserveClass = PreserveClass, 
-		warnMissingTranslation = warnMissingTranslation
-	)
+	
+	
+	# Do the translations:
+	if(!data.table::is.data.table(data[[1]])) {
+		for(ind in seq_along(data)) {
+			
+			# Get the keys of the tables in the data:
+			if(!length(keys)) {
+				keys <- getKeys(data[[ind]])
+			}
+			# Do the translation:
+			lapply(
+				translationList, 
+				translateOne, 
+				data = data[[ind]], 
+				keys = keys, 
+				translate.keys = translate.keys, 
+				preserveClass = preserveClass, 
+				warnMissingTranslation = warnMissingTranslation
+			)
+			
+		}
+	}
+	else {
+		# Get the keys of the tables in the data:
+		if(!length(keys)) {
+			keys <- getKeys(data)
+		}
+		
+		lapply(
+			translationList, 
+			translateOne, 
+			data = data, 
+			keys = keys, 
+			translate.keys = translate.keys, 
+			preserveClass = preserveClass, 
+			warnMissingTranslation = warnMissingTranslation
+		)
+		
+	}
+	
+	
+	
+	
 }
 
+
 # Function to translate one table:
-translateOneTable <- function(table, translationList, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
+translateOne <- function(
+		translationListOne, 
+		data, 
+		keys, 
+		translate.keys = FALSE, 
+		preserveClass = TRUE, 
+		warnMissingTranslation = FALSE
+) {
 	
-	# If the variable to translate is present in the table, check whether the conditional variables are present in the table:
-	variableToTranslate <- sapply(translationList, function(x) names(x)[1])
-	variableToTranslateIsPresent <- variableToTranslate %in% names(table)
+	# Get the variable and the conditional variables:
+	variableToTranslate <- names(translationListOne)[1]
+	conditionalVariables <- names(translationListOne)[-seq_len(2)]
+	tablesHoldingTheVariableToTranslate <- names(data)[sapply(data, function(table) variableToTranslate %in% names(table))]
 	
-	# Abort if the variableToTranslate are not present in the table:
-	if(!any(variableToTranslateIsPresent)) {
-		# This return value is currently not used:
-		return(FALSE)
+	
+	conditional <- length(conditionalVariables) > 0
+	
+	# If we are conditioning on variable possibly in parent tables match both the conditions and the variableToTranslate in those parent tables:
+	if(conditional) {
+		
+		#browser()
+		# Find the keys of rows in the table and parent tables where the conditional variables match:
+		tableNames <- includeParents(tablesHoldingTheVariableToTranslate, data)
+		
+		# Match the conditions and the variable in the different tables:
+		matches <- mapply(
+			getMatchesOneTranslationOneTable, 
+			data[tableNames], 
+			keys = keys[tableNames], 
+			MoreArgs = list(
+				variableToTranslate = variableToTranslate, 
+				conditionalVariables = conditionalVariables, 
+				translationListOne = translationListOne
+			), 
+			SIMPLIFY = FALSE
+		)
+		
+		# Detect tables where there are variables to be matched, but no matches were found (in which case getMatchesOneTranslationOneTable() returns NA):
+		nomatches <- sapply(matches, function(x) length(x) == 1 && is.na(x))
+		
+		# Translate only if there were ane matches:
+		if(!any(nomatches)) {
+			# Remove empty matches:
+			matches <- matches[sapply(matches, NROW) > 0]
+			
+			# Loop through the tables containing the variableToTranslate and perform the translation:
+			tablesContainingVariableToTranslate <- sapply(names(matches), function(x) variableToTranslate %in% names(data[[x]]))
+			
+			# If there are any matches:
+			if(length(matches)) {
+				for(tableName in names(matches)[tablesContainingVariableToTranslate]) {
+					
+					# Get translation matches:
+					thisMatches <- Reduce(function(x, y) mergeByIntersect(x, y, all = FALSE), matches[seq_len(which(tableName == names(matches)))])
+					
+					if(length(thisMatches)) {
+						
+						# Kepp pnly the columns present in the table to translate, so that we can use thisMatches to dientify the rows in which to translate:
+						thisMatches <- subset(thisMatches, select = intersect(names(thisMatches), names(data[[tableName]])))
+						
+						# Translate
+						if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
+							#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+							
+							# Get the replacement by applying the function defined by translationListOne$NewValue:
+							replacement <- data[[tableName]] [thisMatches, eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+						}
+						else {
+							#data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+							
+							# Get the replacement by applying the function defined by translationListOne$NewValue:
+							replacement <- data[[tableName]] [thisMatches, translationListOne$NewValue, on = names(thisMatches)]
+						}
+						
+						# Do the replacement, preserving class if requested:
+						if(!preserveClass) {
+							setColumnClasses(data[[tableName]], structure(list(class(replacement)), names = variableToTranslate))
+						}
+						
+						data[[tableName]] [thisMatches, eval(variableToTranslate) := replacement, on = names(thisMatches)]
+						
+					}
+				}
+			}
+		}
+	}
+	# If not conditional, simply translate in each of the tables holding the variableToTranslate, with no use of keys:
+	else {
+		
+		for(tableName in tablesHoldingTheVariableToTranslate) {
+			
+			thisMatches <- matchVariable(variableToTranslate, translationListOne, data[[tableName]])
+			
+			if(any(thisMatches)) {
+				# Translate
+				if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
+					#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+					
+					# Get the replacement by applying the function defined by translationListOne$NewValue:
+					replacement <- data[[tableName]] [thisMatches, eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+				}
+				else {
+					#data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+					
+					# Get the replacement by applying the function defined by translationListOne$NewValue:
+					replacement <- data[[tableName]] [thisMatches, translationListOne$NewValue, on = names(thisMatches)]
+				}
+				
+				# Do the replacement, preserving class if requested:
+				if(!preserveClass) {
+					setColumnClasses(data[[tableName]], structure(list(class(replacement)), names = variableToTranslate))
+				}
+				
+				data[[tableName]] [thisMatches, eval(variableToTranslate) := replacement, on = names(thisMatches)]
+				
+			}
+		}
+	}
+
+}
+
+
+
+
+
+# Function to apply to all tables of the input data, rows matching the criteria of the target variable and the conditional variables:
+getMatchesOneTranslationOneTable <- function(table, variableToTranslate, conditionalVariables, translationListOne, keys) {
+	
+	varsToMatch <- c(variableToTranslate, conditionalVariables)
+	
+	varsToMatch <- intersect(varsToMatch, names(table))
+	
+	# Find the rows matching the criteria of the target variable and the conditional variables:
+	if( length(varsToMatch) ) {
+		
+		# Get the logical vector of matches for each variable to match (the variable to translate and the conditional variables):
+		matches <- lapply(varsToMatch, matchVariable, list = translationListOne, table = table)
+		
+		# Any empty matches are returned as FALSE to indicate no match:
+		emptyMatches <- lengths(matches) == 0
+		if(any(emptyMatches)) {
+			matches[emptyMatches] <- rep(list(FALSE), sum(emptyMatches))
+		}
+		
+		# Require that all variables match to each row:
+		matches <- apply(do.call(cbind, matches), 1, all)
+		
+		# If no matches, return NA:
+		if(!any(matches)) {
+			return(NA)
+		}
+		
+		# Get the key values of the matches:
+		keyTable <- subset(table, matches, select = keys)
+		
+		
+		return(keyTable)
+	}
+	else {
+		return(NULL)
 	}
 	
-	# List the conditional variables and check whether those linked to the variables present in the table are also present:
-	conditionalVariables <- sapply(translationList, function(x) names(x)[-c(1, 2)])
-	conditionalVariablesNotPresentInTable <- setdiff(unlist(conditionalVariables[variableToTranslateIsPresent]), names(table))
-	if(length(conditionalVariablesNotPresentInTable)) {
-		warning("StoX: The following conditional variables are not present in the table: ", paste(conditionalVariablesNotPresentInTable, collapse = ", "), ".")
-	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+includeParents <- function(tableName, data) {
+	unique(unlist(lapply(tableName, includeParentsOneTableName, data)))
+}
+
+includeParentsOneTableName <- function(tableName, data) {
+	
+	# Get the tree structure (list of children):
+	treeStruct <- getTreestruct(data)
+	tableNames <- names(treeStruct)
+	
+	# Get parents:
+	children  <- unlist(treeStruct, use.names = FALSE)
+	parents <- rep(names(treeStruct), lengths(treeStruct))
+	childrenParentTable <- data.table::data.table(child = children, parent = parents)
+	parentList <- split(childrenParentTable$parent, childrenParentTable$child)
+	
+	# Set the first child:
+	parentsRecursively <- tableName
+	child <- parentsRecursively
 	
 	
-	# Apply the translation, one line at the time:
-	matches <- lapply(
-		translationList, 
-		translateOneTranslationOneTable, 
-		table = table, 
-		translate.keys = translate.keys, 
-		PreserveClass = PreserveClass, 
-		warnMissingTranslation = warnMissingTranslation
-	)
-	
-	# Change the type after matching and before translating to avoid type conversion warnings:
-	if(!PreserveClass) {
-		for(ind in seq_along(translationList)) {
-			variableToTranslate <- names(translationList[[ind]])[1]
-			newClass <- class(translationList[[ind]]$NewValue)
-			setColumnClasses(table, structure(list(newClass), names = variableToTranslate))
+	while(TRUE) {
+		
+		# Get the parent:
+		parent <- parentList[[child]]
+		
+		# Check if the parent exists
+		if(length(parent) && parent %in% tableNames) {
+			parentsRecursively <- append(parentsRecursively, parent)
+			child <- parent
+		}
+		else {
+			break
 		}
 		
 	}
 	
-	# Replace. This assumes that there is exactly one row in each element of the translationList:
-	for(ind in seq_along(matches)) {
-		if(length(matches[[ind]])) {
-			variableToTranslate <- names(translationList[[ind]])[1]
-			replacement <- translationList[[ind]]$NewValue
-			
-			# Compare classes, and change class of the replacement of different to capture the warning but avoid data.table warning "Coercing --- RHS to --- to match the type of column..."
-			variableToTranslate_class <- class(table[[variableToTranslate]])
-			replacement_class <- class(replacement)
-			
-			replacement_original <- replacement
-			suppressWarnings(class(replacement) <- variableToTranslate_class)
-			if(is.na(replacement) && !is.na(replacement_original)) {
-				warning("StoX: The class of the NewValue of the translation table (", replacement_class, ": ", replacement_original, ") does not match the class of the ", variableToTranslate, " (", variableToTranslate_class, "). Missing value (NA) introduced.")
-			}
-			
-			table[matches[[ind]], eval(variableToTranslate) := ..replacement]
-		}
-	}
+	# Reverse the order, since we want the grandparents first for consistency with the function mergeDataTables which assumes ordered tables from the highest to the lowest:
+	parentsRecursively <- rev(parentsRecursively)
 	
-	return(TRUE)
+	return(parentsRecursively)
 }
+
+
 
 getMissingCombinations <- function(translation, table, variableKeys) {
 	# Get the names of those columns in the data:
@@ -422,89 +629,11 @@ matchClass <- function(A, B) {
 
 
 
-# Function to apply to all tables of the input data, converting the variables:
-translateOneTranslationOneTable <- function(translationListOne, table, translate.keys = FALSE, PreserveClass = TRUE, warnMissingTranslation = FALSE) {
-	
-	# Check that the table contains the variable to translate:
-	if(names(translationListOne)[1] %in% names(table)) {
-		
-		## Check for values of the data that are not covered by the translation:
-		#notPresentInTranslation <- sort(
-		#	setdiff(
-		#		table[[Translation$VariableName[1]]], 
-		#		Translation$Value
-		#	)
-		#)
-		
-		if(warnMissingTranslation) {
-			# Get the combinations of ConditionalVariableNames and VariableName missing in the Translation:
-			variableKeys <- setdiff(names(translationListOne), "NewValue")
-			missingCombinations <- getMissingCombinations(translationListOne, table = table, variableKeys = variableKeys)
-			
-			
-			if(nrow(missingCombinations)) {
-				warnMessage <- c(
-					"StoX: The following values are present in the data but not in the translation, and were not translated: ", 
-					getMissingCombinationsWarning(missingCombinations)
-				)
-				warnMessage <- paste(warnMessage, collapse = "\n")
-				warning(warnMessage)
-			}
-		}
-	}
-	variableToTranslate <- names(translationListOne)[1]
-	
-	
-	# Do nothing if the variable is a key:
-	isKeys <- endsWith(variableToTranslate, "Key")
-	if(!translate.keys && isKeys) {
-		warning("StoX: The variable ", variableToTranslate, " is a key and cannot be modified ")
-	}
-	else {
-		# Convert the class to the class of the existing value in the table:
-		if(PreserveClass) {
-			# Convert the class of the translationList to that of the variable to transate:
-			translationListOneConverted <- convertTranslationListClass(
-				translationList = translationListOne, 
-				table = table
-			)
-			
-			# Check whether the NewValue has changed, and if it has changed to NA, report a warning:
-			if(!identical(translationListOneConverted, translationListOne)) {
-				
-				atNAAndDiffering <- is.na(translationListOne) & !is.na(translationListOneConverted)
-				
-				if(any(atNAAndDiffering)) {
-					warning("StoX: NAs introduced when converting class of the columns ", paste(names(translationListOne)[atNAAndDiffering], collapse = ", "), ", to the class of the corresponding column of the data. To prevent converting class of the translation to the class of the data, use PreserveClass = FALSE.")
-				}
-				translationListOne <- translationListOneConverted
-			}
-		}
-		
-		
-		# Replace by the new value:
-		if(variableToTranslate %in% names(table)) {
-			varsToMatch <- setdiff(names(translationListOne), "NewValue")
-			matches <- lapply(varsToMatch, matchVariable, list = translationListOne, table = table)
-			
-			# Any empty matches indicate that the variable of interest is not present, and triggers a warning and no match:
-			emptyMatches <- lengths(matches) == 0
-			if(any(emptyMatches)) {
-				#warning("StoX: The following variables are used in the translation but are not present in the table. This results in no translation: ", paste(varsToMatch[emptyMatches], collapse = ", "), ".")
-				matches[emptyMatches] <- rep(list(FALSE), sum(emptyMatches))
-			}
-			
-			matches <- apply(do.call(cbind, matches), 1, all)
-			
-			
-			return(matches)
-		}
-	}
-	
-	return(NULL)
-}
 
-# Function to match a condition given in the element 'variableName' of 'list' to the corresponding element in 'table', either as an evaluable function expression string, or an evaluable string:
+
+
+
+# Function to match a condition given in the element 'variableName' of 'list' to the corresponding element in 'table', either as a function expression string that can be evaluated, or a replacement string:
 matchVariable <- function(variableName, list, table) {
 	# Special case for NA:
 	if(is.na(list[[variableName]]) || identical(list[[variableName]], "NA")) {
@@ -512,8 +641,15 @@ matchVariable <- function(variableName, list, table) {
 	}
 	# Check whether the translation key is a function string to be evaluated:
 	else if(isFunctionString(list[[variableName]], variableName)) {
-		# Evaluate the function:
-		eval(parse(text = list[[variableName]]))(table[[variableName]])
+		# If the variable is present in the table, apply the function:
+		if(variableName %in% names(table)) {
+			eval(parse(text = list[[variableName]]))(table[[variableName]])
+		}
+		# If not present return FALSE to indicate no matches:
+		else {
+			stop("The variable given by 'variableName' is not present in the table.")
+		}
+		
 	}
 	# Otherwise check whether the table column is in the evaluated string:
 	else {
@@ -529,7 +665,7 @@ matchVariable <- function(variableName, list, table) {
 
 # Test if a value is a function string:
 isFunctionString <- function(x, variableName) {
-	if(is.character(x)) {
+	if(!is.na(x) && is.character(x)) {
 		functionPrefix <- paste0("function(", variableName, ")")
 		xWithoutWhitespace <- gsub("[[:space:]]", "", x)
 		startsWith(xWithoutWhitespace, functionPrefix)
@@ -639,7 +775,7 @@ TranslateStoxBiotic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(StoxBioticDataCopy)
@@ -682,7 +818,7 @@ TranslateStoxAcoustic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(StoxAcousticDataCopy)
@@ -714,6 +850,7 @@ TranslateBiotic <- function(
 	Translation,  
 	PreserveClass = TRUE
 ) {
+	
 	# Make a copy, as we are translating by reference:
 	BioticDataCopy <- data.table::copy(BioticData)
 	
@@ -725,7 +862,7 @@ TranslateBiotic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(BioticDataCopy)
@@ -768,7 +905,7 @@ TranslateAcoustic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(AcousticDataCopy)
@@ -811,7 +948,7 @@ TranslateStoxLanding <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(StoxLandingDataCopy)
@@ -854,7 +991,7 @@ TranslateLanding <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass
 	)
 	
 	return(LandingDataCopy)
@@ -890,8 +1027,12 @@ TranslateICESBiotic <- function(
 	Translation,  
 	PreserveClass = TRUE
 ) {
+	
 	# Make a copy, as we are translating by reference:
 	ICESBioticDataCopy <- data.table::copy(ICESBioticData)
+	
+	# Get keys:
+	keys <- expandICESKeysWithPrefix(xsdObjects$icesBiotic.xsd$keys)
 	
 	translateVariables(
 		data = ICESBioticDataCopy, 
@@ -901,7 +1042,8 @@ TranslateICESBiotic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass, 
+		keys = keys
 	)
 	
 	return(ICESBioticDataCopy)
@@ -936,6 +1078,9 @@ TranslateICESAcoustic <- function(
 	# Make a copy, as we are translating by reference:
 	ICESAcousticDataCopy <- data.table::copy(ICESAcousticData)
 	
+	# Get keys:
+	keys <- expandICESKeysWithPrefix(xsdObjects$icesAcoustic.xsd$keys)
+	
 	translateVariables(
 		data = ICESAcousticDataCopy, 
 		TranslationDefinition = TranslationDefinition, 
@@ -944,7 +1089,8 @@ TranslateICESAcoustic <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass, 
+		keys = keys
 	)
 	
 	return(ICESAcousticDataCopy)
@@ -976,8 +1122,12 @@ TranslateICESDatras <- function(
 	Translation,  
 	PreserveClass = TRUE
 ) {
+	
 	# Make a copy, as we are translating by reference:
 	ICESDatrasDataCopy <- data.table::copy(ICESDatrasData)
+	
+	# Get keys:
+	keys <- getRstoxDataDefinitions("keys")$ICESDatras
 	
 	translateVariables(
 		data = ICESDatrasDataCopy, 
@@ -987,7 +1137,8 @@ TranslateICESDatras <- function(
 		Conditional = Conditional,
 		ConditionalVariableNames = ConditionalVariableNames,
 		Translation = Translation,  
-		PreserveClass = PreserveClass
+		preserveClass = PreserveClass, 
+		keys = keys
 	)
 	
 	return(ICESDatrasDataCopy)
@@ -1021,6 +1172,9 @@ TranslateICESDatsusc <- function(
   # Make a copy, as we are translating by reference:
   ICESDatsuscDataCopy <- data.table::copy(ICESDatsuscData)
   
+  # Get keys:
+  keys <- getRstoxDataDefinitions("keys")$ICESDatsusc
+  
   translateVariables(
     data = ICESDatsuscDataCopy, 
     TranslationDefinition = TranslationDefinition, 
@@ -1029,7 +1183,8 @@ TranslateICESDatsusc <- function(
     Conditional = Conditional,
     ConditionalVariableNames = ConditionalVariableNames,
     Translation = Translation,  
-    PreserveClass = PreserveClass
+    preserveClass = PreserveClass, 
+    keys = keys
   )
   
   return(ICESDatsuscDataCopy)
@@ -1038,309 +1193,23 @@ TranslateICESDatsusc <- function(
 
 
 
-# The general function for converting StoxData:
-ConvertDataOld <- function(
-	StoxData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(), 
-	Conversion = data.table::data.table()
-) {
-	
-	# Get the ConversionFunction input:
-	ConversionFunction <- match_arg_informative(ConversionFunction)
-	
-	# Check the Conversion for unique grouping variables:
-	if(!all(GruopingVariables %in% names(Conversion))) {
-		stop("All grouping variables must be present in the Conversion")
-	}
-	
-	# Make a copy to allow for applying functions by reference:
-	StoxDataCopy <- data.table::copy(StoxData)
-	
-	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
-	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
-	
-	# Merge in the Conversion:
-	StoxDataCopyMerged <- mergeByIntersect(StoxDataCopyMerged, Conversion, all.x = TRUE)
-	
-	# Apply the conversion function for each row of the Conversion:
-	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
-	for(Conversion in ConversionList) {
-		applyConversionFunction(
-			data = StoxDataCopyMerged, 
-			ConversionFunction = ConversionFunction, 
-			TargetVariable = Conversion$TargetVariable, 
-			SourceVariable = Conversion$SourceVariable, 
-			RoundOffTo = Conversion$RoundOffTo
-		)
-	}
-	
-	# Extract the StoxData from the merged:
-	StoxDataCopy <- getStoxDataFromMerged(
-		StoxDataMerged = StoxDataCopyMerged, 
-		StoxData = StoxDataCopy
-	)
-	
-	
-	
-	
-	return(StoxDataCopy)
-}
 
 
 
-# The general function for converting StoxData:
-ConvertData <- function(
-	StoxData, 
-	TargetVariable, 
-	GruopingVariables = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	Conversion = data.table::data.table()
-) {
-	
-	# Get the ConversionFunction input:
-	ConversionFunction <- match_arg_informative(ConversionFunction)
-	
-	# Check the Conversion for unique grouping variables:
-	if(!all(GruopingVariables %in% names(Conversion))) {
-		stop("All grouping variables must be present in the Conversion")
-	}
-	
-	# Make a copy to allow for applying functions by reference:
-	StoxDataCopy <- data.table::copy(StoxData)
-	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
-	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
-	
-	# Apply the conversion function for each row of the Conversion:
-	ConversionList <- split(Conversion, seq_len(nrow(Conversion)))
-	for(Conversion in ConversionList) {
-		parameterNames <- setdiff(names(Conversion), c("SourceVariable", "RoundOffTo"))
-		applyConversionFunction(
-			data = StoxDataCopyMerged, 
-			ConversionFunction = ConversionFunction, 
-			#TargetVariable = Conversion$TargetVariable, 
-			TargetVariable = TargetVariable, 
-			SourceVariable = Conversion$SourceVariable, 
-			RoundOffTo = Conversion$RoundOffTo, 
-			parameters = lapply(split(Conversion[, ..parameterNames], seq_len(nrow(Conversion))), as.list)
-			#parameters = as.list(Conversion[, ..parameterNames])
-		)
-	}
-	
-	# Extract the StoxData from the merged:
-	StoxDataCopy <- getStoxDataFromMerged(
-		StoxDataMerged = StoxDataCopyMerged, 
-		StoxData = StoxDataCopy
-	)
-	
-	return(StoxDataCopy)
-}
 
 
 
-# The general function for converting StoxData:
-ConvertDataFree <- function(
-	StoxData, 
-	TargetVariable = character(), 
-	Conversion = character()
-) {
-	
-	if(!nchar(TargetVariable) || !nchar(Conversion)) {
-		warning("StoX: Unspecified TargetVariable or empty conversion expression. Data returned unchanged.")
-		return(StoxData)
-	}
-	
-	# Make a copy to allow for applying functions by reference:
-	StoxDataCopy <- data.table::copy(StoxData)
-	
-	# Merge the data to allow for use of variables from different tables (e.g., length and lengthmeasurement for NMDBiotic 3.0)
-	StoxDataCopyMerged <- mergeDataTables(StoxDataCopy, output.only.last = TRUE)
-	
-	# Apply the conversion function for each row of the Conversion:
-	StoxDataCopyMerged[, c(TargetVariable) := eval(parse(text  = Conversion))]
-	
-	
-	
-	# Extract the StoxData from the merged:
-	StoxDataCopy <- getStoxDataFromMerged(
-		StoxDataMerged = StoxDataCopyMerged, 
-		StoxData = StoxDataCopy
-	)
-	
-	return(StoxDataCopy)
-}
 
 
+
+
+
+
+# Will these be used?
 getStoxDataFromMerged <- function(StoxDataMerged, StoxData) {
 	toExtract <- lapply(StoxData, names)
 	lapply(toExtract, function(x) unique(StoxDataMerged[, ..x]))
 }
-
-# Function to convert one or more variables of StoxData:
-applyConversionFunctionTemp <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo) {
-	
-	# Get the conversion function:
-	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	do.call(ConversionFunctionName, list(
-		data, 
-		TargetVariable = TargetVariable, 
-		SourceVariable = SourceVariable, 
-		RoundOffTo = RoundOffTo
-	)
-	)
-	
-	return(data)
-}
-
-applyConversionFunction <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
-	
-	# Get the conversion function:
-	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	
-	# Add the current parameters:
-	for(parameter in parameters) {
-		#data[, eval(parameterName) := parameters[[parameterName]]]
-		data[, eval(names(parameter)) := parameter]
-		
-		do.call(ConversionFunctionName, 
-				list(
-					data, 
-					TargetVariable = TargetVariable, 
-					SourceVariable = SourceVariable, 
-					RoundOffTo = RoundOffTo
-				)
-		)
-		
-		# Remove the parameters again:
-		data[, eval(names(parameter)) := NULL]
-	}
-	
-	return(data)
-}
-
-
-# Function to convert one or more variables of StoxData:
-applyConversionFunctionFree <- function(data, ConversionFunction, TargetVariable, SourceVariable, RoundOffTo, parameters) {
-	
-	# Get the conversion function:
-	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-	
-	
-	# Add the current parameters:
-	#for(parameterName in names(parameters)) {
-	#data[, eval(parameterName) := parameters[[parameterName]]]
-	data[, eval(names(parameters)) := parameters]
-	#}
-	
-	
-	do.call(ConversionFunctionName, list(
-		data, 
-		TargetVariable = TargetVariable, 
-		SourceVariable = SourceVariable, 
-		RoundOffTo = RoundOffTo
-	)
-	)
-	
-	# Remove the parameters again:
-	data[, eval(names(parameters)) := NULL]
-	
-	return(data)
-}
-
-
-###  # Function to convert one or more variables of StoxData:
-###  applyConversionFunction <- function(data, ConversionFunction) {
-###  	
-###  	# Get the conversion function:
-###  	ConversionFunctionName <- paste("ConversionFunction", ConversionFunction, sep = "_")
-###  	
-###  	# Get the unique target	and source variable (since the Conversion has been merged with the data):
-###  	uniqueTargetAndSource <- getUniqueTargetAndSource(data)
-###  	
-###  	# Loop through the rows of uniqueTargetAndSource:
-###  	rowIndicesOfTargetAndSource <- seq_len(nrow(uniqueTargetAndSource))
-###  	for(row in rowIndicesOfTargetAndSource) {
-###  		
-###  		# Get the current TargetVariable:
-###  		TargetVariable <- uniqueTargetAndSource$target[row]
-###  		SourceVariable <- uniqueTargetAndSource$source[row]
-###  		
-###  		# Get the row indices of the data:
-###  		#rowIndicesOfData <- 
-###  		#	data[[TargetVariable]] == data[[TargetVariable]][row] & 
-###  		#	data[[SourceVariable]] == data[[SourceVariable]][row]
-###  		#
-###  		
-###  		# Apply the conversion function:
-###  		#data[rowIndicesOfData, eval(TargetVariable) := do.call(ConversionFunctionName, list(.SD, SourceVariable = SourceVariable))]
-###  		##data[, eval(TargetVariable) := do.call(ConversionFunctionName, list(.SD, SourceVariable = SourceVariable))]
-###  		
-###  		do.call(ConversionFunctionName, list(data, TargetVariable = TargetVariable, SourceVariable = SourceVariable))
-###  	}
-###  	
-###  	return(data)
-###  }
-
-# The different available conversion functions, reflecting the methods listed as default in ConvertData (parameter ConversionFunction):
-ConversionFunction_Constant <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Constant)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Constant]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-	#data[valid, eval(TargetVariable) := RoundOff(get(TargetVariable), get(RoundOffTo))]
-}
-
-ConversionFunction_Addition <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Addition)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Addition + get(SourceVariable)]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-}
-
-ConversionFunction_Scaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Scaling)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Scaling * get(SourceVariable)]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-}
-
-ConversionFunction_AdditionAndScaling <- function(data, TargetVariable, SourceVariable, RoundOffTo) {
-	# Get the valid rows (those for which the parameters are defined):
-	valid <- !is.na(data$Addition) & !is.na(data$Scaling)
-	# Apply the function:
-	data[valid, eval(TargetVariable) := Addition + Scaling * get(SourceVariable)]
-	# Round off:
-	roundOffValid(data = data, valid = valid, TargetVariable = TargetVariable, RoundOffTo = RoundOffTo)
-}
-
-
-roundOffValid <- function(data, valid, TargetVariable, RoundOffTo) {
-	# Round off either to the values of a column or to oa numeric:
-	if(!RoundOffTo %in% names(data)) {
-		if(length(RoundOffTo) && nchar(RoundOffTo)) {
-			RoundOffToNumeric <- as.numeric(RoundOffTo)
-			if(!is.na(RoundOffToNumeric)) {
-				# Round off to the RoundOffToNumeric by reference:
-				#RoundOffTo <- RoundOffToNumeric
-				data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), eval(RoundOffToNumeric))]
-			}
-			else {
-				stop("RoundOffTo must be a character string with either the name of column or a single numeric (coercable to numeric)")
-			}
-		}
-	}
-	else {
-		# Round off by reference:
-		data[valid, eval(TargetVariable) := roundOff(get(TargetVariable), get(RoundOffTo))]	
-	}
-}
-
 roundOff <- function(x, RoundOffTo) {
 	if(length(RoundOffTo)) {
 		round(x / RoundOffTo) * RoundOffTo
@@ -1349,294 +1218,3 @@ roundOff <- function(x, RoundOffTo) {
 		x
 	}
 }
-
-
-# Helper function to get unique conversions:
-getUniqueTargetAndSource <- function(data) {
-	# Get the defined names of the target and source columns:
-	targetAndSourceVariables <- unlist(getRstoxDataDefinitions("targetAndSourceVariables"))
-	#targetAndSourceVariablesPresent <- intersect(names(data), targetAndSourceVariables)
-	# Uniquify and rename:
-	output <- unique(data[, ..targetAndSourceVariables])
-	setnames(output, c("target", "source"))
-	# Remoev rows with all NAs:
-	valid <- rowSums(is.na(output)) < ncol(output)
-	output <- output[valid, ]
-	
-	return(output)
-}
-
-
-
-##################################################
-#' Convert StoxBioticData
-#' 
-#' This function converts one or more columns of \code{\link{StoxBioticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @param StoxBioticData An input of \link{ModelData} object
-#' @param TargetVariable The variable to modify.
-#' @param ConversionFunction  Character: The function to convert by, one of "Constant", for replacing the specified columns by a constant value; "Addition", for adding to the columns; "Scaling", for multiplying by a factor; and "AdditionAndScaling", for both adding and multiplying.
-#' @param GruopingVariables A vector of variables to specify in the \code{Conversion}. The parameters specified in the table are valid for the combination of the \code{GruopingVariables} in the data.
-#' @param Conversion A table of the \code{GruopingVariables} and the columns "TargetVariable", "SourceVariable" and the parameters of the \code{ConversionFunction} (see details).
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{StoxBioticData}} object.
-#' 
-#' @export
-#' 
-ConvertStoxBiotic <- function(
-	StoxBioticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	
-	# Convert StoxBioticData:
-	ConvertData(
-		StoxData = StoxBioticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-ConvertStoxBioticOld <- function(
-	StoxBioticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert StoxBioticData:
-	ConvertData(
-		StoxData = StoxBioticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertStoxBioticFree <- function(
-	StoxBioticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert StoxBioticData:
-	ConvertData(
-		StoxData = StoxBioticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-##################################################
-#' Convert StoxAcousticData
-#' 
-#' This function converts one or more columns of \code{\link{StoxAcousticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @inheritParams ConvertStoxBiotic
-#' @param StoxAcousticData An input of \link{ModelData} object
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{StoxAcousticData}} object.
-#' 
-#' @export
-#' 
-ConvertStoxAcoustic <- function(
-	StoxAcousticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert StoxAcousticData:
-	ConvertData(
-		StoxData = StoxAcousticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertStoxAcousticOld <- function(
-	StoxAcousticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert StoxAcousticData:
-	ConvertData(
-		StoxData = StoxAcousticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-
-ConvertStoxAcousticFree <- function(
-	StoxAcousticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert StoxAcousticData:
-	ConvertData(
-		StoxData = StoxAcousticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-##################################################
-#' Convert BioticData
-#' 
-#' This function converts one or more columns of \code{\link{BioticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @inheritParams ConvertStoxBiotic
-#' @param BioticData An input of \link{ModelData} object
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{BioticData}} object.
-#' 
-#' @export
-#' 
-ConvertBiotic <- function(
-	BioticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert BioticData:
-	ConvertData(
-		StoxData = BioticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertBioticOld <- function(
-	BioticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert BioticData:
-	ConvertData(
-		StoxData = BioticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-
-ConvertBioticFree <- function(
-	BioticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert BioticData:
-	ConvertData(
-		StoxData = BioticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-##################################################
-#' Convert AcousticData
-#' 
-#' This function converts one or more columns of \code{\link{AcousticData}} by the function given by \code{ConversionFunction}.
-#' 
-#' @inheritParams ConvertStoxBiotic
-#' @param AcousticData An input of \link{ModelData} object
-#' 
-#' The parameters of the \code{ConversionFunction} are "Constant" for ConversionFunction "Constant", "Addition" for ConversionFunction"Addition", "Scaling" for ConversionFunction "Scaling", and "Addition" and "Scaling" for ConversionFunction "AdditionAndScaling".
-#' 
-#' @return
-#' A \code{\link{AcousticData}} object.
-#' 
-#' @export
-#' 
-ConvertAcoustic <- function(
-	AcousticData, 
-	TargetVariable = character(), 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(), 
-	Conversion = data.table::data.table()
-) {
-	# Convert AcousticData:
-	ConvertData(
-		StoxData = AcousticData, 
-		TargetVariable = TargetVariable, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-ConvertAcousticOld <- function(
-	AcousticData, 
-	ConversionFunction = c("Constant", "Addition", "Scaling", "AdditionAndScaling"), 
-	GruopingVariables = character(),  
-	Conversion = data.table::data.table()
-) {
-	# Convert AcousticData:
-	ConvertData(
-		StoxData = AcousticData, 
-		ConversionFunction = ConversionFunction,
-		GruopingVariables = GruopingVariables,
-		Conversion = Conversion
-	)
-}
-
-
-ConvertAcousticFree <- function(
-	AcousticData, 
-	TargetVariable = character(),  
-	Conversion = character()
-) {
-	# Convert AcousticData:
-	ConvertData(
-		StoxData = AcousticData, 
-		TargetVariable = TargetVariable,
-		Conversion = Conversion
-	)
-}
-
-
-
-
-

@@ -188,8 +188,10 @@ firstPhase <- function(
 	  } 
     else if(datatype == "icesBiotic") {
     	
-    	# Merge Cruise and Survey name
-	    data[["Cruise"]][, Survey := tail(data[["Survey"]], 1)]
+    	# This does not have any effect, as the StoxBiotic format does not contain the Survey field in the Cruise tabel:
+    	# Add the first Survey to the Cruise table???????
+	    #concatentedSurvey <- data[["Survey"]][, .(Survey = paste(Code, collapse = "~")), by = "LocalID"]
+    	#data[["Cruise"]] <- merge(data[["Cruise"]], concatentedSurvey, by = "LocalID")
     	
     	# Apply translations defined in the table 'vocabulary':
     	if(length(data$vocabulary)) {
@@ -203,12 +205,27 @@ firstPhase <- function(
     		# Uniqueify since some columns (keys) are present in several tables:
     		vocabulary <- unique(vocabulary)
     		
-    		translateVariables(
-    			data = data[tablesToTranslate], 
-    			TranslationDefinition = "FunctionInput",
-    			Translation = vocabulary, 
-    			translate.keys = TRUE
+    		# Convert to a list of single translations and run these in a loop:
+    		vocabularyList <- split(vocabulary, seq_len(nrow(vocabulary)))
+    		
+    		mapply(
+    			translateVariables, 
+    			Translation = vocabularyList, 
+    			MoreArgs = list(
+    				# Do not subset to only the tables to translate in, since we need the metadata in the translation (treeStruct):
+    				#data = data[tablesToTranslate],
+    				data = data, 
+    				TranslationDefinition = "FunctionInput",
+    				translate.keys = TRUE
+    			)
     		)
+    		
+    		#translateVariables(
+    		#	data = data[tablesToTranslate], 
+    		#	TranslationDefinition = "FunctionInput",
+    		#	Translation = vocabulary, 
+    		#	translate.keys = TRUE
+    		#)
     	}
     	
     	## Cascading merge tables
@@ -310,13 +327,15 @@ firstPhase <- function(
 	    
 	    # Fix the SampleNumber
 		#colAgg <- setdiff(colnames(data$Catch), c("NumberAtLength", "WeightAtLength", "LengthCode", "LengthClass", "LengthType"))
-		data$Catch[, SubsampledNumber:=ifelse(!is.na(NumberAtLength), sum(NumberAtLength), SubsampledNumber), by=byVars]
+		data$Catch[, SubsampledNumber:=ifelse(!is.na(NumberAtLength), sum(NumberAtLength), SubsampledNumber), by = byVars]
+		
+		
 		# Purge duplicate samples
 		#data$Catch <- data$Catch[!duplicated(data$Catch[, ..byVars])]
 		data$Catch <- unique(data$Catch, by = byVars)
 	  } 
     else {
-	    warning("StoX: Invalid data input format ", datatype, ". Only NMD Biotic ver 1.1, 1.4 and >= 3, and ices Biotic formats that are supported for now.")
+	    warning("StoX: Invalid data input format ", datatype, ". Only NMD Biotic ver 1.1, 1.4 and >= 3, and ICESBiotic formats are supported.")
 	    return(NULL)
     }
     
@@ -327,7 +346,7 @@ firstPhase <- function(
     		as.character(x[[1]])
     	}
     	else {
-    		do.call(paste, c(x, sep="/"))
+    		do.call(paste, c(x, sep = "/"))
     	}
     }
     
@@ -538,7 +557,7 @@ secondPhase <- function(data, datatype, stoxBioticObject) {
 	# Getting conversion function for datatype, used in the loop using convertTable below (applying the conversions in "stox-biotic-final-phase.csv"):
 	convertWeightRes <- stoxBioticObject$convertWeightRes[[datatype]]
 	convertLenRes <- stoxBioticObject$convertLenRes[[datatype]]
-	convertLen <- stoxBioticObject$convertLen[[datatype]]
+	#convertLen <- stoxBioticObject$convertLen[[datatype]]
     convertWt <- stoxBioticObject$convertWt[[datatype]]
     getCatchFractionWeight <- stoxBioticObject$getCatchFractionWeight[[datatype]]
     getSampleWeight <- stoxBioticObject$getSampleWeight[[datatype]]
@@ -659,7 +678,7 @@ MergeStoxBiotic <- function(
     	MergeStoxBioticData, 
     	intersect(
     		names(MergeStoxBioticData), 
-    		getRstoxDataDefinitions("StoxBioticKeys")
+    		unlist(getRstoxDataDefinitions("keys")$StoxBiotic)
     	)
     )
     

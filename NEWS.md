@@ -1,3 +1,22 @@
+# RstoxData v2.2.0-9008  (2025-12-15)
+* Added support for specifying a function in NewValue in TranslationTable in Translate functions. This allows for mathematical transformation of values, e.g. IndividualTotalLength * 0.9 to get total length from fork length
+* Added the possibility to condition on variables present in parent tables in Translate functions. This can be useful e.g. when translating variables in the Individual table of StoxBiotic conditioned on SpeciesCategory (which is found two tables up in the SpeciesCategory table).
+* Restricted LengthType accepted to only "1" from ICESBiotic XML files in the StoxBiotic() function, equivalent to the only accepted lengthmeasurement "E" from NMDBiotic XML files.
+* Fixed bug where the only the first Survey from the Survey table of BioticData read from ICESBiotic XML files was added to the Cruise table. In the ICESBiotic CSV file multiple surveys concatenated with "~" as separator, which is not adopted in RstoxData.
+* Fixed bug where PreserveClass was not showing in the GUI even if Overwrite was set to TRUE.
+* Changed the warning i StoxBiotic() for non-total length (lengthmeasurement != "E" or LengthType != "1") to not list the species, but rather inform about the possibility to transform the length values using Translate functions.
+* Removed the argument useXsd from filterData(), which was used to ignore the table hierarchy provided in the RstoxData::xsdObjects.
+* Added the LocalID as key field in the Survey table of BioticData and AcousticData when read from ICES XML files.
+* Updated documentation of DefineTranslation().
+* Added the element keys to xsdObjects. Keys of other data than input data are defined in initiateRstoxData().
+* Discovered that only the last entry of the Survey table is read by ReadBiotic/ReadAcoustic.
+* Removed the iskey = Y for PreySpeciesCategory in stox-biotic-final-phase.csv.
+* Put convertLen() into getIndividualTotalLength_ICESBiotic() in processBioticData.R.
+* Removed the following functions that were exported but not exposed in the StoX GUI: ConvertStoxBiotic(), ConvertStoxAcoustic(), ConvertBiotic() and ConvertAcoustic(). These were not working, but the intended use can now be achieved using a numeric function in the NewValue field of a TranslationTable og Translate functions.
+* Now passing keys to the function translateVariables() in TranslateICESAcoustic(), TranslateICESBiotic(), TranslateICESDatras() and TranslateICESDatsusc().
+
+
+
 # RstoxData v2.2.0-9006  (2025-11-01)
 * Changed to hard coding UnitWgt to "kg" and UnitLngt to "m" in ICESDatsusc().
 

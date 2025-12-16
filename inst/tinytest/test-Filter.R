@@ -6,7 +6,12 @@ filterExpression <- list()
 filterExpression$`biotic3.1_w_ageandprey.xml`$fishstation <- c(
   'serialnumber == 2'
 )
-expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
+# No longer the warning (2025-12-08):
+# Warning message:
+# 	In getTreestruct(table) :
+# 	member 'metadata' of argument 'inputData' is ignored when argument 'useXsd' is FALSE.
+#expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
+out <- RstoxData:::filterData(inputData, filterExpression)
 expect_true(all(out$biotic3.1_w_ageandprey.xml$agedetermination$serialnumber==2))
 
 # check filterData vs filterTables
@@ -33,10 +38,12 @@ filterExpression$`biotic3.1_w_ageandprey.xml`$prey <- c(
 # since treestruct is not given (age consider below prey)
 
 expect_warning(out <- RstoxData:::filterData(inputData, filterExpression))
-expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),1)
+# This was due to a bug. The agedetermination table should not be affected by deletions in the prey table, since these two tables are both diretly under the individual table:
+#expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),1)
+expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),2)
 expect_equal(out$biotic3.1_w_ageandprey.xml$agedetermination$serialnumber[1],1)
 
-# expect ages to be unnaffected when propdown is off
+# expect ages to be unaffected when propdown is off
 
 expect_warning(out <- RstoxData:::filterData(inputData, filterExpression, propagateDownwards = F))
 expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),nrow(inputData$biotic3.1_w_ageandprey.xml$agedetermination))
@@ -49,7 +56,7 @@ expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),2)
 expect_warning(out <- RstoxData:::FilterBiotic(inputData, filterExpression), "Filter on data from biotic3.1_w_ageandprey.xml returned empty tables")
 expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),2)
 
-# expect all ages to be removed with prey using FilterBiotic with FilterUpwards
+# expect all ages to be removed with prey using FilterBiotic with FilterUpwards, since all individuals are removed as no prey have digestion 100:
 expect_warning(out <- RstoxData:::FilterBiotic(inputData, filterExpression, FilterUpwards = T), "Filter on data from biotic3.1_w_ageandprey.xml returned empty tables")
 expect_equal(nrow(out$biotic3.1_w_ageandprey.xml$agedetermination),0)
 

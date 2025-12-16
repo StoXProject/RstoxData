@@ -81,25 +81,7 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	    stop(paste("useXsd=", useXsd, " is different from schema for detected namespace (",found["xsd"],"). If the namespaces are compatible: Use stream=T to read in data anyway."))
 	  }
 	}
-	
-	## See if we have a namespace prefix set
-	#if(!is.null(usePrefix)) {
-	#	warning(paste("File", basename(xmlFilePath), "contains namespace prefix(es). Will try to remove them before reading."))
-	#	stripXslt <- system.file("extdata/stripns.xsl", package = "RstoxData")
-	#	stripped <- xml2::xml_xslt(read_xml(xmlFilePath), read_xml(stripXslt))
-	#	tempXml <- tempfile(fileext=".xml")
-	#	fileConn <- file(tempXml)
-	#	writeLines(as.character(stripped), fileConn)
-	#	close(fileConn)
-	#	xmlFilePath <- tempXml
-	#}
-	
-	# Apply preprocess for ICES XSDs. This must happen on the xsdObjects, and not e.g. on a copy, as the zip reading fails in that case:
-	if(!is.null(useXsd) && useXsd == "icesAcoustic") {
-		xsdObjects$icesAcoustic.xsd <- icesAcousticPreprocess(xsdObjects$icesAcoustic.xsd)
-	} else if(!is.null(useXsd) && useXsd == "icesBiotic") {
-		xsdObjects$icesBiotic.xsd <- icesBioticPreprocess(xsdObjects$icesBiotic.xsd)
-	}
+
 	
 	# Invoke C++ xml reading
 	# convert path to native to ensure correct handling (typically on windows)
@@ -125,6 +107,11 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	final <- lapply(names(result), setNames_OneTable, result, xsdObjects[[xsdName]])
 	names(final) <- names(result)
 	
+	# Since the ICES XML files the Survey table before the LocalID, we need to specially add this as a key:
+	if(length(final$Survey)) {
+		final$Survey[, LocalID := final$Cruise$LocalID]
+	}
+	
 	# Set the class of the columns by the format definition (xsd):
 	lapply(names(final), setClass_OneTable, final, xsdObjects[[xsdName]])
 	
@@ -133,97 +120,17 @@ readXmlFile <- function(xmlFilePath, stream = TRUE, useXsd = NULL, usePrefix = N
 	final[["metadata"]] <- data.table(useXsd = useXsd, file = xmlFilePath)
 
 	# For ICES data, add their vocabulary
-	if(useXsd == "icesAcoustic" || useXsd == "icesBiotic")
+	if(useXsd == "icesAcoustic" || useXsd == "icesBiotic") {
 		final[["vocabulary"]] <- getIcesVocabulary(xmlFilePath)
+	}
+		
 
 	return(final)
 }
 
-# Ices Acoustic XSD needs several additional treatments
-icesAcousticPreprocess <- function(xsdObject) {
-	
-	AC <- xsdObject
-	
-	# We only interested in these tables
-	allData <- AC$tableOrder
-	newAC <- lapply(AC, function(x) x[allData])
-	
-	# Set again the root
-	newAC$root <- "Acoustic"
-	
-	# Re-build prefix data
-	newAC$prefixLens[allData] <- 0
-	
-	allDatawithPrefix <- c("Instrument", "Calibration", "DataAcquisition", "DataProcessing", "Cruise", "Survey", "Log", "Sample", "Data")
-	
-	newAC$prefixLens[allDatawithPrefix] <- 1
-	newAC$prefixLens["Log"] <- 2
-	newAC$prefixLens["Sample"] <- 4
-	newAC$prefixLens["Data"] <- 5
-	
-	newAC$tableHeaders$Log <- c("LocalID", newAC$tableHeaders$Log)
-	newAC$tableTypes$Log <- c("xsd:string", newAC$tableTypes$Log)
-	
-	# We need here to add Instrument as the first header, since it must serve as a key:
-	newAC$tableHeaders$Sample <- c("LocalID", "Distance", "Instrument", newAC$tableHeaders$Sample)
-	newAC$tableTypes$Sample <- c("xsd:string", "xsd:float", "xsd:string", newAC$tableTypes$Sample)
-	# Remove the duplicated Instrument:
-	atDup <- duplicated(newAC$tableHeaders$Sample)
-	newAC$tableHeaders$Sample <- newAC$tableHeaders$Sample[!atDup]
-	newAC$tableTypes$Sample <- newAC$tableTypes$Sample[!atDup]
-	
-	newAC$tableHeaders$Data <- c("LocalID", "Distance", "Instrument", "ChannelDepthUpper", newAC$tableHeaders$Data)
-	newAC$tableTypes$Data <- c("xsd:string", "xsd:float", "xsd:string", "xsd:float", newAC$tableTypes$Data)
-	
-	
-	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
-	newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
-	
-	# Put back table order
-	newAC$tableOrder <- allData
-	
-	return(newAC)
-}
 
-# Ices Biotic XSD needs several additional treatments
-icesBioticPreprocess <- function(xsdObject) {
-	
-	AC <- xsdObject
-	
-	# We only interested in these tables
-	allData <- AC$tableOrder
-	newAC <- lapply(AC, function(x) x[allData])
-	
-	# Set again the root
-	newAC$root <- "Biotic"
-	
-	# Re-build prefix data
-	newAC$prefixLens[allData] <- 0
-	
-	allDatawithPrefix <- c("Cruise", "Survey", "Haul", "Catch", "Biology")
-	
-	newAC$prefixLens[allDatawithPrefix] <- 1
-	newAC$prefixLens["Haul"] <- 3
-	newAC$prefixLens["Catch"] <- 5
-	newAC$prefixLens["Biology"] <- 6
-	
-	newAC$tableHeaders$Haul <- c("LocalID", newAC$tableHeaders$Haul)
-	newAC$tableTypes$Haul <- c("xsd:string", newAC$tableTypes$Haul)
-	
-	newAC$tableHeaders$Catch <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", "DataType", "SpeciesValidity", tail(newAC$tableHeaders$Catch, length(newAC$tableHeaders$Catch) - 4))
-	newAC$tableTypes$Catch <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", "xsd:string", "xsd:string", tail(newAC$tableTypes$Catch, length(newAC$tableTypes$Catch) - 4))
-	
-	newAC$tableHeaders$Biology <- c("LocalID", "Gear", "Number", "SpeciesCode", "SpeciesCategory", newAC$tableHeaders$Biology)
-	newAC$tableTypes$Biology <- c("xsd:string", "xsd:string", "xsd:int", "xsd:string", "xsd:int", newAC$tableTypes$Biology)
-	
-	# Modify cruise structure to get LocalID as prefix (the types order are the same, as they are all type of string)
-	newAC$tableHeaders$Cruise <- c("LocalID", "Country", "Platform", "StartDate", "EndDate", "Organisation")
-	
-	# Put back table order
-	newAC$tableOrder <- allData
-	
-	return(newAC)
-}
+
+
 
 
 
