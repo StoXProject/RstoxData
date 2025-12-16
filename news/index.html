@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9010</span>
       </span>
     </div>
 
@@ -57,6 +57,24 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.2.0-9008" id="rstoxdata-v220-9008-2025-12-15">RstoxData v2.2.0-9008 (2025-12-15)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9008-2025-12-15"></a></h2>
+<ul><li>Added support for specifying a function in NewValue in TranslationTable in Translate functions. This allows for mathematical transformation of values, e.g. IndividualTotalLength * 0.9 to get total length from fork length</li>
+<li>Added the possibility to condition on variables present in parent tables in Translate functions. This can be useful e.g. when translating variables in the Individual table of StoxBiotic conditioned on SpeciesCategory (which is found two tables up in the SpeciesCategory table).</li>
+<li>Restricted LengthType accepted to only “1” from ICESBiotic XML files in the StoxBiotic() function, equivalent to the only accepted lengthmeasurement “E” from NMDBiotic XML files.</li>
+<li>Fixed bug where the only the first Survey from the Survey table of BioticData read from ICESBiotic XML files was added to the Cruise table. In the ICESBiotic CSV file multiple surveys concatenated with “~” as separator, which is not adopted in RstoxData.</li>
+<li>Fixed bug where PreserveClass was not showing in the GUI even if Overwrite was set to TRUE.</li>
+<li>Changed the warning i StoxBiotic() for non-total length (lengthmeasurement != “E” or LengthType != “1”) to not list the species, but rather inform about the possibility to transform the length values using Translate functions.</li>
+<li>Removed the argument useXsd from filterData(), which was used to ignore the table hierarchy provided in the RstoxData::xsdObjects.</li>
+<li>Added the LocalID as key field in the Survey table of BioticData and AcousticData when read from ICES XML files.</li>
+<li>Updated documentation of DefineTranslation().</li>
+<li>Added the element keys to xsdObjects. Keys of other data than input data are defined in initiateRstoxData().</li>
+<li>Discovered that only the last entry of the Survey table is read by ReadBiotic/ReadAcoustic.</li>
+<li>Removed the iskey = Y for PreySpeciesCategory in stox-biotic-final-phase.csv.</li>
+<li>Put convertLen() into getIndividualTotalLength_ICESBiotic() in processBioticData.R.</li>
+<li>Removed the following functions that were exported but not exposed in the StoX GUI: ConvertStoxBiotic(), ConvertStoxAcoustic(), ConvertBiotic() and ConvertAcoustic(). These were not working, but the intended use can now be achieved using a numeric function in the NewValue field of a TranslationTable og Translate functions.</li>
+<li>Now passing keys to the function translateVariables() in TranslateICESAcoustic(), TranslateICESBiotic(), TranslateICESDatras() and TranslateICESDatsusc().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.2.0-9006" id="rstoxdata-v220-9006-2025-11-01">RstoxData v2.2.0-9006 (2025-11-01)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9006-2025-11-01"></a></h2>
 <ul><li>Changed to hard coding UnitWgt to “kg” and UnitLngt to “m” in ICESDatsusc().</li>

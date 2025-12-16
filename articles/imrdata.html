@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9010</span>
       </span>
     </div>
 
@@ -639,42 +639,13 @@ RstoxData::StoxBiotic to convert the data:</p>
 <span><span class="co">#&gt;  96967</span></span>
 <span><span class="co">#&gt;  98276</span></span>
 <span><span class="co">#&gt;  999301</span></span>
-<span><span class="co">#&gt; Warning in getIndividualTotalLength(length, lengthmeasurement, catchcategory, : StoX: There are lengthmeasurement that are not 'E' (A, B, C, F, G, H, I, J, L, NA), but with non-missing length. This results in missing IndividualTotalLength in StoxBiotic() for the following catchcategory of cruise 2021209:</span></span>
-<span><span class="co">#&gt;  161022</span></span>
-<span><span class="co">#&gt;  161975</span></span>
-<span><span class="co">#&gt;  161996</span></span>
-<span><span class="co">#&gt;  162187</span></span>
-<span><span class="co">#&gt;  162575</span></span>
-<span><span class="co">#&gt;  162680</span></span>
-<span><span class="co">#&gt;  164706</span></span>
-<span><span class="co">#&gt;  165283</span></span>
-<span><span class="co">#&gt;  165421</span></span>
-<span><span class="co">#&gt;  171677</span></span>
-<span><span class="co">#&gt;  172414</span></span>
-<span><span class="co">#&gt;  206587</span></span>
-<span><span class="co">#&gt;  206588</span></span>
-<span><span class="co">#&gt;  564138</span></span>
-<span><span class="co">#&gt;  644687</span></span>
-<span><span class="co">#&gt;  719327</span></span>
-<span><span class="co">#&gt;  78089</span></span>
-<span><span class="co">#&gt;  82330</span></span>
-<span><span class="co">#&gt;  82335</span></span>
-<span><span class="co">#&gt;  82336</span></span>
-<span><span class="co">#&gt;  82348</span></span>
-<span><span class="co">#&gt;  82418</span></span>
-<span><span class="co">#&gt;  82419</span></span>
-<span><span class="co">#&gt;  82589</span></span>
-<span><span class="co">#&gt;  82635</span></span>
-<span><span class="co">#&gt;  82671</span></span>
-<span><span class="co">#&gt;  93294</span></span>
-<span><span class="co">#&gt;  95110</span></span>
-<span><span class="co">#&gt;  95496</span></span>
-<span><span class="co">#&gt;  95533</span></span>
-<span><span class="co">#&gt;  95542</span></span>
-<span><span class="co">#&gt;  96967</span></span>
-<span><span class="co">#&gt;  97935</span></span>
-<span><span class="co">#&gt;  98421</span></span>
-<span><span class="co">#&gt;  98428</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning in getIndividualTotalLength(length, lengthmeasurement): StoX: There are</span></span>
+<span><span class="co">#&gt; lengthmeasurement that are not 'E' (A, B, C, F, G, H, I, J, L, NA), but with</span></span>
+<span><span class="co">#&gt; non-missing length. This results in missing IndividualTotalLength in</span></span>
+<span><span class="co">#&gt; StoxBiotic(). One option is to translate lengthmeasurement in the BioticData to</span></span>
+<span><span class="co">#&gt; "E" using TranslateBiotic() AND translate the IndividualTotalLength using a</span></span>
+<span><span class="co">#&gt; function for NewValue in TranslateStoxBiotic(). See the documentation of</span></span>
+<span><span class="co">#&gt; DefineTranslation() for details.</span></span></code></pre></div>
 <p>Notice the warnings. StoxBiotic does only support one kind of length
 measurement (total length), and only one kind of weight measurement
 (Live weight / Round weight), so warnings are issued for all other kinds

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9010</span>
       </span>
     </div>
 
@@ -68,7 +68,7 @@
 <span>  <span class="va">filterExpression</span>,</span>
 <span>  propagateDownwards <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  propagateUpwards <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  useXsd <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,8 +92,8 @@
 <dd><p>Whether the filter action will propagate in the upwards direction. Default to FALSE.</p></dd>
 
 
-<dt id="arg-usexsd">useXsd<a class="anchor" aria-label="anchor" href="#arg-usexsd"></a></dt>
-<dd><p>logical determining if treeStruct should be read from xsd provided in metadata table. See details.</p></dd>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Ignored</p></dd>
 
 </dl></div>
     <div id="value">
@@ -111,10 +111,6 @@ list of such lists.</p>
 the tables in the input.</p>
 <p>After a filter is applied to a table, data that corresponds to the removed in other tables will be removed
 as specified by the options propagateDownwards and propagateUpwards. These are defined in <code><a href="filterTables.html">filterTables</a></code>:</p>
-<p>The argument 'useXsd' specifies if the hierarchical relation between tables in 'inputData', should be inferred
-from <code><a href="xsdObjects.html">xsdObjects</a></code> via the conventional use of a metadata table on the 'inputData'</p>
-<p>If useXsd is FALSE, each table in the hierarchy is assumed to be strictly lower in the hierarchy than any table preceding it,
-and any table called 'metadata' is ignored.</p>
 <p>Column names are assumed to be unique across all levels of the data hierarchy, except that each table is expected to
 repeated the key-columns of all its ancestors.</p>
     </div>
@@ -132,14 +128,12 @@ repeated the key-columns of all its ancestors.</p>
 <span class="r-in"><span> <span class="op">)</span></span></span>
 <span class="r-in"><span> </span></span>
 <span class="r-in"><span> <span class="va">filteredData</span> <span class="op">&lt;-</span> <span class="fu">RstoxData</span><span class="fu">::</span><span class="fu">filterData</span><span class="op">(</span><span class="va">inputData</span>, </span></span>
-<span class="r-in"><span>             <span class="va">filterExpression</span>, </span></span>
-<span class="r-in"><span>             useXsd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>             <span class="va">filterExpression</span><span class="op">)</span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">filteredData</span><span class="op">$</span><span class="va">biotic3.1_w_ageandprey.xml</span><span class="op">$</span><span class="va">fishstation</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-in"><span> <span class="va">filteredPropUp</span> <span class="op">&lt;-</span> <span class="fu">RstoxData</span><span class="fu">::</span><span class="fu">filterData</span><span class="op">(</span><span class="va">inputData</span>, </span></span>
 <span class="r-in"><span>             <span class="va">filterExpression</span>, </span></span>
-<span class="r-in"><span>             propagateUpwards <span class="op">=</span> <span class="cn">TRUE</span>, </span></span>
-<span class="r-in"><span>             useXsd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>             propagateUpwards <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">filteredPropUp</span><span class="op">$</span><span class="va">biotic3.1_w_ageandprey.xml</span><span class="op">$</span><span class="va">fishstation</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
 <span class="r-in"><span></span></span>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9010</span>
       </span>
     </div>
 
@@ -226,38 +226,84 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     useXsd &lt;- tools::file_path_sans_ext(names(xsdObjects)[hasSelectedXsd])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     return(useXsd)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x124f7a300&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x124f7c878&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x12a421b10&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x12a41f6b0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CruiseKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Log</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"  "Distance"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$Station</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "StationKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Sample</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"           "Distance"          "ChannelDepthUpper"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$Haul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HaulKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESAcousticKeys$Data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"           "Distance"          "ChannelDepthUpper"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "SaCategory"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$SpeciesCategory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SpeciesCategoryKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$Sample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SampleKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$Individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "IndividualKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$PreySpeciesCategory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "PreySpeciesCategoryKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$PreySample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "PreySampleKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxBiotic$PreyIndividual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "PreyIndividualKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESBioticKeys</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESBioticKeys$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CruiseKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESBioticKeys$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID" "Gear"    "Number" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic$Log</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LogKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESBioticKeys$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "SpeciesCategory"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic$Beam</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "BeamKey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ICESBioticKeys$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "SpeciesCategory" "StockCode"       "FishID"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic$AcousticCategory</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AcousticCategoryKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic$ChannelReference</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ChannelReferenceKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$StoxAcoustic$NASC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NASCKey"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatras</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatras$HH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quarter"    "Country"    "Platform"   "Gear"       "HaulNumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatras$HL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quarter"     "Country"     "Platform"    "Gear"        "HaulNumber" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "SpeciesCode" "LengthClass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatras$CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quarter"     "Country"     "Platform"    "Gear"        "HaulNumber" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "SpeciesCode" "LengthClass" "FishID"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatsusc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatsusc$HH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quarter"    "Country"    "Platform"   "Gear"       "HaulNumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatsusc$HL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quarter"     "Country"     "Platform"    "Gear"        "HaulNumber" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "SpeciesCode" "LengthClass"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keys$ICESDatsusc$CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Quarter"     "Country"     "Platform"    "Gear"        "HaulNumber" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "SpeciesCode" "LengthClass" "FishID"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lengthCode_unit_table</span>
@@ -292,28 +338,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nmdbioticv1"   "nmdbioticv1.1" "nmdbioticv1.2" "nmdbioticv1.3"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] "nmdbioticv1.4"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $StoxAcousticKeys</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CruiseKey"           "LogKey"              "BeamKey"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "AcousticCategoryKey" "ChannelReferenceKey" "NASCKey"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $StoxBioticKeys</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CruiseKey"              "StationKey"             "HaulKey"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "SpeciesCategoryKey"     "SampleKey"              "IndividualKey"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "PreySpeciesCategoryKey" "PreySampleKey"          "PreyIndividualKey"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $StoxDateTimeFormat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "%Y-%m-%dT%H:%M:%OS"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $StoxTimeZone</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "UTC"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $targetAndSourceVariables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $targetAndSourceVariables$target</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "TargetVariable"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $targetAndSourceVariables$source</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SourceVariable"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $TranslationOldRequiredColumns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VariableName" "Value"        "NewValue"    </span>
@@ -324,6 +353,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Acoustic"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Acoustic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Instrument"      "Calibration"     "DataAcquisition" "DataProcessing" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "EchoType"        "Vocabulary"      "Cruise"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Instrument</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -336,119 +369,26 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$DataProcessing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$EchoType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Species"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Log"    "Survey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Survey</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Origin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Origin2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$LogValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$SaCategory</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Unit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$PingAxisIntervalType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$PingAxisIntervalUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$PingAxisIntervalOrigin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$TransducerLocation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$TransducerBeamType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$AcquisitionMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$ProcessingMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$DataAcquisitionSoftwareName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$StoredDataFormat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$DataProcessingSoftwareName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$TriwaveCorrection</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$OnAxisGainUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Survey"                      "Country"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Platform"                    "Organisation"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Origin"                      "Origin2"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "LogValidity"                 "SaCategory"                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Type"                        "Unit"                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "PingAxisIntervalType"        "PingAxisIntervalUnit"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "PingAxisIntervalOrigin"      "TransducerLocation"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "TransducerBeamType"          "AcquisitionMethod"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "ProcessingMethod"            "DataAcquisitionSoftwareName"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "StoredDataFormat"            "DataProcessingSoftwareName" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "TriwaveCorrection"           "OnAxisGainUnit"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [23] "Stratum"                     "SpeciesCode"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Log</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sample"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Sample</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Data"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Log</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sample"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Log"    "Survey"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Acoustic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Instrument"      "Calibration"     "DataAcquisition" "DataProcessing" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "EchoType"        "Vocabulary"      "Cruise"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$treeStruct$Data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Acoustic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Instrument</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:ID"     "xsd:float"  "xs:string"  "xsd:string" "xsd:string"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xsd:string" "xs:string"  "xsd:float"  "xsd:string" "xsd:float" </span>
@@ -469,110 +409,32 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xs:string"  "xsd:float"  "xsd:float"  "xsd:string" "xsd:float" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [16] "xsd:string" "xsd:float"  "xsd:string"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:ID"    "xs:string" "xsd:int"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$EchoType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:ID"     "xs:string"  "xsd:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:ID"     "xsd:string" "xsd:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Origin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Origin2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$LogValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$SaCategory</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Unit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$PingAxisIntervalType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$PingAxisIntervalUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$PingAxisIntervalOrigin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$TransducerLocation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$TransducerBeamType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$AcquisitionMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$ProcessingMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$DataAcquisitionSoftwareName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$StoredDataFormat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$DataProcessingSoftwareName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$TriwaveCorrection</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$OnAxisGainUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string" "xs:string" "xs:string" "xs:string" "xsd:float"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Sample</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:float" "xsd:float" "xsd:float" "xs:string" "xs:string" "xsd:float"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "xs:string" "xs:string" "xs:string" "xs:string" "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Log</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:float"  "xsd:string" "xsd:float"  "xsd:float"  "xs:string" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xsd:float"  "xsd:float"  "xs:string"  "xs:string"  "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Cruise</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string"  "xs:string"  "xsd:string" "xsd:string" "xs:string" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] "xsd:string"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Acoustic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Survey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:string" "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Log</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:string" "xsd:float"  "xsd:string" "xsd:float"  "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xs:string"  "xsd:float"  "xsd:float"  "xs:string"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Sample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:string" "xsd:float"  "xsd:string" "xsd:float"  "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xsd:float"  "xs:string"  "xs:string"  "xsd:float"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xs:string"  "xs:string"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableTypes$Data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:string" "xsd:float"  "xsd:string" "xsd:float"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "xs:string"  "xs:string"  "xs:string"  "xsd:float" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Acoustic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Instrument</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "ID"                       "Frequency"               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "TransducerLocation"       "TransducerManufacturer"  </span>
@@ -601,109 +463,29 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Absorption"            "AbsorptionDescription" "SoundSpeed"           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [16] "SoundSpeedDescription" "TransducerPSI"         "Comments"             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ID"              "SpeciesCode"     "SpeciesCategory"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$EchoType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ID"       "Stratum"  "Comments"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"      "Country"      "Platform"     "StartDate"    "EndDate"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "Organisation"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ID"       "CodeType" "Code"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SaCategory" "EchoType"   "Type"       "Unit"       "Value"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Sample</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "ChannelDepthUpper"      "ChannelDepthLower"      "PingAxisInterval"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "PingAxisIntervalType"   "PingAxisIntervalUnit"   "SvThreshold"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Instrument"             "Calibration"            "DataAcquisition"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "DataProcessing"         "PingAxisIntervalOrigin"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID" "Code"   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Log</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Distance"    "Time"        "Latitude"    "Longitude"   "Origin"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Latitude2"   "Longitude2"  "Origin2"     "Validity"    "BottomDepth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LocalID"     "Distance"    "Time"        "Latitude"    "Longitude"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Origin"      "Latitude2"   "Longitude2"  "Origin2"     "Validity"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "BottomDepth"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Country"      "Platform"     "StartDate"    "EndDate"      "Organisation"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "LocalID"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Sample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LocalID"                "Distance"               "Instrument"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "ChannelDepthUpper"      "ChannelDepthLower"      "PingAxisInterval"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "PingAxisIntervalType"   "PingAxisIntervalUnit"   "SvThreshold"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "Calibration"            "DataAcquisition"        "DataProcessing"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "PingAxisIntervalOrigin"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Origin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Origin2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$LogValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$SaCategory</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Unit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$PingAxisIntervalType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$PingAxisIntervalUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$PingAxisIntervalOrigin</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$TransducerLocation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$TransducerBeamType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$AcquisitionMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$ProcessingMethod</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$DataAcquisitionSoftwareName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$StoredDataFormat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$DataProcessingSoftwareName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$TriwaveCorrection</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$OnAxisGainUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Acoustic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$tableHeaders$Data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"           "Distance"          "Instrument"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "ChannelDepthUpper" "SaCategory"        "EchoType"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "Type"              "Unit"              "Value"            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$prefixLens</span>
@@ -739,6 +521,12 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           0                           0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  Vocabulary                    Acoustic </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           0                           0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      Cruise                      Survey </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           1                           1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         Log                      Sample </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           2                           4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        Data </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$levelDims</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                Instrument </span>
@@ -824,341 +612,135 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "DataProcessing"  "Cruise"          "Survey"          "Log"            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Sample"          "Data"           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$keys$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$keys$Survey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID" "Code"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$keys$Log</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"  "Distance"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$keys$Sample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"           "Distance"          "ChannelDepthUpper"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesAcoustic.xsd$keys$Data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"           "Distance"          "ChannelDepthUpper"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "SaCategory"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$root</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Biotic"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$StatisticalRectangle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$HaulValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$GearExceptions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$DoorType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$DataType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$SpeciesValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$LengthCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$LengthType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$StockCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$GeneticPopulationCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$WeightUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Maturity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$MaturityScale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$AgePlusGroup</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$AgeSource</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$SamplingFlag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Survey"                "Country"               "Platform"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "Organisation"          "Gear"                  "StatisticalRectangle" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "HaulValidity"          "GearExceptions"        "DoorType"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "DataType"              "SpeciesCode"           "SpeciesValidity"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Sex"                   "LengthCode"            "LengthType"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "StockCode"             "GeneticPopulationCode" "WeightUnit"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "Maturity"              "MaturityScale"         "AgePlusGroup"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "AgeSource"             "SamplingFlag"          "Stratum"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Biology"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Catch"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Biotic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Vocabulary" "Cruise"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Cruise</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Haul"   "Survey"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Biotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Vocabulary" "Cruise"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Survey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Haul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Catch"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Catch</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Biology"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$treeStruct$Biology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:ID"     "xsd:string" "xsd:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Country</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Biotic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$StatisticalRectangle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$HaulValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$GearExceptions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$DoorType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$DataType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$SpeciesValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$LengthCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$LengthType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$StockCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$GeneticPopulationCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$WeightUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Maturity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$MaturityScale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$AgePlusGroup</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$AgeSource</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$SamplingFlag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xs:string" "xs:string" "xsd:int"   "xs:string" "xsd:int"   "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "xsd:float" "xs:string" "xs:string" "xs:string" "xsd:int"   "xsd:int"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "xs:string" "xs:string" "xs:string" "xs:string" "xs:string" "xsd:int"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xs:string" "xs:string" "xs:string" "xsd:int"   "xsd:float" "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "xsd:float" "xs:string" "xsd:int"   "xsd:float" "xsd:float" "xs:string"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "xsd:int"   "xs:string" "xsd:float" "xsd:float"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xs:string"  "xsd:int"    "xsd:string" "xsd:string" "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xs:string"  "xsd:float"  "xsd:float"  "xsd:float"  "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xs:string"  "xsd:float"  "xsd:float"  "xsd:float"  "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "xsd:float"  "xsd:int"    "xsd:int"    "xs:string"  "xs:string" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "xsd:int"    "xsd:int"    "xsd:int"    "xsd:float"  "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26] "xsd:float"  "xsd:float"  "xsd:int"    "xsd:float"  "xsd:int"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "xsd:string" "xsd:int"    "xsd:string" "xsd:int"    "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [36] "xsd:float"  "xsd:int"    "xsd:int"    "xsd:int"    "xsd:float" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "xsd:float"  "xs:string" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Cruise</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xs:string"  "xs:string"  "xsd:string" "xsd:string" "xs:string" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] "xsd:string"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Biotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Survey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xsd:string" "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Haul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:string" "xs:string"  "xsd:int"    "xsd:string" "xsd:string"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xsd:int"    "xs:string"  "xsd:float"  "xsd:float"  "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xsd:float"  "xs:string"  "xsd:float"  "xsd:float"  "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "xsd:int"    "xsd:float"  "xsd:int"    "xsd:int"    "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "xs:string"  "xsd:int"    "xsd:int"    "xsd:int"    "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26] "xsd:int"    "xsd:float"  "xsd:float"  "xsd:int"    "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "xsd:int"    "xsd:string" "xsd:int"    "xsd:string" "xsd:int"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [36] "xsd:float"  "xsd:float"  "xsd:int"    "xsd:int"    "xsd:int"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "xsd:float"  "xsd:float"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Catch</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:string" "xsd:string" "xsd:int"    "xsd:string" "xsd:int"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xsd:string" "xsd:string" "xsd:float"  "xs:string"  "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xs:string"  "xsd:int"    "xsd:float"  "xsd:float"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "xsd:int"    "xs:string"  "xsd:float"  "xsd:float" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableTypes$Biology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "xsd:string" "xsd:string" "xsd:int"    "xsd:string" "xsd:int"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "xs:string"  "xs:string"  "xsd:int"    "xs:string"  "xsd:int"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "xs:string"  "xsd:float"  "xs:string"  "xs:string"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "xsd:int"    "xsd:int"    "xs:string"  "xs:string"  "xs:string" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "xs:string"  "xs:string"  "xsd:int"   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Survey</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Code"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ID"       "CodeType" "Code"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Biology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "StockCode"                "GeneticPopulationCode"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "FishID"                   "LengthCode"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "LengthClass"              "WeightUnit"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "IndividualWeight"         "IndividualSex"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "IndividualMaturity"       "MaturityScale"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "IndividualAge"            "IndividualGrowthRings"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "AgePlusGroup"             "AgeSource"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "GeneticSamplingFlag"      "StomachSamplingFlag"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "ParasiteSamplingFlag"     "IndividualVertebraeCount"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Catch</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "DataType"              "SpeciesCode"           "SpeciesValidity"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "SpeciesCategory"       "SpeciesCategoryNumber" "WeightUnit"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "SpeciesCategoryWeight" "SpeciesSex"            "SubsampledNumber"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "SubsamplingFactor"     "SubsampleWeight"       "LengthCode"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "LengthClass"           "LengthType"            "NumberAtLength"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "WeightAtLength"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Haul</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Gear"                  "Number"                "StationName"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "StartTime"             "Duration"              "Validity"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "StartLatitude"         "StartLongitude"        "StopLatitude"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "StopLongitude"         "StatisticalRectangle"  "MinTrawlDepth"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "MaxTrawlDepth"         "BottomDepth"           "Distance"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "Netopening"            "CodendMesh"            "SweepLength"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "GearExceptions"        "DoorType"              "WarpLength"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "WarpDiameter"          "WarpDensity"           "DoorSurface"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "DoorWeight"            "DoorSpread"            "WingSpread"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "Buoyancy"              "KiteArea"              "GroundRopeWeight"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "Rigging"               "Tickler"               "HydrographicStationID"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [34] "TowDirection"          "SpeedGround"           "SpeedWater"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "WindDirection"         "WindSpeed"             "SwellDirection"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [40] "SwellHeight"           "LogDistance"           "Stratum"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Cruise</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Country"      "Platform"     "StartDate"    "EndDate"      "Organisation"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "LocalID"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Platform</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Organisation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$StatisticalRectangle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$HaulValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$GearExceptions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$DoorType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$DataType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$SpeciesCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$SpeciesValidity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$LengthCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$LengthType</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$StockCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$GeneticPopulationCode</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$WeightUnit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Maturity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$MaturityScale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$AgePlusGroup</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$AgeSource</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$SamplingFlag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Stratum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Vocabulary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Biotic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"      "Country"      "Platform"     "StartDate"    "EndDate"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "Organisation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Survey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID" "Code"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Haul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LocalID"               "Gear"                  "Number"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "StationName"           "StartTime"             "Duration"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Validity"              "StartLatitude"         "StartLongitude"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "StopLatitude"          "StopLongitude"         "StatisticalRectangle" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "MinTrawlDepth"         "MaxTrawlDepth"         "BottomDepth"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "Distance"              "Netopening"            "CodendMesh"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "SweepLength"           "GearExceptions"        "DoorType"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "WarpLength"            "WarpDiameter"          "WarpDensity"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "DoorSurface"           "DoorWeight"            "DoorSpread"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "WingSpread"            "Buoyancy"              "KiteArea"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "GroundRopeWeight"      "Rigging"               "Tickler"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [34] "HydrographicStationID" "TowDirection"          "SpeedGround"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "SpeedWater"            "WindDirection"         "WindSpeed"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [40] "SwellDirection"        "SwellHeight"           "LogDistance"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] "Stratum"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Catch</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LocalID"               "Gear"                  "Number"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "SpeciesCode"           "SpeciesCategory"       "DataType"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "SpeciesValidity"       "SpeciesCategoryNumber" "WeightUnit"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "SpeciesCategoryWeight" "SpeciesSex"            "SubsampledNumber"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "SubsamplingFactor"     "SubsampleWeight"       "LengthCode"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "LengthClass"           "LengthType"            "NumberAtLength"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "WeightAtLength"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableHeaders$Biology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LocalID"                  "Gear"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Number"                   "SpeciesCode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "SpeciesCategory"          "StockCode"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "GeneticPopulationCode"    "FishID"                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "LengthCode"               "LengthClass"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "WeightUnit"               "IndividualWeight"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "IndividualSex"            "IndividualMaturity"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "MaturityScale"            "IndividualAge"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "IndividualGrowthRings"    "AgePlusGroup"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "AgeSource"                "GeneticSamplingFlag"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "StomachSamplingFlag"      "ParasiteSamplingFlag"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [23] "IndividualVertebraeCount"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$prefixLens</span>
@@ -1178,8 +760,12 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     0                     0                     0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             AgeSource          SamplingFlag               Stratum </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     0                     0                     0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Vocabulary                Biotic </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     0                     0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Vocabulary                Biotic                Cruise </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     0                     0                     1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Survey                  Haul                 Catch </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     2                     3                     5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               Biology </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$levelDims</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                            Survey </span>
@@ -1250,6 +836,25 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$tableOrder</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Biotic"  "Cruise"  "Survey"  "Haul"    "Catch"   "Biology"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$keys$Cruise</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$keys$Survey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID" "Code"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$keys$Haul</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID" "Gear"    "Number" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$keys$Catch</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "SpeciesCategory"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$icesBiotic.xsd$keys$Biology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LocalID"         "Gear"            "Number"          "SpeciesCode"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "SpeciesCategory" "FishID"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd</span>
@@ -1606,6 +1211,128 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Fartøy"           "Fisker"           "Fangstdata"       "Produksjon"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Mottaker"         "Salgslagdata"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Salgslagdata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Mottaker</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Produksjon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Fangstdata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Fisker</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Fartøy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Mottakendefartøy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Kvote</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Redskap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Dellanding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Produkt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Art</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Seddellinje</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Dokumentnummer"            "Linjenummer"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Art_kode"                  "Registreringsmerke_seddel"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Fangstår"                  "SisteFangstdato"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Redskap_kode"              "HovedgruppeRedskap_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Hovedområde_kode"          "Lokasjon_kode"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "StørsteLengde"             "Fartøynasjonalitet_kode"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "KystHav_kode"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$landingerv2.xsd$keys$Landingsdata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$root</span>
@@ -1882,6 +1609,65 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "catchsample"      "individual"       "prey"             "agedetermination"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "preylength"       "copepodedevstage" "tag"             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "no"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "tagno"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$preylength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"         "length"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$copepodedevstage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"      "year"             "platform"         "missionnumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename"  "callsignal"       "platformname"     "serialno"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"          "samplenumber"     "noname"           "aphia"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"           "partno"           "species"          "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$missionlog</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "host"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "user"            "timestamp"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.1.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$root</span>
@@ -2141,6 +1927,60 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missions"         "mission"          "fishstation"      "catchsample"     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "individual"       "prey"             "agedetermination" "preylength"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "copepodedevstage" "tag"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "no"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "tagno"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$preylength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"         "length"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$copepodedevstage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"      "year"             "platform"         "missionnumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename"  "callsignal"       "platformname"     "serialno"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"          "samplenumber"     "noname"           "aphia"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"           "partno"           "species"          "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.2.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd</span>
@@ -2405,6 +2245,60 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "individual"       "prey"             "agedetermination" "preylength"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "copepodedevstage" "tag"             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "no"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "tagno"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$preylength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"         "length"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$copepodedevstage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"      "year"             "platform"         "missionnumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename"  "callsignal"       "platformname"     "serialno"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"          "samplenumber"     "noname"           "aphia"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"           "partno"           "species"          "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.3.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$root</span>
@@ -2668,6 +2562,60 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "individual"       "prey"             "agedetermination" "preylength"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "copepodedevstage" "tag"             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "no"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"      "tagno"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$preylength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"         "length"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$copepodedevstage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"      "year"             "platform"         "missionnumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename"  "callsignal"       "platformname"     "serialno"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"          "samplenumber"     "noname"           "aphia"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"           "partno"           "species"          "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "fishno"          "partno"          "species"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "samplenumber"    "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"    "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"     "year"            "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "missiontypename" "callsignal"      "platformname"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.4.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$root</span>
@@ -2917,6 +2865,59 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "missions"         "mission"          "fishstation"      "catchsample"     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "individual"       "prey"             "agedetermination" "preylength"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "copepodedevstage" "tag"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"        "missionnumber"   "serialno"        "samplenumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "noname"          "aphia"           "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "no"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"        "missionnumber"   "serialno"        "samplenumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "noname"          "aphia"           "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "tagno"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"        "missionnumber"   "serialno"        "samplenumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "noname"          "aphia"           "specimenno"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$copepodedevstage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"             "missiontype"      "missiontypename"  "callsignal"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"         "missionnumber"    "serialno"         "samplenumber"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"          "noname"           "aphia"            "fishno"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "species"          "partno"           "noname"           "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$preylength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"        "missionnumber"   "serialno"        "samplenumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "noname"          "aphia"           "fishno"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "species"         "partno"          "noname"          "length"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"        "missionnumber"   "serialno"        "samplenumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "noname"          "aphia"           "fishno"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "species"         "partno"          "noname"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "platform"        "missionnumber"   "serialno"        "samplenumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "species"         "noname"          "aphia"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "platform"        "missionnumber"   "serialno"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "year"            "missiontype"     "missiontypename" "callsignal"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "platform"        "missionnumber"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv1.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd</span>
@@ -3205,6 +3206,49 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "agedetermination"               "preylengthfrequencytable"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "copepodedevstagefrequencytable" "tag"                           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"        "startyear"          "platform"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "missionnumber"      "serialnumber"       "catchsampleid"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "specimenid"         "agedeterminationid"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"    "tagid"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$preylengthfrequencytable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"    "preysampleid" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [9] "preylengthid" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$copepodedevstagefrequencytable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"      "startyear"        "platform"         "missionnumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"     "catchsampleid"    "specimenid"       "preysampleid"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [9] "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"    "preysampleid" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.1.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$root</span>
@@ -3489,6 +3533,49 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "agedetermination"               "preylengthfrequencytable"      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "copepodedevstagefrequencytable" "tag"                           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$agedetermination</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"        "startyear"          "platform"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "missionnumber"      "serialnumber"       "catchsampleid"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "specimenid"         "agedeterminationid"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$tag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"    "tagid"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$preylengthfrequencytable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"    "preysampleid" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [9] "preylengthid" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$copepodedevstagefrequencytable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"      "startyear"        "platform"         "missionnumber"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"     "catchsampleid"    "specimenid"       "preysampleid"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [9] "copepodedevstage"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$prey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"    "preysampleid" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$individual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid" "specimenid"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$catchsample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber"  "catchsampleid"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$fishstation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "serialnumber" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$mission</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "missiontype"   "startyear"     "platform"      "missionnumber"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdbioticv3.xsd$keys$missions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$root</span>
@@ -3630,6 +3717,37 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "echosounder_dataset" "distance_list"       "distance"           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4] "frequency"           "ch_type"             "sa_by_acocat"       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [7] "sa"                  "acocat_list"         "acocat"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$sa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "log_start"   "start_time"  "freq"        "transceiver" "type"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "acocat"      "ch"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$sa_by_acocat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "log_start"   "start_time"  "freq"        "transceiver" "type"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "acocat"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$ch_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "log_start"   "start_time"  "freq"        "transceiver" "type"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$frequency</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "log_start"   "start_time"  "freq"        "transceiver"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$distance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "log_start"  "start_time"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$acocat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "acocat"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$distance_list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$acocat_list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xsdObjects$nmdechosounderv1.xsd$keys$echosounder_dataset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

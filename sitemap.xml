@@ -10,10 +10,6 @@
 <url><loc>/reference/AddToStoxBiotic.html</loc></url>
 <url><loc>/reference/BioticData.html</loc></url>
 <url><loc>/reference/CompensateEffectiveTowDistanceForFishingDepthCount.html</loc></url>
-<url><loc>/reference/ConvertAcoustic.html</loc></url>
-<url><loc>/reference/ConvertBiotic.html</loc></url>
-<url><loc>/reference/ConvertStoxAcoustic.html</loc></url>
-<url><loc>/reference/ConvertStoxBiotic.html</loc></url>
 <url><loc>/reference/CopyAcoustic.html</loc></url>
 <url><loc>/reference/CopyBiotic.html</loc></url>
 <url><loc>/reference/CopyICESAcoustic.html</loc></url>
@@ -106,6 +102,7 @@
 <url><loc>/reference/firstClass.html</loc></url>
 <url><loc>/reference/generalSamplingHierarhcy.html</loc></url>
 <url><loc>/reference/general_arguments.html</loc></url>
+<url><loc>/reference/getKeys.html</loc></url>
 <url><loc>/reference/getNumberOfCores.html</loc></url>
 <url><loc>/reference/getRstoxDataDefinitions.html</loc></url>
 <url><loc>/reference/getStoxKeys.html</loc></url>
