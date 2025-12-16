@@ -393,45 +393,52 @@ translateOne <- function(
 			), 
 			SIMPLIFY = FALSE
 		)
-		# Remove empty matches:
-		matches <- matches[sapply(matches, NROW) > 0]
 		
-		# Loop through the tables containing the variableToTranslate and perform the translation:
-		tablesContainingVariableToTranslate <- sapply(names(matches), function(x) variableToTranslate %in% names(data[[x]]))
+		# Detect tables where there are variables to be matched, but no matches were found (in which case getMatchesOneTranslationOneTable() returns NA):
+		nomatches <- sapply(matches, function(x) length(x) == 1 && is.na(x))
 		
-		# If there are any matches:
-		if(length(matches)) {
-			for(tableName in names(matches)[tablesContainingVariableToTranslate]) {
-				
-				# Get translation matches:
-				thisMatches <- Reduce(function(x, y) mergeByIntersect(x, y, all = FALSE), matches[seq_len(which(tableName == names(matches)))])
-				
-				if(length(thisMatches)) {
+		# Translate only if there were ane matches:
+		if(!any(nomatches)) {
+			# Remove empty matches:
+			matches <- matches[sapply(matches, NROW) > 0]
+			
+			# Loop through the tables containing the variableToTranslate and perform the translation:
+			tablesContainingVariableToTranslate <- sapply(names(matches), function(x) variableToTranslate %in% names(data[[x]]))
+			
+			# If there are any matches:
+			if(length(matches)) {
+				for(tableName in names(matches)[tablesContainingVariableToTranslate]) {
 					
-					# Kepp pnly the columns present in the table to translate, so that we can use thisMatches to dientify the rows in which to translate:
-					thisMatches <- subset(thisMatches, select = intersect(names(thisMatches), names(data[[tableName]])))
+					# Get translation matches:
+					thisMatches <- Reduce(function(x, y) mergeByIntersect(x, y, all = FALSE), matches[seq_len(which(tableName == names(matches)))])
 					
-					# Translate
-					if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
-						#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+					if(length(thisMatches)) {
 						
-						# Get the replacement by applying the function defined by translationListOne$NewValue:
-						replacement <- data[[tableName]] [thisMatches, eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
-					}
-					else {
-						#data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+						# Kepp pnly the columns present in the table to translate, so that we can use thisMatches to dientify the rows in which to translate:
+						thisMatches <- subset(thisMatches, select = intersect(names(thisMatches), names(data[[tableName]])))
 						
-						# Get the replacement by applying the function defined by translationListOne$NewValue:
-						replacement <- data[[tableName]] [thisMatches, translationListOne$NewValue, on = names(thisMatches)]
+						# Translate
+						if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
+							#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+							
+							# Get the replacement by applying the function defined by translationListOne$NewValue:
+							replacement <- data[[tableName]] [thisMatches, eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
+						}
+						else {
+							#data[[tableName]] [thisMatches, eval(variableToTranslate) := translationListOne$NewValue, on = names(thisMatches)]
+							
+							# Get the replacement by applying the function defined by translationListOne$NewValue:
+							replacement <- data[[tableName]] [thisMatches, translationListOne$NewValue, on = names(thisMatches)]
+						}
+						
+						# Do the replacement, preserving class if requested:
+						if(!preserveClass) {
+							setColumnClasses(data[[tableName]], structure(list(class(replacement)), names = variableToTranslate))
+						}
+						
+						data[[tableName]] [thisMatches, eval(variableToTranslate) := replacement, on = names(thisMatches)]
+						
 					}
-					
-					# Do the replacement, preserving class if requested:
-					if(!preserveClass) {
-						setColumnClasses(data[[tableName]], structure(list(class(replacement)), names = variableToTranslate))
-					}
-					
-					data[[tableName]] [thisMatches, eval(variableToTranslate) := replacement, on = names(thisMatches)]
-					
 				}
 			}
 		}
@@ -443,7 +450,7 @@ translateOne <- function(
 			
 			thisMatches <- matchVariable(variableToTranslate, translationListOne, data[[tableName]])
 			
-			if(length(thisMatches)) {
+			if(any(thisMatches)) {
 				# Translate
 				if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
 					#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
@@ -480,20 +487,27 @@ getMatchesOneTranslationOneTable <- function(table, variableToTranslate, conditi
 	
 	varsToMatch <- c(variableToTranslate, conditionalVariables)
 	
+	varsToMatch <- intersect(varsToMatch, names(table))
+	
 	# Find the rows matching the criteria of the target variable and the conditional variables:
-	if( any(varsToMatch %in% names(table)) ) {
+	if( length(varsToMatch) ) {
 		
+		# Get the logical vector of matches for each variable to match (the variable to translate and the conditional variables):
 		matches <- lapply(varsToMatch, matchVariable, list = translationListOne, table = table)
 		
-		# Any empty matches indicate that the variable of interest is not present, and triggers a warning and no match:
+		# Any empty matches are returned as FALSE to indicate no match:
 		emptyMatches <- lengths(matches) == 0
 		if(any(emptyMatches)) {
-			#warning("StoX: The following variables are used in the translation but are not present in the table. This results in no translation: ", paste(varsToMatch[emptyMatches], collapse = ", "), ".")
-			matches[emptyMatches] <- rep(list(TRUE), sum(emptyMatches))
+			matches[emptyMatches] <- rep(list(FALSE), sum(emptyMatches))
 		}
 		
-		
+		# Require that all variables match to each row:
 		matches <- apply(do.call(cbind, matches), 1, all)
+		
+		# If no matches, return NA:
+		if(!any(matches)) {
+			return(NA)
+		}
 		
 		# Get the key values of the matches:
 		keyTable <- subset(table, matches, select = keys)
@@ -619,7 +633,7 @@ matchClass <- function(A, B) {
 
 
 
-# Function to match a condition given in the element 'variableName' of 'list' to the corresponding element in 'table', either as an evaluable function expression string, or an evaluable string:
+# Function to match a condition given in the element 'variableName' of 'list' to the corresponding element in 'table', either as a function expression string that can be evaluated, or a replacement string:
 matchVariable <- function(variableName, list, table) {
 	# Special case for NA:
 	if(is.na(list[[variableName]]) || identical(list[[variableName]], "NA")) {
@@ -631,8 +645,9 @@ matchVariable <- function(variableName, list, table) {
 		if(variableName %in% names(table)) {
 			eval(parse(text = list[[variableName]]))(table[[variableName]])
 		}
+		# If not present return FALSE to indicate no matches:
 		else {
-			TRUE
+			stop("The variable given by 'variableName' is not present in the table.")
 		}
 		
 	}
