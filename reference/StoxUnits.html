@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0-9011</span>
       </span>
     </div>
 
@@ -98,6 +98,139 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">StoxUnits</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">StoxUnits</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                id conversion            quantity    symbol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            &lt;char&gt;      &lt;num&gt;              &lt;char&gt;    &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:                      mass-mcg  1.000e-09                mass       mcg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:                       mass-mg  1.000e-06                mass        mg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:                        mass-g  1.000e-03                mass         g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:                       mass-kg  1.000e+00                mass        kg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:                      mass-ton  1.000e+03                mass         t</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:                       mass-kt  1.000e+06                mass        kt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:                       mass-Mt  1.000e+09                mass        Mt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:                     length-mm  1.000e-03              length        mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:                     length-cm  1.000e-02              length        cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:                      length-m  1.000e+00              length         m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:                     length-km  1.000e+03              length        km</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:                    length-nmi  1.852e+03              length         M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:                 cardinality-N  1.000e+00         cardinality         N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:                cardinality-kN  1.000e+03         cardinality        kN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:                cardinality-MN  1.000e+06         cardinality        MN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:                cardinality-GN  1.000e+09         cardinality        GN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:                cardinality-TN  1.000e+12         cardinality        TN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:   area_number_density-N/nmi^2  1.000e+00 area_number_density   N/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:  area_number_density-kN/nmi^2  1.000e+03 area_number_density  kN/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:  area_number_density-MN/nmi^2  1.000e+06 area_number_density  MN/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:  area_number_density-GN/nmi^2  1.000e+09 area_number_density  GN/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:  area_number_density-TN/nmi^2  1.000e+12 area_number_density  GN/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23: area_weight_density-mcg/nmi^2  1.000e-09 area_weight_density mcg/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:  area_weight_density-mg/nmi^2  1.000e-06 area_weight_density  mg/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:   area_weight_density-g/nmi^2  1.000e-03 area_weight_density   g/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:  area_weight_density-kg/nmi^2  1.000e+00 area_weight_density  kg/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27: area_weight_density-ton/nmi^2  1.000e+03 area_weight_density ton/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28:  area_weight_density-kt/nmi^2  1.000e+06 area_weight_density  kt/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:  area_weight_density-Mt/nmi^2  1.000e+09 area_weight_density  Mt/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30:                NASC-m^2/nmi^2  1.000e+00                NASC m^2/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:              fraction-decimal  1.000e+00            fraction        0.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32:              fraction-percent  1.000e-02            fraction         %</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:                  frequency-Hz  1.000e+00           frequency        Hz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34:                 frequency-KHz  1.000e+03           frequency       kHz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:                      age-year  1.000e+00                 age         y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36:                        time-s  1.000e+00                time         s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:              datetime-ISO8601  1.000e+00            datetime   ISO8601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38:         longitude-degree_east  1.000e+00               angle        °N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:         latitude-degree_north  1.000e+00               angle        °E</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40:                  angle-degree  1.000e+00               angle         °</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                id conversion            quantity    symbol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            &lt;char&gt;      &lt;num&gt;              &lt;char&gt;    &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   shortname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:                     mcg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:                      mg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:                       g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:                      kg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:                     ton</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:                 kiloton</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:                 megaton</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:                      mm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:                      cm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:                       m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:                      km</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:                     nmi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:             individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:        10^3 individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:        10^6 individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:        10^9 individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:       10^12 individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:       individuals/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:  10^3 individuals/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:  10^6 individuals/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:  10^9 individuals/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22: 10^12 individuals/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:               mcg/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:                mg/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:                 g/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:                kg/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:               ton/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28:                kt/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:                Mt/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30:               m^2/nmi^2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:                fraction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32:                       %</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:                      Hz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34:                     kHz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:                    year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36:                       s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:                 ISO8601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38:             degree east</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:            degree north</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40:                  degree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   shortname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                 name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                               &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:                                                                        microgram</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:                                                                        milligram</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:                                                                             gram</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:                                                                         kilogram</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:                                                                       metric ton</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:                                                                   metric kiloton</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:                                                                   metric megaton</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:                                                                       millimeter</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:                                                                       centimeter</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:                                                                            meter</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:                                                                        kilometer</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:                                                                    nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:                                                                      individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:                                                             thousand individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:                                                              million individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:                                                              billion individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:                                                             trillion individuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:                                             individuals per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:                                    thousand individuals per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:                                     million individuals per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:                                     billion individuals per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:                                    trillion individuals per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:                                               microgram per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:                                               milligram per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:                                                    gram per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:                                                kilogram per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:                                              metric ton per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28:                                          metric kiloton per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:                                          metric megaton per square nautical mile</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30: square meter backscattering cross-section per square nautical mile surveyed area</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:                                                                          decimal</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32:                                                                          percent</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:                                                                            hertz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34:                                                                        kilohertz</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:                                                                             year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36:                                                                           second</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:                                                                          ISO8601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38:                                                                WGS84 degree east</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:                                                               WGS84 degree north</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40:                                                                           degree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                 name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                               &lt;char&gt;</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
