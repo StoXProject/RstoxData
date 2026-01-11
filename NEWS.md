@@ -1,4 +1,8 @@
-# RstoxData v2.2.0-9008  (2025-12-15)
+# RstoxData v2.2.0-9011  (2026-01-08)
+* Added units for area_weight_density.
+
+
+# RstoxData v2.2.0-9010  (2025-12-15)
 * Added support for specifying a function in NewValue in TranslationTable in Translate functions. This allows for mathematical transformation of values, e.g. IndividualTotalLength * 0.9 to get total length from fork length
 * Added the possibility to condition on variables present in parent tables in Translate functions. This can be useful e.g. when translating variables in the Individual table of StoxBiotic conditioned on SpeciesCategory (which is found two tables up in the SpeciesCategory table).
 * Restricted LengthType accepted to only "1" from ICESBiotic XML files in the StoxBiotic() function, equivalent to the only accepted lengthmeasurement "E" from NMDBiotic XML files.
@@ -14,7 +18,6 @@
 * Put convertLen() into getIndividualTotalLength_ICESBiotic() in processBioticData.R.
 * Removed the following functions that were exported but not exposed in the StoX GUI: ConvertStoxBiotic(), ConvertStoxAcoustic(), ConvertBiotic() and ConvertAcoustic(). These were not working, but the intended use can now be achieved using a numeric function in the NewValue field of a TranslationTable og Translate functions.
 * Now passing keys to the function translateVariables() in TranslateICESAcoustic(), TranslateICESBiotic(), TranslateICESDatras() and TranslateICESDatsusc().
-
 
 
 # RstoxData v2.2.0-9006  (2025-11-01)

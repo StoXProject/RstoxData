@@ -26,6 +26,7 @@ Standard units used in Stox
 }
 \examples{
 data(StoxUnits)
+StoxUnits
 
 }
 \seealso{

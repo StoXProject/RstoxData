@@ -25,6 +25,7 @@
 #'
 #' @examples
 #' data(StoxUnits)
+#' StoxUnits
 #' 
 "StoxUnits"
 
