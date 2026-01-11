@@ -84,13 +84,16 @@ getKeys <- function(data) {
 		}
 		else {
 			keys <- vector("list", length(data))
-			# Look for intersecting variables:
-			for(ind in seq_len(length(data) - 1)) {
-				keys[[ind]] <- intersect(names(data[[ind]]), names(data[[ind + 1]]))
-			}
 			
-			# Assume that the last table has the same keys as the parent:
-			keys[[length(data)]] <- keys[[length(data) - 1]]
+			# If there are more than one table, look for the intersects between consequtive tables:
+			if (length(data) > 1) {
+				for(ind in seq_len(length(data) - 1)) {
+					keys[[ind]] <- intersect(names(data[[ind]]), names(data[[ind + 1]]))
+				}	
+				
+				# Assume that the last table has the same keys as the parent:
+				keys[[length(data)]] <- keys[[length(data) - 1]]
+			}
 		}
 		
 		names(keys) <- names(data)
