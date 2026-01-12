@@ -1,4 +1,8 @@
-# RstoxData v2.2.0-9011  (2026-01-08)
+# RstoxData v2.2.0-9012  (2026-01-12)
+* Fixed bug in ICESAcoustic, where reading an NMDEchosounder file in the ReadAcoustic process used as input failed in the merging of tables "distance", "frequency", "sa", Now expanded to merge "distance", "frequency", "ch_type", "sa_by_acocat" and "sa".
+
+
+# RstoxData v2.2.0-9011  (2026-01-12)
 * Added units for area_weight_density.
 
 
