@@ -191,7 +191,7 @@ prepareICESAcousticCSV_nmdechosounderv1 <-  function(AcousticDataOne){
 	#Prepare data for the Data table
 	distanceFrequencySa <- mergeDataTables(
 		AcousticDataOne, 
-		tableNames = c("distance", "frequency", "sa"), 
+		tableNames = c("distance", "frequency", "ch_type", "sa_by_acocat", "sa"), 
 		output.only.last = TRUE, 
 		all = TRUE
 	)
