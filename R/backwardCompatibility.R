@@ -674,7 +674,8 @@ backwardCompatibility_RstoxData <- list(
 				
 				allProcessNames <- unlist(lapply(projectDescription, function(model) lapply(model, "[[", "processName")))
 				if(any(processNameOfSecondProcess %in% allProcessNames)) {
-					stop("Cannot split process...")
+					# If the process "FilterICESBiotic_KeepOnlyICESSpecWoRMS" already exists, assume that the old ICESBitoic process has already been split
+					return(list())
 				}
 				
 				# Create the filter expression:
