@@ -1938,10 +1938,11 @@ ICESDatsuscOne <- function(
               AphiaIDPredator,AphiaIDPrey,IdentMet,DigestionStage,GravMethod,
               SubFactor,PreySequence)]
   
-  # Set the weight to computed weight if possible:
+  # Set the weight to grouped weight:
   hasCountAndTotalCount <- !is.na(finalPP$TotalCount)
-  finalPP[hasCountAndTotalCount, Notes := 'Computed using: total weight * count in length group / count for all length group']
-  finalPP[hasCountAndTotalCount, Weight := Weight * Count / TotalCount]
+  finalPP[, Notes := 'Grouped weight']
+  # Removed:
+  # finalPP[hasCountAndTotalCount, Weight := Weight * Count / TotalCount]
   
   #Handling number of unique species in prey sampled in each individual fish
   #TODO: Needs to be checked
@@ -2002,23 +2003,21 @@ WriteICESDatsusc <- function(ICESDatsuscData){
   #	na = "-9"
   #)
   
-  WriteICESDatsuscData <- WriteICESDatsuscOne(ICESDatsuscData)
+  WriteICESDatsuscData <- WriteICESDatsuscOne(ICESDatsuscData, na = "")
   
   return(WriteICESDatsuscData)
 }
 
 
-WriteICESDatsuscOne <- function(ICESDatsuscData){
+WriteICESDatsuscOne <- function(ICESDatsuscData, na = ""){
 	
 	# Convert all tables to string matrix with header and record, and rbind:
 	ICESDatsuscCSVDataOne<- convertToRecordTypeMatrix(ICESDatsuscData)
-	### # Replace NAs:
-	### if(length(na)) {
-	### 	ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
-	### }
 	
-	# IMPORTANT NOTE: The ICES DATRAS format assumes that the three tables HH, HL and CA are stacked in a comma separated file but without padding the tables to equal number of columns as is done for ICESAcoustic and ICESBiotic. For this reason we need to paste the data to a chatacter vector and write as lines. RstoxFramework detects that the output as a vector of characters and uses writeLines() to produce the file.
-	
+	# Replace NAs:
+	if(length(na)) {
+		ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, function(x) {x[is.na(x)] <- na; x})
+	}
 	
 	# Convert each line of each table to comma separated:
 	ICESDatsuscCSVDataOne <- lapply(ICESDatsuscCSVDataOne, apply, 1, paste, collapse = ",")
@@ -2027,7 +2026,6 @@ WriteICESDatsuscOne <- function(ICESDatsuscData){
   
   return(ICESDatsuscCSVDataOne)
 }
-
 
 
 

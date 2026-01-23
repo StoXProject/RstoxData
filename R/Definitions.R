@@ -84,10 +84,57 @@ initiateRstoxData <- function(){
 				"LengthClass",
 				"FishID"
 			)
+		),
+		# ICESDatsusc keys: 
+		ICESDatsusc = list(
+			FI = character(), 
+			HH = c(
+				"Ship", 
+				"Gear", 
+				"HaulNo", 
+				"StationNumber", 
+				"Year", 
+				"Month", 
+				"Day", 
+				"Time"
+			),
+			PI = c(
+				"Ship",
+				"Gear",
+				"HaulNo",
+				"StationNumber",
+				"Year", 
+				"Month",
+				"Day",
+				"Time",
+				"FishID",
+				"AphiaIDPredator"
+			),
+			PP = c(
+				"Ship",
+				"Gear",
+				"HaulNo",
+				"StationNumber",
+				"Year", 
+				"Month",
+				"Day",
+				"Time",
+				"FishID",
+				"AphiaIDPredator", 
+				"AphiaIDPrey",
+				"IdentMet",
+				"DigestionStage",
+				"GravMethod",
+				"SubFactor",
+				"PreySequence"
+			)
 		)
 	)
-	# Add the ICESDatsusc keys as the same as the ICESDatras:
-	keys$ICESDatsusc <- keys$ICESDatras
+
+	
+	
+	
+	
 	
 	
 	
