@@ -1,4 +1,7 @@
-# RstoxData v2.2.0-9011  (2026-01-11)
+# RstoxData v2.2.0-9011  (2026-01-23)
+* Fixed bug in TranslateICESDatsusc(), where conditional values were ignored.
+* Changed NA to empty string ("") in WriteICESDatsusc().
+* Changed Weight in ICESDatsusc() to always be grouped (changed in the column Notes).
 * Fixed bug in ICESAcoustic, where reading an NMDEchosounder file in the ReadAcoustic process used as input failed in the merging of tables "distance", "frequency", "sa", Now expanded to merge "distance", "frequency", "ch_type", "sa_by_acocat" and "sa".
 * Added units for area_weight_density.
 
