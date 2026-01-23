@@ -58,8 +58,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="2.2.0-9011" id="rstoxdata-v220-9011-2026-01-11">RstoxData v2.2.0-9011 (2026-01-11)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9011-2026-01-11"></a></h2>
-<ul><li>Fixed bug in ICESAcoustic, where reading an NMDEchosounder file in the ReadAcoustic process used as input failed in the merging of tables “distance”, “frequency”, “sa”, Now expanded to merge “distance”, “frequency”, “ch_type”, “sa_by_acocat” and “sa”.</li>
+<h2 class="page-header" data-toc-text="2.2.0-9011" id="rstoxdata-v220-9011-2026-01-23">RstoxData v2.2.0-9011 (2026-01-23)<a class="anchor" aria-label="anchor" href="#rstoxdata-v220-9011-2026-01-23"></a></h2>
+<ul><li>Fixed bug in TranslateICESDatsusc(), where conditional values were ignored.</li>
+<li>Changed NA to empty string (““) in WriteICESDatsusc().</li>
+<li>Changed Weight in ICESDatsusc() to always be grouped (changed in the column Notes).</li>
+<li>Fixed bug in ICESAcoustic, where reading an NMDEchosounder file in the ReadAcoustic process used as input failed in the merging of tables “distance”, “frequency”, “sa”, Now expanded to merge “distance”, “frequency”, “ch_type”, “sa_by_acocat” and “sa”.</li>
 <li>Added units for area_weight_density.</li>
 </ul></div>
     <div class="section level2">
