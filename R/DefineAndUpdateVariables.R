@@ -312,6 +312,8 @@ translateVariables <- function(
 	
 	
 	# Do the translations:
+	
+	# For lists of lists use two loops (one for and one lapply):
 	if(!data.table::is.data.table(data[[1]])) {
 		for(ind in seq_along(data)) {
 			
