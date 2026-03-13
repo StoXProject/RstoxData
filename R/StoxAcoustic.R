@@ -323,6 +323,13 @@ StoxAcousticOne <- function(data_list) {
 		
 		data_list$Log[, LogKey := getLogKey_ICESAcoustic(Time)]
 		
+		# Throw an error if the LogKey is not unique:
+		atDuplicatedLogKey <- data_list$Log[, which(duplicated(LogKey) | duplicated(LogKey, fromLast = TRUE))]
+		if(length(atDuplicatedLogKey)) {
+			duplicatedTimes <- data_list$Log$Time[atDuplicatedLogKey]
+			stop("The AcousticData has duplicated Time, which results in duplicated LogKey in StoxAcoustic, which is not allowed. The data are from an acoustic file in the ICESAcoustic format, and contains the following duplicated Time (first 30):\n", paste(head(duplicatedTimes, 30), collapse = ", "))
+		}
+		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
 		
 		#################################################################
@@ -354,7 +361,7 @@ StoxAcousticOne <- function(data_list) {
 		tmp_beam$BeamKey <- tmp_beam$ID
 		tmp_beam$Beam <- tmp_beam$BeamKey
 		tmp$BeamKey <- tmp_beam$BeamKey
-		data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'AcousticCategory','Type','Unit','SvThreshold', 'SaCategory')])
+		data_list$Beam <- unique(tmp_beam[,!c('NASC','ChannelDepthUpper', 'ChannelDepthLower', 'AcousticCategory','Type','Unit','SvThreshold', 'SaCategory', "EchoType")])
 		
 		
 		#apply acoustic catecory, and add Key to all
@@ -419,8 +426,12 @@ StoxAcousticOne <- function(data_list) {
 		
 		
 		#add integration distance
-		data_list$Log<-merge(data_list$Log,data_list$Beam[,c('PingAxisInterval','LogKey')], all.x = TRUE)
-		names(data_list$Log)[names(data_list$Log)=='PingAxisInterval'] <- 'LogDistance'
+		PingAxisInterval <- data_list$Beam[, c('PingAxisInterval', 'LogKey')]
+		#if(any(duplicated(PingAxisInterval))) {
+		#	stop("Time in the Beam table is not unique. StoX requires Time to be unique across the rows of the Log table as Time in order to use Time as the LogKey. This problem typically occurs when the resolution of the Time is too low, e.g. hours. Please change the input data so that Time is unique.")
+		#}
+		data_list$Log <- merge(data_list$Log, PingAxisInterval, all.x = TRUE)
+		names(data_list$Log)[names(data_list$Log) == 'PingAxisInterval'] <- 'LogDistance'
 		
 		### # The LogOrigin2 should be NA until it gets incorporated in the ICESAcoustic format:
 		### #data_list$Log$LogOrigin2 <- "end"
