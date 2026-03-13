@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9001</span>
       </span>
     </div>
 
@@ -608,9 +608,8 @@ RstoxData::StoxBiotic to convert the data:</p>
 <code class="sourceCode R"><span><span class="va">ecosystem_sb</span> <span class="op">&lt;-</span> <span class="fu">RstoxData</span><span class="fu">::</span><span class="fu"><a href="../reference/StoxBiotic.html">StoxBiotic</a></span><span class="op">(</span><span class="fu">RstoxData</span><span class="fu">::</span><span class="va"><a href="../reference/ecosystemsurvey_example.html">ecosystemsurvey_example</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in getBottomDepth(bottomdepthstart, bottomdepthstop): StoX: The</span></span>
 <span><span class="co">#&gt; BottomDepth is calculated as the average of bottomdepthstart and</span></span>
-<span><span class="co">#&gt; bottomdepthstop from NMDBiotic. bottomdepthstart is missing (NA) in 8,</span></span>
-<span><span class="co">#&gt; bottomdepthstop is missing (NA) in 392 and both are missing in 8 out of 1220</span></span>
-<span><span class="co">#&gt; stations.</span></span>
+<span><span class="co">#&gt; bottomdepthstop from NMDBiotic. bottomdepthstart AND bottomdepthstop are</span></span>
+<span><span class="co">#&gt; missing (NA) in 8 out of 1220 stations.</span></span>
 <span><span class="co">#&gt; Warning in getCatchFractionWeight(catchweight, catchproducttype, catchcategory, : StoX: There are catchproducttype that are not 1 (4, NA), but with non-missing catchweight. This results in missing CatchFractionWeight in StoxBiotic() for the following catchcategory of cruise 2021209:</span></span>
 <span><span class="co">#&gt;  78089</span></span>
 <span><span class="co">#&gt; Warning in getSampleWeight(lengthsampleweight, sampleproducttype, catchcategory, : StoX: There are sampleproducttype that are not 1 (NA), but with non-missing lengthsampleweight. This results in missing SampleWeight in StoxBiotic() for the following catchcategory of cruise 2021209:</span></span>
