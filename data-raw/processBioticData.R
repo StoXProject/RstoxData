@@ -315,12 +315,18 @@ getPreyCatchFractionWeight_NMDBiotic3 <- function(totalweight){
 getBottomDepth_NMDBiotic <- function(bottomdepthstart, bottomdepthstop) {
 	missingStart <- is.na(bottomdepthstart)
 	missingStop <- is.na(bottomdepthstop)
-	hasInvalid <- missingStart | missingStop
+	missingStartAndStop <- missingStart & missingStop
+	missingStop <- missingStop & !missingStartAndStop
+	missingStart <- missingStart & !missingStartAndStop & !missingStop
+	hasInvalid <- missingStart | missingStop | missingStartAndStop
 	if(any(hasInvalid)) {
-		if(!any(missingStop)) {
+		if(any(missingStartAndStop)) {
+			warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. bottomdepthstart AND bottomdepthstop are missing (NA) in ", sum(missingStartAndStop), " out of ", length(missingStartAndStop), " stations.")
+		}
+		else if(any(missingStart)) {
 			warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. bottomdepthstart is missing (NA) in ", sum(missingStart), " out of ", length(missingStart), " stations. Please consider applying RedefineStoxBiotic to define the BottomDepth as bottomdepthstop instead.")
 		}
-		else if(!any(missingStart)) {
+		else if(any(missingStop)) {
 			warning("StoX: The BottomDepth is calculated as the average of bottomdepthstart and bottomdepthstop from NMDBiotic. bottomdepthstop is missing (NA) in ", sum(missingStop), " out of ", length(missingStop), " stations. Please consider applying RedefineStoxBiotic to define the BottomDepth as bottomdepthstart instead.")
 		}
 		else {

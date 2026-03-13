@@ -412,6 +412,10 @@ copyDataOneTable <- function(
 		
 		
 		if(NROW(conditionalTable)) {
+			
+			#matches <- getMatchesOneTranslationOneTable(table, variableToTranslate = NULL, conditionalVariables = names(conditionalTable), conditionalTable, keys = getKeys(table))
+				
+				
 			table[conditionalTable, eval(toVariable) := get(fromVariable), on = names(conditionalTable)]
 		}
 		else {
