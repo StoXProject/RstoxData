@@ -1,3 +1,9 @@
+# RstoxData v2.2.1-9001  (2026-03-10)
+* Added a check for existence of the resource file in DefineTranslation().
+* Improved warning when bottomdepthstart or bottomdepthstop used to calcualte BottomDepth in StoxBiotic() contains missing values.
+* Added error message in StoxAcoustic when the Time is not unique in AcousticData in the ICESAcsoutic format, since StoX uses Time as the LogKey in StoxAcousticData.
+
+
 # RstoxData v2.2.0-9011  (2026-01-23)
 * Fixed bug in TranslateICESDatsusc(), where conditional values were ignored.
 * Changed NA to empty string ("") in WriteICESDatsusc().

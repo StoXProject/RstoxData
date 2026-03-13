@@ -198,6 +198,11 @@ DefineTranslation <- function(
 # Function for reading a conversion table:
 readVariableTranslation <- function(FileName, VariableName, ValueColumn, NewValueColumn, Conditional, ConditionalVariableNames, ConditionalValueColumns, UseProcessData = FALSE) {
 	
+	# Check whether the file exists:
+	if(!file.exists(FileName)) {
+		stop("The file ", FileName, " does not exist!")
+	}
+	
 	# Read the file:
 	tanslation <- data.table::fread(FileName, encoding = "UTF-8", colClasses = "character")
 	
