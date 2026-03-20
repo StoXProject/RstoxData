@@ -2,6 +2,7 @@
 * Added a check for existence of the resource file in DefineTranslation().
 * Improved warning when bottomdepthstart or bottomdepthstop used to calcualte BottomDepth in StoxBiotic() contains missing values.
 * Added error message in StoxAcoustic when the Time is not unique in AcousticData in the ICESAcsoutic format, since StoX uses Time as the LogKey in StoxAcousticData.
+* Added the funciton cropAcoustic() to extract only a subset of the logs of an acoustic file.
 
 
 # RstoxData v2.2.0-9011  (2026-01-23)

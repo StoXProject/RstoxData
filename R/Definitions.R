@@ -317,6 +317,7 @@ initiateRstoxData <- function(){
 		reportingUnit = c("mm", "mm", "cm"), 
 		numericResolution = c(1, 5, 1)
 	)
+	
 	lengthCode_unit_table[, rank := seq_len(.N)]
 	
 	
