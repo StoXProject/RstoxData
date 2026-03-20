@@ -743,9 +743,14 @@ BioticData_NMDToICESBioticOne <- function(
 		WeightUnit = "kg", # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
 		SpeciesCategoryWeight = catchweight,
 		SpeciesSex = NA_character_,
+		
+		#SubsampledNumber = lengthsamplecount,
 		SubsampledNumber = lengthsamplecount,
 		SubsamplingFactor = catchcount / lengthsamplecount,
+		#SubsamplingFactor = ifelse(is.na(lengthsampleweight), 1, catchcount / lengthsamplecount),
 		SubsampleWeight = lengthsampleweight,
+		#SubsampleWeight = ifelse(is.na(lengthsampleweight), catchweight, lengthsampleweight),
+		
 		LengthCode = NA_character_, # NMDBiotic has no way of storing a length distribution.
 		LengthClass = NA_integer_, # NMDBiotic has no way of storing a length distribution.
 		#LengthType = "1", # Should not this be interpreted from the catchsample$lengthmeasurement ???
