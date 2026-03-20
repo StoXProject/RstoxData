@@ -105,6 +105,9 @@ StoxAcousticOne <- function(data_list) {
 		#data_list$ChannelReference[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
 		#data_list$NASC[, LogKey:= paste0(gsub(' ','T',start_time),'.000Z')]
 		data_list$Log[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
+		# Duplicated LogKey is an error:
+		duplicatedLogKeyError(data_list$Log, format = "NMDEchosounder") 
+			
 		data_list$Beam[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
 		data_list$AcousticCategory[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
 		data_list$ChannelReference[, LogKey := formatLogKey(as.POSIXct_NMDEchosounder(start_time))]
@@ -323,12 +326,10 @@ StoxAcousticOne <- function(data_list) {
 		
 		data_list$Log[, LogKey := getLogKey_ICESAcoustic(Time)]
 		
-		# Throw an error if the LogKey is not unique:
-		atDuplicatedLogKey <- data_list$Log[, which(duplicated(LogKey) | duplicated(LogKey, fromLast = TRUE))]
-		if(length(atDuplicatedLogKey)) {
-			duplicatedTimes <- data_list$Log$Time[atDuplicatedLogKey]
-			stop("The AcousticData has duplicated Time, which results in duplicated LogKey in StoxAcoustic, which is not allowed. The data are from an acoustic file in the ICESAcoustic format, and contains the following duplicated Time (first 30):\n", paste(head(duplicatedTimes, 30), collapse = ", "))
-		}
+		# Duplicated LogKey is an error:
+		duplicatedLogKeyError(data_list$Log, format = "ICESAcoustic") 
+		
+		
 		
 		data_list$Log[, EDSU:= paste(LocalID,LogKey,sep='/')]
 		
@@ -427,9 +428,6 @@ StoxAcousticOne <- function(data_list) {
 		
 		#add integration distance
 		PingAxisInterval <- data_list$Beam[, c('PingAxisInterval', 'LogKey')]
-		#if(any(duplicated(PingAxisInterval))) {
-		#	stop("Time in the Beam table is not unique. StoX requires Time to be unique across the rows of the Log table as Time in order to use Time as the LogKey. This problem typically occurs when the resolution of the Time is too low, e.g. hours. Please change the input data so that Time is unique.")
-		#}
 		data_list$Log <- merge(data_list$Log, PingAxisInterval, all.x = TRUE)
 		names(data_list$Log)[names(data_list$Log) == 'PingAxisInterval'] <- 'LogDistance'
 		
@@ -549,6 +547,7 @@ StoxAcousticOne <- function(data_list) {
 }
 
 
+
 hasMinuteResoslution_ICESAcoustic <- function(Time) {
 	# Count the number of colons, where 2 indicates seconds and 1 indicates minutes:
 	max(stringi::stri_count(Time, fixed = ':'), na.rm = TRUE) == 1
@@ -564,6 +563,26 @@ getLogKey_ICESAcoustic <- function(Time) {
 	else {
 		formatLogKey(as.POSIXct_ICESAcoustic(Time))
 	}
+}
+
+
+duplicatedLogKeyError <- function(Log, format = c("NMDEchosounder", "ICESAcoustic")) {
+	
+	format <- match.arg(format)
+	
+	atDuplicatedLogKey <- Log[, which(duplicated(LogKey) | duplicated(LogKey, fromLast = TRUE))]
+	if(length(atDuplicatedLogKey)) {
+		if(format == "NMDEchosounder") {
+			duplicatedTimes <- sort(Log$start_time[atDuplicatedLogKey])
+		}
+		else if(format == "ICESAcoustic") {
+			duplicatedTimes <- sort(Log$Time[atDuplicatedLogKey])
+		}
+		
+		badTimes <- head(unique(duplicatedTimes), 30)
+		stop("The AcousticData (from an ", format, " file) has duplicated Time, which results in duplicated LogKey in StoxAcoustic, which is not allowed. Please add sufficient time resolution in your input data (preferrable in the data source). The following Time are duplicated (first ", length(badTimes), "):\n", paste(badTimes, collapse = "\n"))
+	}
+	
 }
 
 
@@ -614,16 +633,19 @@ as.POSIXct_ICESAcoustic <- function(x) {
 		"%Y-%m-%d %H:%M"
 	)
 	allowedTimeFormatsICESAcoustic <- c(
+		# The order here is important, since the allowedTimeFormatsICESAcousticSansSeconds accepts also times WITH seconds. So first convert with seconds, then the remaining sans seconds!!!:
 		paste0(allowedTimeFormatsICESAcousticSansSeconds, ":%OS"), 
 		allowedTimeFormatsICESAcousticSansSeconds
 	)
 	
 	areNotNAs <- !is.na(x)
 	
-	DateTime <- NULL
+	DateTime <- rep(as.POSIXct(NA), length(x))
+	# Fill inn the missing times. This supports different resolutions in the same object, as we check the highest resolution first (with seconds then minutes, as specified in the allowedTimeFormatsICESAcoustic):
 	for(format in allowedTimeFormatsICESAcoustic) {
-		if(!length(DateTime) || !all(!is.na(DateTime[areNotNAs]))) {
-			DateTime <- as.POSIXct(x, tz = StoxTimeZone, format = format)
+		isNaDateTime <- is.na(DateTime)
+		if(any(isNaDateTime)) {
+			DateTime[isNaDateTime] <- as.POSIXct(x[isNaDateTime], tz = StoxTimeZone, format = format)
 		}
 	}
 	

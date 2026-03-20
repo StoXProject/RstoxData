@@ -471,3 +471,76 @@ scaleUsingUnit <- function(x, inputUnit, outputUnit) {
 
 
 
+
+##################################################
+##################################################
+#' Write a cropped copy of an acoustic file
+#' 
+#' This function writes a copy of an acoustic file in either the NMDEchosounder og ICESAcoustic format, keeping only the logs specified by the user.
+#' 
+#' @param filePath Character: The path to the acoustic file.
+#' @param logsToKeep Numeric: The indiced of the logs to keep. NULL implies to keep all logs.
+#' @param newFilePath Optional, character: The path to the new file, defaulted to \code{filePath} with the suffix before file extension
+#' @param ow Logical: If TRUE overwrite the \code{newFilePath}.
+#' @param suffix Character: The suffix to append to the \code{filePath} before the file extension, in the case that \code{newFilePath} is not specified
+#' 
+#' @return
+#' The path to the cropped file.
+#' 
+#' @examples
+#' exampleFile <- system.file("testresources","ICES_Acoustic_2.xml", package="RstoxData")
+#' acousticData <- ReadAcoustic(exampleFile)
+#' newFilePath <- tempfile(fileext = ".xml")
+#' cropAcoustic(exampleFile, logsToKeep = 2, newFilePath = newFilePath)
+#' croppedAcousticData <- ReadAcoustic(newFilePath)
+#' 
+#' @export
+#' 
+cropAcoustic <- function(filePath, logsToKeep = NULL, newFilePath = NULL, ow = FALSE, suffix = "_croppedLogs.") {
+	
+	# Get the file type and the start and end tags for logs:
+	fileType <- autodetectXml(filePath)
+	if(fileType$xsd == "nmdechosounderv1") {
+		startLogTag = "<distance log_start"
+		endLogTag = "</distance>"
+	}
+	else if(fileType$xsd == "icesAcoustic") {
+		startLogTag = "<Log>"
+		endLogTag = "</Log>"
+	}
+	
+	# Read the lines:
+	l <- readLines(filePath)
+	if(length(l) == 1) {
+		stop("The XML must be prettified to be cropped.")
+	}
+	
+	# Find the end log tags:
+	atStartLog <- which(grepl(startLogTag, l))
+	atEndLog <- which(grepl(endLogTag, l))
+	
+	# Subset the logs:
+	if(length(logsToKeep)) {
+		logsToDelete <- setdiff(seq_along(atStartLog), logsToKeep)
+		linesToDelete <- unlist(mapply(seq, atStartLog[logsToDelete], atEndLog[logsToDelete]))
+		l <- l[- linesToDelete]
+	}
+	
+	# Create the file path of the copy:
+	if(!length(newFilePath)) {
+		newFilePath <- paste0(tools::file_path_sans_ext(filePath), suffix, tools::file_ext(filePath))
+	}
+	# And check existence of the copy:
+	if(file.exists(newFilePath) && !ow) {
+		stop("The file ", newFilePath, " exists. Choose a different file path using newFilePath or set ow to TRUE to overwrite.")
+	}
+	
+	# Write the copy:
+	writeLines(l, newFilePath)
+	
+	return(newFilePath)
+}
+
+
+
+

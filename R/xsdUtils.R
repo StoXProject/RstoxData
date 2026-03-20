@@ -285,8 +285,13 @@ createXsdObject <- function(xsdFile) {
 
 
 #' @importFrom xml2 xml_child read_html xml_find_all
-autodetectXml <- function(xmlFile, xsdObjects, verbose) {
+autodetectXml <- function(xmlFile, xsdObjects, verbose = FALSE) {
 
+	# Get the xsdObjects:
+	if(missing("xsdObjects")) {
+		data(xsdObjects, package="RstoxData", envir = environment())
+	}
+	
 	# Read first 500 characters
 	tmpText <- tryCatch(
 		{
