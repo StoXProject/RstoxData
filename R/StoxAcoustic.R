@@ -640,7 +640,7 @@ as.POSIXct_ICESAcoustic <- function(x) {
 	
 	areNotNAs <- !is.na(x)
 	
-	DateTime <- rep(as.POSIXct(NA), length(x))
+	DateTime <- rep(as.POSIXct(NA, tz = StoxTimeZone), length(x))
 	# Fill inn the missing times. This supports different resolutions in the same object, as we check the highest resolution first (with seconds then minutes, as specified in the allowedTimeFormatsICESAcoustic):
 	for(format in allowedTimeFormatsICESAcoustic) {
 		isNaDateTime <- is.na(DateTime)
