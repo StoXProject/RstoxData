@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Arne Johannes Holmin \email{arnejh@hi.no}
   \item Anthony Hennessey
   \item Charles Abraham Solberg
   \item Sindre Vatnehol

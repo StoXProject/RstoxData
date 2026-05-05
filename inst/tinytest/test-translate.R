@@ -72,3 +72,16 @@ expect_equal(exampleDataTranslated_4$Individual[, sum(IndividualTotalLength > 10
 
 
 
+# Test translating in the Instrument table of ICESAcoustic (metadata table, not part of the hierarchy with keys):
+exampleFile_ICESAcoustic <- system.file("testresources","ICESAcoustic.xml", package="RstoxData")
+suppressWarnings(exampleData_ICESAcoustic <- RstoxData::ICESAcoustic(RstoxData::ReadBiotic(exampleFile_ICESAcoustic)))
+
+
+translated <- TranslateICESAcoustic(exampleData_ICESAcoustic, TranslationTable = data.table::data.table(InstrumentTransducerDepth = NA, NewValue = 1.234, InstrumentFrequency = "38"))
+
+# The original should be NA:
+expect_true(is.na(exampleData_ICESAcoustic$Instrument$InstrumentTransducerDepth))
+
+# The translated should be 1.234:
+expect_equal(translated$Instrument$InstrumentTransducerDepth, 1.234)
+
