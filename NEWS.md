@@ -1,8 +1,14 @@
+# RstoxData v2.2.1-9004  (2026-05-05)
+* Fixed bug in StoxAcoustic where BeamKey was corrupted for data read by ReadAcoustic() from file in the ICESAcoustic format (LU25/LUF26 from LSSS). This resulted in NASC data being mixed between frequencies in the output from StoxAcoustic. The fix was to set sort = FALSE when merging in the Instrument table.
+* Fixed bug where TranslateICESAcoustic() did not manage to translate variables in the tables Instrument, Calibration, DataAcquisition and DataProcessing.
+* Added the file test-translate.R which tests that it is possible to translate a field in the Instrument table using TranslateICESAcoustic().
+
+
 # RstoxData v2.2.1-9001  (2026-03-10)
 * Added a check for existence of the resource file in DefineTranslation().
 * Improved warning when bottomdepthstart or bottomdepthstop used to calcualte BottomDepth in StoxBiotic() contains missing values.
 * Added error message in StoxAcoustic when the Time is not unique in AcousticData in the ICESAcsoutic format, since StoX uses Time as the LogKey in StoxAcousticData.
-* Added the funciton cropAcoustic() to extract only a subset of the logs of an acoustic file.
+* Added the function cropAcoustic() to extract only a subset of the logs of an acoustic file.
 
 
 # RstoxData v2.2.0-9011  (2026-01-23)

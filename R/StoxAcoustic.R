@@ -345,7 +345,7 @@ StoxAcousticOne <- function(data_list) {
 		tmp[, AcousticCategory:=ifelse(is.na(SaCategory), EchoType, SaCategory)]
 
 		#apply beam level, and add Beam key to all
-		tmp_beam<-merge(tmp,data_list$Instrument, by='ID')
+		tmp_beam<-merge(tmp,data_list$Instrument, by='ID', sort = FALSE)
 		
 		# Sanity check, we can't have missing instrument records/linkage
 		if(nrow(tmp_beam) == 0) {
