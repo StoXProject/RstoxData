@@ -465,6 +465,11 @@ icesAcousticPreprocess <- function(xsdObject) {
 	
 	# Define Keys manually, since the keys do not necessarily stand first in the tables. These keys are excluding the InstrumentID, CalibrationID, DataAcquisitionID and DataProcessingID:
 	xsdObject$keys <- list(
+		Instrument = "ID",
+		Calibration = "ID",
+		DataAcquisition = "ID",
+		DataProcessing = "ID",
+		
 		Cruise = c("LocalID"), 
 		Survey = c("LocalID", "Code"), 
 		Log = c("LocalID", "Distance"), 

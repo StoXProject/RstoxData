@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Acoustic>
+  <Instrument ID="ID_F38">
+    <Frequency>38</Frequency>
+    <TransducerLocation IDREF="AC_TransducerLocation_AA" />
+    <TransducerManufacturer>Simrad</TransducerManufacturer>
+    <TransducerModel>ES38B</TransducerModel>
+    <TransducerSerial>0</TransducerSerial>
+    <TransducerBeamType IDREF="AC_TransducerBeamType_S1" />
+    <TransducerOrientation>downwards-looking</TransducerOrientation>
+    <TransducerPSI>-20.7</TransducerPSI>
+    <TransducerBeamAngleMajor>6.7</TransducerBeamAngleMajor>
+    <TransducerBeamAngleMinor>7.0</TransducerBeamAngleMinor>
+    <TransceiverManufacturer>Simrad</TransceiverManufacturer>
+    <TransceiverModel>GPT</TransceiverModel>
+    <TransceiverSerial>0</TransceiverSerial>
+  </Instrument>
+  <Calibration ID="C0">
+    <Date>2004-03-23</Date>
+    <AcquisitionMethod IDREF="AC_AcquisitionMethod_SS" />
+    <ProcessingMethod IDREF="AC_ProcessingMethod_lobe.exe" />
+    <AccuracyEstimate>0.06</AccuracyEstimate>
+  </Calibration>
+  <DataAcquisition ID="DA0">
+    <SoftwareName IDREF="AC_DataAcquisitionSoftwareName_EK500" />
+    <SoftwareVersion>23.8.0.0</SoftwareVersion>
+    <StoredDataFormat IDREF="AC_StoredDataFormat_RAW" />
+    <PingDutyCycle>Varying</PingDutyCycle>
+  </DataAcquisition>
+  <DataProcessing ID="DP38">
+    <SoftwareName IDREF="AC_DataProcessingSoftwareName_LSSS" />
+    <SoftwareVersion>1.8.0</SoftwareVersion>
+    <TriwaveCorrection IDREF="AC_TriwaveCorrection_NA" />
+    <ChannelID>GPT 0090720749b8-1 ES38B_ES</ChannelID>
+    <Bandwidth>0.9765625</Bandwidth>
+    <Frequency>38</Frequency>
+    <TransceiverPower>2000</TransceiverPower>
+    <TransmitPulseLength>1.024</TransmitPulseLength>
+    <OnAxisGain>26.9</OnAxisGain>
+    <OnAxisGainUnit IDREF="AC_OnAxisGainUnit_dB" />
+    <SaCorrection>-0.62</SaCorrection>
+    <Absorption>0.010024905</Absorption>
+    <SoundSpeed>1476</SoundSpeed>
+    <TransducerPSI>-20.7</TransducerPSI>
+  </DataProcessing>
+  <Vocabulary>
+    <TransducerLocation>
+      <Code ID="AC_TransducerLocation_AA" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerLocation.xml">AA</Code>
+    </TransducerLocation>
+    <TransducerBeamType>
+      <Code ID="AC_TransducerBeamType_S1" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_TransducerBeamType.xml">S1</Code>
+    </TransducerBeamType>
+    <AcquisitionMethod>
+      <Code ID="AC_AcquisitionMethod_SS" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_AcquisitionMethod.xml">SS</Code>
+    </AcquisitionMethod>
+    <ProcessingMethod>
+      <Code ID="AC_ProcessingMethod_lobe.exe" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_ProcessingMethod.xml">lobe.exe</Code>
+    </ProcessingMethod>
+    <DataAcquisitionSoftwareName>
+      <Code ID="AC_DataAcquisitionSoftwareName_EK500" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_DataAcquisitionSoftwareName.xml">EK500</Code>
+    </DataAcquisitionSoftwareName>
+    <StoredDataFormat>
+      <Code ID="AC_StoredDataFormat_RAW" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_StoredDataFormat.xml">RAW</Code>
+    </StoredDataFormat>
+    <DataProcessingSoftwareName>
+      <Code ID="AC_DataProcessingSoftwareName_LSSS" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_DataProcessingSoftwareName.xml">LSSS</Code>
+    </DataProcessingSoftwareName>
+    <TriwaveCorrection>
+      <Code ID="AC_TriwaveCorrection_NA" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_TriwaveCorrection.xml">NA</Code>
+    </TriwaveCorrection>
+    <OnAxisGainUnit>
+      <Code ID="AC_OnAxisGainUnit_dB" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_OnAxisGainUnit.xml">dB</Code>
+    </OnAxisGainUnit>
+    <Survey>
+      <Code ID="AC_Survey_IBWSS" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_Survey.xml">IBWSS</Code>
+    </Survey>
+    <Country>
+      <Code ID="ISO_3166_RU" CodeType="https://acoustic.ices.dk/Services/Schema/XML/ISO_3166.xml">RU</Code>
+    </Country>
+    <Platform>
+      <Code ID="SHIPC_90NF" CodeType="https://acoustic.ices.dk/Services/Schema/XML/SHIPC.xml">90NF</Code>
+    </Platform>
+    <Organisation>
+      <Code ID="EDMO_760" CodeType="https://acoustic.ices.dk/Services/Schema/XML/EDMO.xml">760</Code>
+    </Organisation>
+    <PingAxisIntervalType>
+      <Code ID="AC_PingAxisIntervalType_distance" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalType.xml">distance</Code>
+    </PingAxisIntervalType>
+    <PingAxisIntervalUnit>
+      <Code ID="AC_PingAxisIntervalUnit_nmi" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalUnit.xml">nmi</Code>
+    </PingAxisIntervalUnit>
+    <PingAxisIntervalOrigin>
+      <Code ID="AC_PingAxisIntervalOrigin_start" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_PingAxisIntervalOrigin.xml">start</Code>
+    </PingAxisIntervalOrigin>
+    <Origin>
+      <Code ID="AC_LogOrigin_start" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_LogOrigin.xml">start</Code>
+    </Origin>
+    <LogValidity>
+      <Code ID="AC_LogValidity_V" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_LogValidity.xml">V</Code>
+    </LogValidity>
+    <SaCategory>
+      <Code ID="AC_SaCategory_UNK" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml">UNK</Code>
+      <Code ID="AC_SaCategory_WHB" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_SaCategory.xml">WHB</Code>
+    </SaCategory>
+    <Type>
+      <Code ID="AC_AcousticDataType_C" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_AcousticDataType.xml">C</Code>
+    </Type>
+    <Unit>
+      <Code ID="AC_DataUnit_m2nmi-2" CodeType="https://acoustic.ices.dk/Services/Schema/XML/AC_DataUnit.xml">m2nmi-2</Code>
+    </Unit>
+  </Vocabulary>
+  <Cruise>
+    <Survey>
+      <Code IDREF="AC_Survey_IBWSS" />
+    </Survey>
+    <Country IDREF="ISO_3166_RU" />
+    <Platform IDREF="SHIPC_90NF" />
+    <StartDate>2012-03-24</StartDate>
+    <EndDate>2012-04-06</EndDate>
+    <Organisation IDREF="EDMO_760" />
+    <LocalID>2012086</LocalID>
+    <Log>
+      <Distance>2090</Distance>
+      <Time>2012-03-24 22:01:00</Time>
+      <Latitude>53.03</Latitude>
+      <Longitude>-11.5</Longitude>
+      <Origin IDREF="AC_LogOrigin_start" />
+      <Validity IDREF="AC_LogValidity_V" />
+      <Sample>
+        <ChannelDepthUpper>10</ChannelDepthUpper>
+        <ChannelDepthLower>750</ChannelDepthLower>
+        <PingAxisInterval>1</PingAxisInterval>
+        <PingAxisIntervalType IDREF="AC_PingAxisIntervalType_distance" />
+        <PingAxisIntervalUnit IDREF="AC_PingAxisIntervalUnit_nmi" />
+        <SvThreshold>-70</SvThreshold>
+        <Instrument IDREF="ID_F38" />
+        <Calibration IDREF="C0" />
+        <DataAcquisition IDREF="DA0" />
+        <DataProcessing IDREF="DP38" />
+        <PingAxisIntervalOrigin IDREF="AC_PingAxisIntervalOrigin_start" />
+        <Data>
+          <SaCategory IDREF="AC_SaCategory_UNK" />
+          <Type IDREF="AC_AcousticDataType_C" />
+          <Unit IDREF="AC_DataUnit_m2nmi-2" />
+          <Value>0</Value>
+        </Data>
+      </Sample>
+    </Log>
+    <Log>
+      <Distance>2091</Distance>
+      <Time>2012-03-24 22:01:00</Time>
+      <Latitude>53.02</Latitude>
+      <Longitude>-11.5</Longitude>
+      <Origin IDREF="AC_LogOrigin_start" />
+      <Validity IDREF="AC_LogValidity_V" />
+      <Sample>
+        <ChannelDepthUpper>10</ChannelDepthUpper>
+        <ChannelDepthLower>750</ChannelDepthLower>
+        <PingAxisInterval>1</PingAxisInterval>
+        <PingAxisIntervalType IDREF="AC_PingAxisIntervalType_distance" />
+        <PingAxisIntervalUnit IDREF="AC_PingAxisIntervalUnit_nmi" />
+        <SvThreshold>-70</SvThreshold>
+        <Instrument IDREF="ID_F38" />
+        <Calibration IDREF="C0" />
+        <DataAcquisition IDREF="DA0" />
+        <DataProcessing IDREF="DP38" />
+        <PingAxisIntervalOrigin IDREF="AC_PingAxisIntervalOrigin_start" />
+        <Data>
+          <SaCategory IDREF="AC_SaCategory_UNK" />
+          <Type IDREF="AC_AcousticDataType_C" />
+          <Unit IDREF="AC_DataUnit_m2nmi-2" />
+          <Value>0</Value>
+        </Data>
+      </Sample>
+    </Log>
+  </Cruise>
+</Acoustic>
