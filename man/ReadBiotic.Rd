@@ -15,6 +15,11 @@ An object of StoX data type BioticData: A list of a list of data.tables of the d
 \description{
 This function reads multiple biotic file to a list with a list of tables for each file.
 }
+\details{
+The file is read using the ICESBiotic XSD defined by ICES acoustic database (https://www.ices.dk/data/data-portals/Pages/acoustic.aspx), with additional information about headers defined by the internal function \code{icesAcousticPreprocess}.
+
+One particular case is when headers (e.g. LocalID) are stored as NA in the file. This results in the string "NA" and not the missing value NA. To read fields as NA, the field must be left out in the file.
+}
 \examples{
 exampleFile <- system.file("testresources","biotic3.1_example.xml", package="RstoxData")
 bioticData <- ReadBiotic(exampleFile)
