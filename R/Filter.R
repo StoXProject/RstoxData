@@ -375,7 +375,9 @@ processFilter <- function(filters) {
 filterOneTable <- function(tableName, filter, data, treeStruct, propagateDownwards = TRUE, propagateUpwards = FALSE) {
 	
 	# Special operators defined for filter operations. These are also supported in RstoxFramework:
-	`%notin%` <- Negate(`%in%`)
+	# No longer needed since %notin% is now in the R base package:
+	#`%notin%` <- Negate(`%in%`)
+	# Why did we introduce this (in 2021)? Could it be for users who do not understand !=?
 	`%notequal%` <- function(x, table) is.na(x) | x %notin% table
 	
 	# Declare the output
