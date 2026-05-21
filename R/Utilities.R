@@ -1210,16 +1210,53 @@ asIntegerAfterRound <- function(x, prec = sqrt(.Machine$double.eps)) {
 
 expandICESKeysWithPrefix <- function(ICESKeys) {
 	
+	
 	# Declare the output:
 	ICESKeysOut <- ICESKeys
 	
-	# Loop through the tables in reversed order, and paste the table name to the keys, overwriting as we move to the higher tables:
-	reversedTableOrder <- rev(names(ICESKeys))
-	for(tableName1 in reversedTableOrder) {
-		for(tableName2 in reversedTableOrder) {
-			ICESKeysOut[[tableName1]][ICESKeys[[tableName1]] %in% ICESKeys[[tableName2]]] <- paste0(tableName2, ICESKeys[[tableName1]][ICESKeys[[tableName1]] %in% ICESKeys[[tableName2]]])
+	# We use a translation table to do the renaming of the keys:
+	translation <- NULL
+	
+	# Loop through the tables:
+	tableNames <- names(ICESKeys)
+	for(tableName in tableNames) {
+		
+		# If the table only contains one key, prefix with the table name and overwrite the translation table:
+		if(length(ICESKeys[[tableName]]) == 1) {
+			
+			# Set the key directly, without use of the translation table here: 
+			newName <- paste0(tableName, ICESKeys[[tableName]])
+			ICESKeysOut[[tableName]] <- newName
+			
+			# Overwrite the translation table:
+			translation <- data.table(
+				from = ICESKeys[[tableName]], 
+				to = newName
+			)
+		}
+		# For other tables add the table name prefixed keys to the translation table and then perform the actual translation:
+		else {
+			
+			# Identify the keys that are not already fixed in the translation table:
+			areNotAlreadyPrepended <- ! ICESKeys[[tableName]] %in% translation$from
+			notAlreadyPrepended <- ICESKeys[[tableName]][areNotAlreadyPrepended]
+			newName <- paste0(tableName, notAlreadyPrepended)
+			
+			# Add to the translation table:
+			translation <- rbind(
+				translation,
+				data.table(
+					from = ICESKeys[[tableName]][areNotAlreadyPrepended], 
+					to = newName
+				)
+			)
+			
+			# Do the translation:
+			at <- match(ICESKeys[[tableName]], translation$from)
+			ICESKeysOut[[tableName]] <- translation$to[at]
 		}
 	}
+	
 	
 	return(ICESKeysOut)
 }

@@ -742,11 +742,17 @@ BioticData_NMDToICESBioticOne <- function(
 		SpeciesCategoryNumber = catchcount,
 		WeightUnit = "kg", # Always kg in NMDBiotic (see http://www.imr.no/formats/nmdbiotic/)
 		SpeciesCategoryWeight = catchweight,
+		# At IMR we do not split catches by sex, but record sex at the individual level:
 		SpeciesSex = NA_character_,
 		
-		#SubsampledNumber = lengthsamplecount,
+		# Samples:
 		SubsampledNumber = lengthsamplecount,
-		SubsamplingFactor = catchcount / lengthsamplecount,
+		# Prioritize count before weight, since before only catchcount / lengthsamplecount was used here:
+		#SubsamplingFactor = catchcount / lengthsamplecount,
+		SubsamplingFactor = ifelse(!is.na(lengthsamplecount) | is.na(catchcount), catchcount / lengthsamplecount, catchweight / lengthsampleweight),
+		
+		
+		ifelse(is.na(lengthsamplecount) | is.na(catchcount), catchweight / lengthsampleweight, catchcount / lengthsamplecount),
 		#SubsamplingFactor = ifelse(is.na(lengthsampleweight), 1, catchcount / lengthsamplecount),
 		SubsampleWeight = lengthsampleweight,
 		#SubsampleWeight = ifelse(is.na(lengthsampleweight), catchweight, lengthsampleweight),
@@ -763,8 +769,9 @@ BioticData_NMDToICESBioticOne <- function(
 	Catch[is.na(SpeciesCategoryNumber) & is.na(SpeciesCategoryWeight) & !is.na(SubsampledNumber), SpeciesCategoryNumber := SubsampledNumber]
 	Catch[is.na(SpeciesCategoryNumber) & is.na(SpeciesCategoryWeight) & !is.na(SubsampleWeight),  SpeciesCategoryWeight := SubsampleWeight]
 	
-	# NA means that nothing is subsampled
-	Catch[!is.na(SpeciesCategoryWeight) & is.na(SubsampleWeight), SubsampleWeight := 0]
+	# This violated the requirement of the ICES Acoustic database that SubsampleWeight cannot be 0 (only missing or positive):
+	# # NA means that nothing is subsampled
+	# Catch[!is.na(SpeciesCategoryWeight) & is.na(SubsampleWeight), SubsampleWeight := 0]
 	
 	
 	# Combine required tables for the Biology level
@@ -826,7 +833,6 @@ BioticData_NMDToICESBioticOne <- function(
 	
 	return(ICESBioticCSV)
 }
-
 
 
 
