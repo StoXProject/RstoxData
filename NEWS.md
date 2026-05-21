@@ -1,8 +1,7 @@
 # RstoxData v2.2.1-9005  (2026-05-21)
 * Fixed bug in TranslateICESAcoustic() where translation of the tables Calibration, DataAcquisition, DataProcessing did not work due to error in the keys generated with expandICESKeysWithPrefix().
-# Changed ICESBiotic() to NOT set NA to 0 for SubsampleWeight in the Catch table, since the ICES acoustic database only accepts NA or a positive number as of the beginning of 2026.
+* Changed ICESBiotic() to NOT set NA to 0 for SubsampleWeight in the Catch table, since the ICES acoustic database only accepts NA or a positive number as of the beginning of 2026.
 * In ICESBiotic() changed BioticData_NMDToICESBioticOne() to set SubsamplingFactor to catchweight / lengthsampleweight if both catchcount and lengthsamplecount are missing.
-* Removed declaring the %notin% operator, since this is now part of the base package of R.
 
 
 # RstoxData v2.2.1-9004  (2026-05-05)
