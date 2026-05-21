@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9004</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9005</span>
       </span>
     </div>
 
@@ -57,6 +57,12 @@
       <small>Source: <a href="https://github.com/StoXProject/RstoxData/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.2.1-9005" id="rstoxdata-v221-9005-2026-05-21">RstoxData v2.2.1-9005 (2026-05-21)<a class="anchor" aria-label="anchor" href="#rstoxdata-v221-9005-2026-05-21"></a></h2>
+<ul><li>Fixed bug in TranslateICESAcoustic() where translation of the tables Calibration, DataAcquisition, DataProcessing did not work due to error in the keys generated with expandICESKeysWithPrefix().</li>
+<li>Changed ICESBiotic() to NOT set NA to 0 for SubsampleWeight in the Catch table, since the ICES acoustic database only accepts NA or a positive number as of the beginning of 2026.</li>
+<li>In ICESBiotic() changed BioticData_NMDToICESBioticOne() to set SubsamplingFactor to catchweight / lengthsampleweight if both catchcount and lengthsamplecount are missing.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.2.1-9004" id="rstoxdata-v221-9004-2026-05-05">RstoxData v2.2.1-9004 (2026-05-05)<a class="anchor" aria-label="anchor" href="#rstoxdata-v221-9004-2026-05-05"></a></h2>
 <ul><li>Fixed bug in StoxAcoustic where BeamKey was corrupted for data read by ReadAcoustic() from file in the ICESAcoustic format (LU25/LUF26 from LSSS). This resulted in NASC data being mixed between frequencies in the output from StoxAcoustic. The fix was to set sort = FALSE when merging in the Instrument table.</li>
