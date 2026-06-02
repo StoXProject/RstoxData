@@ -28,7 +28,8 @@ RedefineData <- function(
 		VariableReplacement = Redefinition
 	)
 	
-	# Remove rows of duplicated keys:
+	
+	# Remove rows of duplicated keys. This is done in general in the functions StoxBiotic, StoxAcoustic, AddToStoxBiotic, RedefineData, and AddToStoxData. In those specific functions there are several unique and duplicate actions, including error in StoxAcoustic if the LogKey is not unique (non-unique time):
 	StoxData <- removeRowsOfDuplicatedKeys(
 		StoxData = StoxData, 
 		stoxDataFormat = StoxDataFormat

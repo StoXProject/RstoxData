@@ -751,8 +751,6 @@ BioticData_NMDToICESBioticOne <- function(
 		#SubsamplingFactor = catchcount / lengthsamplecount,
 		SubsamplingFactor = ifelse(!is.na(lengthsamplecount) | is.na(catchcount), catchcount / lengthsamplecount, catchweight / lengthsampleweight),
 		
-		
-		ifelse(is.na(lengthsamplecount) | is.na(catchcount), catchweight / lengthsampleweight, catchcount / lengthsamplecount),
 		#SubsamplingFactor = ifelse(is.na(lengthsampleweight), 1, catchcount / lengthsamplecount),
 		SubsampleWeight = lengthsampleweight,
 		#SubsampleWeight = ifelse(is.na(lengthsampleweight), catchweight, lengthsampleweight),
