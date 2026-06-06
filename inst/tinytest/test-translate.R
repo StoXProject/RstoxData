@@ -73,8 +73,8 @@ expect_equal(exampleDataTranslated_4$Individual[, sum(IndividualTotalLength > 10
 
 
 # Test translating in the Instrument table of ICESAcoustic (metadata table, not part of the hierarchy with keys):
-exampleFile_ICESAcoustic <- system.file("testresources","ICESAcoustic.xml", package="RstoxData")
-suppressWarnings(exampleData_ICESAcoustic <- RstoxData::ICESAcoustic(RstoxData::ReadBiotic(exampleFile_ICESAcoustic)))
+exampleFile_ICESAcoustic <- system.file("testresources","ICESAcoustic.xml", package = "RstoxData")
+suppressWarnings(exampleData_ICESAcoustic <- RstoxData::ICESAcoustic(RstoxData::ReadAcoustic(exampleFile_ICESAcoustic)))
 
 
 translated <- TranslateICESAcoustic(exampleData_ICESAcoustic, TranslationTable = data.table::data.table(InstrumentTransducerDepth = NA, NewValue = 1.234, InstrumentFrequency = "38"))
@@ -84,4 +84,22 @@ expect_true(is.na(exampleData_ICESAcoustic$Instrument$InstrumentTransducerDepth)
 
 # The translated should be 1.234:
 expect_equal(translated$Instrument$InstrumentTransducerDepth, 1.234)
+
+
+
+
+
+
+# Test translating numeric fields:
+exampleFile_NMDEchosounder <- system.file("testresources","echosounder_2020821.zip", package = "RstoxData")
+suppressWarnings(exampleData_StoxAcoustic <- RstoxData::StoxAcoustic(RstoxData::ReadAcoustic(exampleFile_NMDEchosounder)))
+
+
+translated <- TranslateStoxAcoustic(exampleData_StoxAcoustic, TranslationTable = data.table::data.table(Frequency = c(120000, 2E+05), NewValue = c(120, 200)))
+
+# The original should be NA:
+expect_equal(translated$Beam[1:3, Frequency], c(120, 18000, 200))
+
+
+
 

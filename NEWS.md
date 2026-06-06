@@ -1,4 +1,8 @@
 # RstoxData v2.2.1-9005  (2026-05-21)
+* Fixed bug in Translate functions where translating numeric variables did not work for large values that are represented by scientific notation in R. As an example, 200000000 is represented as 2E+08, and after the fix, both 200000000 and 2E+08 are valid values to translate from.
+
+
+# RstoxData v2.2.1-9005  (2026-05-21)
 * Fixed bug in TranslateICESAcoustic() where translation of the tables Calibration, DataAcquisition, DataProcessing did not work due to error in the keys generated with expandICESKeysWithPrefix().
 * Changed ICESBiotic() to NOT set NA to 0 for SubsampleWeight in the Catch table, since the ICES acoustic database only accepts NA or a positive number as of the beginning of 2026.
 * In ICESBiotic() changed BioticData_NMDToICESBioticOne() to set SubsamplingFactor to catchweight / lengthsampleweight if both catchcount and lengthsamplecount are missing.
