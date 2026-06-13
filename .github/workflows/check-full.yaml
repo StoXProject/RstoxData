@@ -51,7 +51,7 @@ jobs:
       #### 1. Setup: ####
       ###################
       
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Prepare for deployment at push
         if: github.event_name == 'push'

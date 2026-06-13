@@ -1,4 +1,9 @@
-# RstoxData v2.2.1-9005  (2026-05-21)
+# RstoxData v2.2.1-9007  (2026-06-13)
+* Added support for reading zipped ICESAcoustic XML files (in getIcesVocabulary()).
+* Removed warning occurring when translation table and variable is coerced to numeric in matchVariable().
+
+
+# RstoxData v2.2.1-9006  (2026-06-06)
 * Fixed bug in Translate functions where translating numeric variables did not work for large values that are represented by scientific notation in R. As an example, 200000000 is represented as 2E+08, and after the fix, both 200000000 and 2E+08 are valid values to translate from.
 
 
