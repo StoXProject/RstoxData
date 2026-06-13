@@ -375,7 +375,9 @@ readCharZip <- function(x, ...) {
 		if(length(file) > 1) {
 			stop("Input data can be zipped, but then each file must be zipped individually, so that each zipfile contains only one file (and this file must have the same name as the zip, excluding file extension).")
 		}
-		output <- readChar(unz(x, file), ...)
+		con <- unz(x, file)
+		output <- readChar(con, ...)
+		close(con)
 	}
 	else {
 		output <- readChar(x, ...)
@@ -408,12 +410,31 @@ checkFileNameInZip <- function(x) {
 getIcesVocabulary <- function(xmlFile) {
 
 	# Read only first 10e4 character
-	tmpText <- readChar(xmlFile, 10e4)
+	nchars <- 10e4
+	if(tools::file_ext(xmlFile) == "zip") {
+		tmpText <- readCharZip(xmlFile, nchars = nchars)
+	}
+	else {
+		tmpText <- readChar(xmlFile, nchars = nchars)
+	}
+	
 	xmlObj <- read_html(tmpText)
 
 	# Apply transformation to get the vocabulary translation table
-	ret <- rbindlist(lapply(as_list(xml2::xml_find_all(xmlObj, "//vocabulary/*/code")), function(x) if(length(x)>0) return(list(attr(x, "id"), ifelse(length(x) > 0, unlist(x), NA), attr(x, "codetype")))))
-	setnames(ret, c("id", "value", "codetype"))
+	ret <- rbindlist(
+		lapply(
+			as_list(
+				xml2::xml_find_all(
+					xmlObj, 
+					"//vocabulary/*/code"
+				)
+			), 
+			#function(x) if(length(x)>0) return(list(attr(x, "id"), ifelse(length(x) > 0, unlist(x), NA), attr(x, "codetype")))
+			function(x) if(length(x)>0) return(list(attr(x, "id"), ifelse(length(x) > 0, unlist(x), NA)))
+		)
+	)
+	#setnames(ret, c("id", "value", "codetype"))
+	setnames(ret, c("id", "value"))
 	return(ret)
 }
 

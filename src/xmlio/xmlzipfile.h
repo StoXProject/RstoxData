@@ -34,7 +34,6 @@ public:
 	virtual ~ZipInputStream();
 	virtual int read(XML_Char *buf, size_t bufLen);
 private:
-	int errNo;
 	mz_bool status;
 	mz_zip_archive zip_archive;
 	mz_zip_reader_extract_iter_state* zipstate;
