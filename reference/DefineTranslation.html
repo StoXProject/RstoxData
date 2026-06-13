@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9007</span>
       </span>
     </div>
 
@@ -130,6 +130,7 @@
     <h2>Details</h2>
     <p>The columns of the <code>TranslationTable</code> can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "%in%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength &gt; 10".</p>
 <p>Specifying NewValue as a function can be used to transform numeric values, e.g. "function(IndividualTotalLength) IndividualTotalLength * 1.1" to compensate for different length measurement. This can be useful for length that are not total length, in which case TranslateBiotic can be used to translate the lengthmeasurement (NMDBiotic) or LengthType (ICESBiotic) to the accepted "E" or "1", respectively. For BioticData read from ICESBiotic XML files the the LengthType specifies the type of length measurement. These values are not translated using the vocabulary from the XML file, so that total length is represented as "AC_LengthMeasurementType_1" instead of the code "1". For these data the translation can be either to "AC_LengthMeasurementType_1" or to "1".</p>
+<p>Note that a function string for NewValue must be of the form function(VAR), where VAR is the name of the variable to translate. The function body can however contain other variables. E.g., "function(IndividualTotalLength) 5 * IndividualRoundWeight^(1/3)", will set the IndividualTotalLength 5 times the square root of IndividualTotalLength.</p>
 <p>Similar to transforming IndividualTotalLength, IndividualRoundWeight can also be transformed if the individualproducttype is not 1 for NMDBiotic XML files.</p>
 <p>When the <code>TranslationnTable</code> is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength &gt; 10).</p>
 <p>As an example, if there are three columns in the <code>TranslationTable</code> named "IndividualAge", "NewValue" and "IndividualSex" (as specified by ConditionalVariableNames), with values 3, 4 and "F" in the first row, female fish at age 3 are translated to age 4.</p>

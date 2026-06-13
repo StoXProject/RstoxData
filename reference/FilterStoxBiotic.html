@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RstoxData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.1-9007</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
 
 
 <dt id="arg-filterexpression">FilterExpression<a class="anchor" aria-label="anchor" href="#arg-filterexpression"></a></dt>
-<dd><p>Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator <code>%in%</code> or the special operator <code>%notin%</code>, which is defined in RstoxData. For a numeric filter, in the current StoX GUI, NA must be added manually in the text field of the "Expression table dialog" (the "Query builder dialog" will only show numeric values and will show an empty fields if the filter contains NA). Possible values are provided in the filter expression builder in the StoX GUI for character values, integer values, and numeric values that are all whole numbers, but not for keys (CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey and IndividualKey in <code>FilterStoxBiotic</code>, and CruiseKey, LogKey, BeamKey, AcousticCategoryKey, ChannelReferenceKey and NASCKey in <code><a href="FilterStoxAcoustic.html">FilterStoxAcoustic</a></code>).</p></dd>
+<dd><p>Filter expression given as a list of strings. The name of the list and structures should be identical to the names of the input data list. To extract or exclude missing values (NAs) use the operator <code>%in%</code> or the special operator <code>%notin%</code>, which is defined in RstoxData. For a numeric filter, in the current StoX GUI, NA must be added manually in the text field of the "Expression table dialog" (the "Query builder dialog" will only show numeric values and will show an empty fields if the filter contains NA). Note that there is a distinction between NA and NaN for numeric variables. To overcome this distinction, use <code>is.na</code> instead of <code>%in%</code> NA. In the current GUI <code>is.na</code> must be typed into the parameter field. Possible values are provided in the filter expression builder in the StoX GUI for character values, integer values, and numeric values that are all whole numbers, but not for keys (CruiseKey, StationKey, HaulKey, SpeciesCategoryKey, SampleKey and IndividualKey in <code>FilterStoxBiotic</code>, and CruiseKey, LogKey, BeamKey, AcousticCategoryKey, ChannelReferenceKey and NASCKey in <code><a href="FilterStoxAcoustic.html">FilterStoxAcoustic</a></code>).</p></dd>
 
 
 <dt id="arg-filterupwards">FilterUpwards<a class="anchor" aria-label="anchor" href="#arg-filterupwards"></a></dt>
