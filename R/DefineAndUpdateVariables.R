@@ -113,6 +113,8 @@ RedefineStoxBiotic <- function(
 #' @details The columns of the \code{TranslationTable} can be given in one of two ways: (1) A single value or a string to be evaluated and matched using the "\%in\%" operator, such as "HER" or "c(\"HER\", \"CLU\")"; or (2) a string expressing a function of the variable given by the column name, such as "function(IndividualTotalLength) IndividualTotalLength > 10". 
 #' 
 #' Specifying NewValue as a function can be used to transform numeric values, e.g. "function(IndividualTotalLength) IndividualTotalLength * 1.1" to compensate for different length measurement. This can be useful for length that are not total length, in which case TranslateBiotic can be used to translate the lengthmeasurement (NMDBiotic) or LengthType (ICESBiotic) to the accepted "E" or "1", respectively. For BioticData read from ICESBiotic XML files the the LengthType specifies the type of length measurement. These values are not translated using the vocabulary from the XML file, so that total length is represented as "AC_LengthMeasurementType_1" instead of the code "1". For these data the translation can be either to "AC_LengthMeasurementType_1" or to "1". 
+#' 
+#' Note that a function string for NewValue must be of the form function(VAR), where VAR is the name of the variable to translate. The function body can however contain other variables. E.g., "function(IndividualTotalLength) 5 * IndividualRoundWeight^(1/3)", will set the IndividualTotalLength 5 times the square root of IndividualTotalLength. 
 #'
 #' Similar to transforming IndividualTotalLength, IndividualRoundWeight can also be transformed if the individualproducttype is not 1 for NMDBiotic XML files.
 #'
@@ -406,7 +408,8 @@ translateOne <- function(
 		nomatches <- sapply(matches, function(x) length(x) == 1 && is.na(x))
 		
 		# Translate only if there were ane matches:
-		if(!any(nomatches)) {
+		# Here, na.rm = TRUE makes sure we get TRUE/FALSE and not NA:
+		if(!any(nomatches, na.rm = TRUE)) {
 			# Remove empty matches:
 			matches <- matches[sapply(matches, NROW) > 0]
 			
@@ -422,7 +425,7 @@ translateOne <- function(
 					
 					if(length(thisMatches)) {
 						
-						# Kepp pnly the columns present in the table to translate, so that we can use thisMatches to dientify the rows in which to translate:
+						# Keep only the columns present in the table to translate, so that we can use thisMatches to identify the rows in which to translate:
 						thisMatches <- subset(thisMatches, select = intersect(names(thisMatches), names(data[[tableName]])))
 						
 						# Translate
@@ -458,7 +461,8 @@ translateOne <- function(
 			
 			thisMatches <- matchVariable(variableToTranslate, translationListOne, data[[tableName]])
 			
-			if(any(thisMatches)) {
+			# Here, na.rm = TRUE makes sure we get TRUE/FALSE and not NA:
+			if(any(thisMatches, na.rm = TRUE)) {
 				# Translate
 				if(isFunctionString(translationListOne$NewValue, variableToTranslate)) {
 					#data[[tableName]] [thisMatches, eval(variableToTranslate) := eval(parse(text = translationListOne$NewValue)) (get(variableToTranslate)), on = names(thisMatches)]
@@ -643,6 +647,7 @@ matchClass <- function(A, B) {
 
 # Function to match a condition given in the element 'variableName' of 'list' to the corresponding element in 'table', either as a function expression string that can be evaluated, or a replacement string:
 matchVariable <- function(variableName, list, table) {
+	
 	# Special case for NA:
 	if(is.na(list[[variableName]]) || identical(list[[variableName]], "NA")) {
 		is.na(table[[variableName]])
@@ -664,8 +669,8 @@ matchVariable <- function(variableName, list, table) {
 		vector <- eval(parse(text = deparse(list[[variableName]])))
 		if(!is.list(vector)  &&  is.vector(vector)  &&  length(dim(vector)) < 2) {
 			# If both the translation value and the data value is coercible to numeric, treat as numeric:
-			xnum <- as.numeric(table[[variableName]])
-			ynum <- as.numeric(vector)
+			suppressWarnings(xnum <- as.numeric(table[[variableName]]))
+			suppressWarnings(ynum <- as.numeric(vector))
 			if(!any(is.na(xnum)) && !any(is.na(ynum))) {
 				xnum %in% ynum
 			}

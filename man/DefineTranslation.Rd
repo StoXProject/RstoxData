@@ -50,6 +50,8 @@ The columns of the \code{TranslationTable} can be given in one of two ways: (1) 
 
 Specifying NewValue as a function can be used to transform numeric values, e.g. "function(IndividualTotalLength) IndividualTotalLength * 1.1" to compensate for different length measurement. This can be useful for length that are not total length, in which case TranslateBiotic can be used to translate the lengthmeasurement (NMDBiotic) or LengthType (ICESBiotic) to the accepted "E" or "1", respectively. For BioticData read from ICESBiotic XML files the the LengthType specifies the type of length measurement. These values are not translated using the vocabulary from the XML file, so that total length is represented as "AC_LengthMeasurementType_1" instead of the code "1". For these data the translation can be either to "AC_LengthMeasurementType_1" or to "1". 
 
+Note that a function string for NewValue must be of the form function(VAR), where VAR is the name of the variable to translate. The function body can however contain other variables. E.g., "function(IndividualTotalLength) 5 * IndividualRoundWeight^(1/3)", will set the IndividualTotalLength 5 times the square root of IndividualTotalLength. 
+
 Similar to transforming IndividualTotalLength, IndividualRoundWeight can also be transformed if the individualproducttype is not 1 for NMDBiotic XML files.
 
 When the \code{TranslationnTable} is given in the StoX GUI the strings need not be escaped ((1) HER or c("HER", "CLU"); or (2) function(IndividualTotalLength) IndividualTotalLength > 10).
