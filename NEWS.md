@@ -1,5 +1,10 @@
+# RstoxData v2.2.1-9008  (2026-06-22)
+* Added the option colsToSplit in setorderv_numeric(), to indicate which columns to allow splitting by the characters specified by the parameter split and numeric sorting applied to the parts of the split string.
+* Added the option doNotSplit in createOrderKey().
+
+
 # RstoxData v2.2.1-9007  (2026-06-13)
-* Added support for reading zipped ICESAcoustic XML files (in getIcesVocabulary()).
+* Added support for reading zipped ICESAcoustic XML files (change in getIcesVocabulary()).
 * Removed warning occurring when translation table and variable is coerced to numeric in matchVariable().
 
 

@@ -2,15 +2,17 @@
 % Please edit documentation in R/Utilities.R
 \name{createOrderKey}
 \alias{createOrderKey}
-\title{Convert a vector to an integer vector where individual string elements at interpreted as numeric if possible.}
+\title{Convert a vector to an integer vector where individual string elements are interpreted as numeric if possible.}
 \usage{
-createOrderKey(x, split = "/")
+createOrderKey(x, split = "/", doNotSplit = FALSE)
 }
 \arguments{
 \item{x}{A vector.}
 
 \item{split}{A character to split strings by.}
+
+\item{doNotSplit}{Logical: If TRUE to not split the input to treat the parts as potential numeric values, but merely treat the input as numeri if possible.}
 }
 \description{
-Convert a vector to an integer vector where individual string elements at interpreted as numeric if possible.
+Convert a vector to an integer vector where individual string elements are interpreted as numeric if possible.
 }
