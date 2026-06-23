@@ -675,10 +675,11 @@ orderRowsByKeys <- function(data) {
 #' @param by Order by the given columns.
 #' @param key If given and \code{by} is empty, order by the columns with names ending with \code{key}.
 #' @param split Character: A vector of single character to split by. The default c("-", "/") splits between StoX keys and within StoX keys. 
+#' @param colsToSplit Character: A vector of the columns to apply splitting in in \code{createOrderKey}, or NA (default) to potentially split all columns specified by \code{by}.
 #'
 #' @export
 #' 
-setorderv_numeric <- function(dataOne, by = NULL, key = NULL, split = "/") {
+setorderv_numeric <- function(dataOne, by = NULL, key = NULL, split = "/", colsToSplit = NA) {
 #setorderv_numeric <- function(dataOne, by = NULL, key = NULL, ...) {
 	
 	# Locate keys:
@@ -698,7 +699,20 @@ setorderv_numeric <- function(dataOne, by = NULL, key = NULL, split = "/") {
 		orderKeys <- paste0(by, "OrderedAfterSplitting")
 		
 		# Create keys which are converted to ranks, splitting first and then treating individual elements as numbers if possible:
-		dataOne[, (orderKeys) := lapply(.SD, createOrderKey, split = split), .SDcols = by]
+		if(length(colsToSplit) == 1 && is.na(colsToSplit)) {
+			doNotSplit <- FALSE
+		}
+		else {
+			doNotSplit <- !by %in% colsToSplit
+		}
+		
+		dataOne[, (orderKeys) := mapply(
+			createOrderKey, 
+			.SD, 
+			doNotSplit = doNotSplit, 
+			MoreArgs = list(split = split), 
+			SIMPLIFY = FALSE), 
+		.SDcols = by]
 		
 		# Order the rows:
 		# 2024-10-28: Change to sort out sorting:
@@ -707,6 +721,7 @@ setorderv_numeric <- function(dataOne, by = NULL, key = NULL, split = "/") {
 		# Remove the orderKeys:
 		dataOne[, (orderKeys) := NULL]
 	}
+	
 	
 	return(dataOne)
 }
@@ -721,19 +736,22 @@ addNAs <- function(x, areNAs) {
 	return(x)
 }
 
-#' Convert a vector to an integer vector where individual string elements at interpreted as numeric if possible.
+#' Convert a vector to an integer vector where individual string elements are interpreted as numeric if possible.
 #'
 #' @param x A vector.
 #' @param split A character to split strings by.
+#' @param doNotSplit Logical: If TRUE to not split the input to treat the parts as potential numeric values, but merely treat the input as numeri if possible.
 #'
 #' @export
 #' 
-createOrderKey <- function(x, split = "/") {
+createOrderKey <- function(x, split = "/", doNotSplit = FALSE) {
 	
-	# Split the keys:
+	# If not character, return the input unchanged::
 	if(!is.character(x)) {
 		return(x)
 	}
+	
+	# Get the first non-NA value, by first checking the first value, and then finding the first non-NA if the first is NA:
 	firstNonNA <- x[1]
 	if(is.na(firstNonNA)) {
 		if(all(is.na(x))) {
@@ -741,6 +759,7 @@ createOrderKey <- function(x, split = "/") {
 		}
 		firstNonNA <- x[min(which(!is.na(x)))]
 	}
+	
 	# If the first element is coercible to numeric, try converting the entire vector to numeric, and check that no NAs were generated:
 	if(!is.na(suppressWarnings(as.numeric(x[1])))) {
 		numberOfNAs <- sum(is.na(x))
@@ -753,6 +772,10 @@ createOrderKey <- function(x, split = "/") {
 		}
 	}
 	
+	# Split x and treat individual strings as numeric, but not if doNotSplit is TRUE:
+	if(doNotSplit) {
+		return(x)
+	}
 	# Split by the 'split' argument:
 	if(!any(sapply(split, grepl, firstNonNA))) {
 		return(x)
@@ -763,6 +786,7 @@ createOrderKey <- function(x, split = "/") {
 	for(thisSplit in split) {
 		splitted <- lapply(splitted, function(x) unlist(strsplit(x, thisSplit, fixed = TRUE)))
 	}
+	
 	#splitted <- strsplit(x, split, fixed = TRUE)
 	
 	# Check that all have the same number of elements, that is the same number of splits:
